@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="refshelf-app" content="1">
 <title>Paper Library — 文献管理 / Reference Manager</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 8.6C13.1 6.1 8.6 5.8 4.7 7v16.4c3.9-1.2 8.4-.9 11.3 1.6z' fill='%231e40af'/%3E%3Cpath d='M16 8.6C18.9 6.1 23.4 5.8 27.3 7v16.4c-3.9-1.2-8.4-.9-11.3 1.6z' fill='%233b82f6'/%3E%3Cpath d='M16 8.6v16.6' stroke='%23fff' stroke-width='1.3' stroke-linecap='round'/%3E%3Crect x='3' y='24.5' width='26' height='3' rx='1.5' fill='%2393b4f0'/%3E%3C/svg%3E">
 <style>
@@ -136,15 +137,25 @@
     overflow-y:auto; padding:8px 6px; display:flex; flex-direction:column; gap:2px;
   }
   .sideHead{
-    display:flex; align-items:center; justify-content:space-between;
-    font-size:11px; font-weight:700; color:var(--text3); letter-spacing:.05em;
-    padding:8px 8px 3px;
+    display:flex; align-items:center; justify-content:space-between; gap:6px;
+    position:relative; padding:5px 8px; border-radius:6px; min-height:30px;
+    font-size:14px; font-weight:600; color:var(--text2); letter-spacing:0;
   }
-  .sideHead button{border:none; background:none; color:var(--text2); font-size:13px; padding:0 4px; border-radius:4px}
-  .sideHead button:hover{background:var(--bg); color:var(--text)}
+  .sideHead:hover{background:var(--bg)}
+  .sideHead .headLabel{display:inline-flex; align-items:center; gap:6px; min-width:0}
+  .sideHead .headLabel > span:last-child{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .sideHead .headToggle{
+    width:1.1em; height:20px; display:inline-flex; align-items:center; justify-content:center; padding:0;
+  }
+  .sideHead .headToggle .ic{color:var(--text2); opacity:1}
+  .sideHead .headToggle .ic svg{width:1.1em; height:1.1em}
+  .sideHead .headToggle.closed{color:var(--text2)}
+  .sideHead .headToggle.closed .ic{color:var(--text2)}
+  .sideHead button{border:none; background:none; color:var(--text2); font-size:14px; padding:0 4px; border-radius:4px}
+  .sideHead button:hover{background:var(--border2); color:var(--text)}
   .sideItem{
     display:flex; align-items:center; gap:6px; padding:5px 8px; border-radius:6px;
-    cursor:pointer; user-select:none;
+    cursor:pointer; user-select:none; position:relative; white-space:nowrap;
   }
   .sideItem:hover{background:var(--bg)}
   .sideItem.active{background:var(--sel); color:var(--accent); font-weight:600}
@@ -152,8 +163,21 @@
   .sideItem.collMultiSel::before{content:""; width:3px; align-self:stretch; border-radius:2px; background:var(--accent); margin-right:1px}
   .sideItem.dropTarget{outline:2px dashed var(--accent); outline-offset:-2px; background:var(--accent-soft)}
   .sideItem .indent{display:inline-block; flex:0 0 auto}
+  .sideItem .collToggle{
+    width:16px; height:20px; flex:0 0 16px; display:inline-flex; align-items:center; justify-content:center;
+    border:none; background:none; color:var(--text3); padding:0; border-radius:4px;
+  }
+  .sideItem .collToggle:hover{background:var(--border2); color:var(--text)}
+  .sideItem .collToggle .ic svg{width:12px; height:12px}
+  .sideItem .collToggle.closed .ic{transform:rotate(-90deg)}
+  .sideItem .collToggle.spacer{visibility:hidden; pointer-events:none}
+  .sideItem .collToggle.spacer.root{display:none}
   .sideItem .cnt{margin-left:auto; font-size:11px; color:var(--text3)}
-  .sideItem .rowbtns{display:none; gap:2px}
+  .sideItem .rowbtns{
+    display:none; gap:2px; align-items:center;
+    position:absolute; right:6px; top:0; bottom:0; padding-left:12px;
+    background-color:inherit; border-radius:6px;
+  }
   .sideItem:hover .rowbtns{display:inline-flex}
   .sideItem .rowbtns button{border:none;background:none;padding:0 3px;font-size:11px;color:var(--text2);border-radius:3px}
   .sideItem .rowbtns button:hover{background:var(--border2);color:var(--text)}
@@ -300,11 +324,11 @@
   #itemTable tr.row.sel td{background:var(--sel)}
   #itemTable tr.row.multiSel td{background:var(--accent-soft)}
   #itemTable tr.row.multiSel td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
-  #itemTable tr.row.updating td{background:#fff7d6}
+  #itemTable tr.row.updating td{background:#ecfdf3}
   #itemTable tr.row.updated td{background:#ecfdf3}
   #itemTable tr.row.updateFail td{background:#fff1f2}
   #itemTable tr.row.updateNone td{background:#f1f5f9}
-  body.dark #itemTable tr.row.updating td{background:#3a2f12}
+  body.dark #itemTable tr.row.updating td{background:#123522}
   body.dark #itemTable tr.row.updated td{background:#123522}
   body.dark #itemTable tr.row.updateFail td{background:#3a1820}
   body.dark #itemTable tr.row.updateNone td{background:#202833}
@@ -323,11 +347,11 @@
   .cardRow.sel{border-color:var(--accent-border); background:var(--sel)}
   .cardRow.multiSel{border-color:var(--accent-border); background:var(--accent-soft)}
   .cardRow.multiSel .cardAccent{background:var(--accent)}
-  .cardRow.updating{border-color:#facc15; background:#fff7d6}
+  .cardRow.updating{border-color:#86efac; background:#ecfdf3}
   .cardRow.updated{border-color:#86efac; background:#ecfdf3}
   .cardRow.updateFail{border-color:#fecdd3; background:#fff1f2}
   .cardRow.updateNone{border-color:#cbd5e1; background:#f1f5f9}
-  body.dark .cardRow.updating{border-color:#854d0e; background:#3a2f12}
+  body.dark .cardRow.updating{border-color:#166534; background:#123522}
   body.dark .cardRow.updated{border-color:#166534; background:#123522}
   body.dark .cardRow.updateFail{border-color:#881337; background:#3a1820}
   body.dark .cardRow.updateNone{border-color:#475569; background:#202833}
@@ -356,7 +380,8 @@
   }
   .cardPdfBtn.hasPdf{color:var(--accent); border-color:var(--accent-border); background:var(--accent-soft)}
   .cardPdfBtn.noPdf{color:var(--accent); border-color:var(--accent-border)}
-  .cited-none{color:var(--text3)}
+  .cited-none,.no-data{color:var(--text3)}
+  .no-data.fail{color:var(--danger); font-weight:700}
   .itTitle{font-weight:600}
   body.col-resizing{cursor:col-resize; user-select:none}
   /* list status bar controls */
@@ -452,6 +477,9 @@
     overflow-y:auto; padding:12px;
   }
   #detail.dragover{outline:2px dashed var(--accent); outline-offset:-4px}
+  #itemRows tr.fileDrop{outline:2px dashed var(--accent); outline-offset:-2px}
+  #itemRows tr.fileDrop td{background:var(--accent-soft)}
+  .cardRow.fileDrop{outline:2px dashed var(--accent); outline-offset:-2px}
   #detail .noselect{color:var(--text3); text-align:center; margin-top:60px}
   .fRow{margin-bottom:8px}
   .fRow label{display:block; font-size:11px; color:var(--text2); margin-bottom:2px}
@@ -480,7 +508,24 @@
   .attRow button:hover{background:var(--border2); color:var(--text)}
   .attRow button.attOpen:hover{background:var(--accent-soft); color:var(--accent)}
   .attRow button.attDel:hover{background:var(--danger-soft); color:var(--danger)}
-  .collCheck{display:flex; align-items:center; gap:6px; font-size:13px; padding:2px 0}
+  .detailFoldHead{display:flex; align-items:center; justify-content:space-between; gap:8px; margin:4px 0 6px}
+  .detailFoldToggle{
+    border:none; background:none; color:var(--text2); padding:2px 4px; border-radius:4px;
+    display:inline-flex; align-items:center; gap:4px; font-size:12.5px; font-weight:600;
+  }
+  .detailFoldToggle:hover{background:var(--bg); color:var(--text)}
+  .detailFoldToggle .ic svg{width:12px; height:12px}
+  .detailFoldToggle.closed .ic{transform:rotate(-90deg)}
+  .detailCollections{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:6px}
+  .detailCollBtn{
+    min-width:0; display:flex; align-items:center; gap:6px; min-height:28px;
+    border:1px solid var(--border); background:var(--panel); border-radius:6px;
+    padding:4px 7px; font-size:12.5px; text-align:left; cursor:default;
+  }
+  button.detailCollBtn:hover{background:var(--bg)}
+  .detailCollBtn.on{background:var(--accent-soft); border-color:var(--accent-border); color:var(--accent); font-weight:600}
+  .detailCollBtn .collName{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  @media(max-width:980px){.detailCollections{grid-template-columns:minmax(0,1fr)}}
   .danger.tbtn{color:var(--danger); border-color:#efc4c4}
   .danger.tbtn:hover{background:var(--danger-soft)}
 
@@ -569,6 +614,15 @@
   .emptyRecMeta{font-size:12px; color:var(--text2); margin-top:2px}
   .emptyRecBtns{display:flex; gap:6px; flex:0 0 auto}
   .emptyRecBtns .tbtn{font-size:12px; padding:4px 7px; min-height:26px}
+  .fixInline{
+    margin:6px 0 8px; padding:8px 10px; border:1px solid var(--accent-border);
+    border-radius:7px; background:var(--accent-soft); color:var(--text2);
+    font-size:12px; line-height:1.45;
+  }
+  .fixInlineTop{display:flex; align-items:flex-start; gap:8px}
+  .fixInlineText{flex:1; min-width:0}
+  .fixInline b{color:var(--text)}
+  .fixInline .tbtn{font-size:12px; min-height:26px; padding:4px 8px}
   @media (max-width:720px){.dupCols{grid-template-columns:1fr}}
 
   /* ---------- citations dialog ---------- */
@@ -608,22 +662,42 @@
   #dlgGraph .dlgHead{align-items:center}
   #graphBody{display:flex; height:min(640px,72vh)}
   #graphCanvasWrap{flex:1; min-width:0; position:relative; background:#fafbfc; border-right:1px solid var(--border2)}
+  body.dark #graphCanvasWrap{background:#141922}
   #graphSvg{width:100%; height:100%; display:block; cursor:grab; user-select:none}
   #graphSvg.panning{cursor:grabbing}
   #graphSvg .gEdge{stroke:#94a3b8; stroke-linecap:round}
+  body.dark #graphSvg .gEdge{stroke:#64748b}
   #graphSvg .gNode{cursor:pointer}
   #graphSvg .gNode circle{stroke:#fff; stroke-width:1.5}
+  body.dark #graphSvg .gNode circle{stroke:#141922}
   #graphSvg .gNode.dim{opacity:.18}
   #graphSvg .gEdge.dim{opacity:.06}
   #graphSvg .gNode.seed circle{stroke:#1f2328; stroke-width:2; stroke-dasharray:none}
+  body.dark #graphSvg .gNode.seed circle{stroke:#e7eaf0}
   #graphSvg .gNode.sel circle{stroke:var(--accent); stroke-width:2.5}
   #graphSvg .gNode.inlib circle{stroke:#1a7f37; stroke-width:2}
   #graphSvg .gLabel{font-size:10.5px; fill:#374151; pointer-events:none; paint-order:stroke; stroke:#fafbfc; stroke-width:3px; stroke-linejoin:round}
+  body.dark #graphSvg .gLabel{fill:#cbd5e1; stroke:#141922}
   #graphSvg .gLabel.dim{opacity:.15}
+  #graphSvg.hideLabels .gLabel{display:none}
+  #graphToolbar{
+    position:absolute; left:10px; top:10px; display:flex; flex-wrap:wrap; gap:6px; align-items:center;
+    max-width:calc(100% - 20px); z-index:1; pointer-events:none;
+  }
+  #graphToolbar .tbtn, #graphStats{pointer-events:auto}
+  #graphToolbar .tbtn{min-height:26px; padding:0 8px; font-size:11.5px; background:rgba(255,255,255,.9); backdrop-filter:blur(8px)}
+  body.dark #graphToolbar .tbtn{background:rgba(24,28,34,.88)}
+  #graphStats{
+    display:inline-flex; align-items:center; gap:7px; min-height:26px; padding:0 8px;
+    border:1px solid var(--border); border-radius:6px; background:rgba(255,255,255,.9);
+    color:var(--text2); font-size:11.5px; backdrop-filter:blur(8px);
+  }
+  body.dark #graphStats{background:rgba(24,28,34,.88)}
   #graphLoading{
     position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
     color:var(--text2); font-size:13px; background:rgba(250,251,252,.85); pointer-events:none;
   }
+  body.dark #graphLoading{background:rgba(20,25,34,.86)}
   #graphLoading:empty{display:none}
   #graphLegend{
     position:absolute; left:10px; bottom:8px; display:flex; gap:14px; align-items:center;
@@ -636,6 +710,13 @@
   #graphSide .noselect{color:var(--text3); text-align:center; margin-top:40px; font-size:12px}
   #graphSide .gsTitle{font-weight:700; font-size:13px; line-height:1.35; margin-bottom:4px}
   #graphSide .gsMeta{color:var(--text2); margin-bottom:2px}
+  #graphSide .gsRel{
+    margin-top:9px; padding:8px; border:1px solid var(--border2); border-radius:6px;
+    background:var(--bg); color:var(--text2); line-height:1.45;
+  }
+  #graphSide .gsRel b{color:var(--text)}
+  #graphSide .gsLinks{margin-top:8px; display:flex; flex-direction:column; gap:5px}
+  #graphSide .gsLink{font-size:11.5px; color:var(--text2); line-height:1.35}
   #graphSide .gsAbs{color:var(--text2); font-size:11.5px; line-height:1.5; margin-top:8px; max-height:180px; overflow-y:auto}
   #graphSide .gsBtns{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px}
   #graphSide .gsBtns .tbtn{font-size:12px; padding:3px 9px}
@@ -668,7 +749,7 @@
   #startCard .bigbtn .bd{flex:1}
   #startCard .bigbtn .bd small{display:block; color:var(--text2); font-size:11.5px; margin-top:1px}
   #startCard .warn{font-size:12px; color:var(--danger); margin-top:10px; display:none}
-  #startLang{position:fixed; top:14px; right:16px}
+  #startTopBtns{position:fixed; top:14px; right:16px; display:flex; gap:8px}
 
   /* toast */
   #toast{
@@ -678,6 +759,33 @@
   }
   #toast.show{opacity:.95; transform:translateX(-50%) translateY(0)}
   #toast.err{background:var(--danger)}
+
+  #dlgManual{max-width:840px; width:min(840px,94vw)}
+  #manualWrap{display:flex; min-height:0; height:min(560px,66vh)}
+  #manualTabs{
+    flex:0 0 202px; border-right:1px solid var(--border2); padding:10px 8px;
+    display:flex; flex-direction:column; gap:2px; overflow-y:auto;
+  }
+  #manualTabs button{
+    border:none; background:none; text-align:left; padding:7px 10px; border-radius:8px;
+    color:var(--text2); font-size:13px; cursor:pointer; font-family:inherit;
+    display:flex; align-items:center; gap:7px; line-height:1.25;
+  }
+  #manualTabs button .ic{width:16px; color:currentColor}
+  #manualTabs button .ic svg{width:16px; height:16px}
+  #manualTabs button span:last-child{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  #manualTabs button:hover{background:var(--bg)}
+  #manualTabs button.active{background:var(--accent-soft); color:var(--accent); font-weight:600}
+  #manualContent{flex:1; min-width:0; padding:14px 20px 18px; overflow-y:auto}
+  #manualContent h3{margin:0 0 10px; font-size:15px}
+  #manualContent h4{margin:16px 0 6px; font-size:13px; color:var(--accent)}
+  #manualContent p{margin:0 0 8px; line-height:1.65}
+  #manualContent ul{margin:0 0 8px; padding-left:20px}
+  #manualContent li{margin-bottom:5px; line-height:1.6}
+  #manualContent .ic{color:var(--accent)}
+  .manual-fig{margin:4px 0 14px; padding:10px 12px; border:1px solid var(--border2); border-radius:10px; background:var(--bg)}
+  .manual-fig svg{display:block; width:100%; height:auto; max-width:560px; margin:0 auto}
+  #manualContent a{color:var(--accent)}
 
   .changelog-item{margin-bottom:12px}
   .changelog-item .cv{font-weight:700}
@@ -725,6 +833,7 @@
   <button class="tbtn libraryStatusBtn" id="btnChangeFolder" style="display:none" data-i18n-title="changeFolder" title="作業フォルダを変更">
     <span id="saveDot"></span><span id="libName"></span><span data-i18n="changeFolder">作業フォルダを変更</span>
   </button>
+  <button class="tbtn" id="btnManual"><span class="ic" data-ic="book"></span><span data-i18n="manual">マニュアル</span></button>
   <button class="tbtn" id="btnTheme"><span class="ic" data-ic="moon"></span><span id="themeLabel">Dark</span></button>
   <button class="tbtn" id="btnLang">EN</button>
 </div>
@@ -732,15 +841,17 @@
 <!-- ============ main ============ -->
 <div id="main">
   <aside id="sidebar">
-    <div class="sideHead"><span data-i18n="library">ライブラリ</span></div>
     <div id="fixedFilters"></div>
     <div class="sideHead" data-drop-root="1">
-      <span data-i18n="collections">コレクション</span>
+      <span class="headLabel"><button id="btnToggleCollections" class="headToggle" data-i18n-title="collapse" title="折りたたみ"><span class="ic" data-ic="folderOpen"></span></button><span data-i18n="collections">コレクション</span></span>
       <button id="btnAddColl" data-i18n-title="newCollection" title="新規コレクション"><span class="ic" data-ic="plus"></span></button>
     </div>
     <div id="collList"></div>
-    <div class="sideHead"><span data-i18n="tags">タグ</span></div>
+    <div class="sideHead">
+      <span class="headLabel"><button id="btnToggleTags" class="headToggle" data-i18n-title="collapse" title="折りたたみ"><span class="ic" data-ic="tag"></span></button><span data-i18n="tags">タグ</span></span>
+    </div>
     <div id="tagList"></div>
+    <div id="uncatFilter"></div>
   </aside>
 
   <main id="listPane">
@@ -835,6 +946,16 @@
   <div class="dlgFoot"><button class="tbtn primary" data-close data-i18n="close">閉じる</button></div>
 </dialog>
 
+<!-- ============ manual dialog ============ -->
+<dialog id="dlgManual">
+  <div class="dlgHead"><span data-i18n="manual">マニュアル</span><button data-close><span class="ic" data-ic="x"></span></button></div>
+  <div id="manualWrap">
+    <nav id="manualTabs"></nav>
+    <div id="manualContent"></div>
+  </div>
+  <div class="dlgFoot"><button class="tbtn primary" data-close data-i18n="close">閉じる</button></div>
+</dialog>
+
 <!-- ============ fetch log dialog ============ -->
 <dialog id="dlgFetchLog">
   <div class="dlgHead"><span data-i18n="fetchLogTitle">更新ログ</span><button data-close><span class="ic" data-ic="x"></span></button></div>
@@ -911,6 +1032,11 @@
   <div id="graphBody">
     <div id="graphCanvasWrap">
       <svg id="graphSvg"></svg>
+      <div id="graphToolbar">
+        <button class="tbtn" id="btnGraphFit"><span class="ic" data-ic="zoom"></span><span data-i18n="graphFit">全体表示</span></button>
+        <button class="tbtn" id="btnGraphLabels"><span class="ic" data-ic="text"></span><span data-i18n="graphLabels">ラベル</span></button>
+        <span id="graphStats"></span>
+      </div>
       <div id="graphLoading"></div>
       <div id="graphLegend">
         <span data-i18n="graphLegendSize">大きさ = 被引用数</span>
@@ -969,7 +1095,10 @@
 
 <!-- ============ start screen ============ -->
 <div id="startScreen">
-  <button class="tbtn" id="startLang">EN</button>
+  <div id="startTopBtns">
+    <button class="tbtn" id="startManual"><span class="ic" data-ic="book"></span><span data-i18n="manual">マニュアル</span></button>
+    <button class="tbtn" id="startLang">EN</button>
+  </div>
   <div id="startCard">
     <h1><span data-logo></span>Paper Library</h1>
     <div class="sub" data-i18n="startSub">文献管理ツール</div>
@@ -1038,6 +1167,8 @@ const ICONS = {
   folderPlus:'<path d="M4 19.5A1.5 1.5 0 0 1 2.5 18V6A1.5 1.5 0 0 1 4 4.5h4.3a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h6.6A1.5 1.5 0 0 1 21 8.5V18a1.5 1.5 0 0 1-1.5 1.5z"/><path d="M12 10.5v5M9.5 13h5"/>',
   alert:'<path d="M12 4 2.5 20.5h19z"/><path d="M12 10v4.5M12 17.6h.01"/>',
   retry:'<path d="M20 11a8 8 0 1 0-1.5 5.5"/><path d="M20 5v5h-5"/>',
+  zoom:'<circle cx="10.5" cy="10.5" r="5.5"/><path d="M15 15l5 5"/><path d="M8.5 10.5h4M10.5 8.5v4"/>',
+  text:'<path d="M5 6h14M12 6v12M8.5 18h7"/>',
   citations:'<circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="9" r="2.4"/><circle cx="8.5" cy="18" r="2.4"/><path d="M8.3 7 15.6 8.6M7.7 15.7 6.6 8.3M10.2 16.6 16.1 10.9"/>',
   users:'<circle cx="9" cy="8" r="3"/><path d="M3.8 19a5.2 5.2 0 0 1 10.4 0"/><circle cx="17" cy="9.5" r="2.3"/><path d="M14.8 15.5a4.2 4.2 0 0 1 5.4 3.5"/>',
   graph:'<circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="17" r="2.2"/><circle cx="19" cy="16" r="2.2"/><circle cx="12" cy="12.5" r="1.6"/><path d="M12 7.2v3.7M10.6 13.6 6.4 15.6M13.5 13.3 17.4 15M6.8 15.5 10.6 6.6M17.2 14.9 13 6.7"/>',
@@ -1078,289 +1209,28 @@ function renderIcons(root){
   });
 }
 
-const APP_VERSION = 69;
+const APP_VERSION = '1.0';
 const CHANGELOG = [
-  { v:69, date:'2026-07-04',
-    ja:['左パネルのコレクションも⌘/Ctrlクリック複数選択・Shift範囲選択・まとめてドラッグ移動に対応'],
-    en:['Add Cmd/Ctrl multi-select, Shift range-select, and grouped drag moves for collections in the left pane'],
-  },
-  { v:68, date:'2026-07-04',
-    ja:['文献一覧で⌘/Ctrlクリックによる複数選択とShiftクリックによる範囲選択を追加','複数選択した文献をまとめてコレクションへドラッグ＆ドロップできるように追加'],
-    en:['Add Cmd/Ctrl multi-select and Shift range-select in the item list','Allow dragging selected items together into a collection'],
-  },
-  { v:67, date:'2026-07-04',
-    ja:['ツールバーの検索欄を左寄りに移動','ライブラリ状態ボタンから変更用フォルダアイコンを削除'],
-    en:['Move the toolbar search control toward the left','Remove the change-folder icon from the library status button'],
-  },
-  { v:66, date:'2026-07-04',
-    ja:['ツールバーの検索欄と詳細検索ボタンをひとつの枠内に統合','保存状態・フォルダ名・作業フォルダ変更アイコンをひとつのステータスボタンに統合'],
-    en:['Merge the toolbar search field and advanced-search button into one framed control','Merge save state, folder name, and change-folder icon into one status button'],
-  },
-  { v:65, date:'2026-07-04',
-    ja:['ツールバー右側の保存状態・ライブラリ名・作業フォルダ変更ボタンをコンパクトに整理'],
-    en:['Compact the toolbar status area for save state, library name, and change-folder action'],
-  },
-  { v:64, date:'2026-07-04',
-    ja:['初期画面の説明文から「単一HTMLファイル」の表現を削除'],
-    en:['Remove “single HTML file” wording from the start screen subtitle'],
-  },
-  { v:63, date:'2026-07-04',
-    ja:['初期画面の説明文から「Zotero ライク」の表現を削除'],
-    en:['Remove “Zotero-like” wording from the start screen subtitle'],
-  },
-  { v:62, date:'2026-07-04',
-    ja:['アプリの表示名を Paper Library に変更','エクスポート時のファイル名接頭辞も paper-library に変更'],
-    en:['Rename the app display name to Paper Library','Change export filename prefixes to paper-library'],
-  },
-  { v:61, date:'2026-07-04',
-    ja:['エクスポートに「表示中の文献 → CSV」と「表示中の文献 → JSON」を追加','Paper Library JSON の再インポート時に、コレクション名を引き継げるように対応'],
-    en:['Add “Shown items → CSV” and “Shown items → JSON” export options','Allow re-imported Paper Library JSON to preserve collection names'],
-  },
-  { v:60, date:'2026-07-04',
-    ja:['カード表示の「表示」メニュー内フィルタが、非表示の旧フィルタボタン親要素に隠れて開かない問題を修正'],
-    en:['Fix the card-view View-menu filter popup being hidden inside the now-hidden legacy filter-button wrapper'],
-  },
-  { v:59, date:'2026-07-04',
-    ja:['PDF・スターなどのアイコン列ヘッダーを絶対中央配置に変更し、リサイズ境界による見かけのズレを修正'],
-    en:['Center icon-only table headers absolutely so resize handles no longer make PDF/Star headers look off-center'],
-  },
-  { v:58, date:'2026-07-04',
-    ja:['PDF列ヘッダーを文字ではなくファイルアイコン表示に変更し、中央揃えを調整'],
-    en:['Change the PDF column header from text to a file icon and tighten center alignment'],
-  },
-  { v:57, date:'2026-07-04',
-    ja:['スター済みの色をアプリ全体のアクセント色に合わせて調整','表のスター列ヘッダーを文字ではなく星アイコン表示に変更し、列幅を抑制'],
-    en:['Align starred-item color with the app accent color','Show the Star table-column header as an icon instead of text to keep the column compact'],
-  },
-  { v:56, date:'2026-07-04',
-    ja:['スターを表の独立列として定義し、列メニューから表示・非表示を切り替え可能に','スター切替時に一覧全体を再描画せず、星アイコンだけを即時更新するように改善'],
-    en:['Define Star as an independent table column that can be shown or hidden from the Columns menu','Update only the star icon immediately when toggling a star instead of redrawing the whole list'],
-  },
-  { v:55, date:'2026-07-04',
-    ja:['文献にスターを付けられるようにし、サイドバーの分類項目に「スター」を追加','詳細パネル・表表示・カード表示からスターを切り替えられるように追加'],
-    en:['Add starred references as a sidebar smart category','Allow toggling stars from the detail pane, table view, and card view'],
-  },
-  { v:54, date:'2026-07-04',
-    ja:['下部バーの通知バッジから赤系の強調を外し、通常のグレー系チップ表示に変更'],
-    en:['Remove red emphasis from bottom-bar notification badges and render them as neutral gray chips'],
-  },
-  { v:53, date:'2026-07-04',
-    ja:['下部バーの「表示」ボタンを常に通常色で表示するように変更','修正候補・空データ・重複候補・更新ログの警告表示を控えめなバッジ中心の見た目に調整'],
-    en:['Keep the bottom View button in the normal color instead of highlighting it','Tone down fix/empty/duplicate/update-log warnings so only the badge carries a subtle alert color'],
-  },
-  { v:52, date:'2026-07-04',
-    ja:['表表示でも下部バーに「表示」メニューを表示し、折り返し・カード表示への切り替えを集約','カード専用の列数・フィルタ項目はカード表示時だけ表示するように調整'],
-    en:['Show the View menu in table view too, grouping wrap and the switch to card view','Only show card-specific column-count and filter entries while in card view'],
-  },
-  { v:51, date:'2026-07-04',
-    ja:['カード表示時の下部バーを整理し、折り返し・表表示・列数・フィルタを「表示」メニューに集約','カード表示時は列メニューを非表示にし、通知ボタンをアイコン中心のコンパクト表示に変更'],
-    en:['Compact the card-view bottom bar by grouping wrap/table/columns/filter into a View menu','Hide the Columns menu in card view and make notification buttons icon-forward and compact'],
-  },
-  { v:50, date:'2026-07-04',
-    ja:['下部バーで非表示のカード用フィルタ枠が余白として残る問題を修正し、ボタン間隔を調整'],
-    en:['Fix hidden card-filter wrapper leaving extra spacing in the bottom bar and tighten button spacing'],
-  },
-  { v:49, date:'2026-07-04',
-    ja:['著者表示設定アイコンを漏斗アイコンと同じホバー表示に変更','責任著者列にも同じ表示設定アイコンと表示形式を適用'],
-    en:['Make the author-display settings icon hover-only like the filter funnel','Apply the same display-settings icon and formatting to the corresponding-authors column'],
-  },
-  { v:48, date:'2026-07-04',
-    ja:['詳細パネルに「更新」ボタンを追加し、開いている1件だけの被引用数・責任著者を即座に更新可能に','下部の「被引用数を更新」「責任著者を更新」ボタンをキャレット付きに変更し、「自動で更新（表示中の全件）」と「文献を選択して更新」を選べるように','「文献を選択して更新」では一覧・カードの行をクリック（Shiftで範囲選択）して対象を選び、まとめて更新できる（選択中はオレンジ色でハイライト、詳細パネルの選択色とは別）'],
-    en:['Add a “Refresh” button to the detail pane to instantly update cited-by count and corresponding author for just the open item','Turn the bottom “Refresh citations” / “Refresh corresponding authors” buttons into split buttons offering “Refresh automatically (all shown)” or “Select items to refresh”','In select mode, click rows/cards (Shift to select a range) to build a target set and refresh only those — picked items are highlighted in orange, distinct from the normal selection color'],
-  },
-  { v:47, date:'2026-07-04',
-    ja:['表の著者列ヘッダーに表示設定アイコンを追加し、姓のみ・イニシャル・フルネーム、省略人数、区切りを変更可能に'],
-    en:['Add an author-display settings icon to the table Authors header with family-only/initial/full-name, truncation, and separator options'],
-  },
-  { v:46, date:'2026-07-04',
-    ja:['被引用数更新で Semantic Scholar の応答待ち中も、対象文献を処理中として表・カード・更新ログに即時表示'],
-    en:['Show cited-by refresh targets as processing in the table/card views and update log immediately while waiting for Semantic Scholar'],
-  },
-  { v:45, date:'2026-07-04',
-    ja:['取得ログの表記を更新ログに改め、被引用数・責任著者の種別表示を追加','責任著者情報が最近見つからなかった文献は通常更新でスキップ'],
-    en:['Rename fetch log to update log, add cited-by/corresponding-author type labels, and skip recently checked no-data corresponding-author items'],
-  },
-  { v:44, date:'2026-07-04',
-    ja:['更新作業中の文献を表・カード上で色付き表示し、取得ログを実行中にもライブ更新'],
-    en:['Highlight items being refreshed in table/card views and live-update the fetch log during refresh operations'],
-  },
-  { v:43, date:'2026-07-04',
-    ja:['責任著者が見つからない場合も取得ログへ記録し、取得ログボタンの表示制御を修正'],
-    en:['Record missing corresponding-author results in the fetch log and fix fetch-log button visibility'],
-  },
-  { v:42, date:'2026-07-04',
-    ja:['被引用数更新と責任著者更新を別ボタン・別処理に分離'],
-    en:['Separate cited-by refresh and corresponding-author refresh into distinct buttons and processes'],
-  },
-  { v:41, date:'2026-07-04',
-    ja:['Angew. Chem. Int. Ed. Engl. / Engle. のような旧・誤略称を検出し、1998年以降の文献では Angew. Chem. Int. Ed. への修正候補を出す機能を追加'],
-    en:['Add fix suggestions for old or mistyped Angewandte abbreviations such as Angew. Chem. Int. Ed. Engl./Engle., suggesting Angew. Chem. Int. Ed. for papers from 1998 onward'],
-  },
-  { v:40, date:'2026-07-04',
-    ja:['文献を選択するだけの操作では一覧全体を再描画せず、選択表示と詳細パネルだけ更新するようにして表示遅延を軽減'],
-    en:['Reduce selection lag by updating only the selected row/card and detail pane instead of re-rendering the whole list'],
-  },
-  { v:39, date:'2026-07-04',
-    ja:['手動追加後に未入力のまま残った空データを検出し、下部ボタンから確認・削除できるように追加'],
-    en:['Detect empty records left after manual add and allow reviewing/deleting them from a bottom button'],
-  },
-  { v:38, date:'2026-07-04',
-    ja:['文献追加・インポート後に重複候補を確認する画面を追加','中央パネル下部に、ライブラリ内の重複候補を開くボタンを追加'],
-    en:['Add a duplicate-candidate review dialog after adding/importing items','Add a bottom-panel button for reviewing possible duplicates in the library'],
-  },
-  { v:37, date:'2026-07-04',
-    ja:['被引用数更新を Semantic Scholar 優先に変更し、OpenAlex は未解決項目と責任著者補完のみに抑制'],
-    en:['Make cited-by refresh prefer Semantic Scholar, using OpenAlex only for unresolved items and corresponding-author enrichment'],
-  },
-  { v:36, date:'2026-07-04',
-    ja:['BibTeX インポート時に keywords をタグとして読み込むか選べるチェック項目を追加（既定OFF）'],
-    en:['Add an opt-in checkbox for importing BibTeX keywords as tags (off by default)'],
-  },
-  { v:35, date:'2026-07-04',
-    ja:['日英表示でボタン・入力欄・ラベルの高さが揺れにくいよう、主要UI部品の行高と最小高を統一'],
-    en:['Stabilize button, input, and label sizing across Japanese and English by unifying line-height and minimum heights'],
-  },
-  { v:34, date:'2026-07-04',
-    ja:['カード表示でも折り返しボタンが効くように修正'],
-    en:['Make the wrap toggle apply to card view as well'],
-  },
-  { v:33, date:'2026-07-04',
-    ja:['カード表示を下部ボタンから1列/2列に切り替えられるように追加'],
-    en:['Add a bottom button to switch card view between one and two columns'],
-  },
-  { v:32, date:'2026-07-04',
-    ja:['カード表示の余白・行間・PDFボタンを詰めて情報密度を改善','カード表示から「雑誌論文」などの種別ラベルを削除'],
-    en:['Tighten card-view spacing, line-height, and PDF buttons to improve information density','Remove type labels such as Article from card view'],
-  },
-  { v:31, date:'2026-07-04',
-    ja:['カード表示のフィルタポップアップが下部バーから画面外へ出る問題を修正'],
-    en:['Fix card-view filter popups opening off-screen from the bottom toolbar'],
-  },
-  { v:30, date:'2026-07-04',
-    ja:['カード表示でも下部のフィルタメニューから列フィルタを操作できるように変更'],
-    en:['Allow column filters to be used from a bottom filter menu in card view'],
-  },
-  { v:29, date:'2026-07-04',
-    ja:['作業フォルダ表示を、取得できる場合は絶対パス優先で表示するように変更'],
-    en:['Show the working folder as an absolute path when the browser provides one'],
-  },
-  { v:28, date:'2026-07-04',
-    ja:['起動画面からお試しモードを削除','前回のライブラリ権限が残っている場合は起動時に自動で開くように変更','ツールバーから作業フォルダを後で変更できるボタンを追加'],
-    en:['Remove trial mode from the start screen','Automatically open the previous library on startup when permission is still granted','Add a toolbar button for changing the working folder later'],
-  },
-  { v:27, date:'2026-07-04',
-    ja:['右詳細パネルから種別入力を非表示化（データ上の種別は保持）'],
-    en:['Hide the Type field from the detail pane while keeping type data internally'],
-  },
-  { v:26, date:'2026-07-04',
-    ja:['右詳細パネルから BibTeX ボタンを削除','引用設定の歯車アイコンをシンプルで視認しやすい形に改善'],
-    en:['Remove the BibTeX button from the detail pane','Improve the citation-settings gear icon with a simpler, clearer shape'],
-  },
-  { v:25, date:'2026-07-04',
-    ja:['右詳細パネルの引用設定をプレビューカード内の歯車ボタンから開く設定ウィンドウへ移動','重複していた上段の「引用をコピー」を外し、コピー操作を引用プレビューに集約'],
-    en:['Move citation settings in the detail pane into a settings dialog opened from the preview card gear button','Remove the duplicate top-level copy-citation button and consolidate copying in the citation preview'],
-  },
-  { v:24, date:'2026-07-04',
-    ja:['引用プレビューとHTML形式コピーで et al. をイタリック表示に変更'],
-    en:['Italicize et al. in citation preview and HTML citation copying'],
-  },
-  { v:23, date:'2026-07-04',
-    ja:['責任著者のみの引用でも、選択中の引用スタイルに合わせて著者名を整形するように修正'],
-    en:['Format corresponding-author-only citations according to the selected citation style'],
-  },
-  { v:22, date:'2026-07-04',
-    ja:['引用スタイルに ACS / RSC / CSJ / Angewandte-GDCh / Nature / Science を追加・整理','著者設定に「ファーストオーサーのみ」を追加し、et al. 付きで引用コピーできるように'],
-    en:['Add and organize ACS / RSC / CSJ / Angewandte-GDCh / Nature / Science citation styles','Add a first-author-only author option for citation copying with et al.'],
-  },
-  { v:21, date:'2026-07-03',
-    ja:['ページ範囲の二重ダッシュを en dash 1つに正規化','引用コピーにHTML形式を追加し、対応アプリで太字・斜体が反映されるように','添付ファイル行に明示的な「開く」ボタンを追加'],
-    en:['Normalize doubled page-range dashes to a single en dash','Add HTML citation copying so bold/italic formatting is preserved in supported apps','Add an explicit Open button to attachment rows'],
-  },
-  { v:20, date:'2026-07-03',
-    ja:['OpenAlex の1日予算対策：相関図データを文献ごとにキャッシュ保存し、再表示は API 呼び出しゼロに（ヘッダーに「再取得」ボタン）','相関図の候補メタ取得を、予算枯渇下でも動く単一取得（works/id）に変更し、リスト系クエリを最小化','被引用数の更新で OpenAlex が失敗した場合は Semantic Scholar（無料）から自動補完','被引用数は21日以内なら最新とみなしてスキップ（キャッシュ）、明示更新・再試行時は強制取得','文献追加時に自動で OpenAlex を叩くのをやめ、取得は「OpenAlex で更新」ボタンでの手動のみに'],
-    en:['OpenAlex daily-budget mitigation: cache each paper’s graph so re-opening it makes zero API calls (a “Refetch” button forces a refresh)','Fetch graph candidate metadata via the single-entity endpoint (works/id), which keeps working under the budget limit, minimizing list queries','Fall back to Semantic Scholar (free) for cited-by counts when OpenAlex fails','Treat cited-by data younger than 21 days as fresh and skip it (cache); explicit refresh/retry forces a fetch','Stop calling OpenAlex automatically on add — metadata is fetched only via the manual “Refresh from OpenAlex” button'],
-  },
-  { v:19, date:'2026-07-03',
-    ja:['引用スタイル設定の下に「引用プレビュー」欄を追加（設定を変えるとコピーされる引用文がその場で更新）','取得ログを追加：OpenAlex/CrossRef の取得失敗を理由付きで記録し、行ごと・一括で再試行可能に','責任著者・被引用数が更新されない不具合を修正（OpenAlex の新しい1日予算制でバッチDOIクエリが429になるため、常に動く単一取得へ切替）','PDF列を並べ替え・幅変更できる通常の列に変更（先頭固定を解除）','ツールバーの「＋」とインポートを1つの「追加」メニューに統合','左サイドバー・中央の表・右詳細・ポップアップのスクロールバー見た目を統一','カード表示のPDF追加ボタンを「PDF +」に変更して用途を明確化','カード表示の未接続アイコンを削除','カード表示のタイトル文字サイズを表表示と揃えるよう調整'],
-    en:['Add a live “Citation preview” below the citation settings (updates as you change options)','Add a fetch log: records OpenAlex/CrossRef failures with reasons and offers per-row and bulk retry','Fix corresponding authors / cited-by not updating (OpenAlex’s new daily budget 429s batch DOI queries — switched to the single-entity endpoint that keeps working)','Make the PDF column a normal movable/resizable column (no longer pinned first)','Merge the toolbar “+” and Import into a single “Add” menu','Unify scrollbar styling across the sidebar, list, detail pane, and popovers','Change the card PDF add button to “PDF +” for clarity','Remove non-functional card icons','Align card title sizing with the table view'],
-  },
-  { v:18, date:'2026-07-03',
-    ja:['PDF列見出しの省略表示を防ぐ専用スタイルを追加','カード表示をRefShelf独自のコンパクトなパネル表示へ調整'],
-    en:['Add dedicated styling to prevent the PDF column header from truncating','Revise card view into a more compact RefShelf-specific panel layout'],
-  },
-  { v:17, date:'2026-07-03',
-    ja:['PDF添付の有無で一覧をソートできるように','OpenAlex更新を小分け・リトライ付きにして一部失敗しても更新を継続','下部ボタンから表表示／カード表示を切り替え可能に'],
-    en:['Allow sorting by PDF attachment presence','Make OpenAlex refresh smaller, retried, and tolerant of partial failures','Add a bottom button to switch between table and card list styles'],
-  },
-  { v:16, date:'2026-07-03',
-    ja:['PDF列の幅を広げて「pdf」見出しが見切れないように修正','PDF添付済みの行はファイルアイコンで表示','出版物フィルターの候補を一覧表示と同じ略称に統一','ライブラリ名に保存先情報のホバー表示を追加'],
-    en:['Widen the PDF column so the “pdf” header is not clipped','Show attached PDFs with a file icon','Make Publication filter options match the abbreviated table display','Add hover text for the library location label'],
-  },
-  { v:15, date:'2026-07-03',
-    ja:['PDF列を「pdf」見出しに変更し、添付済みか未添付かを行内で判別できるように','表中コレクションは背景なし・文字色だけで表示','著者表示を「ほか」で省略せず全員表示','列幅の右端をダブルクリックして内容に合わせて自動調整できるように','コレクション／タグのフィルター候補にも設定色を反映'],
-    en:['Change the PDF column header to “pdf” and show attachment presence in each row','Show table collection labels with text color only, without background fill','Show all authors without et al. abbreviation','Auto-fit column width by double-clicking the resize edge','Apply collection and tag colors to filter option lists'],
-  },
-  { v:14, date:'2026-07-03',
-    ja:['表中のコレクションチップから枠線を削除','追加ボタンを「+」のみのアイコン表示に変更','インポート／エクスポートの矢印アイコンを修正','表の先頭列からPDFを添付できるように'],
-    en:['Remove borders from collection chips in the table','Change the add button to a plus-only icon','Fix import/export arrow icons','Allow PDF attachment from the first column in the table'],
-  },
-  { v:13, date:'2026-07-03',
-    ja:['コレクション見出しへドロップしてフォルダをルート階層へ戻せるように','表中コレクションの表示を左タブと揃え、フォルダアイコン＋フォルダ名＋色で表示','タグ色の変更に対応','Dark モード時のスクロールバーを控えめに調整','詳細パネルのアブストラクト／メモ欄も自動で広がるように'],
-    en:['Drop collections onto the Collections heading to return them to the root level','Match collection chips in the table with the sidebar: folder icon, name, and color','Support tag colors','Tone down scrollbars in Dark mode','Auto-grow Abstract and Notes fields in the detail panel'],
-  },
-  { v:12, date:'2026-07-03',
-    ja:['フォルダ色を表中のコレクションチップにも反映','コレクションの階層をドラッグ&ドロップで変更可能に','Dark モードを追加','タグ・出版物・コレクションの列フィルタを選択式＋検索式に変更'],
-    en:['Apply collection folder colors to collection chips in the table','Allow collection hierarchy changes by drag and drop','Add Dark mode','Use selectable + searchable filters for Tags, Publication, and Collections columns'],
-  },
-  { v:11, date:'2026-07-03',
-    ja:['リストの折り返しを表下の「折り返し」ボタンで切替可能に（1行表示⇔複数行表示）','ファビコン（ブックロゴ）を設置','コレクションにサブフォルダを作成できるように（フォルダ行の＋ボタン）。階層のインデント表示も修正','コレクションのフォルダ色を変更可能に（既定色9色＋カスタム）','列ヘッダーの漏斗アイコンから列ごとの絞り込みが可能に（年・被引用は範囲指定、他は部分一致）'],
-    en:['Toggle list wrapping (single-line ⇔ multi-line) with a button under the table','Added a favicon (book logo)','Create subfolders inside collections (+ button on each folder row); fixed hierarchy indentation','Collection folder colors: 9 presets + custom picker','Per-column filters via the funnel icon in headers (range for Year / Cited-by, contains for others)'],
-  },
-  { v:10, date:'2026-07-03',
-    ja:['相関図の視覚改善：エッジを間引いて毛玉状の線を解消（最強連結＋各ノード上位2本）、ホバーで関連ノードを強調、色のコントラストとノードサイズの差を拡大','文献リスト：セル内の折り返しを許可し複数行表示に。タグ・コレクション列を追加、責任著者列も「列」メニューから選択可能に','引用コピー：責任著者のみの場合に et al. を付加、URL を含めるかどうかを選択可能に','詳細パネルのタイトル・著者欄は内容に合わせて自動で広がるように（スクロール廃止）'],
-    en:['Graph readability: thinned edges (max-spanning tree + top-2 per node), hover highlighting of neighbourhoods, higher color contrast and larger size differences','List: cells now wrap across lines; added Tags & Collections columns, Corresponding-authors column available in the Columns menu','Citations: append “et al.” for corresponding-only scope, and choose whether to include the URL','Title/author fields in the detail pane auto-grow instead of scrolling'],
-  },
-  { v:9, date:'2026-07-03',
-    ja:['Connected Papers 風の「相関図」を追加：種論文の参照・被引用から関連論文を発見し、参照文献の重なり（書誌結合）で類似論文を近くに配置する力学的グラフを描画','ノードの大きさ＝被引用数、色＝出版年。クリックで詳細表示、未登録の論文はその場でライブラリに追加可能','ドラッグでパン・ホイールでズーム・ノードのドラッグ移動・再レイアウトに対応'],
-    en:['Add a Connected Papers-style graph view: discovers related papers from the seed’s references/citations and lays out a force-directed map where papers sharing references (bibliographic coupling) cluster together','Node size = citations, color = year. Click a node for details and add unsaved papers to the library in place','Pan by dragging, zoom with the wheel, drag nodes, and re-layout'],
-  },
-  { v:8, date:'2026-07-03',
-    ja:['Nature 系 URL（nature.com/articles/…）を DOI として認識し正しく取得できるように（スラッグが DOI 末尾のため従来は誤検索していた）'],
-    en:['Recognize Nature URLs (nature.com/articles/…) as DOIs so they fetch correctly (the slug is the DOI suffix)'],
-  },
-  { v:7, date:'2026-07-03',
-    ja:['責任著者（対応著者）の取得を OpenAlex ベースに改善（CrossRef はこの情報をほぼ返さないため）','DOI/タイトルから追加する際に責任著者を自動補完','「OpenAlex で更新」ボタンで被引用数と責任著者をまとめて一括更新'],
-    en:['Corresponding-author detection now uses OpenAlex (CrossRef rarely provides it)','Auto-fill corresponding authors when adding via DOI/title','“Refresh from OpenAlex” updates cited-by counts and corresponding authors together'],
-  },
-  { v:6, date:'2026-07-03',
-    ja:['一覧の列をヘッダーのドラッグで並べ替え／右端のドラッグで幅調整できるように','「被引用」列を追加（OpenAlex から被引用数を取得、「被引用数を更新」ボタンで一括更新）','「列」メニューで各列の表示/非表示を切替（種別・DOI・追加日も選択可）・既定に戻す'],
-    en:['Reorder list columns by dragging headers, and resize them by dragging the right edge','Add a “Cited by” column (counts from OpenAlex; “Refresh cited-by” updates all shown items)','“Columns” menu to show/hide columns (Type, DOI, Added available) and reset to default'],
-  },
-  { v:5, date:'2026-07-03',
-    ja:['引用関係ビューを追加：各文献が「引用している文献」と「引用されている文献（被引用）」を OpenAlex から取得して2列表示','引用関係の各文献はリンクを開く／ワンクリックでライブラリに追加が可能（登録済みは明示）'],
-    en:['Add citation-relations view: fetch each item’s references and cited-by from OpenAlex, shown in two columns','Open links or add any related paper to the library in one click (already-saved items are marked)'],
-  },
-  { v:4, date:'2026-07-03',
-    ja:['絵文字アイコンを、オリジナルの2色ロゴと統一感のあるラインアイコンセットに一新'],
-    en:['Replaced emoji with an original two-tone logo and a cohesive custom line-icon set'],
-  },
-  { v:3, date:'2026-07-03',
-    ja:['詳細検索（AND / OR・対象フィールド・年範囲）を追加','出版物略称、責任著者、引用コピー設定を追加','コレクションの階層化と、文献行からコレクションへのドラッグ&ドロップ追加に対応','Open Access PDF が取得できる場合の自動添付に対応','ページ範囲の表記を en dash（–）に統一'],
-    en:['Add advanced search with AND / OR, fields, and year ranges','Add publication abbreviations, corresponding authors, and citation-copy options','Support nested collections and drag-and-drop assignment from item rows','Auto-attach Open Access PDFs when a retrievable PDF is available','Use en dash (–) for page ranges'],
-  },
-  { v:2, date:'2026-07-03',
-    ja:['ID の無い出版社ページ URL・論文タイトルに対応（CrossRef タイトル検索）','検索結果を候補リストで表示し、選んで追加できるように'],
-    en:['Support publisher-page URLs / titles without an embedded ID (CrossRef title search)','Show search results as a candidate list to pick from'],
-  },
-  { v:1, date:'2026-07-03',
-    ja:['初版リリース','DOI / arXiv ID からのメタデータ自動取得（CrossRef / arXiv API）','ローカルフォルダ保存（library.json + attachments/）とお試しモード','PDF添付（ドラッグ&ドロップ対応）・ブラウザでの閲覧','BibTeX / RIS のインポート・エクスポート','コレクション・タグによる整理と検索','日英バイリンガルUI'],
-    en:['Initial release','Auto-fetch metadata from DOI / arXiv ID (CrossRef / arXiv API)','Local-folder storage (library.json + attachments/) and trial mode','PDF attachments (drag & drop) with in-browser viewing','BibTeX / RIS import & export','Collections, tags, and search','Bilingual Japanese/English UI'],
+  { v:'1.0', date:'2026-07-05',
+    ja:[
+      'Paper Library v1.0 を公開しました',
+      'ローカルフォルダに library.json と attachments/ を保存する、単一 HTML の文献管理アプリとして利用できます',
+      'DOI / arXiv / URL / タイトルからの文献追加、手動追加、BibTeX / RIS / CSV / JSON インポートに対応しています',
+      'コレクション、タグ、スター、検索、詳細検索、表表示 / カード表示で文献を整理できます',
+      'PDF 添付、引用コピー、相関図、被引用数・責任著者の更新、重複・空データ・修正候補の確認に対応しています',
+      'Chrome 拡張機能 Paper Library Connector から、論文ページを開いたまま保存先ライブラリとコレクションを選んで保存できます',
+    ],
+    en:[
+      'Release Paper Library v1.0',
+      'Use it as a single-HTML reference manager that stores library.json and attachments/ in a local folder',
+      'Add references from DOI / arXiv / URL / title, add manually, and import BibTeX / RIS / CSV / JSON',
+      'Organize references with collections, tags, stars, search, advanced search, table view, and card view',
+      'Attach PDFs, copy citations, open the graph view, refresh cited-by / corresponding-author data, and review duplicates, empty records, and fix suggestions',
+      'Save from paper pages with the Paper Library Connector Chrome extension, choosing the destination library and collections from the popup',
+    ],
   },
 ];
 
-/* ---------------------------------------------------------------
-   i18n
----------------------------------------------------------------- */
 const I18N = {
   ja: {
     add:'追加', addByIdMenu:'DOI / arXiv / URL から',
@@ -1424,7 +1294,7 @@ const I18N = {
     noSelect:'文献を選択してください',
     addByIdTitle:'DOI / arXiv ID から追加',
     addByIdHint:'DOI・arXiv ID・それらを含む URL・または論文タイトル / 出版社ページ URL を入力してください。ID が無い場合は CrossRef をタイトル検索します。',
-    cancel:'キャンセル', close:'閉じる', fetchAdd:'取得して追加', changelog:'更新履歴',
+    cancel:'キャンセル', close:'閉じる', expand:'展開', collapse:'折りたたみ', fetchAdd:'取得して追加', changelog:'更新履歴', manual:'マニュアル',
     startSub:'文献管理ツール',
     openFolder:'ライブラリフォルダを開く / 作成',
     openFolderSub:'フォルダを選択します。library.json があれば読み込み、なければ新規作成します。',
@@ -1453,6 +1323,9 @@ const I18N = {
     graphTooFew:'関連論文が十分に見つかりませんでした（参照・被引用が少ない可能性）',
     graphHint:'ドラッグで移動 / ホイールで拡大縮小 / ノードをクリックで詳細',
     graphOpenPage:'ページを開く', graphRelayout:'再レイアウト', graphRefetch:'再取得',
+    graphFit:'全体表示', graphLabels:'ラベル', graphRelToSeed:'種論文との関係',
+    graphSharedRefs:(n)=>`共通参照 ${n} 件`, graphDirectCites:'この論文が種論文を引用', graphDirectCitedBy:'種論文がこの論文を引用',
+    graphNearest:'近い論文', graphStats:(n,e)=>`${n} 論文 / ${e} 関係`,
     graphCached:(d)=>`キャッシュ表示（${d} 取得・API 呼び出しなし）`,
     addedFromCite:'ライブラリに追加しました',
     searchTerms:'検索語', searchMode:'条件', searchField:'対象', fieldAll:'すべて', yearFrom:'年（開始）', yearTo:'年（終了）', clear:'クリア', apply:'適用',
@@ -1465,6 +1338,7 @@ const I18N = {
     searchResults:(n)=>`検索結果（${n} 件）— クリックで追加：`, addThis:'追加',
     dupDoi:'同じ DOI の文献が既に存在します', copied:'コピーしました',
     imported:(n,s)=>`${n} 件をインポートしました（${s} 件は重複のためスキップ）`,
+    connectorImported:(n)=>`拡張機能から ${n} 件を取り込みました`,
     exported:(n)=>`${n} 件をエクスポートしました`,
     pdfAttached:'PDF を添付しました', pdfAutoAttached:'Open Access PDF を自動添付しました', attDeleted:'添付を削除しました',
     confirmDeleteAtt:(n)=>`添付「${n}」を削除しますか？`,
@@ -1537,7 +1411,7 @@ const I18N = {
     noSelect:'Select an item',
     addByIdTitle:'Add from DOI / arXiv ID',
     addByIdHint:'Enter a DOI, an arXiv ID, a URL containing one, or a paper title / publisher-page URL. Without an ID, CrossRef is searched by title.',
-    cancel:'Cancel', close:'Close', fetchAdd:'Fetch & add', changelog:'Changelog',
+    cancel:'Cancel', close:'Close', expand:'Expand', collapse:'Collapse', fetchAdd:'Fetch & add', changelog:'Changelog', manual:'Manual',
     startSub:'A reference manager',
     openFolder:'Open / create a library folder',
     openFolderSub:'Pick a folder. If it contains library.json it is loaded; otherwise a new library is created.',
@@ -1566,6 +1440,9 @@ const I18N = {
     graphTooFew:'Not enough related papers found (few references / citations)',
     graphHint:'Drag to pan / wheel to zoom / click a node for details',
     graphOpenPage:'Open page', graphRelayout:'Re-layout', graphRefetch:'Refetch',
+    graphFit:'Fit', graphLabels:'Labels', graphRelToSeed:'Relation to seed',
+    graphSharedRefs:(n)=>`${n} shared references`, graphDirectCites:'This paper cites the seed', graphDirectCitedBy:'The seed cites this paper',
+    graphNearest:'Closest papers', graphStats:(n,e)=>`${n} papers / ${e} links`,
     graphCached:(d)=>`Cached (fetched ${d}, no API calls)`,
     addedFromCite:'Added to library',
     searchTerms:'Search terms', searchMode:'Mode', searchField:'Field', fieldAll:'All', yearFrom:'Year from', yearTo:'Year to', clear:'Clear', apply:'Apply',
@@ -1578,6 +1455,7 @@ const I18N = {
     searchResults:(n)=>`Search results (${n}) — click to add:`, addThis:'Add',
     dupDoi:'An item with the same DOI already exists', copied:'Copied',
     imported:(n,s)=>`Imported ${n} item(s) (${s} duplicate(s) skipped)`,
+    connectorImported:(n)=>`Imported ${n} item(s) from the browser extension`,
     exported:(n)=>`Exported ${n} item(s)`,
     pdfAttached:'PDF attached', pdfAutoAttached:'Open Access PDF attached', attDeleted:'Attachment deleted',
     confirmDeleteAtt:(n)=>`Delete attachment “${n}”?`,
@@ -1751,10 +1629,10 @@ function journalDisplay(item){
 }
 function isAngewEnglVariant(s){
   const k = normalizeJournalKey(s);
-  return /\bangew chem int ed engl(e)?\b/.test(k);
+  return /\bangew chem int ed (engl(e)?|eng ed)\b/.test(k);
 }
 function isAngewEngleTypo(s){
-  return /\bangew chem int ed engle\b/.test(normalizeJournalKey(s));
+  return /\bangew chem int ed (engle|eng ed)\b/.test(normalizeJournalKey(s));
 }
 function shouldUseCurrentAngew(item){
   const y = parseInt(item && item.year, 10);
@@ -1908,8 +1786,8 @@ function newItem(partial){
   return Object.assign({
     id: uid(), type:'article', title:'', authors:[], journal:'', journalAbbr:'', year:'',
     volume:'', issue:'', pages:'', publisher:'', doi:'', arxiv:'', url:'',
-    abstract:'', notes:'', correspondingAuthors:'', correspondingCheckedAt:'', tags:[], collections:[], citekey:'', attachments:[],
-    citedByCount:null, citedByAt:'', starred:false,
+    abstract:'', notes:'', correspondingAuthors:'', correspondingCheckedAt:'', correspondingStatus:'', tags:[], collections:[], citekey:'', attachments:[],
+    citedByCount:null, citedByAt:'', citedByStatus:'', starred:false,
     dateAdded: new Date().toISOString(), dateModified: new Date().toISOString(),
   }, partial||{});
 }
@@ -2012,6 +1890,10 @@ let multiSelectedIds = new Set();
 let multiSelectAnchorId = null;
 let selectedCollectionIds = new Set();
 let collectionSelectAnchorId = null;
+let collapsedCollectionIds = new Set();
+let collectionsSectionCollapsed = false;
+let tagsSectionCollapsed = false;
+let detailCollectionsCollapsed = false;
 let filter = { query:'', coll:'all', tags:new Set(), cols:{}, advanced:{ terms:'', mode:'and', field:'all', yearFrom:'', yearTo:'' } };
 let sortKey = 'dateAdded', sortAsc = false;
 let dirty = false, saveTimer = null, saving = false;
@@ -2037,6 +1919,11 @@ function starButtonHTML(it, extraCls){
   const tip = esc(t(on ? 'unstarItem' : 'starItem'));
   return `<button class="starBtn ${extraCls||''} ${on?'on':''}" data-star-id="${esc(it.id)}" title="${tip}" aria-label="${tip}">${ic('star')}</button>`;
 }
+function missingDataHTML(status, checkedAt){
+  if(status==='fail') return `<span class="no-data fail" title="${esc(t('fetchFail'))}">!</span>`;
+  if(status==='none' || checkedAt) return `<span class="no-data" title="${esc(t('logNoData'))}">—</span>`;
+  return '';
+}
 const COLUMN_DEFS = {
   starred: { i18n:'colStar', w:34, min:30, sortable:true, align:'center', noFilter:true, headerIcon:'star',
              cell:(it)=>starButtonHTML(it, 'starCell') },
@@ -2047,7 +1934,8 @@ const COLUMN_DEFS = {
   authors: { i18n:'colAuthors', w:180, min:80,  sortable:true,
              cell:(it)=>esc(tableAuthorsText(it.authors)), tip:(it)=>authorsShort(it.authors) },
   corresponding: { i18n:'correspondingAuthors', w:150, min:80, sortable:true,
-             cell:(it)=>esc(textAuthorsForTable(it.correspondingAuthors)), tip:(it)=>it.correspondingAuthors },
+             cell:(it)=> it.correspondingAuthors ? esc(textAuthorsForTable(it.correspondingAuthors)) : missingDataHTML(it.correspondingStatus, it.correspondingCheckedAt),
+             tip:(it)=>it.correspondingAuthors || (it.correspondingStatus==='fail' ? t('fetchFail') : it.correspondingCheckedAt ? t('logNoData') : '') },
   tags:    { i18n:'tags', w:140, min:70, sortable:true,
              cell:(it)=>(it.tags||[]).map(tg=>`<span class="tdChip" ${tagChipStyle(tg)}>${esc(tg)}</span>`).join('') },
   collections: { i18n:'collections', w:140, min:70, sortable:true,
@@ -2056,8 +1944,8 @@ const COLUMN_DEFS = {
   journal: { i18n:'colJournal', w:170, min:70,  sortable:true,
              cell:(it)=>esc(journalDisplay(it)), tip:(it)=>it.journal },
   citedBy: { i18n:'colCitedBy', w:78,  min:52,  sortable:true, align:'right',
-             cell:(it)=> it.citedByCount==null ? '<span class="cited-none">—</span>' : String(it.citedByCount),
-             tip:(it)=> it.citedByAt ? 'OpenAlex ' + it.citedByAt.slice(0,10) : '' },
+             cell:(it)=> it.citedByCount==null ? missingDataHTML(it.citedByStatus, it.citedByAt) : String(it.citedByCount),
+             tip:(it)=> it.citedByStatus==='fail' ? t('fetchFail') : it.citedByAt ? (it.citedByCount==null ? t('logNoData') : 'OpenAlex ' + it.citedByAt.slice(0,10)) : '' },
   type:    { i18n:'colType',    w:96,  min:60,  sortable:true,
              cell:(it)=>esc(I18N[lang].typeNames[it.type]||it.type), tip:(it)=>I18N[lang].typeNames[it.type] },
   doi:     { i18n:'colDoi',     w:150, min:80,  sortable:true, cell:(it)=>esc(it.doi), tip:(it)=>it.doi },
@@ -2230,6 +2118,7 @@ function touch(item){
   dirty = true; updateSaveDot();
   clearTimeout(saveTimer);
   saveTimer = setTimeout(saveNow, 700);
+  connectorNotify();
 }
 async function saveNow(){
   if(!backend || backend.kind==='mem'){ dirty=false; return; }
@@ -2478,14 +2367,12 @@ const updateMarks = new Map(); // itemId -> running | ok | none | fail | skipped
 function updateClassForItem(id){
   const st = updateMarks.get(id);
   if(st==='running') return 'updating';
-  if(st==='ok') return 'updated';
-  if(st==='none') return 'updateNone';
-  if(st==='fail') return 'updateFail';
   return '';
 }
 function setItemUpdateState(item, status){
   if(!item || !item.id) return;
-  if(status) updateMarks.set(item.id, status); else updateMarks.delete(item.id);
+  if(status==='running') updateMarks.set(item.id, status);
+  else updateMarks.delete(item.id);
   document.querySelectorAll(dataIdSelector(item.id)).forEach(el=>{
     el.classList.remove('updating','updated','updateNone','updateFail');
     const cls = updateClassForItem(item.id);
@@ -3167,7 +3054,7 @@ function visibleItems(){
 /* ---------------------------------------------------------------
    Rendering
 ---------------------------------------------------------------- */
-function renderAll(){ renderSidebar(); renderList(); renderDetail(); }
+function renderAll(){ renderSidebar(); renderList(); renderDetail(); connectorNotify(); }
 
 function collectionWithDescendants(id){
   const ids = [id];
@@ -3184,7 +3071,19 @@ function orderedCollections(parent, depth, out){
     .sort((a,b)=>a.name.localeCompare(b.name))
     .forEach(c=>{
       out.push({c, depth});
-      orderedCollections(c.id, depth+1, out);
+      if(!collapsedCollectionIds.has(c.id)) orderedCollections(c.id, depth+1, out);
+    });
+  return out;
+}
+function orderedAllCollections(parent, depth, out){
+  depth = depth || 0;
+  out = out || [];
+  lib.collections
+    .filter(c=>(c.parent||'')===(parent||''))
+    .sort((a,b)=>a.name.localeCompare(b.name))
+    .forEach(c=>{
+      out.push({c, depth});
+      orderedAllCollections(c.id, depth+1, out);
     });
   return out;
 }
@@ -3198,6 +3097,16 @@ function isCollectionDescendant(id, maybeChild){
 }
 function collectionVisibleIds(){
   return orderedCollections().map(x=>x.c.id);
+}
+function hasChildCollections(id){
+  return lib.collections.some(c=>(c.parent||'')===id);
+}
+function openCollectionAncestors(id){
+  let cur = lib.collections.find(c=>c.id===id);
+  while(cur && cur.parent){
+    collapsedCollectionIds.delete(cur.parent);
+    cur = lib.collections.find(c=>c.id===cur.parent);
+  }
 }
 function handleCollectionSelection(id, e){
   if(!id) return;
@@ -3218,7 +3127,7 @@ function handleCollectionSelection(id, e){
     selectedCollectionIds = new Set([id]);
     collectionSelectAnchorId = id;
   }
-  renderSidebar();
+  updateSidebarSelection();
 }
 function moveCollectionsToParent(ids, parentId){
   let changed = 0;
@@ -3231,18 +3140,40 @@ function moveCollectionsToParent(ids, parentId){
   });
   return changed;
 }
+function setSectionToggle(btn, closed){
+  if(!btn) return;
+  btn.classList.toggle('closed', closed);
+  btn.title = t(closed ? 'expand' : 'collapse');
+  const icEl = btn.querySelector('[data-ic]');
+  if(icEl && btn.id==='btnToggleCollections'){
+    icEl.dataset.ic = closed ? 'folder' : 'folderOpen';
+    icEl.removeAttribute('data-ic-done');
+    icEl.innerHTML = '';
+    renderIcons(btn);
+  }
+}
+function updateSidebarSectionVisibility(){
+  $('#collList').style.display = collectionsSectionCollapsed ? 'none' : '';
+  $('#tagList').style.display = tagsSectionCollapsed ? 'none' : '';
+  setSectionToggle($('#btnToggleCollections'), collectionsSectionCollapsed);
+  setSectionToggle($('#btnToggleTags'), tagsSectionCollapsed);
+}
 function renderSidebar(){
   const counts = { all: lib.items.length, starred: lib.items.filter(i=>i.starred).length, uncat: lib.items.filter(i=>!i.collections.length).length };
   $('#fixedFilters').innerHTML = `
     <div class="sideItem ${filter.coll==='all'?'active':''}" data-coll="all" data-drop-root="1">${ic('library')}${esc(t('allItems'))}<span class="cnt">${counts.all}</span></div>
-    <div class="sideItem ${filter.coll==='starred'?'active':''}" data-coll="starred">${ic('star')}${esc(t('starred'))}<span class="cnt">${counts.starred}</span></div>
-    <div class="sideItem ${filter.coll==='uncat'?'active':''}" data-coll="uncat">${ic('inbox')}${esc(t('uncategorized'))}<span class="cnt">${counts.uncat}</span></div>`;
+    <div class="sideItem ${filter.coll==='starred'?'active':''}" data-coll="starred">${ic('star')}${esc(t('starred'))}<span class="cnt">${counts.starred}</span></div>`;
   $('#collList').innerHTML = orderedCollections().map(({c, depth})=>{
     const ids = collectionWithDescendants(c.id);
     const n = lib.items.filter(i=>i.collections.some(id=>ids.includes(id))).length;
+    const hasKids = hasChildCollections(c.id);
+    const closed = collapsedCollectionIds.has(c.id);
+    const toggle = hasKids
+      ? `<button class="collToggle ${closed?'closed':''}" data-act="toggleColl" data-id="${c.id}" title="${esc(closed ? t('expand') : t('collapse'))}">${ic('chevron')}</button>`
+      : `<span class="collToggle spacer ${depth ? '' : 'root'}"></span>`;
     const folderIc = ic('folder', c.color ? {style:`color:${esc(c.color)}`} : undefined);
     return `<div class="sideItem ${filter.coll===c.id?'active':''} ${selectedCollectionIds.has(c.id)?'collMultiSel':''}" data-coll="${c.id}" data-drop-coll="${c.id}" draggable="true">
-      <span class="indent" style="width:${depth*14}px"></span>${folderIc}<span style="overflow:hidden;text-overflow:ellipsis;flex:1">${esc(c.name)}</span>
+      <span class="indent" style="width:${Math.min(depth*8, 24)}px"></span>${toggle}${folderIc}<span style="overflow:hidden;text-overflow:ellipsis;flex:1">${esc(c.name)}</span>
       <span class="rowbtns">
         <button data-act="sub" data-id="${c.id}" title="${esc(t('newSubCollection'))}">${ic('folderPlus')}</button>
         <button data-act="color" data-id="${c.id}" title="${esc(t('collColor'))}">${ic('palette')}</button>
@@ -3258,6 +3189,33 @@ function renderSidebar(){
   $('#tagList').innerHTML = tags.map(([tg,n])=>
     `<span class="tagchip ${filter.tags.has(tg)?'on':''}" data-tag="${esc(tg)}" ${tagChipStyle(tg)}>${esc(tg)}<span class="cnt">${n}</span><button class="tagColorBtn" data-tagcolor="${esc(tg)}" title="${esc(t('collColor'))}">${ic('palette')}</button></span>`
   ).join('') || `<span style="color:var(--text3);font-size:12px;padding:0 8px">—</span>`;
+  $('#uncatFilter').innerHTML = `<div class="sideItem ${filter.coll==='uncat'?'active':''}" data-coll="uncat">${ic('inbox')}${esc(t('uncategorized'))}<span class="cnt">${counts.uncat}</span></div>`;
+  updateSidebarSectionVisibility();
+}
+
+// Fast path: selecting a collection/tag doesn't change any counts, so just
+// re-flag the active/selected classes instead of rebuilding the whole sidebar
+// (which recomputes every collection's item count = O(collections × items)).
+function updateSidebarSelection(){
+  document.querySelectorAll('#sidebar .sideItem[data-coll]').forEach(el=>{
+    const cid = el.dataset.coll;
+    el.classList.toggle('active', filter.coll === cid);
+    if(el.dataset.dropColl) el.classList.toggle('collMultiSel', selectedCollectionIds.has(cid));
+  });
+  document.querySelectorAll('#tagList .tagchip[data-tag]').forEach(el=>{
+    el.classList.toggle('on', filter.tags.has(el.dataset.tag));
+  });
+}
+function clearCollectionSelection(){
+  const wasCollectionFilter = !!lib.collections.find(c=>c.id===filter.coll);
+  const hadSelection = selectedCollectionIds.size > 0 || collectionSelectAnchorId;
+  if(!wasCollectionFilter && !hadSelection) return false;
+  if(wasCollectionFilter) filter.coll = 'all';
+  selectedCollectionIds.clear();
+  collectionSelectAnchorId = null;
+  updateSidebarSelection();
+  if(wasCollectionFilter) renderList({skipBadges:true});
+  return true;
 }
 
 function renderListHeader(){
@@ -3287,7 +3245,7 @@ function renderListHeader(){
     }).join('');
   renderIcons($('#itemHead'));
 }
-function renderList(){
+function renderList(opts){
   const items = visibleItems();
   const keys = visibleColumnKeys();
   renderListHeader();
@@ -3308,9 +3266,14 @@ function renderList(){
     ? I18N[lang].itemsCount(lib.items.length)
     : I18N[lang].itemsShown(items.length, lib.items.length);
   updateListViewButton();
-  updateDuplicateButton();
-  updateEmptyRecordsButton();
-  updateFixSuggestionsButton();
+  // The duplicate/empty/fix badges are library-wide and don't change when only
+  // the collection/tag/search filter changes, so allow skipping their (heavy)
+  // recomputation on pure view changes. Data mutations call renderList() plainly.
+  if(!opts || !opts.skipBadges){
+    updateDuplicateButton();
+    updateEmptyRecordsButton();
+    updateFixSuggestionsButton();
+  }
 }
 function dataIdSelector(id){
   const v = window.CSS && CSS.escape ? CSS.escape(id) : String(id).replace(/["\\]/g, '\\$&');
@@ -3498,13 +3461,32 @@ function openCitationPrefsDialog(){
   renderIcons($('#citationPrefsBody'));
   $('#dlgCitationPrefs').showModal();
 }
+function collectionPathLabel(id){
+  const names = [];
+  let cur = lib.collections.find(c=>c.id===id);
+  while(cur){
+    names.unshift(cur.name);
+    cur = cur.parent ? lib.collections.find(c=>c.id===cur.parent) : null;
+  }
+  return names.join(' / ');
+}
+function detailCollectionsDisplay(it){
+  const rows = (it.collections||[]).map(id=>{
+    const c = lib.collections.find(x=>x.id===id);
+    if(!c) return '';
+    const folderIc = ic('folder', c.color ? {style:`color:${esc(c.color)}`} : undefined);
+    return `<span class="detailCollBtn on" title="${esc(collectionPathLabel(id))}">
+      ${folderIc}<span class="collName">${esc(collectionPathLabel(id) || c.name)}</span>
+    </span>`;
+  }).filter(Boolean).join('');
+  return rows || `<span style="color:var(--text3);font-size:12px">—</span>`;
+}
 function renderDetail(){
   const pane = $('#detail');
   const it = lib.items.find(x=>x.id===selectedId);
   if(!it){ pane.innerHTML = `<div class="noselect">${esc(t('noSelect'))}</div>`; return; }
-  const collChecks = lib.collections.map(c=>
-    `<label class="collCheck"><input type="checkbox" data-collcheck="${c.id}" ${it.collections.includes(c.id)?'checked':''}> ${esc(c.name)}</label>`
-  ).join('') || `<span style="color:var(--text3);font-size:12px">—</span>`;
+  const collDisplay = detailCollectionsDisplay(it);
+  const journalFix = fixSuggestionForItem(it);
   const atts = (it.attachments||[]).map((a,idx)=>
     `<div class="attRow">${ic('file')}<span class="aname" data-open-att="${idx}" title="${esc(a.name)}">${esc(a.name)}</span>
      <button class="attOpen" data-open-att="${idx}" title="${esc(t('openAttachment'))}">${ic('link')}${esc(t('openAttachment'))}</button>
@@ -3531,7 +3513,18 @@ function renderDetail(){
     ${fieldRow(t('title'),'title',it.title,'textarea')}
     ${fieldRow(t('authorsField'),'authors',authorsToText(it.authors),'textarea')}
     ${fieldRow(t('journal'),'journal',it.journal)}
-    ${fieldRow(t('journalAbbr'),'journalAbbr',mappedJournalAbbr(it.journal) || mappedJournalAbbr(it.journalAbbr) || it.journalAbbr || '')}
+    ${fieldRow(t('journalAbbr'),'journalAbbr',it.journalAbbr || mappedJournalAbbr(it.journal) || '')}
+    ${journalFix ? `<div class="fixInline">
+      <div class="fixInlineTop">
+        <div class="fixInlineText">
+          <b>${esc(t('fixSuggestions'))}</b><br>
+          ${esc(t('currentValue'))}: ${esc(journalFix.current)}<br>
+          ${esc(t('suggestedValue'))}: ${esc(journalFix.next)}<br>
+          ${esc(t(journalFix.reason))}
+        </div>
+        <button class="tbtn primary" data-act="applyJournalFix">${esc(t('applyFix'))}</button>
+      </div>
+    </div>` : ''}
     <div class="fGrid">
       ${fieldRow(t('year'),'year',it.year)}
       ${fieldRow(t('volume'),'volume',it.volume)}
@@ -3552,7 +3545,13 @@ function renderDetail(){
     <button class="tbtn" data-act="addpdf" style="font-size:12.5px">${ic('paperclip')}${esc(t('addPdf'))}</button>
     <div class="dSection">${esc(t('organize'))}</div>
     ${fieldRow(t('tagsField'),'tags',(it.tags||[]).join(', '))}
-    <div class="fRow"><label>${esc(t('collections'))}</label>${collChecks}</div>
+    <div class="fRow">
+      <div class="detailFoldHead">
+        <label style="margin:0">${esc(t('collections'))}</label>
+        <button class="detailFoldToggle ${detailCollectionsCollapsed?'closed':''}" data-act="toggleDetailCollections" title="${esc(t(detailCollectionsCollapsed ? 'expand' : 'collapse'))}">${ic('chevron')}${esc(t(detailCollectionsCollapsed ? 'expand' : 'collapse'))}</button>
+      </div>
+      <div class="detailCollections" style="${detailCollectionsCollapsed?'display:none':''}">${collDisplay}</div>
+    </div>
     ${fieldRow(t('notes'),'notes',it.notes,'textarea')}
     <div style="margin-top:16px"><button class="tbtn danger" data-act="delitem">${ic('trash')}${esc(t('deleteItem'))}</button></div>
   `;
@@ -3674,20 +3673,21 @@ function updateEmptyRecordsButton(){
   $('#emptyRecBadge').textContent = n;
   btn.style.display = n ? 'inline-flex' : 'none';
 }
+function fixSuggestionForItem(it){
+  const cur = [it.journal, it.journalAbbr].filter(isAngewEnglVariant).filter(Boolean);
+  if(!cur.length) return null;
+  const typo = cur.some(isAngewEngleTypo);
+  if(!shouldUseCurrentAngew(it) && !typo) return null;
+  return {
+    id: it.id,
+    item: it,
+    current: Array.from(new Set(cur)).join(' / '),
+    next: shouldUseCurrentAngew(it) ? 'Angew. Chem. Int. Ed.' : 'Angew. Chem. Int. Ed. Engl.',
+    reason: typo && !shouldUseCurrentAngew(it) ? 'fixAngewTypo' : 'fixAngewCurrent',
+  };
+}
 function findFixSuggestions(){
-  return lib.items.map(it=>{
-    const cur = [it.journal, it.journalAbbr].filter(isAngewEnglVariant).filter(Boolean);
-    if(!cur.length) return null;
-    const typo = cur.some(isAngewEngleTypo);
-    if(!shouldUseCurrentAngew(it) && !typo) return null;
-    return {
-      id: it.id,
-      item: it,
-      current: Array.from(new Set(cur)).join(' / '),
-      next: shouldUseCurrentAngew(it) ? 'Angew. Chem. Int. Ed.' : 'Angew. Chem. Int. Ed. Engl.',
-      reason: typo && !shouldUseCurrentAngew(it) ? 'fixAngewTypo' : 'fixAngewCurrent',
-    };
-  }).filter(Boolean);
+  return lib.items.map(fixSuggestionForItem).filter(Boolean);
 }
 function renderFixSuggestionsDialog(items){
   const body = $('#fixSuggestionsBody');
@@ -3765,9 +3765,25 @@ function collectionIdByName(name){
   }
   return c.id;
 }
+function collectionIdByPath(path){
+  const parts = String(path||'').split('/').map(s=>s.trim()).filter(Boolean);
+  if(!parts.length) return '';
+  if(parts.length===1) return collectionIdByName(parts[0]);
+  let parent = '';
+  let cur = null;
+  parts.forEach(name=>{
+    cur = lib.collections.find(x=>x.name===name && (x.parent||'')===parent);
+    if(!cur){
+      cur = {id:uid(), name, parent};
+      lib.collections.push(cur);
+    }
+    parent = cur.id;
+  });
+  return cur ? cur.id : '';
+}
 function resolveImportedCollections(items){
   items.forEach(it=>{
-    it.collections = (it.collections||[]).map(collectionIdByName).filter(Boolean);
+    it.collections = Array.from(new Set((it.collections||[]).map(collectionIdByPath).filter(Boolean)));
   });
   return items;
 }
@@ -3948,6 +3964,618 @@ $('#btnOpenFolder').addEventListener('click', pickFolder);
 $('#btnOpenLast').addEventListener('click', openLast);
 $('#btnChangeFolder').addEventListener('click', pickFolder);
 
+// manual
+// miFig(): renders an ICONS path inside the schematic figures
+const miFig = (name, x, y, s=16, color='var(--text2)') =>
+  `<g transform="translate(${x} ${y}) scale(${(s/24).toFixed(3)})" stroke="${color}" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]}</g>`;
+const MANUAL_FIGS = {
+  storage(lg){
+    const J = lg==='ja';
+    return `<svg viewBox="0 0 560 175" xmlns="http://www.w3.org/2000/svg" font-size="11">
+      <rect x="14" y="34" width="168" height="112" rx="10" fill="var(--panel)" stroke="var(--border)"/>
+      <text x="98" y="53" text-anchor="middle" font-weight="600" fill="var(--text)">Paper Library</text>
+      <line x1="14" y1="62" x2="182" y2="62" stroke="var(--border2)"/>
+      <rect x="28" y="76" width="126" height="8" rx="4" fill="var(--border2)"/>
+      <rect x="28" y="94" width="104" height="8" rx="4" fill="var(--border2)"/>
+      <rect x="28" y="112" width="118" height="8" rx="4" fill="var(--border2)"/>
+      <text x="98" y="166" text-anchor="middle" font-size="10.5" fill="var(--text3)">${J?'アプリの画面':'The app'}</text>
+      <text x="216" y="74" text-anchor="middle" fill="var(--accent)" font-weight="600">${J?'自動保存':'Auto-save'}</text>
+      <path d="M192 90 H234 M226 83 L238 90 L226 97" stroke="var(--accent)" fill="none" stroke-width="2"/>
+      <path d="M250 52 h86 l12 12 h178 a8 8 0 0 1 8 8 v66 a8 8 0 0 1 -8 8 h-268 a8 8 0 0 1 -8 -8 v-78 a8 8 0 0 1 8 -8 z" fill="var(--panel)" stroke="var(--border)"/>
+      <text x="266" y="86" font-weight="600" fill="var(--text)">${J?'選んだフォルダ（例：文献ライブラリ）':'The folder you chose (e.g. “Papers”)'}</text>
+      ${miFig('file', 264, 96, 15)}
+      <text x="288" y="108" fill="var(--text2)">library.json ${J?'— 文献の情報（自動で保存）':'— reference data (saved automatically)'}</text>
+      ${miFig('folder', 264, 118, 15)}
+      <text x="288" y="130" fill="var(--text2)">attachments/ ${J?'— 添付した PDF':'— attached PDFs'}</text>
+    </svg>`;
+  },
+  add(lg){
+    const J = lg==='ja';
+    return `<svg viewBox="0 0 560 150" xmlns="http://www.w3.org/2000/svg" font-size="11">
+      <text x="14" y="24" fill="var(--text2)">${J?'「追加」→「DOI / arXiv / URL から」に入力':'“Add” → “From DOI / arXiv / URL”'}</text>
+      <rect x="14" y="36" width="210" height="30" rx="8" fill="var(--panel)" stroke="var(--border)"/>
+      <text x="24" y="55" fill="var(--text3)" font-size="11.5">10.1038/nature12373</text>
+      <rect x="232" y="36" width="106" height="30" rx="8" fill="var(--accent)"/>
+      <text x="285" y="55" text-anchor="middle" fill="#fff" font-size="11.5">${J?'取得して追加':'Fetch &amp; add'}</text>
+      <path d="M348 51 H382 M374 44 L386 51 L374 58" stroke="var(--accent)" fill="none" stroke-width="2"/>
+      <rect x="394" y="18" width="152" height="114" rx="10" fill="var(--panel)" stroke="var(--border)"/>
+      <rect x="406" y="32" width="128" height="9" rx="4" fill="var(--accent)" opacity=".85"/>
+      <rect x="406" y="52" width="110" height="7" rx="3" fill="var(--border2)"/>
+      <rect x="406" y="66" width="90" height="7" rx="3" fill="var(--border2)"/>
+      <rect x="406" y="80" width="62" height="7" rx="3" fill="var(--border2)"/>
+      <circle cx="414" cy="110" r="8" fill="var(--green-soft)" stroke="var(--green)"/>
+      <path d="M410.5 110 l2.5 2.8 4.5 -5.6" stroke="var(--green)" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="428" y="114" fill="var(--green)" font-size="10.5">${J?'自動で入力されます':'Filled in automatically'}</text>
+      <text x="470" y="146" text-anchor="middle" font-size="10.5" fill="var(--text3)">${J?'タイトル・著者・雑誌・年 など':'Title, authors, journal, year, …'}</text>
+    </svg>`;
+  },
+  connector(lg){
+    const J = lg==='ja';
+    return `<svg viewBox="0 0 640 250" xmlns="http://www.w3.org/2000/svg" font-size="11">
+      <rect x="16" y="18" width="150" height="66" rx="11" fill="var(--panel)" stroke="var(--border)"/>
+      ${miFig('download', 32, 31, 18, 'var(--accent)')}
+      <text x="68" y="43" font-weight="700" fill="var(--text)">ZIP</text>
+      <text x="32" y="64" fill="var(--text2)" font-size="10">${J?'解凍して読み込む':'Unzip and load'}</text>
+      <path d="M176 51 H214 M206 44 L218 51 L206 58" stroke="var(--accent)" fill="none" stroke-width="2"/>
+      <rect x="230" y="18" width="182" height="66" rx="11" fill="var(--panel)" stroke="var(--border)"/>
+      <text x="246" y="39" font-weight="700" fill="var(--text)" font-size="12.5">chrome://extensions</text>
+      <rect x="248" y="53" width="62" height="18" rx="9" fill="var(--accent-soft)" stroke="var(--accent-border)"/>
+      <text x="279" y="66" text-anchor="middle" fill="var(--accent)" font-size="9.5">${J?'開発者ON':'Dev ON'}</text>
+      <rect x="320" y="53" width="56" height="18" rx="7" fill="var(--bg)" stroke="var(--border2)"/>
+      <text x="348" y="66" text-anchor="middle" fill="var(--text2)" font-size="9.5">${J?'読込':'Load'}</text>
+      <path d="M422 51 H460 M452 44 L464 51 L452 58" stroke="var(--accent)" fill="none" stroke-width="2"/>
+      <rect x="476" y="18" width="148" height="66" rx="11" fill="var(--panel)" stroke="var(--border)"/>
+      ${miFig('gear', 492, 31, 16, 'var(--accent)')}
+      <text x="518" y="43" font-weight="700" fill="var(--text)">${J?'詳細':'Details'}</text>
+      <circle cx="496" cy="63" r="6" fill="var(--green-soft)" stroke="var(--green)"/>
+      <path d="M493 63 l2 2.2 4 -5" stroke="var(--green)" fill="none" stroke-width="1.5" stroke-linecap="round"/>
+      <text x="508" y="67" fill="var(--green)" font-size="9.5">${J?'file URL 許可':'Allow file URLs'}</text>
+      <rect x="16" y="120" width="190" height="96" rx="11" fill="var(--panel)" stroke="var(--border)"/>
+      <text x="32" y="143" font-weight="700" fill="var(--text)">${J?'論文ページ':'Paper page'}</text>
+      <rect x="32" y="157" width="138" height="8" rx="4" fill="var(--border2)"/>
+      <rect x="32" y="174" width="112" height="8" rx="4" fill="var(--border2)"/>
+      ${miFig('book', 170, 133, 18, 'var(--accent)')}
+      <text x="111" y="203" text-anchor="middle" fill="var(--text3)" font-size="10">${J?'本のアイコンをクリック':'Click the book icon'}</text>
+      <path d="M216 168 H250 M242 161 L254 168 L242 175" stroke="var(--accent)" fill="none" stroke-width="2"/>
+      <rect x="266" y="110" width="202" height="116" rx="12" fill="var(--panel)" stroke="var(--border)"/>
+      <text x="282" y="132" font-weight="700" fill="var(--text)" font-size="12.5">Paper Library Connector</text>
+      <rect x="282" y="145" width="146" height="20" rx="9" fill="var(--bg)" stroke="var(--border2)"/>
+      <text x="300" y="159" fill="var(--text2)" font-size="10">${J?'保存先ライブラリ':'Destination library'}</text>
+      <rect x="282" y="176" width="15" height="15" rx="3" fill="var(--accent-soft)" stroke="var(--accent)"/>
+      <path d="M285 183 l3 3 6 -7" stroke="var(--accent)" fill="none" stroke-width="1.5" stroke-linecap="round"/>
+      <text x="307" y="188" fill="var(--text2)" font-size="10.5">${J?'コレクションを選択':'Choose collections'}</text>
+      <rect x="282" y="199" width="146" height="22" rx="8" fill="var(--accent)"/>
+      <text x="355" y="214" text-anchor="middle" fill="#fff" font-size="10.5">${J?'保存':'Save'}</text>
+      <path d="M478 168 H512 M504 161 L516 168 L504 175" stroke="var(--green)" fill="none" stroke-width="2"/>
+      <rect x="528" y="120" width="96" height="96" rx="11" fill="var(--panel)" stroke="var(--border)"/>
+      <text x="576" y="143" text-anchor="middle" font-weight="700" fill="var(--text)" font-size="11.5">Paper Library</text>
+      <circle cx="576" cy="166" r="11" fill="var(--green-soft)" stroke="var(--green)"/>
+      <path d="M570.5 166 l4 4.2 7 -8.4" stroke="var(--green)" fill="none" stroke-width="1.8" stroke-linecap="round"/>
+      <text x="576" y="191" text-anchor="middle" fill="var(--green)" font-weight="600" font-size="10">${J?'自動取り込み':'Auto-import'}</text>
+      <text x="576" y="207" text-anchor="middle" fill="var(--text3)" font-size="9">${J?'次回も反映':'Next open too'}</text>
+    </svg>`;
+  },
+  organize(lg){
+    const J = lg==='ja';
+    return `<svg viewBox="0 0 560 170" xmlns="http://www.w3.org/2000/svg" font-size="11">
+      <rect x="14" y="22" width="168" height="128" rx="10" fill="var(--panel)" stroke="var(--border)"/>
+      <text x="26" y="44" font-weight="600" fill="var(--text)">${J?'コレクション':'Collections'}</text>
+      ${miFig('folder', 26, 54, 15)}
+      <text x="48" y="66" fill="var(--text2)">${J?'光化学':'Photochemistry'}</text>
+      <rect x="22" y="80" width="152" height="26" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-dasharray="4 3"/>
+      ${miFig('folder', 28, 85, 15, 'var(--accent)')}
+      <text x="50" y="97" fill="var(--accent)" font-weight="600">${J?'有機合成':'Org. synthesis'}</text>
+      ${miFig('folder', 26, 114, 15)}
+      <text x="48" y="126" fill="var(--text2)">${J?'レビュー':'Reviews'}</text>
+      <rect x="224" y="26" width="320" height="28" rx="8" fill="var(--panel)" stroke="var(--border)"/>
+      <rect x="236" y="36" width="180" height="8" rx="4" fill="var(--border2)"/>
+      <rect x="224" y="64" width="320" height="28" rx="8" fill="var(--sel)" stroke="var(--accent)"/>
+      <rect x="236" y="74" width="200" height="8" rx="4" fill="var(--text3)"/>
+      <rect x="224" y="102" width="320" height="28" rx="8" fill="var(--panel)" stroke="var(--border)"/>
+      <rect x="236" y="112" width="160" height="8" rx="4" fill="var(--border2)"/>
+      <path d="M224 82 C 200 92, 200 92, 186 92 M196 86 L184 93 L196 99" stroke="var(--accent)" fill="none" stroke-width="2" stroke-dasharray="4 3"/>
+      <text x="384" y="152" text-anchor="middle" fill="var(--accent)" font-weight="600">${J?'文献をコレクションへドラッグ＆ドロップ':'Drag &amp; drop references into a collection'}</text>
+      <text x="384" y="166" text-anchor="middle" font-size="10.5" fill="var(--text3)">${J?'⌘/Ctrl・Shift クリックで複数選択してまとめて移動もできます':'Cmd/Ctrl- or Shift-click to select several and move them together'}</text>
+    </svg>`;
+  },
+  search(lg){
+    const J = lg==='ja';
+    return `<svg viewBox="0 0 560 150" xmlns="http://www.w3.org/2000/svg" font-size="11">
+      <rect x="14" y="16" width="260" height="30" rx="8" fill="var(--panel)" stroke="var(--border)"/>
+      ${miFig('search', 24, 23, 15)}
+      <text x="48" y="35" fill="var(--text3)" font-size="11.5">${J?'検索（タイトル・著者・DOI…）':'Search (title, author, DOI…)'}</text>
+      <text x="290" y="35" fill="var(--text2)" font-size="10.5">${J?'← タイトル・著者・タグなどをまとめて検索':'← matches title, authors, tags, … at once'}</text>
+      <rect x="14" y="70" width="530" height="30" rx="8" fill="var(--panel)" stroke="var(--border)"/>
+      <text x="34" y="89" fill="var(--accent)" font-weight="700">${J?'年':'Year'} ▼</text>
+      <line x1="96" y1="70" x2="96" y2="100" stroke="var(--border2)"/>
+      <text x="112" y="89" fill="var(--text2)">${J?'タイトル':'Title'}</text>
+      <line x1="300" y1="70" x2="300" y2="100" stroke="var(--border2)"/>
+      <text x="316" y="89" fill="var(--text2)">${J?'著者':'Authors'}</text>
+      <line x1="460" y1="70" x2="460" y2="100" stroke="var(--border2)"/>
+      ${miFig('funnel', 508, 76, 15, 'var(--accent)')}
+      <path d="M56 104 v10" stroke="var(--accent)" stroke-dasharray="3 3"/>
+      <text x="24" y="128" fill="var(--accent)" font-weight="600">${J?'見出しをクリックで並べ替え':'Click a header to sort'}</text>
+      <path d="M516 104 v10" stroke="var(--accent)" stroke-dasharray="3 3"/>
+      <text x="544" y="128" text-anchor="end" fill="var(--accent)" font-weight="600">${J?'漏斗アイコンで絞り込み':'Funnel icon to filter'}</text>
+      <text x="24" y="144" fill="var(--text3)" font-size="10.5">${J?'見出しのドラッグで並び順、右端ドラッグで幅を変更できます':'Drag headers to reorder; drag their right edge to resize'}</text>
+    </svg>`;
+  },
+  pdf(lg){
+    const J = lg==='ja';
+    return `<svg viewBox="0 0 560 160" xmlns="http://www.w3.org/2000/svg" font-size="11">
+      <path d="M44 18 h24 l10 10 v34 h-34 z" fill="var(--panel)" stroke="var(--border)"/>
+      <path d="M68 18 v10 h10" fill="none" stroke="var(--border)"/>
+      <text x="61" y="48" text-anchor="middle" font-weight="700" font-size="10" fill="var(--danger)">PDF</text>
+      <path d="M61 68 V94 M54 86 L61 98 L68 86" stroke="var(--accent)" fill="none" stroke-width="2" stroke-dasharray="4 3"/>
+      <text x="80" y="88" fill="var(--accent)" font-weight="600">${J?'ドラッグ＆ドロップ':'Drag &amp; drop'}</text>
+      <rect x="14" y="104" width="250" height="30" rx="8" fill="var(--panel)" stroke="var(--border)"/>
+      <rect x="26" y="115" width="150" height="8" rx="4" fill="var(--border2)"/>
+      ${miFig('paperclip', 238, 111, 15, 'var(--accent)')}
+      <text x="139" y="152" text-anchor="middle" font-size="10.5" fill="var(--text3)">${J?'文献の行か詳細パネルに PDF を重ねると添付されます':'Drop a PDF onto a row or the detail pane to attach it'}</text>
+      <rect x="300" y="16" width="244" height="128" rx="10" fill="var(--panel)" stroke="var(--border)"/>
+      <text x="312" y="38" font-weight="600" fill="var(--text)">${J?'詳細パネル':'Detail pane'}</text>
+      <line x1="300" y1="48" x2="544" y2="48" stroke="var(--border2)"/>
+      ${miFig('paperclip', 312, 56, 15, 'var(--accent)')}
+      <text x="334" y="68" fill="var(--text2)">paper.pdf ${J?'（クリックで閲覧）':'(click to view)'}</text>
+      <rect x="312" y="84" width="104" height="26" rx="8" fill="var(--accent-soft)" stroke="var(--accent-border)"/>
+      <text x="364" y="101" text-anchor="middle" fill="var(--accent)" font-size="10.5">${J?'引用をコピー':'Copy citation'}</text>
+      ${miFig('gear', 428, 89, 15)}
+      <text x="450" y="101" fill="var(--text2)" font-size="10.5">${J?'引用設定':'Citation settings'}</text>
+      <rect x="312" y="118" width="104" height="18" rx="6" fill="var(--border2)"/>
+      <rect x="428" y="118" width="80" height="18" rx="6" fill="var(--border2)"/>
+    </svg>`;
+  },
+  graph(lg){
+    const J = lg==='ja';
+    return `<svg viewBox="0 0 560 175" xmlns="http://www.w3.org/2000/svg" font-size="11">
+      <defs><linearGradient id="mfigYear" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="hsl(205,70%,62%)"/><stop offset="1" stop-color="hsl(275,60%,62%)"/>
+      </linearGradient></defs>
+      <rect x="14" y="16" width="376" height="144" rx="10" fill="var(--panel)" stroke="var(--border)"/>
+      <path d="M200 88 L110 52 M200 88 L286 60 M200 88 L146 126 M200 88 L258 128 M200 88 L330 102 M110 52 L146 126 M286 60 L330 102" stroke="var(--border)" stroke-width="1.2"/>
+      <circle cx="110" cy="52" r="8" fill="hsl(205,70%,62%)"/>
+      <circle cx="286" cy="60" r="11" fill="hsl(245,60%,62%)"/>
+      <circle cx="146" cy="126" r="7" fill="hsl(220,65%,62%)"/>
+      <circle cx="258" cy="128" r="10" fill="hsl(262,58%,62%)"/>
+      <circle cx="330" cy="102" r="6" fill="hsl(275,60%,62%)"/>
+      <circle cx="200" cy="88" r="15" fill="hsl(240,62%,58%)" stroke="var(--accent)" stroke-width="2.5"/>
+      <text x="200" y="118" text-anchor="middle" fill="var(--accent)" font-weight="600">${J?'選んだ論文':'Selected paper'}</text>
+      <text x="202" y="152" text-anchor="middle" font-size="10.5" fill="var(--text3)">${J?'ドラッグで移動・ホイールで拡大縮小':'Drag to pan, scroll to zoom'}</text>
+      <rect x="402" y="16" width="142" height="144" rx="10" fill="var(--panel)" stroke="var(--border)"/>
+      <circle cx="420" cy="40" r="4" fill="var(--text3)"/><circle cx="434" cy="40" r="7" fill="var(--text3)"/>
+      <text x="448" y="44" fill="var(--text2)" font-size="10.5">${J?'大きさ＝被引用数':'Size = citations'}</text>
+      <rect x="416" y="58" width="60" height="8" rx="4" fill="url(#mfigYear)"/>
+      <text x="416" y="82" fill="var(--text2)" font-size="10.5">${J?'色＝出版年':'Color = year'}</text>
+      <line x1="402" y1="94" x2="544" y2="94" stroke="var(--border2)"/>
+      <text x="416" y="112" fill="var(--text2)" font-size="10.5">${J?'クリックで詳細を表示':'Click for details'}</text>
+      <rect x="416" y="122" width="64" height="22" rx="7" fill="var(--accent-soft)" stroke="var(--accent-border)"/>
+      <text x="448" y="137" text-anchor="middle" fill="var(--accent)" font-size="10.5">${J?'＋ 追加':'+ Add'}</text>
+      <text x="490" y="137" fill="var(--text3)" font-size="10">${J?'未登録も':'even new'}</text>
+    </svg>`;
+  },
+  maintain(lg){
+    const J = lg==='ja';
+    return `<svg viewBox="0 0 560 130" xmlns="http://www.w3.org/2000/svg" font-size="11">
+      <text x="14" y="26" fill="var(--text2)" font-size="10.5">${J?'一覧の下部バー':'The bar below the list'}</text>
+      <rect x="14" y="36" width="530" height="36" rx="8" fill="var(--panel)" stroke="var(--border)"/>
+      <rect x="24" y="43" width="126" height="22" rx="7" fill="var(--bg)" stroke="var(--border2)"/>
+      ${miFig('citations', 30, 46, 14, 'var(--accent)')}
+      <text x="50" y="58" fill="var(--text2)" font-size="10.5">${J?'被引用数を更新':'Update cited-by'}</text>
+      <rect x="158" y="43" width="126" height="22" rx="7" fill="var(--bg)" stroke="var(--border2)"/>
+      ${miFig('users', 164, 46, 14, 'var(--accent)')}
+      <text x="184" y="58" fill="var(--text2)" font-size="10.5">${J?'責任著者を更新':'Update corresp.'}</text>
+      <rect x="330" y="43" width="98" height="22" rx="7" fill="var(--bg)" stroke="var(--border2)"/>
+      ${miFig('alert', 336, 46, 14, 'var(--accent)')}
+      <text x="356" y="58" fill="var(--text2)" font-size="10.5">${J?'重複候補':'Duplicates'}</text>
+      <rect x="404" y="46" width="18" height="16" rx="8" fill="var(--chip)"/>
+      <text x="413" y="58" text-anchor="middle" fill="var(--text2)" font-size="10">2</text>
+      <rect x="436" y="43" width="98" height="22" rx="7" fill="var(--bg)" stroke="var(--border2)"/>
+      ${miFig('alert', 442, 46, 14, 'var(--accent)')}
+      <text x="462" y="58" fill="var(--text2)" font-size="10.5">${J?'修正候補':'Fixes'}</text>
+      <rect x="498" y="46" width="18" height="16" rx="8" fill="var(--chip)"/>
+      <text x="507" y="58" text-anchor="middle" fill="var(--text2)" font-size="10">3</text>
+      <path d="M154 76 v10 M472 76 v10" stroke="var(--accent)" stroke-dasharray="3 3"/>
+      <text x="24" y="102" fill="var(--accent)" font-weight="600">${J?'最新の情報をインターネットから取得':'Fetch the latest data from the internet'}</text>
+      <text x="544" y="102" text-anchor="end" fill="var(--accent)" font-weight="600">${J?'見つかった問題はバッジで通知 → クリックで確認':'Problems appear as badges — click to review'}</text>
+    </svg>`;
+  },
+  exportfig(lg){
+    const J = lg==='ja';
+    return `<svg viewBox="0 0 560 170" xmlns="http://www.w3.org/2000/svg" font-size="11">
+      <rect x="14" y="16" width="216" height="132" rx="10" fill="var(--panel)" stroke="var(--border)"/>
+      ${miFig('upload', 26, 26, 15, 'var(--accent)')}
+      <text x="48" y="38" font-weight="600" fill="var(--text)">${J?'エクスポート':'Export'}</text>
+      <line x1="14" y1="48" x2="230" y2="48" stroke="var(--border2)"/>
+      <text x="28" y="66" fill="var(--text2)">${J?'表示中の文献 → BibTeX':'Shown items → BibTeX'}</text>
+      <text x="28" y="82" fill="var(--text2)">${J?'表示中の文献 → RIS / CSV / JSON':'Shown items → RIS / CSV / JSON'}</text>
+      <line x1="14" y1="96" x2="230" y2="96" stroke="var(--border2)"/>
+      <text x="28" y="116" fill="var(--accent)" font-weight="600">${J?'ライブラリ全体 → JSON':'Whole library → JSON'}</text>
+      <text x="28" y="134" fill="var(--text3)" font-size="10">${J?'バックアップ・引っ越し用':'Backup / migration'}</text>
+      <path d="M242 68 H274 M266 61 L278 68 L266 75" stroke="var(--accent)" fill="none" stroke-width="2"/>
+      <path d="M300 36 h24 l9 9 v34 h-33 z" fill="var(--panel)" stroke="var(--border)"/>
+      <text x="316" y="61" text-anchor="middle" font-size="9.5" fill="var(--text2)">.bib</text>
+      <path d="M348 36 h24 l9 9 v34 h-33 z" fill="var(--panel)" stroke="var(--border)"/>
+      <text x="364" y="61" text-anchor="middle" font-size="9.5" fill="var(--text2)">.ris</text>
+      <path d="M396 36 h24 l9 9 v34 h-33 z" fill="var(--panel)" stroke="var(--border)"/>
+      <text x="412" y="61" text-anchor="middle" font-size="9.5" fill="var(--text2)">.csv</text>
+      <text x="372" y="98" text-anchor="middle" font-size="10.5" fill="var(--text3)">${J?'LaTeX・他の文献管理ソフトで利用':'For LaTeX and other managers'}</text>
+      <path d="M242 122 H274 M266 115 L278 122 L266 129" stroke="var(--green)" fill="none" stroke-width="2"/>
+      <rect x="300" y="106" width="222" height="46" rx="10" fill="var(--green-soft)" stroke="var(--green)"/>
+      <path d="M318 114 h24 l9 9 v22 h-33 z" fill="var(--panel)" stroke="var(--green)"/>
+      <text x="335" y="137" text-anchor="middle" font-size="9.5" fill="var(--green)">.json</text>
+      <text x="366" y="127" fill="var(--green)" font-size="10.5" font-weight="600">${J?'バックアップ・引っ越し':'Backup / migration'}</text>
+      <text x="366" y="143" fill="var(--text2)" font-size="10">${J?'コレクション構成ごと保存':'Includes collection structure'}</text>
+    </svg>`;
+  },
+  settings(lg){
+    const J = lg==='ja';
+    return `<svg viewBox="0 0 560 115" xmlns="http://www.w3.org/2000/svg" font-size="11">
+      <rect x="14" y="26" width="530" height="40" rx="10" fill="var(--panel)" stroke="var(--border)"/>
+      ${miFig('book', 26, 38, 16, 'var(--accent)')}
+      <text x="50" y="51" font-weight="700" fill="var(--text)">Paper Library</text>
+      <rect x="138" y="37" width="40" height="18" rx="9" fill="var(--accent-soft)" stroke="var(--accent-border)"/>
+      <text x="158" y="50" text-anchor="middle" fill="var(--accent)" font-size="10">v1.0</text>
+      <rect x="330" y="36" width="88" height="22" rx="7" fill="var(--bg)" stroke="var(--border2)"/>
+      ${miFig('book', 336, 39, 14)}
+      <text x="356" y="51" fill="var(--text2)" font-size="10.5">${J?'マニュアル':'Manual'}</text>
+      <rect x="426" y="36" width="62" height="22" rx="7" fill="var(--bg)" stroke="var(--border2)"/>
+      ${miFig('moon', 432, 39, 14)}
+      <text x="452" y="51" fill="var(--text2)" font-size="10.5">Dark</text>
+      <rect x="496" y="36" width="36" height="22" rx="7" fill="var(--bg)" stroke="var(--border2)"/>
+      <text x="514" y="51" text-anchor="middle" fill="var(--text2)" font-size="10.5">EN</text>
+      <path d="M158 70 v10" stroke="var(--accent)" stroke-dasharray="3 3"/>
+      <text x="60" y="96" fill="var(--accent)" font-weight="600">${J?'クリックで更新履歴':'Click for the changelog'}</text>
+      <path d="M430 70 v10" stroke="var(--accent)" stroke-dasharray="3 3"/>
+      <text x="544" y="96" text-anchor="end" fill="var(--accent)" font-weight="600">${J?'マニュアル・テーマ・言語の切替':'Manual, theme, and language'}</text>
+    </svg>`;
+  },
+};
+const MANUAL = {
+  ja: [
+    { h:'ホーム画面と保存の仕組み', tab:'はじめに', blocks:[
+      {p:'Paper Library v1.0 は、論文などの文献をブラウザ上で管理するローカル保存型のツールです。インストールは不要で、この HTML ファイルをブラウザ（Chrome / Edge）で開くだけで使えます。'},
+      {fig:'storage'},
+      {sub:'初めて使うとき'},
+      {ul:[
+        'ホーム画面の「ライブラリフォルダを開く / 作成」[[ic:folderOpen]] を押し、文献データの保存先にしたいフォルダを選びます（例：「ダウンロード」の中に「文献ライブラリ」フォルダを作って選ぶ）。',
+        '注意：macOS の「デスクトップ」や「書類」など、OS が保護しているフォルダは選べない・保存できないことがあります。その場合は「ダウンロード」の中など、別の場所にフォルダを作ってください。',
+        'ブラウザが「ファイルの変更を許可しますか？」と確認してきたら「許可」を選んでください。自動保存に必要です。',
+        '空のフォルダを選ぶと、新しいライブラリが作られます。以前使ったフォルダを選ぶと、その中身がそのまま読み込まれます。',
+        '2回目からはホーム画面に「前回のライブラリを開く」[[ic:clock]] ボタンが表示されるので、ワンクリックで再開できます。',
+      ]},
+      {sub:'データはどこに保存される？'},
+      {ul:[
+        '文献の情報（タイトル・著者・年など）は、選んだフォルダの中に「library.json」というファイルとして自動保存されます。保存ボタンを押す必要はありません（保存状態は画面右上に表示されます）。',
+        '添付した PDF は、同じフォルダの中に自動で作られる「attachments」フォルダにコピーされます。',
+        'つまり、選んだフォルダを丸ごとコピーすれば、それがライブラリ全体のバックアップになります。',
+        'データはすべて自分のパソコンの中に保存されます。インターネット上にアップロードされることはありません。',
+      ]},
+    ]},
+    { h:'文献を追加する', blocks:[
+      {p:'文献の登録方法は「自動取得」「手動入力」「他のソフトからの取り込み」の3つです。'},
+      {fig:'add'},
+      {sub:'DOI などから自動取得（おすすめ）'},
+      {ul:[
+        '「追加」[[ic:plus]] →「DOI / arXiv / URL から」を開き、DOI（例：10.1038/nature12373）、arXiv ID、論文ページの URL、または論文タイトルを入力します。',
+        '「取得して追加」を押すと、タイトル・著者・雑誌名・年などの情報が自動で入力されます。',
+        'タイトルで検索した場合は候補が一覧で表示されるので、正しい論文をクリックして追加します。',
+      ]},
+      {sub:'手動で入力する'},
+      {ul:[
+        '「追加」→「手動追加」で空の文献が作られるので、右側の詳細パネルに直接入力します。',
+      ]},
+      {sub:'他のソフトから移行する（インポート）'},
+      {ul:[
+        'Zotero・Mendeley・Paperpile などから書き出したファイル（BibTeX .bib / RIS .ris / CSV / JSON）を「追加」メニューの「インポート」[[ic:download]] から読み込めます。',
+        'コレクションやフォルダ階層まで引き継ぎたい場合は、Paper Library JSON や Paperpile JSON など、フォルダ情報を含む形式で読み込んでください。BibTeX / RIS では通常、フォルダ構成までは復元できません。',
+        '「keywords をタグとして読み込む」にチェックを入れると、書誌データのキーワードがそのままタグになります。',
+      ]},
+    ]},
+    { h:'拡張機能で保存する', tab:'拡張機能', blocks:[
+      {p:'Paper Library Connector は、論文ページを開いたまま Chrome のツールバーから文献を保存するための付属拡張機能です。保存した文献は、Paper Library を開いたときに自動でライブラリへ取り込まれます。'},
+      {fig:'connector'},
+      {sub:'インストール'},
+      {dl:'拡張機能をダウンロード（ZIP）'},
+      {ul:[
+        '上のボタンで ZIP をダウンロードして解凍します。',
+        'Chrome で chrome://extensions を開き、右上の「デベロッパーモード」を ON にします。',
+        '「パッケージ化されていない拡張機能を読み込む」を押し、解凍してできた「paper-library-connector」フォルダを選びます。',
+        '仕上げに、拡張機能の「詳細」画面で「ファイルの URL へのアクセスを許可する」を ON にしてください（ライブラリとの連携に必要です）。',
+        '拡張機能を使う前に、一度 Paper Library をライブラリフォルダを開いた状態で表示しておいてください（保存先ライブラリとコレクション一覧を拡張機能に知らせるためです）。',
+      ]},
+      {sub:'論文ページから保存する'},
+      {ul:[
+        '出版社ページや arXiv などの論文ページを開き、Chrome ツールバーの本のアイコンをクリックします。',
+        'ポップアップには論文タイトル、著者、雑誌名略語、年が表示されます。DOI は表示を邪魔しないよう、ここでは出しません。',
+        '入れたいコレクションにチェックを入れて「保存」を押します。コレクションを選ばなければ「未分類」（どのコレクションにも入れない状態）で保存されます。',
+      ]},
+      {sub:'保存先ライブラリと取り込み'},
+      {ul:[
+        'ポップアップ上部に保存先ライブラリが表示されます。複数のライブラリを Paper Library で開いたことがある場合は、プルダウンで保存先を切り替えられます。',
+        'Paper Library が開いている場合は、保存後すぐに取り込まれます。開いていない場合は「Paper Library を開いて取り込む」ボタンが表示され、次に開いたときにも自動で取り込まれます。',
+        '選んだ保存先ライブラリとコレクションは、次にそのライブラリを開いたときに反映されます。',
+      ]},
+      {sub:'保存済み・取り込み待ちの見分け方'},
+      {ul:[
+        'すでにライブラリにある論文ページでは、拡張機能アイコンに緑の「✓」バッジが付き、ポップアップに登録先コレクションが表示されます。',
+        '保存したがまだ Paper Library に取り込まれていない論文は、オレンジの「…」バッジで表示されます。',
+        'ライブラリにまだ入っていない論文は、青い「＋」バッジで表示されます。',
+        '保存済みの論文でも、別のコレクションを選んで保存すると、そのコレクションへの追加として扱われます。',
+      ]},
+    ]},
+    { h:'整理する', blocks:[
+      {p:'文献は「コレクション」（フォルダのようなもの）と「タグ」で分類できます。'},
+      {fig:'organize'},
+      {ul:[
+        'コレクション：左パネルの「＋」[[ic:plus]] ボタンで作成し、文献をドラッグ＆ドロップで入れます。コレクションの中にコレクションを作って階層化もできます。',
+        '1つの文献を複数のコレクションに入れることもできます（同じ文献が両方から見えるだけで、二重登録にはなりません）。',
+        'タグ [[ic:tag]]：詳細パネルで文献にタグを付けられます。左パネルのタグ一覧から色も設定できます。',
+        'スター [[ic:star]]：重要な文献に星を付けると、左パネルの「スター」からすぐに呼び出せます。',
+        'まとめて操作：⌘（Windows では Ctrl）を押しながらクリックで複数選択、Shift＋クリックで範囲選択して、まとめてドラッグできます。',
+      ]},
+    ]},
+    { h:'探す・並べ替える', blocks:[
+      {fig:'search'},
+      {ul:[
+        '上部の検索欄 [[ic:search]]：タイトル・著者・雑誌名・DOI・タグなどをまとめて検索できます。',
+        '「詳細検索」：「著者に◯◯を含み、2020年以降」のような、条件を組み合わせた検索ができます。',
+        '並べ替え：表の見出し（「年」「タイトル」など）をクリックすると、その項目で並べ替わります。もう一度クリックすると昇順・降順が切り替わります。',
+        '列のカスタマイズ：見出しをドラッグすると列の順番を変更、見出しの右端をドラッグすると幅を変更できます。下部バーの「列」メニューで表示する項目を選べます。',
+        '絞り込み [[ic:funnel]]：列の見出しにある漏斗アイコンから、その列の値で絞り込めます。',
+        '表示の切替：下部バーで「表表示」[[ic:table]] と「カード表示」[[ic:rows]] を切り替えられます。',
+      ]},
+    ]},
+    { h:'詳細パネルと PDF', blocks:[
+      {p:'文献をクリックすると、右側に詳細パネルが開きます。'},
+      {fig:'pdf'},
+      {ul:[
+        '書誌情報・アブストラクト・メモなどを確認・編集できます。編集した内容は自動で保存されます。',
+        'PDF の添付 [[ic:paperclip]]：PDF ファイルを一覧の文献の行、または詳細パネルにドラッグ＆ドロップします。詳細パネルの「PDF を添付」ボタンからファイルを選ぶこともできます。',
+        '添付した PDF は、クリックするとブラウザ内で開きます。',
+        '引用をコピー [[ic:quote]]：論文リスト用の書式（著者・雑誌・年など）でコピーできます。歯車アイコン [[ic:gear]] の「引用設定」でスタイルや著者の書き方を変更できます。',
+        '相関図 [[ic:graph]]：引用関係で繋がる関連論文をマップ表示します。詳しくは「相関図」タブをご覧ください。',
+      ]},
+    ]},
+    { h:'相関図（関連論文マップ）', tab:'相関図', blocks:[
+      {p:'相関図は、選んだ文献と引用関係で繋がる論文を地図のように表示する機能です。関連する論文や、読み落としている重要な論文を探すのに便利です。'},
+      {fig:'graph'},
+      {ul:[
+        '開き方：文献を選んで、詳細パネルの「相関図」[[ic:graph]] ボタンを押します。',
+        '丸1つが1本の論文です。丸の大きさは被引用数（よく引用される論文ほど大きい）、色は出版年を表します。',
+        '関連の強い論文ほど近くに配置されます（同じ論文を参照している度合いなどから計算しています）。',
+        '操作：背景をドラッグすると移動、マウスホイールで拡大・縮小、丸をドラッグすると配置を調整できます。',
+        '丸をクリックすると右側に詳細が表示されます。ライブラリに未登録の論文はその場で「追加」でき、登録済みの論文には緑の印が付きます。',
+        'データは公開データベース OpenAlex から取得します。一度表示した相関図は保存されるので、2回目からは通信なしですぐに開けます（ヘッダーの「再取得」で最新に更新）。',
+        '短時間に多くの相関図を表示すると、OpenAlex の1日あたりの利用上限に達することがあります。その場合は時間をおいてから再試行してください。',
+      ]},
+    ]},
+    { h:'情報の更新・メンテナンス', tab:'更新・メンテナンス', blocks:[
+      {fig:'maintain'},
+      {ul:[
+        '被引用数を更新 [[ic:citations]]：下部バーのボタンで、各文献が何回引用されているかの最新値をインターネットから取得します。',
+        '責任著者を更新 [[ic:users]]：論文の責任著者（corresponding author）の情報を取得します。',
+        '責任著者の自動更新は、OpenAlex への負荷を抑えるため一度に最大25件ずつ処理します。さらに更新したい場合は、もう一度実行してください。',
+        'どちらも「表示中の全件を自動で」または「文献を選んで」実行できます。',
+        '重複候補・空データ・修正候補 [[ic:alert]]：同じ論文の二重登録や情報の欠けを自動で見つけて、下部バーにバッジで知らせます。クリックすると内容を確認して整理できます。',
+        '修正候補では、Angew. Chem. Int. Ed. Engl. / Engle. / Eng. Ed. のような旧・誤略称を検出し、1998年以降の文献では Angew. Chem. Int. Ed. への修正を提案します。',
+        '更新ログ：情報の自動取得に失敗した場合はここに記録され、あとから再試行 [[ic:retry]] できます。',
+      ]},
+    ]},
+    { h:'エクスポート・バックアップ', tab:'エクスポート', blocks:[
+      {fig:'exportfig'},
+      {ul:[
+        '「エクスポート」[[ic:upload]] メニューから、いま一覧に表示されている文献を BibTeX / RIS / CSV / JSON 形式で書き出せます。LaTeX や他の文献管理ソフトで使えます。',
+        '「ライブラリ全体 → JSON」はバックアップ用です。別のパソコンでこの JSON をインポートすると、コレクション構成ごと復元できます。',
+        'フォルダ情報まで確実に残したい場合は JSON を使ってください。BibTeX / RIS は文献情報の受け渡し向けで、フォルダ構成は保持されないことがあります。',
+        '普段のバックアップは、ライブラリフォルダ（library.json と attachments）を丸ごとコピーするだけでも大丈夫です。',
+      ]},
+    ]},
+    { h:'画面設定', blocks:[
+      {fig:'settings'},
+      {ul:[
+        '右上のボタンで、ダーク / ライトテーマ [[ic:moon]] と日本語 / 英語表示を切り替えられます。',
+        'アプリ名の横のバージョン番号をクリックすると、更新履歴が表示されます。',
+        '文献情報の自動取得のときだけ、CrossRef・OpenAlex などの公開データベースに接続します。それ以外の操作はすべてパソコンの中で完結します。',
+      ]},
+    ]},
+    { h:'お問い合わせ', blocks:[
+      {p:'不明点や、こうしてほしいという改善点があれば、下記までご連絡ください。'},
+      {contact:true},
+    ]},
+  ],
+  en: [
+    { h:'Home screen & saving', blocks:[
+      {p:'Paper Library v1.0 is a local-first tool for managing references (papers, books, etc.) in your browser. No installation is needed — just open this HTML file in Chrome or Edge.'},
+      {fig:'storage'},
+      {sub:'First time'},
+      {ul:[
+        'On the home screen, press “Open / create a library folder” [[ic:folderOpen]] and choose the folder where you want your reference data to live (for example, a “Papers” folder created inside Downloads).',
+        'Note: folders protected by the OS — such as Desktop and Documents on macOS — may be refused for saving. If that happens, create your library folder somewhere else, e.g. inside Downloads.',
+        'If the browser asks for permission to edit files, choose “Allow” — this is needed for automatic saving.',
+        'Choosing an empty folder creates a new library. Choosing a folder you used before loads its contents as-is.',
+        'From the second time on, the home screen shows an “Open the last library” [[ic:clock]] button so you can resume with one click.',
+      ]},
+      {sub:'Where is my data stored?'},
+      {ul:[
+        'Reference details (title, authors, year, …) are saved automatically into a file called “library.json” inside the folder you chose. There is no save button to press — the save state is shown at the top right.',
+        'Attached PDFs are copied into an “attachments” folder that is created automatically inside the same folder.',
+        'This means copying that one folder gives you a complete backup of your library.',
+        'Everything stays on your own computer; nothing is uploaded to the internet.',
+      ]},
+    ]},
+    { h:'Adding references', blocks:[
+      {p:'There are three ways to register a reference: automatic fetching, manual entry, and importing from other software.'},
+      {fig:'add'},
+      {sub:'Fetch automatically from a DOI (recommended)'},
+      {ul:[
+        'Open “Add” [[ic:plus]] → “From DOI / arXiv / URL” and enter a DOI (e.g. 10.1038/nature12373), an arXiv ID, the URL of a paper page, or a paper title.',
+        'Press “Fetch & add” and the title, authors, journal, year, and more are filled in automatically.',
+        'If you searched by title, a list of candidates appears — click the right paper to add it.',
+      ]},
+      {sub:'Enter manually'},
+      {ul:[
+        '“Add” → “Add manually” creates an empty record that you fill in from the detail pane on the right.',
+      ]},
+      {sub:'Migrate from other software (import)'},
+      {ul:[
+        'Files exported from Zotero, Mendeley, Paperpile, etc. (BibTeX .bib / RIS .ris / CSV / JSON) can be loaded from “Import” [[ic:download]] in the “Add” menu.',
+        'To preserve collections or folder hierarchy, import a format that actually contains folder information, such as Paper Library JSON or Paperpile JSON. BibTeX / RIS usually cannot restore folder structure.',
+        'Check “Import keywords as tags” to turn bibliographic keywords into tags automatically.',
+      ]},
+    ]},
+    { h:'Save with the extension', tab:'Extension', blocks:[
+      {p:'Paper Library Connector is the bundled Chrome extension for saving references from paper pages directly from the Chrome toolbar. Saved papers are imported automatically when Paper Library is open.'},
+      {fig:'connector'},
+      {sub:'Install'},
+      {dl:'Download the extension (ZIP)'},
+      {ul:[
+        'Download the ZIP with the button above and unzip it.',
+        'Open chrome://extensions in Chrome and turn on “Developer mode” at the top right.',
+        'Click “Load unpacked” and select the unzipped “paper-library-connector” folder.',
+        'Finally, open the extension’s “Details” page and enable “Allow access to file URLs” (required to talk to your library).',
+        'Before first use, open Paper Library once with your library folder open, so the extension learns your library name and collection list.',
+      ]},
+      {sub:'Save from a paper page'},
+      {ul:[
+        'Open a publisher page, arXiv page, or another paper page, then click the book icon in the Chrome toolbar.',
+        'The popup shows the paper title, authors, abbreviated journal name, and year. DOI is hidden here to keep the popup readable.',
+        'Tick the collections you want and press “Save”. With nothing selected, the paper is saved as “uncategorized” (in no collection).',
+      ]},
+      {sub:'Destination library and import'},
+      {ul:[
+        'The popup shows the destination library at the top. If you have opened more than one Paper Library library, use the dropdown to switch where the paper will be saved.',
+        'If Paper Library is already open, the paper is imported right after saving. If it is closed, the popup shows an “Open Paper Library to import” button, and it also imports automatically the next time you open the library.',
+        'The chosen destination library and collections are applied when that library is next opened.',
+      ]},
+      {sub:'Saved and pending states'},
+      {ul:[
+        'Pages already in your library show a green “✓” badge on the extension icon, and the popup lists the collections the paper is filed in.',
+        'Papers saved but not yet imported into Paper Library show an orange “…” badge.',
+        'Detected papers that are not in your library yet show a blue “+” badge.',
+        'If a paper is already saved, choosing more collections and saving again adds it to those collections.',
+      ]},
+    ]},
+    { h:'Organizing', blocks:[
+      {p:'References can be organized with collections (like folders) and tags.'},
+      {fig:'organize'},
+      {ul:[
+        'Collections: create one with the “+” [[ic:plus]] button in the left pane and drag & drop references into it. Collections can be nested inside each other.',
+        'A reference can belong to several collections at once (it simply appears in both — it is not duplicated).',
+        'Tags [[ic:tag]]: assign tags from the detail pane. You can set tag colors from the tag list in the left pane.',
+        'Stars [[ic:star]]: mark important references with a star and find them instantly under “Starred” in the left pane.',
+        'Bulk actions: Cmd-click (Ctrl on Windows) for multi-select, Shift-click for range select, then drag them together.',
+      ]},
+    ]},
+    { h:'Searching & sorting', blocks:[
+      {fig:'search'},
+      {ul:[
+        'The search box [[ic:search]] at the top matches titles, authors, journals, DOIs, tags, and more, all at once.',
+        '“Advanced search” combines conditions, e.g. “author contains X, published after 2020”.',
+        'Sorting: click a table header (“Year”, “Title”, …) to sort by that column; click again to reverse the order.',
+        'Customizing columns: drag headers to reorder, drag a header’s right edge to resize, and choose visible columns from the “Columns” menu in the bottom bar.',
+        'Filtering [[ic:funnel]]: the funnel icon in each column header filters by that column’s values.',
+        'View switching: the bottom bar toggles between table view [[ic:table]] and card view [[ic:rows]].',
+      ]},
+    ]},
+    { h:'Detail pane & PDFs', blocks:[
+      {p:'Clicking a reference opens the detail pane on the right.'},
+      {fig:'pdf'},
+      {ul:[
+        'You can view and edit bibliographic info, the abstract, notes, and more. Edits are saved automatically.',
+        'Attaching PDFs [[ic:paperclip]]: drag & drop a PDF onto a reference row in the list, or onto the detail pane. You can also pick a file with the “Attach PDF” button in the detail pane.',
+        'Attached PDFs open right in the browser when clicked.',
+        'Copy citation [[ic:quote]]: copies a formatted citation (authors, journal, year, …). The gear icon [[ic:gear]] opens Citation settings for style and author formatting.',
+        'Graph [[ic:graph]]: maps related papers connected through citations — see the “Graph” tab for details.',
+      ]},
+    ]},
+    { h:'Graph (related-papers map)', blocks:[
+      {p:'The Graph view lays out papers connected to the selected reference through citations, like a map. It is handy for discovering related work and important papers you may have missed.'},
+      {fig:'graph'},
+      {ul:[
+        'How to open: select a reference and press the “Graph” [[ic:graph]] button in the detail pane.',
+        'Each circle is one paper. Its size reflects the citation count (heavily cited papers are bigger) and its color reflects the publication year.',
+        'Strongly related papers are placed close together (computed from how many references they share, among other signals).',
+        'Controls: drag the background to pan, use the mouse wheel to zoom, and drag circles to adjust the layout.',
+        'Click a circle to see its details on the right. Papers not yet in your library can be added on the spot; papers already registered get a green mark.',
+        'Data comes from the public OpenAlex database. Once shown, a graph is cached, so reopening it needs no network access (use “Refetch” in the header to refresh).',
+        'Opening many graphs in a short time can hit OpenAlex’s daily usage limit. If that happens, wait a while and retry.',
+      ]},
+    ]},
+    { h:'Updating & maintenance', blocks:[
+      {fig:'maintain'},
+      {ul:[
+        'Update cited-by counts [[ic:citations]]: a bottom-bar button fetches the latest citation counts from the internet.',
+        'Update corresponding authors [[ic:users]]: fetches corresponding-author information for your papers.',
+        'Corresponding-author refresh processes at most 25 items at a time to reduce OpenAlex load. Run it again if you need to continue.',
+        'Both can run on “all shown items” automatically or only on items you pick.',
+        'Duplicates / empty records / fix suggestions [[ic:alert]]: double registrations and missing fields are detected automatically and flagged with badges in the bottom bar. Click a badge to review and clean up.',
+        'Fix suggestions also detect old or mistyped Angewandte abbreviations such as Angew. Chem. Int. Ed. Engl. / Engle. / Eng. Ed., and suggest Angew. Chem. Int. Ed. for papers from 1998 onward.',
+        'Update log: failed fetches are recorded here and can be retried [[ic:retry]] later.',
+      ]},
+    ]},
+    { h:'Export & backup', blocks:[
+      {fig:'exportfig'},
+      {ul:[
+        'The “Export” [[ic:upload]] menu writes the currently shown references to BibTeX / RIS / CSV / JSON — usable in LaTeX and other reference managers.',
+        '“Whole library → JSON” is for backup. Importing that JSON on another computer restores everything, including your collection structure.',
+        'Use JSON when folder information must be preserved. BibTeX / RIS are mainly for bibliographic exchange and may not carry folder structure.',
+        'For everyday backups, simply copying the whole library folder (library.json and attachments) also works.',
+      ]},
+    ]},
+    { h:'Display settings', blocks:[
+      {fig:'settings'},
+      {ul:[
+        'The buttons at the top right switch between dark / light themes [[ic:moon]] and Japanese / English.',
+        'Click the version number next to the app name to see the changelog.',
+        'The app only connects to public databases such as CrossRef and OpenAlex when fetching reference data; everything else happens entirely on your computer.',
+      ]},
+    ]},
+    { h:'Contact', blocks:[
+      {p:'For questions or suggestions, please contact us at the address below.'},
+      {contact:true},
+    ]},
+  ],
+};
+function openManual(){
+  const secs = MANUAL[lang];
+  const rich = x => esc(x)
+    .replace(/\bchrome:\/\/extensions\b/g, '<a href="chrome://extensions">chrome://extensions</a>')
+    .replace(/\[\[ic:(\w+)\]\]/g, (_, n) => ic(n));
+  const tabIcon = s => s.icon || (((s.blocks || []).some(b => b.contact)) ? 'message' : ({
+    storage:'folderOpen',
+    add:'plus',
+    connector:'book',
+    organize:'folder',
+    search:'search',
+    pdf:'paperclip',
+    graph:'graph',
+    maintain:'retry',
+    exportfig:'upload',
+    settings:'gear',
+  }[((s.blocks || []).find(b => b.fig) || {}).fig] || 'book'));
+  const tabs = $('#manualTabs');
+  tabs.innerHTML = secs.map((s,i)=>`<button data-mtab="${i}">${ic(tabIcon(s))}<span>${esc(s.tab || s.h)}</span></button>`).join('');
+  const show = (i)=>{
+    tabs.querySelectorAll('button').forEach((b,j)=>b.classList.toggle('active', j===i));
+    $('#manualContent').innerHTML = `<h3>${esc(secs[i].h)}</h3>` + secs[i].blocks.map(b=>
+      b.fig ? `<div class="manual-fig">${MANUAL_FIGS[b.fig](lang)}</div>` :
+      b.sub ? `<h4>${esc(b.sub)}</h4>` :
+      b.contact ? `<p><a href="mailto:aaths.takumi@gmail.com">aaths.takumi@gmail.com</a></p>` :
+      b.dl  ? `<p><button class="tbtn primary" data-connector-dl>${ic('download')}${esc(b.dl)}</button></p>` :
+      b.p   ? `<p>${rich(b.p)}</p>` :
+              `<ul>${b.ul.map(x=>`<li>${rich(x)}</li>`).join('')}</ul>`).join('');
+    $('#manualContent').scrollTop = 0;
+  };
+  tabs.querySelectorAll('button').forEach((b,i)=>b.addEventListener('click', ()=>show(i)));
+  show(0);
+  $('#dlgManual').showModal();
+}
+$('#btnManual').addEventListener('click', openManual);
+$('#startManual').addEventListener('click', openManual);
+$('#manualContent').addEventListener('click', (e)=>{
+  if(e.target.closest('[data-connector-dl]')) downloadConnectorZip();
+});
+
 // version badge / changelog
 $('#verBadge').textContent = 'v' + APP_VERSION;
 $('#verBadge').addEventListener('click', ()=>{
@@ -4039,7 +4667,7 @@ $('#btnApplyAllFixes').addEventListener('click', ()=>{
 });
 
 // search
-$('#searchBox').addEventListener('input', ()=>{ filter.query = $('#searchBox').value.trim(); renderList(); });
+$('#searchBox').addEventListener('input', ()=>{ filter.query = $('#searchBox').value.trim(); renderList({skipBadges:true}); });
 $('#btnAdvancedSearch').addEventListener('click', ()=>{
   const adv = filter.advanced || {};
   $('#advTerms').value = adv.terms || '';
@@ -4074,18 +4702,34 @@ document.addEventListener('keydown', (e)=>{
     e.preventDefault(); $('#searchBox').focus();
   }
   if(e.key==='Escape' && pickMode && !document.querySelector('dialog[open]')) exitPickMode();
+  if(e.key==='Escape' && !document.querySelector('dialog[open]')) clearCollectionSelection();
 });
 
 // sidebar
+$('#btnToggleCollections').addEventListener('click', (e)=>{
+  e.stopPropagation();
+  collectionsSectionCollapsed = !collectionsSectionCollapsed;
+  updateSidebarSectionVisibility();
+});
+$('#btnToggleTags').addEventListener('click', (e)=>{
+  e.stopPropagation();
+  tagsSectionCollapsed = !tagsSectionCollapsed;
+  updateSidebarSectionVisibility();
+});
 $('#sidebar').addEventListener('click', async (e)=>{
   const actBtn = e.target.closest('[data-act]');
   if(actBtn){
     e.stopPropagation();
     const c = lib.collections.find(x=>x.id===actBtn.dataset.id);
     if(!c) return;
-    if(actBtn.dataset.act==='sub'){
+    if(actBtn.dataset.act==='toggleColl'){
+      if(collapsedCollectionIds.has(c.id)) collapsedCollectionIds.delete(c.id);
+      else collapsedCollectionIds.add(c.id);
+      renderSidebar();
+    }else if(actBtn.dataset.act==='sub'){
       const name = prompt(t('promptCollName'));
       if(name && name.trim()){
+        collapsedCollectionIds.delete(c.id);
         lib.collections.push({ id: uid(), name: name.trim(), parent: c.id });
         touch(); renderSidebar(); renderDetail();
       }
@@ -4117,7 +4761,7 @@ $('#sidebar').addEventListener('click', async (e)=>{
       selectedCollectionIds = new Set([cid]);
       collectionSelectAnchorId = cid;
     }
-    filter.coll = cid; renderSidebar(); renderList(); return;
+    filter.coll = cid; updateSidebarSelection(); renderList({skipBadges:true}); return;
   }
   const tagEl = e.target.closest('[data-tag]');
   if(tagEl){
@@ -4125,8 +4769,10 @@ $('#sidebar').addEventListener('click', async (e)=>{
     if(colorBtn){ openTagColorPop(colorBtn.dataset.tagcolor, colorBtn); return; }
     const tg = tagEl.dataset.tag;
     if(filter.tags.has(tg)) filter.tags.delete(tg); else filter.tags.add(tg);
-    renderSidebar(); renderList();
+    updateSidebarSelection(); renderList({skipBadges:true});
+    return;
   }
+  clearCollectionSelection();
 });
 $('#sidebar').addEventListener('dragover', (e)=>{
   const collEl = e.target.closest('[data-drop-coll],[data-drop-root]');
@@ -4157,6 +4803,7 @@ $('#sidebar').addEventListener('drop', (e)=>{
     if(changed){
       if(draggedCollIds.includes(filter.coll)) filter.coll = cid || 'all';
       selectedCollectionIds = new Set(draggedCollIds);
+      if(cid) collapsedCollectionIds.delete(cid);
       touch(); renderAll();
     }
     return;
@@ -4193,7 +4840,10 @@ $('#sidebar').addEventListener('dragstart', (e)=>{
 $('#btnAddColl').addEventListener('click', ()=>{
   const name = prompt(t('promptCollName'));
   if(name && name.trim()){
-    lib.collections.push({ id: uid(), name: name.trim(), parent: (filter.coll!=='all' && filter.coll!=='uncat' && filter.coll!=='starred') ? filter.coll : '' });
+    const parent = (filter.coll!=='all' && filter.coll!=='uncat' && filter.coll!=='starred') ? filter.coll : '';
+    collectionsSectionCollapsed = false;
+    if(parent) collapsedCollectionIds.delete(parent);
+    lib.collections.push({ id: uid(), name: name.trim(), parent });
     touch(); renderSidebar(); renderDetail();
   }
 });
@@ -4744,6 +5394,7 @@ function applyOaCitedBy(it, w){
   if(typeof w.cited_by_count!=='number') return false;
   it.citedByCount = w.cited_by_count;
   it.citedByAt = new Date().toISOString();
+  it.citedByStatus = '';
   return true;
 }
 // Fetch one item's OpenAlex record via the single-entity endpoint, which keeps
@@ -4785,6 +5436,7 @@ async function refreshCitedByCounts(explicitItems, opts){
       if(counts.has(it.id)){
         it.citedByCount = counts.get(it.id);
         it.citedByAt = new Date().toISOString();
+        it.citedByStatus = '';
         s2Updated++; updatedIds.add(it.id);
         setItemUpdateState(it, 'ok');
         logUpdateProgress(it, 'cited', 'ok', `${t('logUpdated')} · Semantic Scholar`, String(it.citedByCount));
@@ -4815,11 +5467,15 @@ async function refreshCitedByCounts(explicitItems, opts){
             setItemUpdateState(it, 'ok');
             logUpdateProgress(it, 'cited', 'ok', `${t('logUpdated')} · OpenAlex`, String(it.citedByCount));
           }else{
+            it.citedByCount = null;
+            it.citedByAt = new Date().toISOString();
+            it.citedByStatus = 'none';
             setItemUpdateState(it, 'none');
             logUpdateProgress(it, 'cited', 'none');
           }
         }catch(e){
           if(e && e.rateLimited) rateLimited = true;
+          it.citedByStatus = 'fail';
           setItemUpdateState(it, 'fail');
           stillFailed.push(it);
         }
@@ -4832,11 +5488,14 @@ async function refreshCitedByCounts(explicitItems, opts){
   unresolved.filter(it=>!oaCandidates.includes(it)).forEach(it=>stillFailed.push(it));
   updated = updatedIds.size;
 
-  stillFailed.forEach(it=>logFetchFailure({
-    label: it.title || it.doi || it.arxiv, detail: it.doi || it.arxiv || '',
-    reason: rateLimited ? t('oaBudgetErr') : t('citeNotFound'), itemId: it.id, kind:'cited'
-  }));
-  if(updated) touch();
+  stillFailed.forEach(it=>{
+    it.citedByStatus = 'fail';
+    logFetchFailure({
+      label: it.title || it.doi || it.arxiv, detail: it.doi || it.arxiv || '',
+      reason: rateLimited ? t('oaBudgetErr') : t('citeNotFound'), itemId: it.id, kind:'cited'
+    });
+  });
+  if(updated || stillFailed.length || oaCandidates.length) touch();
   renderList(); renderDetail();
   if(label) label.textContent = orig; btn.disabled = false;
   const failed = stillFailed.length;
@@ -4873,12 +5532,15 @@ async function refreshCorrespondingAuthors(explicitItems, opts){
       if(corr){
         it.correspondingAuthors = corr;
         it.correspondingCheckedAt = new Date().toISOString();
+        it.correspondingStatus = '';
         checked++;
         updated++;
         setItemUpdateState(it, 'ok');
         logUpdateProgress(it, 'corresponding', 'ok', t('logUpdated'), corr);
       }else{
+        it.correspondingAuthors = '';
         it.correspondingCheckedAt = new Date().toISOString();
+        it.correspondingStatus = 'none';
         checked++;
         failed++;
         setItemUpdateState(it, 'none');
@@ -4890,6 +5552,7 @@ async function refreshCorrespondingAuthors(explicitItems, opts){
       }
     }catch(e){
       if(e && e.rateLimited) rateLimited = true;
+      it.correspondingStatus = 'fail';
       failed++;
       setItemUpdateState(it, 'fail');
       logFetchFailure({
@@ -4899,7 +5562,7 @@ async function refreshCorrespondingAuthors(explicitItems, opts){
       if(rateLimited) break;
     }
   }
-  if(updated || checked) touch();
+  if(updated || checked || failed) touch();
   renderList(); renderDetail();
   if(label) label.textContent = orig; btn.disabled = false;
   if(failed) showToast(I18N[lang].refreshedCorrespondingPartial(updated, failed), !updated);
@@ -4917,6 +5580,7 @@ $('#detail').addEventListener('input', (e)=>{
     case 'authors': it.authors = textToAuthors(v); break;
     case 'tags': it.tags = v.split(',').map(s=>s.trim()).filter(Boolean); break;
     case 'pages': it.pages = normalizeRange(v); break;
+    case 'correspondingAuthors': it.correspondingAuthors = v; it.correspondingStatus = v.trim() ? '' : it.correspondingStatus; break;
     default: it[f] = v;
   }
   touch(it);
@@ -4938,14 +5602,6 @@ function updateCitationPrefFromEvent(e){
 $('#dlgCitationPrefs').addEventListener('change', updateCitationPrefFromEvent);
 $('#detail').addEventListener('change', (e)=>{
   if(updateCitationPrefFromEvent(e)) return;
-  const it = lib.items.find(x=>x.id===selectedId);
-  if(!it) return;
-  const cc = e.target.dataset.collcheck;
-  if(cc){
-    if(e.target.checked){ if(!it.collections.includes(cc)) it.collections.push(cc); }
-    else it.collections = it.collections.filter(x=>x!==cc);
-    touch(it); renderSidebar(); renderList();
-  }
 });
 $('#detail').addEventListener('click', async (e)=>{
   const btn = e.target.closest('[data-act],[data-open-att],[data-del-att]');
@@ -4968,11 +5624,19 @@ $('#detail').addEventListener('click', async (e)=>{
     case 'copybib': await navigator.clipboard.writeText(itemToBibTeX(it)); showToast(t('copied')); break;
     case 'citeprefs': openCitationPrefsDialog(); break;
     case 'toggleStar': toggleStar(it.id); break;
+    case 'toggleDetailCollections': detailCollectionsCollapsed = !detailCollectionsCollapsed; renderDetail(); break;
     case 'addpdf': $('#filePdf').click(); break;
     case 'delitem': await deleteItem(it.id); break;
     case 'citations': openCitationsDialog(it); break;
     case 'graph': openGraphDialog(it); break;
     case 'updateThis': await updateSingleItem(it); break;
+    case 'applyJournalFix': {
+      const sug = fixSuggestionForItem(it);
+      if(sug && applyJournalFixSuggestion(sug)){
+        renderList(); renderDetail();
+      }
+      break;
+    }
   }
 });
 // Per-item update: refresh cited-by + corresponding authors for exactly one item,
@@ -5070,9 +5734,10 @@ $('#citBody').addEventListener('click', (e)=>{
    Neighborhood = seed refs + top cited-by; similarity = bibliographic
    coupling (shared references) + direct citation links; force layout.
 ---------------------------------------------------------------- */
-const GRAPH_MAX_NODES = 34;      // seed + neighbours
-const GRAPH_MIN_SHARED = 2;      // min shared refs for an edge
+const GRAPH_MAX_NODES = 42;      // seed + neighbours
+const GRAPH_MIN_SHARED = 1;      // min shared refs for an edge; later thinned visually
 let graphState = null;           // { nodes, edges, view, selId, anim }
+let graphShowLabels = true;
 
 async function buildGraphData(seedItem, onProgress){
   onProgress(t('graphLoading1'));
@@ -5115,6 +5780,16 @@ async function buildGraphData(seedItem, onProgress){
     n.year = parseInt(n.item.year,10) || null;
     n.cited = n.w.cited_by_count || 0;
     n.label = ((n.item.authors[0]||{}).family || '') + (n.year ? ' ' + n.year : '');
+    n.seedRel = n.seed ? null : {
+      shared: 0,
+      citesSeed: n.wRefs.has(seedId),
+      citedBySeed: seedRefs.has(n.id)
+    };
+    if(!n.seed){
+      const small = n.wRefs.size < seedRefs.size ? n.wRefs : seedRefs;
+      const large = small===n.wRefs ? seedRefs : n.wRefs;
+      small.forEach(r=>{ if(large.has(r)) n.seedRel.shared++; });
+    }
   });
   // edges: bibliographic coupling between all node pairs + direct citations
   const edges = [];
@@ -5127,7 +5802,7 @@ async function buildGraphData(seedItem, onProgress){
       small.forEach(r=>{ if(large.has(r)) shared++; });
       const direct = A.wRefs.has(B.id) || B.wRefs.has(A.id);
       if(shared >= GRAPH_MIN_SHARED || direct){
-        edges.push({ a:i, b:j, w: shared + (direct ? 2 : 0) });
+        edges.push({ a:i, b:j, w: shared + (direct ? 2 : 0), shared, direct });
       }
     }
   }
@@ -5147,7 +5822,7 @@ function thinEdges(nodes, edges){
     const ra = find(e.a), rb = find(e.b);
     if(ra!==rb){ parent[ra] = rb; keep.add(e); }
   });
-  // + top-2 strongest per node
+  // + top-3 strongest per node so local clusters remain readable
   const byNode = new Map();
   sorted.forEach(e=>{
     for(const v of [e.a, e.b]){
@@ -5155,7 +5830,7 @@ function thinEdges(nodes, edges){
       byNode.get(v).push(e);
     }
   });
-  byNode.forEach(list=>{ list.slice(0,2).forEach(e=>keep.add(e)); });
+  byNode.forEach(list=>{ list.slice(0,3).forEach(e=>keep.add(e)); });
   return edges.filter(e=>keep.has(e));
 }
 
@@ -5227,6 +5902,48 @@ function graphYearColor(year, minY, maxY){
 function graphNodeR(cited, maxCited){
   return 6 + 16 * Math.sqrt(Math.log10(1+cited) / Math.log10(1+Math.max(10,maxCited)));
 }
+function graphEdgeShared(e){ return e.shared!=null ? e.shared : Math.max(0, (e.w||0) - (e.direct ? 2 : 0)); }
+function graphSeedRelation(g, idx){
+  const n = g.nodes[idx];
+  if(!n || n.seed) return null;
+  if(n.seedRel) return n.seedRel;
+  const seedIdx = g.nodes.findIndex(x=>x.seed);
+  const e = g.edges.find(x=>(x.a===seedIdx && x.b===idx) || (x.b===seedIdx && x.a===idx));
+  return e ? { shared:graphEdgeShared(e), citesSeed:false, citedBySeed:false } : { shared:0, citesSeed:false, citedBySeed:false };
+}
+function graphRelationText(rel){
+  const parts = [];
+  if(rel.citesSeed) parts.push(t('graphDirectCites'));
+  if(rel.citedBySeed) parts.push(t('graphDirectCitedBy'));
+  if(rel.shared) parts.push(I18N[lang].graphSharedRefs(rel.shared));
+  return parts.length ? parts.join(' / ') : I18N[lang].graphSharedRefs(0);
+}
+function graphNearestLinks(g, idx){
+  return g.edges
+    .filter(e=>e.a===idx || e.b===idx)
+    .sort((a,b)=>b.w-a.w)
+    .slice(0,4)
+    .map(e=>{
+      const otherIdx = e.a===idx ? e.b : e.a;
+      return { node:g.nodes[otherIdx], edge:e };
+    });
+}
+function fitGraphView(pad){
+  const g = graphState;
+  if(!g || !g.nodes.length) return;
+  const rs = g.nodes.map(n=>graphNodeR(n.cited, Math.max(...g.nodes.map(x=>x.cited))));
+  const minX = Math.min(...g.nodes.map((n,i)=>n.x-rs[i])), maxX = Math.max(...g.nodes.map((n,i)=>n.x+rs[i]));
+  const minY = Math.min(...g.nodes.map((n,i)=>n.y-rs[i])), maxY = Math.max(...g.nodes.map((n,i)=>n.y+rs[i]));
+  const boxW = Math.max(1, maxX-minX), boxH = Math.max(1, maxY-minY);
+  const p = pad == null ? 46 : pad;
+  const k = Math.max(0.3, Math.min(5, Math.min((g.W - p*2)/boxW, (g.H - p*2)/boxH)));
+  g.view = { x:minX - p/k, y:minY - p/k, k };
+}
+function updateGraphStats(){
+  const el = $('#graphStats');
+  if(!el || !graphState){ if(el) el.textContent = ''; return; }
+  el.textContent = I18N[lang].graphStats(graphState.nodes.length, graphState.edges.length);
+}
 
 function renderGraph(){
   const g = graphState;
@@ -5234,6 +5951,7 @@ function renderGraph(){
   const svg = $('#graphSvg');
   const W = g.W, H = g.H;
   svg.setAttribute('viewBox', `${g.view.x} ${g.view.y} ${W/g.view.k} ${H/g.view.k}`);
+  svg.classList.toggle('hideLabels', !graphShowLabels);
   const years = g.nodes.map(n=>n.year).filter(Boolean);
   const minY = Math.min(...years), maxY = Math.max(...years);
   $('#glYears').textContent = years.length ? `${minY}–${maxY}` : '';
@@ -5241,7 +5959,8 @@ function renderGraph(){
   const maxW = Math.max(1, ...g.edges.map(e=>e.w));
   const edgeHtml = g.edges.map((e,ei)=>{
     const A = g.nodes[e.a], B = g.nodes[e.b];
-    return `<line class="gEdge" data-e="${ei}" x1="${A.x.toFixed(1)}" y1="${A.y.toFixed(1)}" x2="${B.x.toFixed(1)}" y2="${B.y.toFixed(1)}" stroke-width="${(0.7 + 2.8*e.w/maxW).toFixed(2)}" opacity="${(0.18 + 0.4*e.w/maxW).toFixed(2)}"/>`;
+    const title = graphEdgeShared(e) ? I18N[lang].graphSharedRefs(graphEdgeShared(e)) : '';
+    return `<line class="gEdge" data-e="${ei}" x1="${A.x.toFixed(1)}" y1="${A.y.toFixed(1)}" x2="${B.x.toFixed(1)}" y2="${B.y.toFixed(1)}" stroke-width="${(0.7 + 2.8*e.w/maxW).toFixed(2)}" opacity="${(0.18 + 0.4*e.w/maxW).toFixed(2)}">${title ? `<title>${esc(title)}</title>` : ''}</line>`;
   }).join('');
   const nodeHtml = g.nodes.map((n,i)=>{
     const r = graphNodeR(n.cited, maxCited);
@@ -5253,6 +5972,7 @@ function renderGraph(){
       `<text class="gLabel" data-lbl="${i}" x="${n.x.toFixed(1)}" y="${(n.y + r + 10).toFixed(1)}" text-anchor="middle">${esc(n.label)}</text>`;
   }).join('');
   svg.innerHTML = `<g>${edgeHtml}${nodeHtml}</g>`;
+  updateGraphStats();
   applyHighlight();
 }
 // Dim everything except the focused node (hover takes priority over selection)
@@ -5293,12 +6013,16 @@ function renderGraphSide(){
   const inLib = isInLibrary(it);
   const meta1 = [authorsShort(it.authors)].filter(Boolean).join('');
   const meta2 = [it.journal, it.year].filter(Boolean).join(' · ');
+  const rel = graphSeedRelation(g, g.selIdx);
+  const nearest = graphNearestLinks(g, g.selIdx);
   side.innerHTML = `
     ${n.seed ? `<span class="gsSeedBadge">${esc(t('graphSeed'))}</span>` : ''}
     <div class="gsTitle">${esc(it.title)}</div>
     <div class="gsMeta">${esc(meta1)}</div>
     <div class="gsMeta">${esc(meta2)}</div>
     <div class="gsMeta">${esc(t('colCitedBy'))}: ${n.cited.toLocaleString()}</div>
+    ${rel ? `<div class="gsRel"><b>${esc(t('graphRelToSeed'))}</b><br>${esc(graphRelationText(rel))}</div>` : ''}
+    ${nearest.length ? `<div class="gsLinks"><b>${esc(t('graphNearest'))}</b>${nearest.map(x=>`<div class="gsLink">${esc(x.node.label || x.node.item.title || '')} · ${esc(I18N[lang].graphSharedRefs(graphEdgeShared(x.edge)))}</div>`).join('')}</div>` : ''}
     <div class="gsBtns">
       ${(it.doi||it.url) ? `<button class="tbtn" data-gs="open">${ic('link')}${esc(t('graphOpenPage'))}</button>` : ''}
       ${n.seed ? '' : inLib
@@ -5312,13 +6036,14 @@ function renderGraphSide(){
 function graphCacheKey(item){ return item.doi ? 'doi:'+normDoi(item.doi) : item.arxiv ? 'arxiv:'+item.arxiv : 'id:'+item.id; }
 // lean, JSON-serialisable snapshot of a built graph (no Sets / full works)
 function leanGraph(data){
-  return { nodes: data.nodes.map(n=>({ id:n.id, item:n.item, year:n.year, cited:n.cited, seed:!!n.seed, label:n.label })), edges: data.edges };
+  return { nodes: data.nodes.map(n=>({ id:n.id, item:n.item, year:n.year, cited:n.cited, seed:!!n.seed, label:n.label, seedRel:n.seedRel||null })), edges: data.edges };
 }
 async function openGraphDialog(item, opts){
   opts = opts || {};
   $('#graphHeadTitle').textContent = I18N[lang].graphTitle(item.title || t('newItem'));
   const svg = $('#graphSvg');
   svg.innerHTML = '';
+  $('#graphStats').textContent = '';
   graphState = null; graphSeedItem = item;
   renderGraphSide();
   $('#dlgGraph').showModal();
@@ -5357,6 +6082,7 @@ async function openGraphDialog(item, opts){
   await new Promise(r=>setTimeout(r, 20)); // let the message paint
   graphLayout(data.nodes, data.edges, W, H);
   graphState = { nodes:data.nodes, edges:data.edges, W, H, view:{x:0,y:0,k:1}, selIdx:null, hoverIdx:null };
+  fitGraphView();
   $('#graphLoading').textContent = '';
   $('#graphCacheNote').textContent = fromCache ? I18N[lang].graphCached(cached.ts.slice(0,10)) : '';
   renderGraph();
@@ -5437,7 +6163,16 @@ $('#btnGraphRelayout').addEventListener('click', ()=>{
   const g = graphState;
   if(!g) return;
   graphLayout(g.nodes, g.edges, g.W, g.H);
-  g.view = {x:0, y:0, k:1};
+  fitGraphView();
+  renderGraph();
+});
+$('#btnGraphFit').addEventListener('click', ()=>{
+  if(!graphState) return;
+  fitGraphView();
+  renderGraph();
+});
+$('#btnGraphLabels').addEventListener('click', ()=>{
+  graphShowLabels = !graphShowLabels;
   renderGraph();
 });
 $('#btnGraphRefetch').addEventListener('click', ()=>{
@@ -5473,6 +6208,35 @@ detailEl.addEventListener('drop', async (e)=>{
   e.preventDefault();
   await attachFiles(it, Array.from(e.dataTransfer.files));
 });
+
+// drag & drop PDF onto a list row / card
+{
+  let fileDropRow = null;
+  const setFileDropRow = (el)=>{
+    if(fileDropRow === el) return;
+    if(fileDropRow) fileDropRow.classList.remove('fileDrop');
+    fileDropRow = el;
+    if(el) el.classList.add('fileDrop');
+  };
+  [['#itemRows','tr.row'], ['#itemCards','.cardRow']].forEach(([rootSel, rowSel])=>{
+    const root = $(rootSel);
+    root.addEventListener('dragover', (e)=>{
+      if(!e.dataTransfer.types.includes('Files')){ setFileDropRow(null); return; }
+      const row = e.target.closest(rowSel);
+      if(row){ e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; }
+      setFileDropRow(row);
+    });
+    root.addEventListener('dragleave', (e)=>{ if(!(e.relatedTarget && root.contains(e.relatedTarget))) setFileDropRow(null); });
+    root.addEventListener('drop', async (e)=>{
+      const row = e.target.closest(rowSel);
+      setFileDropRow(null);
+      if(!row || !e.dataTransfer.files.length) return;
+      e.preventDefault();
+      const it = lib.items.find(x=>x.id===row.dataset.id);
+      if(it) await attachFiles(it, Array.from(e.dataTransfer.files));
+    });
+  });
+}
 
 // add manually
 $('#miAddManual').addEventListener('click', ()=>{
@@ -5598,6 +6362,155 @@ $('#fileImport').addEventListener('change', async ()=>{
   showToast(I18N[lang].imported(res.added, res.skipped));
 });
 
+/* ---------------------------------------------------------------
+   Browser-extension connector (Paper Library Connector)
+   The extension's content script relays window.postMessage between
+   this page and chrome.storage: we publish a library snapshot
+   (DOI/arXiv keys + collection tree) and accept queued saves.
+   The extension itself ships inside this file (CONNECTOR_FILES)
+   and is downloaded as a ZIP from the manual.
+---------------------------------------------------------------- */
+// Minimal ZIP writer (store method, no compression) for the extension download.
+function crc32Bytes(buf){
+  let table = crc32Bytes.table;
+  if(!table){
+    table = crc32Bytes.table = new Int32Array(256);
+    for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c = (c&1) ? (0xEDB88320 ^ (c>>>1)) : (c>>>1); table[n]=c; }
+  }
+  let c = ~0;
+  for(let i=0;i<buf.length;i++) c = table[(c ^ buf[i]) & 0xFF] ^ (c >>> 8);
+  return ~c >>> 0;
+}
+function buildZip(files){ // files: [{name, data:Uint8Array}]
+  const enc = new TextEncoder();
+  const num = (n, bytes)=>{ const a = new Uint8Array(bytes); for(let i=0;i<bytes;i++) a[i] = (n >>> (8*i)) & 0xFF; return a; };
+  const parts = [], central = [];
+  let offset = 0;
+  for(const f of files){
+    const name = enc.encode(f.name);
+    const crc = crc32Bytes(f.data);
+    const local = [num(0x04034b50,4), num(20,2), num(0,2), num(0,2), num(0,2), num(0,2),
+      num(crc,4), num(f.data.length,4), num(f.data.length,4), num(name.length,2), num(0,2), name, f.data];
+    central.push([num(0x02014b50,4), num(20,2), num(20,2), num(0,2), num(0,2), num(0,2), num(0,2),
+      num(crc,4), num(f.data.length,4), num(f.data.length,4), num(name.length,2), num(0,2), num(0,2),
+      num(0,2), num(0,2), num(0,4), num(offset,4), name]);
+    for(const a of local){ parts.push(a); offset += a.length; }
+  }
+  const centralStart = offset;
+  let centralSize = 0;
+  for(const c of central) for(const a of c){ parts.push(a); centralSize += a.length; }
+  parts.push(num(0x06054b50,4), num(0,2), num(0,2), num(files.length,2), num(files.length,2),
+    num(centralSize,4), num(centralStart,4), num(0,2));
+  return new Blob(parts, {type:'application/zip'});
+}
+function downloadConnectorZip(){
+  const enc = new TextEncoder();
+  const files = Object.entries(CONNECTOR_FILES).map(([name, f])=>({
+    name: 'paper-library-connector/' + name,
+    data: f.b64 ? Uint8Array.from(atob(f.b64), ch=>ch.charCodeAt(0)) : enc.encode(f.text),
+  }));
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(buildZip(files));
+  a.download = 'paper-library-connector.zip';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 5000);
+}
+/* === CONNECTOR_FILES (auto-generated by sync-connector.py — do not edit by hand) === */
+const CONNECTOR_FILES = {
+  "README.md": {text: "# Paper Library Connector\n\nPaper Library 用の Chrome 拡張機能です。論文ページを開いたまま、ツールバーのボタン一つでライブラリに保存できます。\n\nA Chrome extension for Paper Library: save the paper you are viewing to your library with one toolbar click.\n\nこの ZIP は Paper Library 本体（index.html）のマニュアル「拡張機能」からダウンロードできます。\n\n## インストール / Install\n\n1. ダウンロードした `paper-library-connector.zip` を解凍する\n2. Chrome で `chrome://extensions` を開く\n3. 右上の「デベロッパーモード」を ON にする\n4. 「パッケージ化されていない拡張機能を読み込む」で、解凍してできた `paper-library-connector` フォルダを選ぶ\n5. 拡張機能の「詳細」を開き、**「ファイルの URL へのアクセスを許可する」を ON にする**（`index.html` をファイルとして開いているライブラリと連携するために必須）\n\nEnglish: unzip `paper-library-connector.zip`, open `chrome://extensions`, enable *Developer mode*, click *Load unpacked* and select the unzipped `paper-library-connector` folder, then open the extension's *Details* page and enable **Allow access to file URLs**.\n\n## 使い方 / Usage\n\n- 論文ページ（出版社ページ・arXiv など）でツールバーの本のアイコンをクリック → 入れるコレクションにチェック →「保存」。何も選ばなければ「未分類」（どのコレクションにも入れない状態）で保存されます\n- 保存先ライブラリはポップアップ上部に表示されます。複数のライブラリを Paper Library で開いたことがある場合は、プルダウンで保存先を切り替えられます\n- 雑誌名はポップアップで略語表示されます（例：J. Am. Chem. Soc.）\n- すでにライブラリにある論文のページでは、アイコンに緑の「✓」バッジが付き、ポップアップに所属コレクションが表示されます\n- 送信待ちの論文はオレンジの「…」バッジで表示されます\n- 未登録の論文は青い「+」バッジで表示されます\n- 保存した文献は、Paper Library（`index.html`）をライブラリフォルダを開いた状態で表示した瞬間に自動で取り込まれます。メタデータは CrossRef / arXiv API から自動補完されます\n\n## 仕組み / How it works\n\n- `sniffer.js` — 各ページで DOI / arXiv ID を検出し、ライブラリのミラーと照合してバッジを表示\n- `popup.js` — ページから書誌メタデータ（`citation_*` メタタグ等）を抽出し、保存キューに追加\n- `bridge.js` — Paper Library のページと `chrome.storage` の橋渡し（ライブラリのスナップショット保存・キューの受け渡し）\n- ライブラリ本体（library.json・PDF）には一切触れません。取り込みはすべて Paper Library 本体が行います\n\n## 注意 / Notes\n\n- お試しモード（フォルダ未選択）のライブラリとは同期しません。フォルダを開いた状態の Paper Library とだけ連携します\n- Paper Library のタブを複数同時に開くと二重取り込みの原因になるため、1 つだけ開いてください\n"},
+  "background.js": {text: "// Badge keeper: content scripts report whether the current page's paper is in\n// the library; we paint the toolbar badge for that tab.\n// '✓' = already in the library, '…' = queued, waiting for Paper Library to open,\n// '+' = detected paper that is not in the library yet.\nchrome.runtime.onMessage.addListener((msg, sender) => {\n  if (msg && msg.type === 'badge' && sender.tab && sender.tab.id != null) {\n    const text = msg.text || '';\n    chrome.action.setBadgeText({ tabId: sender.tab.id, text });\n    if (text) {\n      chrome.action.setBadgeBackgroundColor({\n        tabId: sender.tab.id,\n        color: text === '✓' ? '#16a34a' : (text === '…' ? '#d97706' : '#2563eb'),\n      });\n      if (chrome.action.setBadgeTextColor) {\n        chrome.action.setBadgeTextColor({ tabId: sender.tab.id, color: '#ffffff' });\n      }\n    }\n  }\n});\n"},
+  "bridge.js": {text: "// Runs on the Paper Library page (file:// or localhost): relays messages\n// between the page and chrome.storage — stores each library's snapshot under\n// its id, and feeds queued saves addressed to THIS library into the page.\n(function () {\n  if (!document.querySelector('meta[name=\"refshelf-app\"]')) return;\n\n  let myLibId = '';        // id of the library currently open in this page\n  let delivering = false;\n\n  function post(msg) {\n    window.postMessage(Object.assign({ source: 'refshelf-connector' }, msg), '*');\n  }\n\n  async function deliver() {\n    if (!myLibId || delivering) return;\n    const { pending = [] } = await chrome.storage.local.get('pending');\n    // items addressed to this library, plus legacy items with no target\n    const mine = pending.filter(p => !p.targetLib || p.targetLib === myLibId);\n    if (!mine.length) return;\n    delivering = true;\n    post({ action: 'import', items: mine });\n  }\n\n  window.addEventListener('message', async (e) => {\n    const d = e.data;\n    if (e.source !== window || !d || d.source !== 'refshelf-app') return;\n    if (d.action === 'snapshot' && d.snapshot) {\n      // Trial (in-memory) libraries are not mirrored and get no queued saves:\n      // anything imported there would evaporate with the session.\n      if (!d.snapshot.persistent) return;\n      const snap = d.snapshot;\n      myLibId = snap.libraryId || snap.libraryName || 'default';\n      const store = await chrome.storage.local.get(['libraries', 'activeLib']);\n      const libraries = store.libraries || {};\n      libraries[myLibId] = {\n        id: myLibId,\n        name: snap.libraryName || '',\n        collections: snap.collections || [],\n        saved: snap.saved || {},\n        url: location.href, // so the popup can offer to open this library\n        snapshotAt: Date.now(),\n      };\n      const patch = { libraries, appUrl: location.href };\n      // Default the active (destination) library to whatever is open, until the\n      // user picks a specific one in the popup.\n      if (!store.activeLib || !libraries[store.activeLib]) patch.activeLib = myLibId;\n      await chrome.storage.local.set(patch);\n      deliver();\n    } else if (d.action === 'import-result') {\n      const done = new Set((d.results || []).map(r => r.id));\n      const { pending = [] } = await chrome.storage.local.get('pending');\n      await chrome.storage.local.set({ pending: pending.filter(p => !done.has(p.id)) });\n      delivering = false;\n      deliver(); // pick up anything that arrived while we were importing\n    }\n  });\n\n  chrome.storage.onChanged.addListener((ch, area) => {\n    if (area === 'local' && ch.pending && (ch.pending.newValue || []).length) deliver();\n  });\n\n  post({ action: 'hello' });\n})();\n"},
+  "icons/icon128.png": {b64: "iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAADKElEQVR42u3dP2sTYRzA8b6DvAMzOfcFOKSbY1a3Gx2zuxQEcRDNIAhFJG9AqNAOHYSITuJwDgVxym6HFNQqIjzeEx61JE2T6vV6l3y+8KMlpH+S3yd3bZbb2JAkSZIkSZIkSZIkSZIkSZIkSSq5a1u77WI6xWwX0y9mWMw4fezU7fe9cfekU8ywmHH62C9mO93ettH5i94sppsWvZsWHJaYeL92DRa/mRYelph4v90Eoxu/dp0WHV/NWVp0XN5oyUUvmsFVQIiv6mIGSy5+0YwSjggji0eNph+2e1OH7VDBVAKh5MUvmtOnk16tTydp8aEGEyG0Gr74RdMB4PwZp1NNq4TFt9KheVyT5QNQBYSaLh6AMiGEENpxGrR4AP5z4n8eWVr+MPxtmJaf1XzxAJQx93cOx2GqJy9/NGHxAJQxjwYfpvcfnr36EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYA0B5Oky9P10+ddBjQEM0mVn++my7zkAy13O9fSCu+l7tc75WZvpa+oCIC57c97vm65H3CmmOwVktA4Afi94kBacpfu2S/qZwysEMCxjGcX3aCcgWQIyWACklgDaZS/4siCUAGBY5RLOANLe0FwIo0sEkNfy1acZCNl5EP4BQDwUZ57ZFYFwAQAWv0IQxhcAYPHL9Hj/uFdMXkyo+zx4fhRu3cnD9Zt7cwFs3fsabj/9HB6+qP/jSROf+95VLL7VlMWfBWHvzdEMgIP335u0+LMgtKoEkDf0iZrM24/fZgDE25r8mOJOqjzsN/rJen14MgMg3tb0x1XJ6aDpr/44OwfH4dPxzz/Lj5/H21YAQF4FgFV4oiYL33/3ZTIrsvzJALDm4xSw3pP7I3C9p+ffQK9+bwSt4/IrfSOoiW8Fr/Diq38rWJIkSZIkSZIkSZIkSVJN+wWzouI99lKbwgAAAABJRU5ErkJggg=="},
+  "icons/icon16.png": {b64: "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAe0lEQVR42mNgGD5AzmF9PBCvB+LzQPweiOuBmN+66RsI1wPxeyA+D8TrgTgemwH7gfg/Mg7LP/w/Z+GP/0AN6Hj/qAGD1YB+aNyDsD8Q30cyABT//tD0AML9KJonb/ngD8T70fGElY//z9j19T82OZAeggYQwP6DIw8BAHNcStl941x5AAAAAElFTkSuQmCC"},
+  "icons/icon32.png": {b64: "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAA4klEQVR42mNgGAWjYBRgAXIO6+WB2B6I64G4H4j3A/F7KG2PS5910zd7IN4PxO+hdD8Q10PF5Ym1HGTxfwIY5BB5JIv1oRb+J4DtqeUAMN534sX947f/3CfCYto44Nj51//P3f/zf9QBow4YdcCoA0YdMOoAWjsA1g5YD8T3iXAAqHZcj9QuINkBsMaIPg75eJhD0BwAsjgeR0NFn6hGyeQtH+SBuJ4YnNB05f65a+//X37053/uvE/3idUHsgOfA0AG/ScWn7z5HYxJ0QOyg2oOIBPfp0oUUIDlR5v9owAZAADCXwIiw7wc3wAAAABJRU5ErkJggg=="},
+  "icons/icon48.png": {b64: "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAABQElEQVR42u2ZMUoDQRiFc4O5gZ11DpBi0wTLtHbT2c4BLBYDViIBbT1BEFYw/TTp5wamsLQYBZV0f/4Jf5YUYiYzu6uQ9+ArFpbZ98Fu87bXQxAEQZBjycmwKhjNlEzFOMbLtYo9ZzD5VkzJeMYxlVxrpmiy8JSxzJKhPQQRE1HeSHHaw5KxzDRHgBIIsvqH4lpK0aF0LVCLEJELpBb/awHaJqc8BCAAAQhAAAIQgAAEIAABCEAAAhBIF/CyDVUyYBkZuPo792m5L1YgrBR6Z3Lph0FLNqNShi673Y+6Wu2UCPpfBLwUVK0Xup+/FylcPryORxcLe3r2XAsMr7/o/O7TXs0+xqnnHlJcMY6hHG4e32qB26e8s4TQScUImAYetsG9rDY0dV7o1qlAC5jOXqEWiHuFcj/itsDfGQRB/mfWC5TjUOc+S18AAAAASUVORK5CYII="},
+  "manifest.json": {text: "{\n  \"manifest_version\": 3,\n  \"name\": \"Paper Library Connector\",\n  \"version\": \"1.0\",\n  \"description\": \"Save the paper you are viewing to Paper Library and see at a glance whether it is already in your library.\",\n  \"icons\": {\n    \"16\": \"icons/icon16.png\",\n    \"32\": \"icons/icon32.png\",\n    \"48\": \"icons/icon48.png\",\n    \"128\": \"icons/icon128.png\"\n  },\n  \"action\": {\n    \"default_popup\": \"popup.html\",\n    \"default_icon\": {\n      \"16\": \"icons/icon16.png\",\n      \"32\": \"icons/icon32.png\"\n    }\n  },\n  \"background\": {\n    \"service_worker\": \"background.js\"\n  },\n  \"permissions\": [\"storage\", \"scripting\", \"activeTab\", \"tabs\"],\n  \"content_scripts\": [\n    {\n      \"matches\": [\"http://*/*\", \"https://*/*\"],\n      \"js\": [\"sniffer.js\"],\n      \"run_at\": \"document_idle\"\n    },\n    {\n      \"matches\": [\"file:///*\", \"http://localhost/*\", \"http://127.0.0.1/*\"],\n      \"js\": [\"bridge.js\"],\n      \"run_at\": \"document_idle\"\n    }\n  ]\n}\n"},
+  "popup.html": {text: "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<style>\n  :root{\n    --bg:#ffffff; --bg2:#f5f6f8; --border:#dcdfe4; --text:#1f2328; --text2:#59636e;\n    --accent:#2563eb; --accent-soft:#eaf1fe; --green:#16a34a; --green-soft:#e7f6ec; --amber:#d97706; --amber-soft:#fdf1e0;\n  }\n  @media (prefers-color-scheme: dark){\n    :root{\n      --bg:#1c2128; --bg2:#22272e; --border:#3a4048; --text:#e6e8eb; --text2:#9aa4af;\n      --accent:#6ba1f7; --accent-soft:#263a5c; --green:#3fbf6f; --green-soft:#1f3a2a; --amber:#e8a44a; --amber-soft:#3d3020;\n    }\n  }\n  html,body{margin:0; padding:0}\n  body{\n    width:340px; background:var(--bg); color:var(--text);\n    font:13px/1.5 -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Hiragino Sans\", \"Noto Sans JP\", sans-serif;\n  }\n  header{display:flex; align-items:center; gap:8px; padding:10px 14px; border-bottom:1px solid var(--border)}\n  header img{width:18px; height:18px}\n  header .name{font-weight:600; font-size:13px}\n  header .libname{margin-left:auto; font-size:11px; color:var(--text2); max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}\n  #body{padding:12px 14px}\n  #paperTitle{font-weight:600; font-size:13.5px; line-height:1.45; margin:0 0 3px}\n  #paperMeta{font-size:11.5px; color:var(--text2); margin:0 0 10px; overflow-wrap:break-word}\n  .chip{\n    display:inline-flex; align-items:center; gap:5px; padding:2px 9px; border-radius:999px;\n    font-size:11.5px; font-weight:600; margin:0 0 10px;\n  }\n  .chip.saved{background:var(--green-soft); color:var(--green)}\n  .chip.queued{background:var(--amber-soft); color:var(--amber)}\n  .chip.new{background:var(--accent-soft); color:var(--accent)}\n  #savedFolders{font-size:11.5px; color:var(--text2); margin:-6px 0 10px}\n  #destLib{\n    font-size:11.5px; color:var(--text2); background:var(--bg2);\n    border:1px solid var(--border); border-radius:8px; padding:6px 9px; margin:0 0 10px;\n  }\n  #destLib b{color:var(--text); font-weight:600}\n  #destLib .libRow{display:flex; align-items:center; gap:6px}\n  #destLib select{\n    flex:1; min-width:0; font:inherit; font-size:12px; color:var(--text);\n    background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:3px 6px;\n  }\n  .sectionLabel{font-size:11px; font-weight:600; color:var(--text2); margin:0 0 5px; text-transform:none}\n  #folders{\n    max-height:180px; overflow-y:auto; border:1px solid var(--border); border-radius:8px;\n    padding:5px 4px; margin-bottom:10px; background:var(--bg2);\n  }\n  #folders label{display:flex; align-items:center; gap:7px; padding:3px 8px; border-radius:6px; cursor:pointer}\n  #folders label:hover{background:var(--accent-soft)}\n  #folders input{margin:0; accent-color:var(--accent)}\n  #folders .none{color:var(--text2); font-size:11.5px; padding:4px 8px}\n  button#save{\n    width:100%; padding:8px 0; border:none; border-radius:8px; background:var(--accent); color:#fff;\n    font-size:13px; font-weight:600; cursor:pointer;\n  }\n  button#save:hover{filter:brightness(1.07)}\n  button#save:disabled{opacity:.5; cursor:default}\n  #note{font-size:11.5px; color:var(--text2); margin:8px 0 0; line-height:1.5}\n  #note.ok{color:var(--green)}\n  #note button{\n    margin-top:6px; padding:5px 10px; border:1px solid var(--accent); border-radius:7px;\n    background:var(--accent-soft); color:var(--accent); font-size:12px; font-weight:600; cursor:pointer;\n  }\n  #note button:hover{filter:brightness(1.03)}\n  #warn{font-size:11.5px; color:var(--amber); margin:0 0 10px; line-height:1.5}\n<\/style>\n<\/head>\n<body>\n<header>\n  <img src=\"icons/icon32.png\" alt=\"\">\n  <span class=\"name\">Paper Library Connector<\/span>\n<\/header>\n<div id=\"body\">\n  <div id=\"status\"><\/div>\n  <p id=\"paperTitle\"><\/p>\n  <p id=\"paperMeta\"><\/p>\n  <div id=\"savedFolders\"><\/div>\n  <div id=\"warn\" style=\"display:none\"><\/div>\n  <div id=\"destLib\" style=\"display:none\"><\/div>\n  <div class=\"sectionLabel\" id=\"foldersLabel\"><\/div>\n  <div id=\"folders\"><\/div>\n  <button id=\"save\"><\/button>\n  <p id=\"note\"><\/p>\n<\/div>\n<script src=\"popup.js\"><\/script>\n<\/body>\n<\/html>\n"},
+  "popup.js": {text: "// Popup: extracts the paper on the active tab, shows saved/queued status and\n// the collection tree for the chosen destination library, and queues the save.\n\nconst JA = (navigator.language || '').toLowerCase().startsWith('ja');\nconst T = JA ? {\n  saved: '✓ ライブラリに保存済み',\n  queued: '… 取り込み待ち',\n  notSaved: '未登録',\n  noPaper: 'このページから論文情報を見つけられませんでした。DOI 付きの論文ページで試してください。',\n  savedIn: (names) => `所属コレクション: ${names}`,\n  savedNoFolder: '所属コレクション: なし（未分類）',\n  destLib: '保存先ライブラリ',\n  folders: '入れるコレクション（複数選択可）',\n  noFolders: 'コレクションはまだありません（未分類として保存されます）',\n  saveRoot: 'コレクションに入れずに保存（未分類）',\n  saveTo: (names) => `「${names}」に保存`,\n  addTo: (names) => `「${names}」に追加`,\n  uncat: '未分類',\n  openApp: 'Paper Library を開いて取り込む',\n  // after a save\n  doneOpen: (dest) => `保存しました → ${dest}。開いている Paper Library に取り込まれます。`,\n  doneClosed: (dest) => `保存しました → ${dest}。下のボタンを押すか、次に Paper Library を開くと取り込まれます。`,\n  doneNoUrl: (dest) => `保存しました → ${dest}。次に Paper Library を開くと取り込まれます。`,\n  // when the paper is already queued (popup reopened)\n  pendingOpen: 'この論文は取り込み待ちです。開いている Paper Library に取り込まれます。',\n  pendingClosed: 'この論文は取り込み待ちです。下のボタンを押すか、次に Paper Library を開くと取り込まれます。',\n  pendingNoUrl: 'この論文は取り込み待ちです。次に Paper Library を開くと取り込まれます。',\n  needSync: 'まだライブラリと同期していません。Paper Library をライブラリフォルダを開いた状態で一度表示すると、保存先ライブラリ・コレクション一覧・保存済み判定が使えるようになります（保存自体は今でも可能です）。',\n  restricted: 'このページでは拡張機能が動作できません。',\n} : {\n  saved: '✓ In your library',\n  queued: '… Pending import',\n  notSaved: 'Not in library',\n  noPaper: 'Could not find paper metadata on this page. Try a paper page with a DOI.',\n  savedIn: (names) => `In collections: ${names}`,\n  savedNoFolder: 'In collections: none (uncategorized)',\n  destLib: 'Destination library',\n  folders: 'Put in collections (multi-select)',\n  noFolders: 'No collections yet (saved as uncategorized)',\n  saveRoot: 'Save without a collection (uncategorized)',\n  saveTo: (names) => `Save to “${names}”`,\n  addTo: (names) => `Add to “${names}”`,\n  uncat: 'uncategorized',\n  openApp: 'Open Paper Library to import',\n  doneOpen: (dest) => `Saved → ${dest}. Importing into the open Paper Library.`,\n  doneClosed: (dest) => `Saved → ${dest}. Press the button below, or it imports next time you open Paper Library.`,\n  doneNoUrl: (dest) => `Saved → ${dest}. It imports next time you open Paper Library.`,\n  pendingOpen: 'This paper is pending import. It will be imported into the open Paper Library.',\n  pendingClosed: 'This paper is pending import. Press the button below, or it imports next time you open Paper Library.',\n  pendingNoUrl: 'This paper is pending import. It imports next time you open Paper Library.',\n  needSync: 'Not synced with your library yet. Open Paper Library once (with your library folder open) to enable the destination-library picker, collection list, and saved-state checks. Saving still works now.',\n  restricted: 'The extension cannot run on this page.',\n};\n\nconst DOI_RE = /10\\.\\d{4,9}\\/[^\\s\"'<>&]+/;\n\n// A few common journals for an instant, offline abbreviation; anything else is\n// refined from CrossRef's short-container-title once it responds.\nconst ABBREV = {\n  'journal of the american chemical society': 'J. Am. Chem. Soc.',\n  'angewandte chemie international edition': 'Angew. Chem. Int. Ed.',\n  'angewandte chemie': 'Angew. Chem.',\n  'chemical science': 'Chem. Sci.',\n  'chemical communications': 'Chem. Commun.',\n  'chemical reviews': 'Chem. Rev.',\n  'chemistry - a european journal': 'Chem. Eur. J.',\n  'chemistry a european journal': 'Chem. Eur. J.',\n  'nature': 'Nature',\n  'nature chemistry': 'Nat. Chem.',\n  'nature communications': 'Nat. Commun.',\n  'nature materials': 'Nat. Mater.',\n  'science': 'Science',\n  'journal of organic chemistry': 'J. Org. Chem.',\n  'organic letters': 'Org. Lett.',\n  'organometallics': 'Organometallics',\n  'inorganic chemistry': 'Inorg. Chem.',\n  'dalton transactions': 'Dalton Trans.',\n  'journal of physical chemistry a': 'J. Phys. Chem. A',\n  'journal of physical chemistry b': 'J. Phys. Chem. B',\n  'journal of physical chemistry c': 'J. Phys. Chem. C',\n  'journal of physical chemistry letters': 'J. Phys. Chem. Lett.',\n  'journal of chemical physics': 'J. Chem. Phys.',\n  'physical review letters': 'Phys. Rev. Lett.',\n  'physical review b': 'Phys. Rev. B',\n  'proceedings of the national academy of sciences': 'Proc. Natl. Acad. Sci. U. S. A.',\n  'advanced materials': 'Adv. Mater.',\n  'acs nano': 'ACS Nano',\n  'journal of the chemical society': 'J. Chem. Soc.',\n};\nfunction abbreviate(journal, journalAbbr) {\n  if (journalAbbr) return journalAbbr;\n  const key = String(journal || '').toLowerCase().replace(/^the\\s+/, '').replace(/[.:]/g, '').replace(/\\s+/g, ' ').trim();\n  return ABBREV[key] || '';\n}\nasync function fetchCrossrefAbbrev(doi) {\n  try {\n    const r = await fetch('https://api.crossref.org/works/' + encodeURIComponent(doi) + '?select=short-container-title');\n    if (!r.ok) return '';\n    const m = (await r.json()).message || {};\n    return (m['short-container-title'] && m['short-container-title'][0]) || '';\n  } catch (e) { return ''; }\n}\n\n// ACS-style author list: \"Family, F. M.\" joined by \"; \" (matches the app).\nfunction acsAuthors(authors) {\n  return (authors || []).map(a => {\n    const s = String(a).trim();\n    if (!s) return '';\n    let family, given;\n    if (s.includes(',')) { const p = s.split(','); family = p[0].trim(); given = p.slice(1).join(',').trim(); }\n    else { const p = s.split(/\\s+/); family = p.pop() || ''; given = p.join(' '); }\n    const ini = given.split(/[\\s.\\-]+/).filter(Boolean).map(w => w[0].toUpperCase() + '.').join(' ');\n    return ini ? `${family}, ${ini}` : family;\n  }).filter(Boolean);\n}\n// ACS-style meta line: \"Doe, J.; Smith, A. B. Chem. Sci. 2026\" (no DOI).\nfunction acsMetaLine(authors, venue, year, cap) {\n  const names = acsAuthors(authors);\n  let auth = '';\n  if (names.length) {\n    const many = cap && names.length > cap;\n    auth = (many ? names.slice(0, cap) : names).join('; ');\n    if (many) auth += ' et al.';\n    if (!/\\.$/.test(auth)) auth += '.'; // period before the venue\n  }\n  return [auth, venue, year].filter(Boolean).join(' ');\n}\n\n// Injected into the page — must be self-contained.\nfunction extractPageMetadata() {\n  const doiRe = /10\\.\\d{4,9}\\/[^\\s\"'<>&]+/;\n  const one = (n) => {\n    const el = document.querySelector(`meta[name=\"${n}\" i], meta[property=\"${n}\" i]`);\n    return el && el.content ? el.content.trim() : '';\n  };\n  const all = (n) => Array.from(document.querySelectorAll(`meta[name=\"${n}\" i]`))\n    .map(e => (e.content || '').trim()).filter(Boolean);\n  let doi = '';\n  for (const n of ['citation_doi', 'dc.identifier', 'dc.identifier.doi', 'prism.doi', 'doi']) {\n    const m = one(n).match(doiRe);\n    if (m) { doi = m[0]; break; }\n  }\n  if (!doi) {\n    try {\n      const m = decodeURIComponent(location.href).match(doiRe);\n      if (m) doi = m[0].replace(/[.,;)\\]]+$/, '');\n    } catch (e) { /* malformed escape */ }\n  }\n  if (!doi) {\n    const a = document.querySelector('a[href*=\"doi.org/10.\"]');\n    if (a) {\n      const m = decodeURIComponent(a.href).match(doiRe);\n      if (m) doi = m[0];\n    }\n  }\n  let arxiv = one('citation_arxiv_id');\n  if (!arxiv) {\n    const m = location.href.match(/arxiv\\.org\\/(?:abs|pdf)\\/([a-z\\-]+(?:\\.[A-Z]{2})?\\/\\d{7}|\\d{4}\\.\\d{4,5})/i);\n    if (m) arxiv = m[1];\n  }\n  if (!arxiv && doi) {\n    const m = doi.match(/^10\\.48550\\/arxiv\\.(.+)$/i);\n    if (m) { arxiv = m[1]; doi = ''; }\n  }\n  const yr = (one('citation_publication_date') || one('citation_date') ||\n    one('citation_online_date') || one('prism.publicationdate')).match(/\\d{4}/);\n  return {\n    url: location.href.replace(/#.*$/, ''),\n    doi, arxiv,\n    title: one('citation_title') || one('og:title') || document.title || '',\n    authors: all('citation_author'),\n    journal: one('citation_journal_title') || one('og:site_name') || '',\n    journalAbbr: one('citation_journal_abbrev') || '',\n    year: yr ? yr[0] : '',\n    abstract: one('citation_abstract') || one('dcterms.abstract') || one('dc.description') || '',\n  };\n}\n\n// Fallback when scripting is blocked (PDF viewer, chrome:// pages…).\nfunction metaFromUrl(url, title) {\n  const out = { url: String(url || ''), doi: '', arxiv: '', title: String(title || ''), authors: [], journal: '', journalAbbr: '', year: '', abstract: '' };\n  try {\n    const dec = decodeURIComponent(out.url);\n    const a = dec.match(/arxiv\\.org\\/(?:abs|pdf)\\/([a-z\\-]+(?:\\.[A-Z]{2})?\\/\\d{7}|\\d{4}\\.\\d{4,5})/i);\n    if (a) out.arxiv = a[1];\n    else {\n      const m = dec.match(DOI_RE);\n      if (m) out.doi = m[0].replace(/[.,;)\\]]+$/, '');\n    }\n  } catch (e) { /* ignore */ }\n  return out;\n}\n\nfunction normKeys(meta) {\n  return {\n    doiKey: meta.doi ? 'doi:' + meta.doi.toLowerCase() : '',\n    arxivKey: meta.arxiv ? 'arxiv:' + String(meta.arxiv).toLowerCase().replace(/v\\d+$/, '') : '',\n  };\n}\n\nfunction folderTree(collections) {\n  const byParent = new Map();\n  (collections || []).forEach(c => {\n    const k = c.parent || '';\n    if (!byParent.has(k)) byParent.set(k, []);\n    byParent.get(k).push(c);\n  });\n  for (const arr of byParent.values()) arr.sort((a, b) => a.name.localeCompare(b.name, JA ? 'ja' : 'en'));\n  const out = [];\n  (function walk(parent, depth) {\n    (byParent.get(parent) || []).forEach(c => {\n      out.push({ id: c.id, name: c.name, depth });\n      walk(c.id, depth + 1);\n    });\n  })('', 0);\n  return out;\n}\n\nconst $ = (s) => document.querySelector(s);\nfunction esc(s) {\n  return String(s).replace(/[&<>\"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', \"'\": '&#39;' }[c]));\n}\n\nasync function init() {\n  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });\n  let meta = null;\n  if (tab && /^(https?|file):/.test(tab.url || '')) {\n    try {\n      const res = await chrome.scripting.executeScript({ target: { tabId: tab.id }, func: extractPageMetadata });\n      meta = res && res[0] && res[0].result;\n    } catch (e) { /* injection blocked (PDF viewer etc.) */ }\n  }\n  if (!meta) meta = metaFromUrl(tab && tab.url, tab && tab.title);\n\n  const { doiKey, arxivKey } = normKeys(meta);\n  const identifiable = !!(meta.doi || meta.arxiv || meta.title);\n\n  // ---- title + ACS-style meta line (authors, journal abbrev, year; no DOI) ----\n  const venueOf = (journal) => journal || (meta.arxiv ? 'arXiv:' + meta.arxiv : '');\n  const renderMeta = (journal) => {\n    $('#paperMeta').textContent = acsMetaLine(meta.authors, venueOf(journal), meta.year, 10);\n  };\n  $('#paperTitle').textContent = meta.title || meta.doi || meta.arxiv || '';\n  const abbr = abbreviate(meta.journal, meta.journalAbbr);\n  renderMeta(abbr || meta.journal);\n  if (!abbr && meta.doi && meta.journal) {\n    fetchCrossrefAbbrev(meta.doi).then(a => { if (a) renderMeta(a); });\n  }\n\n  // ---- load libraries (with fallback from the old single-snapshot shape) ----\n  let { libraries = {}, activeLib, pending = [], appUrl = '' } =\n    await chrome.storage.local.get(['libraries', 'activeLib', 'pending', 'appUrl']);\n  if (!Object.keys(libraries).length) {\n    const { snapshot } = await chrome.storage.local.get('snapshot');\n    if (snapshot && snapshot.persistent) {\n      const id = snapshot.libraryId || snapshot.libraryName || 'default';\n      libraries = { [id]: { id, name: snapshot.libraryName || '', collections: snapshot.collections || [], saved: snapshot.saved || {} } };\n      if (!activeLib) activeLib = id;\n    }\n  }\n  const libIds = Object.keys(libraries);\n  if (!activeLib || !libraries[activeLib]) activeLib = libIds[0];\n  const currentLib = () => libraries[activeLib] || null;\n\n  // ---- \"open Paper Library to import\" helpers ----\n  // The library folder can only be written by the Paper Library page (browser\n  // security — an extension can't write to your chosen folder). So a save is\n  // captured here and flushed when the page is open; offer to open it.\n  async function appTabState() {\n    const url = (currentLib() && currentLib().url) || appUrl || '';\n    if (!url) return { url: '', open: false };\n    try {\n      const base = url.split('#')[0];\n      const tabs = await chrome.tabs.query({});\n      return { url, open: tabs.some(t => t.url && t.url.split('#')[0] === base) };\n    } catch (e) { return { url, open: false }; }\n  }\n  function setNote(text, url) {\n    $('#note').className = 'ok';\n    $('#note').textContent = text;\n    if (url) {\n      const b = document.createElement('button');\n      b.textContent = T.openApp;\n      b.addEventListener('click', () => { chrome.tabs.create({ url }); window.close(); });\n      $('#note').appendChild(document.createElement('br'));\n      $('#note').appendChild(b);\n    }\n  }\n  async function showImportHint(msgOpen, msgClosed, msgNoUrl) {\n    const { url, open } = await appTabState();\n    if (open) setNote(msgOpen, '');\n    else if (url) setNote(msgClosed, url);\n    else setNote(msgNoUrl, '');\n  }\n\n  if (!libIds.length) { $('#warn').style.display = 'block'; $('#warn').textContent = T.needSync; }\n\n  // ---- destination-library picker ----\n  const renderDestLib = () => {\n    if (!libIds.length) { $('#destLib').style.display = 'none'; return; }\n    $('#destLib').style.display = 'block';\n    if (libIds.length === 1) {\n      $('#destLib').innerHTML = esc(T.destLib) + ': <b>' + esc(currentLib().name || activeLib) + '<\/b>';\n      return;\n    }\n    const opts = libIds.map(id =>\n      `<option value=\"${esc(id)}\"${id === activeLib ? ' selected' : ''}>${esc(libraries[id].name || id)}<\/option>`).join('');\n    $('#destLib').innerHTML = `<div class=\"libRow\"><span>${esc(T.destLib)}:<\/span><select id=\"libSel\">${opts}<\/select><\/div>`;\n    $('#libSel').addEventListener('change', async (e) => {\n      activeLib = e.target.value;\n      await chrome.storage.local.set({ activeLib });\n      renderForLibrary(); // collections/saved-state differ per library\n    });\n  };\n\n  // ---- per-library section (status, collections, save button) ----\n  const collName = (id) => {\n    const lib = currentLib();\n    const c = lib && (lib.collections || []).find(x => x.id === id);\n    return c ? c.name : '';\n  };\n  const btn = $('#save');\n  const checkedNames = () => Array.from(document.querySelectorAll('#folders input:checked'))\n    .map(el => collName(el.value)).filter(Boolean);\n\n  function renderForLibrary() {\n    const lib = currentLib();\n    const saved = (lib && lib.saved) || {};\n    const savedColls = (doiKey && saved[doiKey]) || (arxivKey && saved[arxivKey]) || null;\n    const isQueued = pending.some(p => {\n      const k = normKeys(p);\n      return (doiKey && k.doiKey === doiKey) || (arxivKey && k.arxivKey === arxivKey);\n    });\n\n    // status chip\n    $('#savedFolders').textContent = '';\n    if (savedColls) {\n      $('#status').innerHTML = `<span class=\"chip saved\">${esc(T.saved)}<\/span>`;\n      const names = (savedColls || []).map(collName).filter(Boolean);\n      $('#savedFolders').textContent = names.length ? T.savedIn(names.join(', ')) : T.savedNoFolder;\n    } else if (isQueued) {\n      $('#status').innerHTML = `<span class=\"chip queued\">${esc(T.queued)}<\/span>`;\n    } else if (identifiable) {\n      $('#status').innerHTML = `<span class=\"chip new\">${esc(T.notSaved)}<\/span>`;\n    } else {\n      $('#status').innerHTML = '';\n    }\n\n    // collection list\n    $('#foldersLabel').textContent = T.folders;\n    const tree = folderTree(lib && lib.collections);\n    $('#folders').innerHTML = tree.length\n      ? tree.map(c => `<label style=\"padding-left:${8 + c.depth * 16}px\"><input type=\"checkbox\" value=\"${esc(c.id)}\">${esc(c.name)}<\/label>`).join('')\n      : `<div class=\"none\">${esc(T.noFolders)}<\/div>`;\n\n    // button label\n    btn.dataset.saved = savedColls ? '1' : '';\n    updateBtn();\n  }\n\n  const updateBtn = () => {\n    const names = checkedNames();\n    if (!names.length) btn.textContent = T.saveRoot;\n    else btn.textContent = (btn.dataset.saved ? T.addTo : T.saveTo)(names.join('・'));\n  };\n\n  renderDestLib();\n  renderForLibrary();\n\n  $('#folders').addEventListener('change', updateBtn);\n\n  if (!identifiable) {\n    btn.disabled = true;\n    $('#note').textContent = T.noPaper;\n    return;\n  }\n\n  btn.addEventListener('click', async () => {\n    btn.disabled = true;\n    const collIds = Array.from(document.querySelectorAll('#folders input:checked')).map(el => el.value);\n    const item = {\n      id: (crypto.randomUUID && crypto.randomUUID()) || String(Date.now()) + Math.random().toString(36).slice(2),\n      doi: meta.doi || '', arxiv: meta.arxiv || '', url: meta.url || '',\n      title: meta.title || '', authors: meta.authors || [], journal: meta.journal || '',\n      year: meta.year || '', abstract: meta.abstract || '',\n      collections: collIds, targetLib: activeLib || '', savedAt: Date.now(),\n    };\n    const { pending: cur = [] } = await chrome.storage.local.get('pending');\n    cur.push(item);\n    await chrome.storage.local.set({ pending: cur });\n    const destColl = checkedNames().join('・') || T.uncat;\n    const libLabel = (currentLib() && currentLib().name) || '';\n    const dest = libLabel ? `${libLabel} / ${destColl}` : destColl;\n    $('#status').innerHTML = `<span class=\"chip queued\">${esc(T.queued)}<\/span>`;\n    await showImportHint(T.doneOpen(dest), T.doneClosed(dest), T.doneNoUrl(dest));\n  });\n\n  // if this paper is already queued (popup reopened before importing), explain\n  // how it gets into the library rather than looking stuck\n  const alreadyQueued = pending.some(p => {\n    const k = normKeys(p);\n    return (doiKey && k.doiKey === doiKey) || (arxivKey && k.arxivKey === arxivKey);\n  });\n  const savedNow = (() => {\n    const saved = (currentLib() && currentLib().saved) || {};\n    return (doiKey && saved[doiKey]) || (arxivKey && saved[arxivKey]) || null;\n  })();\n  if (alreadyQueued && !savedNow) {\n    showImportHint(T.pendingOpen, T.pendingClosed, T.pendingNoUrl);\n  }\n}\n\ninit().catch(e => {\n  console.error(e);\n  $('#note').textContent = T.restricted;\n});\n"},
+  "sniffer.js": {text: "// Runs on every http(s) page: detects the paper's DOI / arXiv id and asks the\n// background worker to show saved / queued / not-yet-saved status for this tab.\n(function () {\n  if (document.querySelector('meta[name=\"refshelf-app\"]')) return; // the app itself\n\n  const DOI_RE = /10\\.\\d{4,9}\\/[^\\s\"'<>&]+/;\n\n  function meta(name) {\n    const el = document.querySelector(`meta[name=\"${name}\" i], meta[property=\"${name}\" i]`);\n    return el && el.content ? el.content.trim() : '';\n  }\n\n  function findIds() {\n    let doi = '';\n    for (const n of ['citation_doi', 'dc.identifier', 'dc.identifier.doi', 'prism.doi', 'doi']) {\n      const m = meta(n).match(DOI_RE);\n      if (m) { doi = m[0]; break; }\n    }\n    if (!doi) {\n      try {\n        const m = decodeURIComponent(location.href).match(DOI_RE);\n        if (m) doi = m[0].replace(/[.,;)\\]]+$/, '');\n      } catch (e) { /* malformed escape in URL */ }\n    }\n    if (!doi) {\n      const a = document.querySelector('a[href*=\"doi.org/10.\"]');\n      if (a) {\n        const m = decodeURIComponent(a.href).match(DOI_RE);\n        if (m) doi = m[0];\n      }\n    }\n    let arxiv = meta('citation_arxiv_id');\n    if (!arxiv) {\n      const m = location.href.match(/arxiv\\.org\\/(?:abs|pdf)\\/([a-z\\-]+(?:\\.[A-Z]{2})?\\/\\d{7}|\\d{4}\\.\\d{4,5})/i);\n      if (m) arxiv = m[1];\n    }\n    if (!arxiv && doi) {\n      const m = doi.match(/^10\\.48550\\/arxiv\\.(.+)$/i);\n      if (m) { arxiv = m[1]; doi = ''; }\n    }\n    return {\n      doi: doi.toLowerCase(),\n      arxiv: String(arxiv || '').toLowerCase().replace(/v\\d+$/, ''),\n    };\n  }\n\n  async function update() {\n    const { doi, arxiv } = findIds();\n    let text = '';\n    if (doi || arxiv) {\n      const { libraries = {}, activeLib, pending = [] } =\n        await chrome.storage.local.get(['libraries', 'activeLib', 'pending']);\n      // badge reflects the active (destination) library, matching the popup\n      const lib = libraries[activeLib] || Object.values(libraries)[0] || null;\n      const saved = (lib && lib.saved) || {};\n      const queued = pending.some(p =>\n        (doi && String(p.doi || '').toLowerCase() === doi) ||\n        (arxiv && String(p.arxiv || '').toLowerCase().replace(/v\\d+$/, '') === arxiv));\n      if ((doi && saved['doi:' + doi]) || (arxiv && saved['arxiv:' + arxiv])) text = '✓';\n      else if (queued) text = '…';\n      else text = '+';\n    }\n    try { await chrome.runtime.sendMessage({ type: 'badge', text }); }\n    catch (e) { /* extension reloaded / worker unavailable */ }\n  }\n\n  chrome.storage.onChanged.addListener((ch, area) => {\n    if (area === 'local' && (ch.libraries || ch.activeLib || ch.pending)) update();\n  });\n  update();\n})();\n"},
+};
+/* === END CONNECTOR_FILES === */
+function connectorSnapshot(){
+  const saved = {};
+  for(const it of lib.items){
+    if(it.doi) saved['doi:' + String(it.doi).toLowerCase()] = it.collections || [];
+    if(it.arxiv) saved['arxiv:' + String(it.arxiv).toLowerCase().replace(/v\d+$/,'')] = it.collections || [];
+  }
+  const persistent = !!(backend && backend.kind === 'fs');
+  // Stable per-library id so the extension can offer a destination-library
+  // picker and route each save to the right library (survives folder renames).
+  if(persistent && !lib.libraryId){ lib.libraryId = uid(); touch(); }
+  return {
+    persistent,
+    libraryId: lib.libraryId || '',
+    libraryName: (backend && backend.name) || '',
+    collections: lib.collections.map(c => ({ id:c.id, name:c.name, parent:c.parent || '' })),
+    saved,
+  };
+}
+let connectorTimer = null;
+function connectorNotify(immediate){
+  if(!backend) return;
+  clearTimeout(connectorTimer);
+  connectorTimer = setTimeout(()=>{
+    window.postMessage({ source:'refshelf-app', action:'snapshot', snapshot:connectorSnapshot() }, '*');
+  }, immediate ? 0 : 600);
+}
+function connectorAuthors(list){
+  return (list || []).map(s=>{
+    s = String(s).trim();
+    if(!s) return null;
+    if(s.includes(',')){ const p = s.split(','); return { family:p[0].trim(), given:p.slice(1).join(',').trim() }; }
+    const p = s.split(/\s+/); return { family:p.pop() || '', given:p.join(' ') };
+  }).filter(Boolean);
+}
+async function connectorImportOne(p){
+  let it = null;
+  if(p.doi){ try{ it = await fetchCrossref(normDoi(p.doi)); }catch(e){ console.warn('connector: CrossRef failed', e); } }
+  if(!it && p.arxiv){ try{ it = await fetchArxiv(p.arxiv); }catch(e){ console.warn('connector: arXiv failed', e); } }
+  if(!it){
+    // offline / unresolvable → keep what the extension scraped from the page
+    it = newItem({
+      type: p.arxiv ? 'preprint' : (p.doi ? 'article' : 'web'),
+      title: p.title || '', journal: p.journal || '', year: String(p.year || ''),
+      doi: p.doi ? normDoi(p.doi) : '', arxiv: p.arxiv || '', url: p.url || '',
+      abstract: p.abstract || '', authors: connectorAuthors(p.authors),
+    });
+  }
+  if(!it.url && p.url) it.url = p.url;
+  if(!it.abstract && p.abstract) it.abstract = p.abstract;
+  const collIds = (p.collections || []).filter(id => lib.collections.some(c => c.id === id));
+  if(collIds.length) it.collections = collIds;
+  return it;
+}
+window.addEventListener('message', async (e)=>{
+  const d = e.data;
+  if(e.source !== window || !d || d.source !== 'refshelf-connector') return;
+  if(!backend) return; // home screen: no library to report or import into
+  if(d.action === 'hello'){ connectorNotify(true); return; }
+  if(d.action === 'import' && Array.isArray(d.items)){
+    const results = [], newOnes = [];
+    for(const p of d.items){
+      try{
+        const it = await connectorImportOne(p);
+        const res = addItems([it]);
+        if(res.added) newOnes.push(it);
+        results.push({ id:p.id, ok:true, added:res.added, skipped:res.skipped });
+      }catch(err){
+        console.error(err);
+        results.push({ id:p.id, ok:false, error:String(err && err.message || err) });
+      }
+    }
+    renderAll();
+    window.postMessage({ source:'refshelf-app', action:'import-result', results }, '*');
+    const n = results.filter(r=>r.ok).length;
+    if(n) showToast(I18N[lang].connectorImported(n));
+    for(const it of newOnes){
+      try{ await tryAutoAttachPdf(it); }catch(err){ console.warn(err); }
+    }
+  }
+});
+
 // export
 function collectionNamesForItem(item){
   return (item.collections||[]).map(id=>{
@@ -5687,7 +6600,8 @@ window.__refshelf = { parseBibTeX, parseRIS, itemToBibTeX, itemToRIS, parseIdInp
   resolveOpenAlexWork, fetchOpenAlexReferences, fetchOpenAlexCitedBy, openAlexToItem, openCitationsDialog,
   enrichCorresponding, oaCorrespondingAuthors, refreshCitedByCounts, refreshCorrespondingAuthors,
   buildGraphData, graphLayout, openGraphDialog, get graphState(){ return graphState; },
-  get lib(){ return lib; }, startDemo: ()=>startWithBackend(memBackend()) };
+  get lib(){ return lib; }, startDemo: ()=>startWithBackend(memBackend()),
+  buildZip, downloadConnectorZip, get connectorFiles(){ return CONNECTOR_FILES; } };
 </script>
 </body>
 </html>
