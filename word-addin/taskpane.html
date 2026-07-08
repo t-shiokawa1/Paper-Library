@@ -37,10 +37,11 @@
   .card:hover{border-color:var(--accent)}
   .card .ct{font-weight:600; line-height:1.3; margin-bottom:3px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
   .card .cau{color:var(--text2); font-size:12px; line-height:1.25; margin-bottom:4px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
-  .card .cmeta{display:flex; flex-wrap:wrap; gap:6px; align-items:center; color:var(--text3); font-size:11.5px; font-weight:600; margin-bottom:7px}
+  .card .cmeta{display:flex; flex-wrap:wrap; gap:6px 8px; align-items:center; color:var(--text3); font-size:11.5px; font-weight:600}
   .card .cmeta .journal{color:var(--accent)}
-  .card .acts{display:flex; gap:6px; flex-wrap:wrap}
-  .card .acts .btn{padding:5px 10px}
+  .card .acts{display:flex; gap:6px; margin-left:auto}
+  .card .acts .btn{display:inline-flex; align-items:center; gap:4px; padding:3px 9px}
+  .card .acts .btn svg{width:13px; height:13px; flex:0 0 auto}
   .empty{color:var(--text3); text-align:center; padding:26px 16px; line-height:1.6}
   .toast{position:fixed; left:50%; bottom:12px; transform:translateX(-50%); background:#1c2430; color:#fff; padding:7px 13px; border-radius:8px; font-size:12px; opacity:0; transition:opacity .2s; pointer-events:none; max-width:88%}
   .toast.show{opacity:.96}
@@ -253,8 +254,8 @@ var I18N = {
     styleLabel:'スタイル', collLabel:'コレクション', allColl:'すべてのコレクション',
     incTitle:'タイトル', incUrl:'DOI/URL', numberLabel:'番号', superOpt:'上付き ¹',
     refreshBtn:'文献リストを更新', refreshTitle:'本文の番号と末尾の文献リストを再同期します',
-    insertBtn:'挿入', fullBtn:'全文', copyBtn:'コピー',
-    insertTitle:'番号を本文に挿入し、末尾リストと連動', fullTitle:'整形済みの引用文をそのまま挿入',
+    insertBtn:'挿入', copyBtn:'コピー',
+    insertTitle:'番号を本文に挿入し、末尾リストと連動',
     count:function(n,m){return n+' / '+m+' 件';},
     emptyLoad:'まず「ライブラリ」ボタンから library.json を読み込んでください。（Paper Library の保存フォルダ内、または「エクスポート → ライブラリ全体 → JSON」）',
     moreItems:function(n){return '上位 '+n+' 件を表示（絞り込んでください）';}, noTitle:'(無題)',
@@ -271,8 +272,8 @@ var I18N = {
     styleLabel:'Style', collLabel:'Collection', allColl:'All collections',
     incTitle:'Title', incUrl:'DOI/URL', numberLabel:'Number', superOpt:'Superscript ¹',
     refreshBtn:'Update bibliography', refreshTitle:'Re-sync the in-text numbers and the reference list',
-    insertBtn:'Insert', fullBtn:'Full text', copyBtn:'Copy',
-    insertTitle:'Insert a number in the text, linked to the reference list', fullTitle:'Insert the fully formatted citation as text',
+    insertBtn:'Insert', copyBtn:'Copy',
+    insertTitle:'Insert a number in the text, linked to the reference list',
     count:function(n,m){return n+' / '+m;},
     emptyLoad:'Load library.json with the “Library” button. (It is in your Paper Library folder, or export via Export → Whole library → JSON.)',
     moreItems:function(n){return 'Showing top '+n+' (refine your search)';}, noTitle:'(untitled)',
@@ -299,6 +300,9 @@ var LS_PREFS = 'plWordAddin.prefs';
 var LS_LANG = 'plWordAddin.lang';
 // inserted content defaults to Times New Roman 10.5pt
 var INS_FONT = "Times New Roman", INS_SIZE = 10.5;
+// inline button icons
+var IC_INSERT = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3.3v9.4M3.3 8h9.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
+var IC_COPY = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.2 5.6V4.1A1.5 1.5 0 0 0 8.7 2.6H4A1.5 1.5 0 0 0 2.5 4.1v4.7A1.5 1.5 0 0 0 4 10.3h1.6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>';
 
 function toast(msg, isErr){
   var el = $('#toast'); el.textContent = msg;
@@ -368,27 +372,17 @@ function render(){
     return '<div class="card">'
       + '<div class="ct">'+esc(it.title||tr('noTitle'))+'</div>'
       + '<div class="cau">'+esc(authorsShort(it.authors))+'</div>'
-      + '<div class="cmeta">'+meta+'</div>'
-      + '<div class="acts">'
-      +   '<button class="btn" data-num="'+i+'" title="'+esc(tr('insertTitle'))+'">'+esc(tr('insertBtn'))+'</button>'
-      +   '<button class="btn ghost" data-ins="'+i+'" title="'+esc(tr('fullTitle'))+'">'+esc(tr('fullBtn'))+'</button>'
-      +   '<button class="btn ghost" data-copy="'+i+'">'+esc(tr('copyBtn'))+'</button>'
+      + '<div class="cmeta">'+meta
+      +   '<span class="acts">'
+      +     '<button class="btn" data-num="'+i+'" title="'+esc(tr('insertTitle'))+'">'+IC_INSERT+esc(tr('insertBtn'))+'</button>'
+      +     '<button class="btn ghost" data-copy="'+i+'">'+IC_COPY+esc(tr('copyBtn'))+'</button>'
+      +   '</span>'
       + '</div>'
       + '</div>';
   }).join('') + (list.length>shown.length ? '<div class="empty">'+esc(tr('moreItems', shown.length))+'</div>' : '');
   box.__list = shown;
 }
 
-/* ---- full-text insertion (Times New Roman 10.5pt) ---- */
-async function insertCitation(it){
-  if(!(officeReady && window.Office && Office.context && Office.context.document)){ toast(tr('wordOnly'), true); return; }
-  var inner = itemToCitationHtml(it, currentOpts());
-  var html = '<span style="font-family:\'Times New Roman\',serif;font-size:10.5pt;">' + inner + '</span>';
-  Office.context.document.setSelectedDataAsync(html, { coercionType: Office.CoercionType.Html }, function(res){
-    if(res.status === Office.AsyncResultStatus.Succeeded) toast(tr('inserted'));
-    else toast(tr('insertFail', res.error && res.error.message), true);
-  });
-}
 async function copyCitation(it){
   var html = itemToCitationHtml(it, currentOpts());
   var tmp = document.createElement('div'); tmp.innerHTML = html;
@@ -514,10 +508,9 @@ $('#markerStyle').addEventListener('change', function(){ savePrefs(); refreshCit
 $('#btnRefresh').addEventListener('click', function(){ refreshCitations(); });
 $('#btnLang').addEventListener('click', function(){ setLang(LANG === 'ja' ? 'en' : 'ja'); });
 $('#results').addEventListener('click', function(e){
-  var num = e.target.closest('[data-num]'), ins = e.target.closest('[data-ins]'), cp = e.target.closest('[data-copy]');
+  var num = e.target.closest('[data-num]'), cp = e.target.closest('[data-copy]');
   var list = $('#results').__list || [];
   if(num){ var it0 = list[+num.dataset.num]; if(it0) insertCitationNumber(it0); }
-  else if(ins){ var it = list[+ins.dataset.ins]; if(it) insertCitation(it); }
   else if(cp){ var it2 = list[+cp.dataset.copy]; if(it2) copyCitation(it2); }
 });
 
