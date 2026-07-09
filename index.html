@@ -919,6 +919,15 @@
     white-space:nowrap;
   }
   .tdChip.coll{background:transparent; color:var(--text2); border:none; padding:0 3px}
+  .tdChip.cat{font-weight:600}
+  .tdChip.cat-review, .tdChip.cat-minireview{background:color-mix(in srgb, var(--accent) 16%, transparent); color:var(--accent)}
+  .tdChip.cat-perspective{background:color-mix(in srgb, var(--green,#16a34a) 18%, transparent); color:var(--green,#16a34a)}
+  .tdChip.cat-communication{background:color-mix(in srgb, #d97706 18%, transparent); color:#b45309}
+  body.dark .tdChip.cat-communication{color:#f59e0b}
+  .tdChip.cat-account, .tdChip.cat-highlight{background:color-mix(in srgb, #a855f7 16%, transparent); color:#9333ea}
+  body.dark .tdChip.cat-account, body.dark .tdChip.cat-highlight{color:#c084fc}
+  .tdChip.cat-editorial{background:var(--chip); color:var(--text3)}
+  .tdChip.cat-article{background:var(--chip); color:var(--text2)}
   .tdChip .ic{font-size:11px}
   .rowPdfBtn{
     min-width:24px; border:none; background:transparent; color:var(--text3); border-radius:4px;
@@ -1068,8 +1077,15 @@
     display:inline-flex; align-items:center; justify-content:center; gap:4px; white-space:nowrap;
   }
   .cardDeleteBtn:hover, .rowTrashDeleteBtn:hover{background:var(--danger-soft); color:var(--danger)}
+  .cardRestoreBtn{
+    border:1px solid var(--border);
+    background:var(--panel); color:var(--text2); border-radius:6px;
+    min-height:24px; padding:0 8px; font-size:12px; font-weight:700;
+    display:inline-flex; align-items:center; justify-content:center; gap:4px; white-space:nowrap;
+  }
+  .cardRestoreBtn:hover{background:var(--bg); color:var(--accent); border-color:var(--accent)}
   .rowTrashDeleteBtn{min-width:32px; width:32px; padding:0}
-  .trashDelCol{width:42px}
+  .col-trashRestore, .col-trashDelete{text-align:center}
   #itemTable th.trashDelCol{
     position:sticky;
   }
@@ -1079,7 +1095,7 @@
   }
   #itemTable th.trashDelCol:hover::after{background:var(--text3)}
   .cited-none,.no-data{color:var(--text3)}
-  .no-data.fail{color:var(--danger); font-weight:700}
+  .no-data.fail{color:var(--text3); font-weight:400; opacity:.85}
   .itTitle{font-weight:600}
   body.col-resizing{cursor:col-resize; user-select:none}
   /* trash view action bar */
@@ -1101,10 +1117,25 @@
     display:inline-flex; align-items:center; gap:5px;
   }
   #trashInfoBar .trashDangerBtn:hover{background:var(--danger-soft); color:var(--danger)}
+  #trashInfoBar .trashRestoreBtn{
+    border:1px solid var(--border);
+    background:var(--panel); color:var(--text); border-radius:6px;
+    min-height:26px; padding:0 10px; font-size:12px; font-weight:700;
+    display:inline-flex; align-items:center; gap:5px; margin-right:6px;
+  }
+  #trashInfoBar .trashRestoreBtn:hover{background:var(--bg); border-color:var(--text3)}
+  .trashRowBtns{display:inline-flex; align-items:center; gap:4px; justify-content:center}
+  .rowTrashRestoreBtn{
+    min-width:32px; width:32px; padding:0; min-height:24px; border-radius:6px;
+    border:1px solid var(--border); background:var(--panel); color:var(--text2);
+    display:inline-flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .rowTrashRestoreBtn:hover{background:var(--bg); color:var(--accent); border-color:var(--accent)}
   @media(max-width:760px){
     #trashInfoBar{align-items:flex-start; flex-wrap:wrap}
     #trashInfoBar .trashInfoSpacer{display:none}
     #trashInfoBar .trashDangerBtn{width:100%; justify-content:center}
+    #trashInfoBar .trashRestoreBtn{width:100%; justify-content:center; margin-right:0}
   }
 
   /* list status bar controls */
@@ -1128,6 +1159,7 @@
   #listStatus .logBadge{
     background:var(--chip); color:var(--text2); border:1px solid var(--border);
   }
+  #menuAlerts button .alertItemBadge{margin-left:auto}
   /* split button: one unified shell (default action + a caret for the mode menu) */
   #listStatus .splitWrap{
     display:inline-flex; position:relative; align-items:stretch;
@@ -1145,8 +1177,8 @@
   #listStatus .splitWrap.menuwrap .menu.open ~ .lsbtnCaret,
   #listStatus .splitWrap .lsbtnCaret[aria-expanded="true"]{color:var(--accent)}
   .splitWrap .lsbtnCaret .ic svg{width:11px; height:11px}
-  #menuRefreshCited, #menuRefreshCorresponding{min-width:210px}
-  #menuRefreshCited button, #menuRefreshCorresponding button{font-size:12.5px}
+  #menuRefreshAll{min-width:220px}
+  #menuRefreshAll button{font-size:12.5px}
 
   /* responsive bottom status bar v1.8: keep full labels while there is enough room, then collapse one by one */
   #listStatus{flex-wrap:nowrap; overflow-x:auto; overflow-y:visible; scrollbar-width:thin; min-width:0}
@@ -1159,13 +1191,9 @@
   #listStatus .lsbtn #viewStyleLabel,
   #listStatus .lsbtn #cardColsLabel,
   #listStatus .lsbtn .colMenuLabel{white-space:nowrap}
-  @container (max-width: 760px){
-    #btnRefreshCorresponding span[data-i18n="refreshCorresponding"]{display:none}
-    #btnRefreshCorresponding{padding-inline:7px}
-  }
   @container (max-width: 710px){
-    #btnRefreshCited span[data-i18n="refreshCited"]{display:none}
-    #btnRefreshCited{padding-inline:7px}
+    #btnRefreshAll span[data-i18n="refreshAll"]{display:none}
+    #btnRefreshAll{padding-inline:7px}
   }
   @container (max-width: 660px){
     #btnCardViewMenu span[data-i18n="viewMenu"]{display:none}
@@ -1422,6 +1450,9 @@
   .citRow .cbody{flex:1; min-width:0}
   .citRow .ct{font-weight:600; font-size:12.5px; line-height:1.3}
   .citRow .cm{font-size:11.5px; color:var(--text2); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .citRow .cCite{font-size:12px; line-height:1.5; color:var(--text); word-break:break-word}
+  .citRow .cCite i{font-style:italic}
+  .citRow .cCite b{font-weight:700}
   .citRow .cbtns{flex:0 0 auto; display:flex; gap:3px}
   .citRow .cbtns button{
     border:1px solid var(--border); background:var(--panel); border-radius:5px;
@@ -2649,9 +2680,15 @@
     <button class="searchAdvBtn" id="btnAdvancedSearch" data-i18n-title="advancedSearch" title="詳細検索"><span class="ic" data-ic="search"></span><span data-i18n="advancedSearch">詳細検索</span></button>
   </div>
   <span class="spacer"></span>
-  <button class="tbtn libraryStatusBtn" id="btnChangeFolder" style="display:none" data-i18n-title="changeFolder" title="作業フォルダを変更">
-    <span id="saveDot"></span><span id="libName"></span><span data-i18n="changeFolder">作業フォルダを変更</span>
-  </button>
+  <div class="menuwrap" id="changeFolderWrap" style="display:none">
+    <button class="tbtn libraryStatusBtn" id="btnChangeFolder" data-i18n-title="changeFolderMenuTitle" title="ライブラリの切り替え・新規作成">
+      <span id="saveDot"></span><span id="libName"></span><span data-i18n="changeFolder">作業フォルダを変更</span>
+    </button>
+    <div class="menu" id="menuChangeFolder">
+      <button id="miOpenFolder"><span class="ic" data-ic="folderOpen"></span><span data-i18n="openChangeFolder">別のフォルダを開く / 変更</span></button>
+      <button id="miNewLibrary"><span class="ic" data-ic="plus"></span><span data-i18n="newLibrary">新規ライブラリを作成</span></button>
+    </div>
+  </div>
   <div class="menuwrap">
     <button class="tbtn" id="btnExport"><span class="ic" data-ic="upload"></span><span data-i18n="export">エクスポート</span><span class="ic" data-ic="chevron"></span></button>
     <div class="menu" id="menuExport">
@@ -2690,6 +2727,7 @@
       <span class="trashInfoMain"><span class="ic" data-ic="trash"></span><span id="trashInfoCount"></span></span>
       <span class="trashInfoNote" data-i18n="trashPermanentNote">完全削除すると元に戻せません。</span>
       <span class="trashInfoSpacer"></span>
+      <button class="trashRestoreBtn" id="btnRestoreAllTrash" type="button"><span class="ic" data-ic="arrowUpRight"></span><span data-i18n="restoreAll">すべて復元</span></button>
       <button class="trashDangerBtn" id="btnEmptyTrash" type="button"><span class="ic" data-ic="trash"></span><span data-i18n="emptyTrash">完全に削除する</span></button>
     </div>
     <div id="listScroller">
@@ -2713,10 +2751,10 @@
     <div id="listStatus">
       <span id="listCount"></span>
       <span style="flex:1"></span>
-      <button class="lsbtn statusCompact" id="btnFixSuggestions" style="display:none"><span class="ic" data-ic="alert"></span><span data-i18n="fixSuggestions">修正候補</span><span id="fixSugBadge" class="logBadge">0</span></button>
-      <button class="lsbtn statusCompact" id="btnEmptyRecords" style="display:none"><span class="ic" data-ic="trash"></span><span data-i18n="emptyRecords">空データ</span><span id="emptyRecBadge" class="logBadge">0</span></button>
-      <button class="lsbtn statusCompact" id="btnDuplicates" style="display:none"><span class="ic" data-ic="alert"></span><span data-i18n="duplicateCandidates">重複候補</span><span id="dupBadge" class="logBadge">0</span></button>
-      <button class="lsbtn statusCompact" id="btnFetchLog" style="display:none" title="更新ログ"><span class="ic" data-ic="alert"></span><span data-i18n="fetchLog">更新ログ</span><span id="fetchLogBadge" class="logBadge" style="display:none">0</span></button>
+      <div class="menuwrap" id="alertsWrap" style="display:none">
+        <button class="lsbtn statusCompact" id="btnAlerts" data-i18n-title="alerts"><span class="ic" data-ic="alert"></span><span data-i18n="alerts">通知</span><span id="alertsBadge" class="logBadge">0</span><span class="ic" data-ic="chevron"></span></button>
+        <div class="menu" id="menuAlerts" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto"></div>
+      </div>
       <button class="lsbtn" id="btnWrap"><span class="ic" data-ic="wrap"></span><span data-i18n="wrapToggle">折り返し</span></button>
       <button class="lsbtn" id="btnViewStyle"><span class="ic" data-ic="rows"></span><span id="viewStyleLabel" data-i18n="viewCards">カード表示</span></button>
       <button class="lsbtn" id="btnCardCols"><span class="ic" data-ic="table"></span><span id="cardColsLabel">2列</span></button>
@@ -2736,19 +2774,16 @@
       </div>
       <div class="menu" id="cardFilterMenu" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto"></div>
       <div class="splitWrap menuwrap">
-        <button class="lsbtn lsbtnMain" id="btnRefreshCited"><span class="ic" data-ic="citations"></span><span data-i18n="refreshCited">被引用数を更新</span></button>
-        <button class="lsbtn lsbtnCaret" id="btnRefreshCitedCaret" aria-label="menu"><span class="ic" data-ic="chevron"></span></button>
-        <div class="menu" id="menuRefreshCited" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto">
-          <button data-refresh-mode="auto" data-refresh-kind="cited"><span class="ic" data-ic="citations"></span><span data-i18n="refreshModeAuto">自動で更新（表示中の全件）</span></button>
-          <button data-refresh-mode="pick" data-refresh-kind="cited"><span class="ic" data-ic="check"></span><span data-i18n="refreshModePick">文献を選択して更新</span></button>
-        </div>
-      </div>
-      <div class="splitWrap menuwrap">
-        <button class="lsbtn lsbtnMain" id="btnRefreshCorresponding"><span class="ic" data-ic="users"></span><span data-i18n="refreshCorresponding">責任著者を更新</span></button>
-        <button class="lsbtn lsbtnCaret" id="btnRefreshCorrespondingCaret" aria-label="menu"><span class="ic" data-ic="chevron"></span></button>
-        <div class="menu" id="menuRefreshCorresponding" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto">
-          <button data-refresh-mode="auto" data-refresh-kind="corresponding"><span class="ic" data-ic="users"></span><span data-i18n="refreshModeAuto">自動で更新（表示中の全件）</span></button>
-          <button data-refresh-mode="pick" data-refresh-kind="corresponding"><span class="ic" data-ic="check"></span><span data-i18n="refreshModePick">文献を選択して更新</span></button>
+        <button class="lsbtn lsbtnMain" id="btnRefreshAll"><span class="ic" data-ic="retry"></span><span data-i18n="refreshAll">更新</span></button>
+        <button class="lsbtn lsbtnCaret" id="btnRefreshAllCaret" aria-label="menu"><span class="ic" data-ic="chevron"></span></button>
+        <div class="menu" id="menuRefreshAll" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto">
+          <button data-refresh-mode="auto" data-refresh-kind="all"><span class="ic" data-ic="retry"></span><span data-i18n="refreshModeAutoAll">すべて更新（表示中の全件）</span></button>
+          <button data-refresh-mode="pick" data-refresh-kind="all"><span class="ic" data-ic="check"></span><span data-i18n="refreshModePick">文献を選択して更新</span></button>
+          <hr>
+          <div class="menuLabel" data-i18n="refreshOnlyLabel">項目を選んで更新</div>
+          <button data-refresh-mode="auto" data-refresh-kind="cited"><span class="ic" data-ic="citations"></span><span data-i18n="refreshCited">被引用数を更新</span></button>
+          <button data-refresh-mode="auto" data-refresh-kind="corresponding"><span class="ic" data-ic="users"></span><span data-i18n="refreshCorresponding">責任著者を更新</span></button>
+          <button data-refresh-mode="auto" data-refresh-kind="category"><span class="ic" data-ic="tag"></span><span data-i18n="refreshCategory">種類を更新</span></button>
         </div>
       </div>
       <div class="menuwrap">
@@ -2828,6 +2863,19 @@
   <div class="dlgFoot">
     <button class="tbtn danger" id="btnDeleteAllEmpty" data-i18n="deleteAllEmpty">すべて削除</button>
     <button class="tbtn primary" data-close data-i18n="close">閉じる</button>
+  </div>
+</dialog>
+
+<!-- ============ delete collection dialog ============ -->
+<dialog id="dlgDeleteColl">
+  <div class="dlgHead"><span data-i18n="deleteCollTitle">コレクションの削除</span><button data-close><span class="ic" data-ic="x"></span></button></div>
+  <div class="dlgBody" id="deleteCollBody"></div>
+  <div class="dlgFoot" style="flex-wrap:wrap; gap:8px">
+    <button class="tbtn" data-close data-i18n="cancel">キャンセル</button>
+    <span style="flex:1"></span>
+    <button class="tbtn" id="btnCollDelKeep" data-i18n="collDelKeepItems">コレクションのみ削除</button>
+    <button class="tbtn" id="btnCollTrashItemsKeepColl" data-i18n="collTrashItemsKeepColl">文献だけゴミ箱へ</button>
+    <button class="tbtn danger" id="btnCollDelTrash" data-i18n="collDelTrashItems">削除＋文献をゴミ箱へ</button>
   </div>
 </dialog>
 
@@ -3099,21 +3147,25 @@ const I18N = {
     addById:'DOI / arXiv', addManual:'手動追加', import:'インポート', importKeywordsAsTags:'keywords をタグとして読み込む', export:'エクスポート',
     expBibShown:'表示中の文献 → BibTeX', expRisShown:'表示中の文献 → RIS', expCsvShown:'表示中の文献 → CSV', expJsonShown:'表示中の文献 → JSON', expJson:'ライブラリ全体 → JSON',
     searchPh:'検索ワードを入力して Enter', advancedSearch:'詳細検索', quickAddTitle:'この DOI / URL を取得して追加', addBoxPh:'URL を入力して Enter', addMoreTitle:'手動追加・インポート', library:'ライブラリ', collections:'コレクション', tags:'タグ',
-    newCollection:'新規コレクション', allItems:'すべての文献', starred:'スター', starItem:'スターを付ける', unstarItem:'スターを外す', myPublication:'自分の論文', markMyPublication:'自分の論文にする', unmarkMyPublication:'自分の論文から外す', trash:'ゴミ箱', emptyTrash:'完全に削除する', trashPermanentNote:'完全削除すると元に戻せません。', restoreItem:'復元', deleteForever:'完全に削除', deleteSingle:'削除', colTrashDelete:'削除', uncategorized:'未分類',
-    colStar:'スター', colPdf:'pdf', colTitle:'タイトル', colAuthors:'著者', colYear:'年', colJournal:'出版物', colCitedBy:'被引用', colType:'種別', colDoi:'DOI', colAdded:'追加日',
+    newCollection:'新規コレクション', allItems:'すべての文献', starred:'スター', starItem:'スターを付ける', unstarItem:'スターを外す', myPublication:'自分の論文', markMyPublication:'自分の論文にする', unmarkMyPublication:'自分の論文から外す', trash:'ゴミ箱', emptyTrash:'完全に削除する', trashPermanentNote:'完全削除すると元に戻せません。', restoreItem:'復元', deleteForever:'完全に削除', deleteSingle:'削除', colTrashDelete:'操作', uncategorized:'未分類',
+    colStar:'スター', colPdf:'pdf', colTitle:'タイトル', colAuthors:'著者', colYear:'年', colJournal:'出版物', colCitedBy:'被引用数', colType:'種別', colCategory:'種類', colDoi:'DOI', colAdded:'追加日',
+    colTrashRestore:'復元',
     columns:'列', colReset:'既定に戻す', refreshCited:'被引用数を更新', refreshCorresponding:'責任著者を更新',
+    refreshAll:'更新', refreshCategory:'種類を更新', refreshModeAutoAll:'すべて更新（表示中の全件）', refreshOnlyLabel:'項目を選んで更新',
     refreshModeAuto:'自動で更新（表示中の全件）', refreshModePick:'文献を選択して更新',
     pickHintCited:'被引用数を更新する文献をクリックして選択（Shiftで範囲選択）',
     pickHintCorresponding:'責任著者を更新する文献をクリックして選択（Shiftで範囲選択）',
+    pickHintAll:'更新する文献をクリックして選択（Shiftで範囲選択）',
     pickClearAll:'全解除', pickConfirm:(n)=>`選択した${n}件を更新`, pickNone:'文献を選択してください',
-    updateThisItem:'更新', updateThisItemHint:'この文献の被引用数・責任著者を更新',
+    updateThisItem:'更新', updateThisItemHint:'この文献の被引用数・責任著者・種類を更新',
     pickDone:(n)=>`${n} 件の更新を開始しました`,
     duplicateCandidates:'重複候補', duplicateTitle:'重複候補の確認',
     duplicateSummary:(n)=>`${n} 件の重複候補があります。内容を確認して、不要な追加分だけ削除してください。`,
     duplicateNone:'重複候補は見つかりませんでした',
     duplicateExisting:'既存', duplicateAdded:'追加分', duplicatePossible:'候補',
     duplicateReasonDoi:'DOI が一致', duplicateReasonTitle:'タイトルがほぼ一致', duplicateReasonSimilar:'タイトルが類似',
-    duplicateOpenExisting:'既存を開く', duplicateOpenAdded:'追加分を開く', duplicateDeleteAdded:'追加分を削除',
+    duplicateOpenExisting:'既存を開く', duplicateOpenAdded:'追加分を開く', duplicateDeleteAdded:'追加分を削除', duplicateDeleteExisting:'既存を削除',
+    duplicateReplaceExisting:'既存を置き換え', duplicateReplacedExisting:'既存を新しい情報で置き換えました',
     duplicateSkipped:'同じ DOI のため追加されませんでした',
     emptyRecords:'空データ', emptyRecordsTitle:'空データの確認',
     emptyRecordsSummary:(n)=>`${n} 件の未入力データがあります。手動追加後に内容を入れなかった文献はここから削除できます。`,
@@ -3145,11 +3197,13 @@ const I18N = {
     refreshedCitedS2:(n,s)=>`${n} 件を更新しました（うち ${s} 件は Semantic Scholar から補完）`,
     refreshingCorresponding:'責任著者を取得中…',
     refreshedCorresponding:(n)=>`${n} 件の責任著者を更新しました`,
+    refreshedCategory:(n)=>`${n} 件の種類を更新しました`,
     refreshedCorrespondingPartial:(n,f)=>`${n} 件の責任著者を更新しました（${f} 件は取得失敗 — 取得ログを確認）`,
     noCorrespondingTargets:'更新対象の責任著者はありません',
     noCorrespondingFound:'OpenAlex に責任著者情報がありません',
     allFresh:(n)=>`${n} 件はすべて最新でした（キャッシュ利用・API 呼び出しなし）`,
     fetchLog:'更新ログ', fetchLogTitle:'更新ログ', logEmpty:'更新ログはありません',
+    alerts:'通知', alertsNone:'通知はありません',
     logRetry:'再試行', logClear:'ログを消去', logRetryAll:'すべて再試行',
     logRunning:'処理中…', logUpdated:'更新済み', logNoData:'情報なし', logSkipped:'スキップ',
     logKindCited:'被引用数', logKindCorresponding:'責任著者', recentlyCheckedNoCorresponding:'最近確認済みのためスキップ',
@@ -3205,6 +3259,20 @@ const I18N = {
     trashInfoCount:(n)=>`ゴミ箱内の文献：${n}件`,
     trashEmptied:(n)=>`ゴミ箱内の文献を完全に削除しました（${n}件）`,
     confirmDeleteColl:(n)=>`コレクション「${n}」を削除しますか？（文献自体は削除されません）`,
+    deleteCollTitle:'コレクションの削除',
+    collDelKeepItems:'コレクションのみ削除', collDelTrashItems:'削除＋文献をゴミ箱へ', collTrashItemsKeepColl:'文献だけゴミ箱へ', restoreAll:'すべて復元',
+    deleteCollHeadOne:(name)=>`コレクション「${name}」`,
+    deleteCollHeadMany:(n)=>`選択中の ${n} 個のコレクション`,
+    deleteCollItemCount:(n)=> n>0 ? `このコレクション内の文献：${n} 件（サブフォルダを含む）` : 'このコレクション内に文献はありません。',
+    deleteCollExplain:'操作を選んでください：',
+    deleteCollOptKeep:'「コレクションのみ削除」— フォルダを消し、文献はライブラリに残します。',
+    deleteCollOptTrash:'「削除＋文献をゴミ箱へ」— フォルダを消し、その文献をゴミ箱へ移動します。',
+    deleteCollOptItemsOnly:'「文献だけゴミ箱へ」— フォルダは残し、その文献だけをゴミ箱へ移動します。',
+    deleteCollTrashWarn:'⚠ ゴミ箱へ移動した文献は、別のコレクションにも入っている場合すべてのコレクションから外れます。ゴミ箱からいつでも復元できます。',
+    collDeleted:(n)=> n===1 ? 'コレクションを削除しました。' : `${n} 個のコレクションを削除しました。`,
+    collItemsTrashed:(n)=>`${n} 件の文献をゴミ箱へ移動しました。`,
+    itemsRestored:(n)=>`${n} 件の文献を復元しました。`,
+    confirmRestoreAll:(n)=>`ゴミ箱内の ${n} 件の文献をすべて復元しますか？`,
     promptCollName:'コレクション名：', promptRename:'新しい名前：',
     fetching:'取得中…', fetchFail:'取得に失敗しました', added:'追加しました',
     searching:'CrossRef を検索中…', searchNoHit:'該当する文献が見つかりませんでした',
@@ -3220,6 +3288,9 @@ const I18N = {
     permDenied:'フォルダへのアクセスが許可されませんでした',
     demoWarn:'お試しモード：データは保存されません',
     typeNames:{article:'雑誌論文', preprint:'プレプリント', book:'書籍', chapter:'書籍の章', inproceedings:'会議録', thesis:'学位論文', report:'レポート', web:'Webページ', misc:'その他'},
+    categoryNames:{article:'Article', communication:'Communication', review:'Review', minireview:'Minireview', perspective:'Perspective', account:'Account', highlight:'Highlight', editorial:'Editorial'}, categoryNone:'（未設定）',
+    changeFolderMenuTitle:'ライブラリの切り替え・新規作成', openChangeFolder:'別のフォルダを開く / 変更', newLibrary:'新規ライブラリを作成',
+    newLibOverwriteConfirm:'このフォルダには既に library.json があります。上書きして新しい空のライブラリを作成しますか？（既存のデータは失われます）',
     unsavedWarn:'未保存の変更があります。',
   },
   en: {
@@ -3227,21 +3298,25 @@ const I18N = {
     addById:'DOI / arXiv', addManual:'Add manually', import:'Import', importKeywordsAsTags:'Import keywords as tags', export:'Export',
     expBibShown:'Shown items → BibTeX', expRisShown:'Shown items → RIS', expCsvShown:'Shown items → CSV', expJsonShown:'Shown items → JSON', expJson:'Whole library → JSON',
     searchPh:'Enter search keywords and press Enter', advancedSearch:'Advanced search', quickAddTitle:'Fetch and add this DOI / URL', addBoxPh:'Enter URL and press Enter', addMoreTitle:'Manual add / import', library:'Library', collections:'Collections', tags:'Tags',
-    newCollection:'New collection', allItems:'All items', starred:'Starred', starItem:'Star', unstarItem:'Unstar', myPublication:'My publications', markMyPublication:'Mark as my publication', unmarkMyPublication:'Remove from my publications', trash:'Trash', emptyTrash:'Delete forever', trashPermanentNote:'This cannot be undone.', restoreItem:'Restore', deleteForever:'Delete forever', deleteSingle:'Delete', colTrashDelete:'Delete', uncategorized:'Uncategorized',
-    colStar:'Star', colPdf:'pdf', colTitle:'Title', colAuthors:'Authors', colYear:'Year', colJournal:'Publication', colCitedBy:'Cited by', colType:'Type', colDoi:'DOI', colAdded:'Added',
+    newCollection:'New collection', allItems:'All items', starred:'Starred', starItem:'Star', unstarItem:'Unstar', myPublication:'My publications', markMyPublication:'Mark as my publication', unmarkMyPublication:'Remove from my publications', trash:'Trash', emptyTrash:'Delete forever', trashPermanentNote:'This cannot be undone.', restoreItem:'Restore', deleteForever:'Delete forever', deleteSingle:'Delete', colTrashDelete:'Actions', uncategorized:'Uncategorized',
+    colStar:'Star', colPdf:'pdf', colTitle:'Title', colAuthors:'Authors', colYear:'Year', colJournal:'Publication', colCitedBy:'Cited by', colType:'Type', colCategory:'Category', colDoi:'DOI', colAdded:'Added',
+    colTrashRestore:'Restore',
     columns:'Columns', colReset:'Reset to default', refreshCited:'Refresh citations', refreshCorresponding:'Refresh corresponding authors',
+    refreshAll:'Update', refreshCategory:'Refresh category', refreshModeAutoAll:'Update all (all shown)', refreshOnlyLabel:'Update one field',
     refreshModeAuto:'Refresh automatically (all shown)', refreshModePick:'Select items to refresh',
     pickHintCited:'Click items to refresh their cited-by count (Shift to select a range)',
     pickHintCorresponding:'Click items to refresh their corresponding author (Shift to select a range)',
+    pickHintAll:'Click items to update (Shift to select a range)',
     pickClearAll:'Clear all', pickConfirm:(n)=>`Refresh ${n} selected`, pickNone:'Select at least one item',
-    updateThisItem:'Refresh', updateThisItemHint:'Refresh cited-by count and corresponding author for this item',
+    updateThisItem:'Refresh', updateThisItemHint:'Refresh cited-by count, corresponding author and category for this item',
     pickDone:(n)=>`Started refreshing ${n} item(s)`,
     duplicateCandidates:'Duplicates', duplicateTitle:'Review duplicate candidates',
     duplicateSummary:(n)=>`${n} possible duplicate${n===1?'':'s'} found. Review them and remove only the extra added records if needed.`,
     duplicateNone:'No duplicate candidates found',
     duplicateExisting:'Existing', duplicateAdded:'Added', duplicatePossible:'Candidate',
     duplicateReasonDoi:'Matching DOI', duplicateReasonTitle:'Nearly identical title', duplicateReasonSimilar:'Similar title',
-    duplicateOpenExisting:'Open existing', duplicateOpenAdded:'Open added', duplicateDeleteAdded:'Delete added',
+    duplicateOpenExisting:'Open existing', duplicateOpenAdded:'Open added', duplicateDeleteAdded:'Delete added', duplicateDeleteExisting:'Delete existing',
+    duplicateReplaceExisting:'Replace existing', duplicateReplacedExisting:'Replaced the existing record with the newer data',
     duplicateSkipped:'Not added because the DOI already exists',
     emptyRecords:'Empty data', emptyRecordsTitle:'Review empty records',
     emptyRecordsSummary:(n)=>`${n} empty record${n===1?'':'s'} found. Records left blank after manual add can be removed here.`,
@@ -3273,11 +3348,13 @@ const I18N = {
     refreshedCitedS2:(n,s)=>`Updated ${n} item(s) (${s} via Semantic Scholar)`,
     refreshingCorresponding:'Fetching corresponding authors…',
     refreshedCorresponding:(n)=>`Updated corresponding authors for ${n} item(s)`,
+    refreshedCategory:(n)=>`Updated category for ${n} item(s)`,
     refreshedCorrespondingPartial:(n,f)=>`Updated corresponding authors for ${n} item(s) (${f} failed — see the fetch log)`,
     noCorrespondingTargets:'No corresponding-author targets to update',
     noCorrespondingFound:'No corresponding-author data in OpenAlex',
     allFresh:(n)=>`${n} item(s) already up to date (cached, no API calls)`,
     fetchLog:'Update log', fetchLogTitle:'Update log', logEmpty:'No update log entries',
+    alerts:'Alerts', alertsNone:'No alerts',
     logRetry:'Retry', logClear:'Clear log', logRetryAll:'Retry all',
     logRunning:'Processing…', logUpdated:'Updated', logNoData:'No data', logSkipped:'Skipped',
     logKindCited:'Cited by', logKindCorresponding:'Corresponding', recentlyCheckedNoCorresponding:'Skipped: recently checked',
@@ -3333,6 +3410,20 @@ This cannot be undone.`,
     trashInfoCount:(n)=>`${n} reference${n===1?'':'s'} in Trash`,
     trashEmptied:(n)=>`Permanently deleted ${n} reference${n===1?'':'s'} from Trash`,
     confirmDeleteColl:(n)=>`Delete collection “${n}”? (Items themselves are kept.)`,
+    deleteCollTitle:'Delete collection',
+    collDelKeepItems:'Delete collection only', collDelTrashItems:'Delete + items to Trash', collTrashItemsKeepColl:'Items to Trash only', restoreAll:'Restore all',
+    deleteCollHeadOne:(name)=>`Collection “${name}”`,
+    deleteCollHeadMany:(n)=>`${n} selected collections`,
+    deleteCollItemCount:(n)=> n>0 ? `References in this collection: ${n} (including subfolders)` : 'This collection contains no references.',
+    deleteCollExplain:'Choose an action:',
+    deleteCollOptKeep:'“Delete collection only” — removes the folder; references stay in your library.',
+    deleteCollOptTrash:'“Delete + items to Trash” — removes the folder and moves its references to Trash.',
+    deleteCollOptItemsOnly:'“Items to Trash only” — keeps the folder and moves just its references to Trash.',
+    deleteCollTrashWarn:'⚠ References moved to Trash are removed from every collection they belong to. You can restore them from Trash at any time.',
+    collDeleted:(n)=> n===1 ? 'Collection deleted.' : `${n} collections deleted.`,
+    collItemsTrashed:(n)=>`Moved ${n} reference${n===1?'':'s'} to Trash.`,
+    itemsRestored:(n)=>`Restored ${n} reference${n===1?'':'s'}.`,
+    confirmRestoreAll:(n)=>`Restore all ${n} reference${n===1?'':'s'} in Trash?`,
     promptCollName:'Collection name:', promptRename:'New name:',
     fetching:'Fetching…', fetchFail:'Fetch failed', added:'Added',
     searching:'Searching CrossRef…', searchNoHit:'No matching item found',
@@ -3348,6 +3439,9 @@ This cannot be undone.`,
     permDenied:'Folder access was not granted',
     demoWarn:'Trial mode: data will not be saved',
     typeNames:{article:'Journal article', preprint:'Preprint', book:'Book', chapter:'Book chapter', inproceedings:'Conference paper', thesis:'Thesis', report:'Report', web:'Web page', misc:'Misc'},
+    categoryNames:{article:'Article', communication:'Communication', review:'Review', minireview:'Minireview', perspective:'Perspective', account:'Account', highlight:'Highlight', editorial:'Editorial'}, categoryNone:'(none)',
+    changeFolderMenuTitle:'Switch / create library', openChangeFolder:'Open / change folder', newLibrary:'Create new library',
+    newLibOverwriteConfirm:'This folder already contains a library.json. Overwrite it and create a new empty library? (Existing data will be lost.)',
     unsavedWarn:'There are unsaved changes.',
   },
 };
@@ -3929,7 +4023,7 @@ function findLibraryDuplicateCandidates(limit){
 const ITEM_TYPES = ['article','preprint','book','chapter','inproceedings','thesis','report','web','misc'];
 function newItem(partial){
   return Object.assign({
-    id: uid(), type:'article', title:'', authors:[], journal:'', journalAbbr:'', year:'',
+    id: uid(), type:'article', category:'', title:'', authors:[], journal:'', journalAbbr:'', year:'',
     volume:'', issue:'', pages:'', publisher:'', doi:'', arxiv:'', url:'',
     abstract:'', notes:'', correspondingAuthors:'', correspondingCheckedAt:'', correspondingStatus:'', tags:[], collections:[], citekey:'', attachments:[],
     citedByCount:null, citedByAt:'', citedByStatus:'', starred:false, myPublication:false, trashed:false, trashedAt:'',
@@ -4046,7 +4140,7 @@ let undoStack = []; // stores recent undoable operations for Cmd/Ctrl+Z
 // "pick mode": lets the user click specific rows/cards to build a set of items
 // to refresh (cited-by or corresponding authors), instead of always acting on
 // every currently-visible item.
-let pickMode = null;          // null | 'cited' | 'corresponding'
+let pickMode = null;          // null | 'all' | 'cited' | 'corresponding' | 'category'
 let pickedIds = new Set();
 let pickAnchorId = null;      // for shift-click range selection
 
@@ -4059,13 +4153,19 @@ function pdfCellHTML(it){
   const tip = esc(hasPdf ? t('attachments') : t('addPdf'));
   return `<button class="rowPdfBtn ${hasPdf?'hasPdf':'noPdf'}" data-row-addpdf="${it.id}" title="${tip}" aria-label="${tip}">${hasPdf?ic('file'):'+'}</button>`;
 }
+function trashRestoreCellHTML(it){
+  const rtip = esc(t('restoreItem'));
+  return `<button class="rowTrashRestoreBtn" data-restore-id="${esc(it.id)}" title="${rtip}" aria-label="${rtip}">${ic('arrowUpRight')}</button>`;
+}
 function trashDeleteCellHTML(it){
   const tip = esc(t('deleteForever'));
   return `<button class="rowTrashDeleteBtn" data-delete-forever-id="${esc(it.id)}" title="${tip}" aria-label="${tip}">${ic('trash')}</button>`;
 }
 function cardTrashDeleteHTML(it){
   const tip = esc(t('deleteForever'));
-  return `<button class="cardDeleteBtn" data-delete-forever-id="${esc(it.id)}" title="${tip}" aria-label="${tip}">${ic('trash')}<span>${esc(t('deleteSingle'))}</span></button>`;
+  const rtip = esc(t('restoreItem'));
+  return `<span class="trashRowBtns"><button class="cardRestoreBtn" data-restore-id="${esc(it.id)}" title="${rtip}" aria-label="${rtip}">${ic('arrowUpRight')}<span>${esc(t('restoreItem'))}</span></button>`
+    + `<button class="cardDeleteBtn" data-delete-forever-id="${esc(it.id)}" title="${tip}" aria-label="${tip}">${ic('trash')}<span>${esc(t('deleteSingle'))}</span></button></span>`;
 }
 function starButtonHTML(it, extraCls){
   const on = !!(it && it.starred);
@@ -4078,7 +4178,9 @@ function missingDataHTML(status, checkedAt){
   return '';
 }
 const COLUMN_DEFS = {
-  trashDelete: { i18n:'colTrashDelete', w:42, min:38, sortable:false, align:'center', noFilter:true, headerIcon:'trash',
+  trashRestore: { i18n:'colTrashRestore', w:52, min:44, sortable:false, align:'center', noFilter:true, trashOnly:true, headerIcon:'arrowUpRight',
+             cell:(it)=>trashRestoreCellHTML(it) },
+  trashDelete: { i18n:'deleteSingle', w:52, min:44, sortable:false, align:'center', noFilter:true, trashOnly:true, headerIcon:'trash',
              cell:(it)=>trashDeleteCellHTML(it) },
   starred: { i18n:'colStar', w:34, min:30, sortable:true, align:'center', noFilter:true, headerIcon:'star',
              cell:(it)=>starButtonHTML(it, 'starCell') },
@@ -4103,11 +4205,14 @@ const COLUMN_DEFS = {
              tip:(it)=> it.citedByStatus==='fail' ? t('fetchFail') : it.citedByAt ? (it.citedByCount==null ? t('logNoData') : 'OpenAlex ' + it.citedByAt.slice(0,10)) : '' },
   type:    { i18n:'colType',    w:96,  min:60,  sortable:true,
              cell:(it)=>esc(I18N[lang].typeNames[it.type]||it.type), tip:(it)=>I18N[lang].typeNames[it.type] },
+  category:{ i18n:'colCategory', w:96, min:60, sortable:true,
+             cell:(it)=>it.category?`<span class="tdChip cat cat-${esc(it.category)}">${esc(I18N[lang].categoryNames[it.category]||it.category)}</span>`:'',
+             tip:(it)=>it.category?(I18N[lang].categoryNames[it.category]||it.category):'' },
   doi:     { i18n:'colDoi',     w:150, min:80,  sortable:true, cell:(it)=>esc(it.doi), tip:(it)=>it.doi },
   added:   { i18n:'colAdded',   w:92,  min:70,  sortable:true,
              cell:(it)=>esc((it.dateAdded||'').slice(0,10)), sortVal:(it)=>it.dateAdded||'' },
 };
-const DEFAULT_COLUMNS = { order:['starred','pdf','title','authors','year','journal','tags','collections','citedBy'], widths:{}, hidden:[] };
+const DEFAULT_COLUMNS = { order:['starred','pdf','title','authors','year','journal','category','tags','collections','citedBy'], widths:{}, hidden:[] };
 let columnConfig;
 try{ columnConfig = JSON.parse(localStorage.getItem('refshelf.columns') || 'null'); }catch(e){ columnConfig = null; }
 if(!columnConfig || !Array.isArray(columnConfig.order)){
@@ -4118,7 +4223,7 @@ if(!columnConfig || !Array.isArray(columnConfig.order)){
   columnConfig.widths = columnConfig.widths || {};
   columnConfig.hidden = (columnConfig.hidden || []).filter(k=>COLUMN_DEFS[k]);
   // migrate: surface newly added default columns for configs saved before they existed
-  ['tags','collections'].forEach(k=>{ if(!columnConfig.order.includes(k)) columnConfig.order.push(k); });
+  ['tags','collections','category'].forEach(k=>{ if(!columnConfig.order.includes(k)) columnConfig.order.push(k); });
   if(!columnConfig.order.includes('starred')) columnConfig.order.unshift('starred');
   if(!columnConfig.widths.starred || columnConfig.widths.starred <= 42) columnConfig.widths.starred = COLUMN_DEFS.starred.w;
   // the PDF column used to be a fixed first column; make it a real, movable column
@@ -4127,14 +4232,14 @@ if(!columnConfig || !Array.isArray(columnConfig.order)){
 function saveColumns(){ localStorage.setItem('refshelf.columns', JSON.stringify(columnConfig)); }
 function visibleColumnKeys(){ return columnConfig.order.filter(k=>!columnConfig.hidden.includes(k)); }
 function tableColumnKeys(){
-  const keys = visibleColumnKeys();
-  return filter.coll === 'trash' ? ['trashDelete', ...keys.filter(k=>k!=='trashDelete')] : keys.filter(k=>k!=='trashDelete');
+  const keys = visibleColumnKeys().filter(k=>!COLUMN_DEFS[k].trashOnly);
+  return filter.coll === 'trash' ? ['trashRestore', 'trashDelete', ...keys] : keys;
 }
 function colWidth(key){ return columnConfig.widths[key] || COLUMN_DEFS[key].w; }
 
 /* ---- per-column filters (funnel in the header) ---- */
 const NUMERIC_FILTER_COLS = ['year','citedBy'];
-const PICK_FILTER_COLS = ['tags','journal','collections'];
+const PICK_FILTER_COLS = ['tags','journal','collections','category'];
 function collectionChipStyle(c){
   if(!c) return '';
   if(!c.color) return '';
@@ -4173,6 +4278,7 @@ function colFilterValues(it, k){
     case 'tags': return (it.tags||[]).filter(Boolean);
     case 'journal': return [journalDisplay(it)].filter(Boolean);
     case 'collections': return (it.collections||[]).map(id=>{ const c=lib.collections.find(x=>x.id===id); return c?c.name:''; }).filter(Boolean);
+    case 'category': return it.category ? [I18N[lang].categoryNames[it.category]||it.category] : [];
     default: return [colFilterText(it, k)];
   }
 }
@@ -4189,6 +4295,7 @@ function colFilterText(it, k){
     case 'journal': return journalDisplay(it);
     case 'doi': return it.doi||'';
     case 'type': return (I18N[lang].typeNames[it.type]||it.type||'') + ' ' + (it.type||'');
+    case 'category': return (I18N[lang].categoryNames[it.category]||it.category||'') + ' ' + (it.category||'');
     case 'tags': return (it.tags||[]).join(', ');
     case 'collections': return (it.collections||[]).map(id=>{const c=lib.collections.find(x=>x.id===id); return c?c.name:'';}).join(', ');
     case 'added': return (it.dateAdded||'').slice(0,10);
@@ -4200,6 +4307,7 @@ function colAutoFitText(it, k){
     case 'authors': return authorsShort(it.authors);
     case 'journal': return journalDisplay(it);
     case 'type': return I18N[lang].typeNames[it.type] || it.type || '';
+    case 'category': return I18N[lang].categoryNames[it.category] || it.category || '';
     case 'tags': return (it.tags||[]).join('  ');
     case 'collections': return (it.collections||[]).map(id=>{
       const c = lib.collections.find(x=>x.id===id);
@@ -4368,6 +4476,31 @@ function normalizeArxivInput(v){
 const CROSSREF_TYPE_MAP = { 'journal-article':'article', 'proceedings-article':'inproceedings',
   'book':'book', 'book-chapter':'chapter', 'monograph':'book', 'report':'report',
   'dissertation':'thesis', 'posted-content':'preprint' };
+// Best-effort auto-detection of the "category" (Review / Article / Perspective).
+// Only section-level labels are trusted (not the title/abstract, which produce
+// false positives like a research article titled "… a critical review of …").
+// Perspective is a publisher-specific section that most metadata omits, so it is
+// only caught when explicitly labelled. Undetected items are left blank for the
+// user to set manually.
+function detectCategoryFromLabel(){
+  const s = Array.prototype.slice.call(arguments).filter(Boolean).join(' ').toLowerCase();
+  if(!s) return '';
+  // order matters: check the more specific labels first
+  if(/\bperspectives?\b/.test(s)) return 'perspective';
+  if(/\bmini[- ]?reviews?\b/.test(s)) return 'minireview';
+  if(/\breviews?\b/.test(s)) return 'review';
+  if(/\bhighlights?\b/.test(s)) return 'highlight';
+  if(/\baccounts?\b/.test(s)) return 'account';
+  if(/\beditorials?\b/.test(s)) return 'editorial';
+  if(/\b(communications?|letters?)\b/.test(s)) return 'communication';
+  return '';
+}
+// CrossRef exposes the journal section in `subtype` / `group-title` (e.g.
+// "Reviews", "Perspectives", "Communications") for some publishers.
+function crossrefCategory(msg){
+  const gt = msg['group-title'];
+  return detectCategoryFromLabel(msg.subtype, ...(Array.isArray(gt) ? gt : [gt]));
+}
 function extractCorrespondingAuthors(msg){
   const names = [];
   (msg.author||[]).forEach(a=>{
@@ -4388,6 +4521,7 @@ function crossrefMsgToItem(msg){
   const doi = normDoi(msg.DOI || '');
   return normalizeRepositoryPreprintItem(newItem({
     type: CROSSREF_TYPE_MAP[msg.type] || 'article',
+    category: crossrefCategory(msg),
     title: stripTags((msg.title && msg.title[0]) || ''),
     authors: (msg.author||[]).map(a=>({ family:a.family||a.name||'', given:a.given||'' })),
     journal: (msg['container-title'] && msg['container-title'][0]) || '',
@@ -4502,6 +4636,7 @@ function openAlexToItem(w){
   const isArxiv = /arxiv/i.test(src.display_name||'') || /10\.48550\/arxiv/i.test(doi);
   return normalizeRepositoryPreprintItem(newItem({
     type: OPENALEX_TYPE_MAP[w.type] || 'article',
+    category: detectCategoryFromLabel(w.type),
     title: stripTags(w.title || w.display_name || ''),
     authors,
     journal: stripTags(src.display_name || ''),
@@ -4525,12 +4660,14 @@ async function autoEnrichOnAdd(it){
   if(!qd) return;
   try{
     setItemUpdateState(it, 'running');
-    const w = await oaFetch('works/doi:' + encodeURIComponent(qd) + '?select=authorships,cited_by_count');
+    const w = await oaFetch('works/doi:' + encodeURIComponent(qd) + '?select=authorships,cited_by_count,type');
     const corr = oaCorrespondingAuthors(w.authorships);
     if(corr) it.correspondingAuthors = corr;
     it.correspondingCheckedAt = new Date().toISOString();
     it.correspondingStatus = corr ? '' : 'none';
     applyOaCitedBy(it, w);
+    // CrossRef often lacks a section label; OpenAlex may still classify reviews
+    if(!it.category){ const c = detectCategoryFromLabel(w.type); if(c) it.category = c; }
     setItemUpdateState(it, 'ok');
     touch(); renderList(); renderDetail();
   }catch(e){
@@ -4546,6 +4683,27 @@ async function enrichCorresponding(item){
     const corr = oaCorrespondingAuthors(w.authorships);
     if(corr) item.correspondingAuthors = corr;
   }catch(e){ /* leave as-is if OpenAlex has no record */ }
+}
+// Fill an item's "category" (Review / Article / Perspective …) for existing items
+// on demand — the equivalent of a cited-by refresh, but for the section label.
+// Uses CrossRef's section fields first (best for Perspective/Highlight/Account/
+// Communication), then OpenAlex's `type` (catches reviews CrossRef doesn't label).
+// Only fills when empty: a manual choice is never overwritten. Best-effort/silent.
+async function enrichCategory(it){
+  if(!it || it.category) return false;
+  let cat = '';
+  if(it.doi){
+    try{
+      const r = await fetch('https://api.crossref.org/works/' + encodeURIComponent(normDoi(it.doi)) + '?select=subtype,group-title');
+      if(r.ok) cat = crossrefCategory((await r.json()).message || {});
+    }catch(e){ /* ignore — fall through to OpenAlex */ }
+  }
+  if(!cat && (it.doi || it.arxiv)){
+    try{ cat = detectCategoryFromLabel((await fetchOneOaByItem(it, 'type')).type); }
+    catch(e){ /* leave blank if OpenAlex has no record */ }
+  }
+  if(cat){ it.category = cat; return true; }
+  return false;
 }
 // A 429 from OpenAlex now means the daily budget is exhausted (resets at
 // midnight UTC) — retrying immediately is futile, so surface it and back off.
@@ -4616,6 +4774,31 @@ function clearUpdateStates(){
     el.classList.remove('updating','updated','updateNone','updateFail');
   }));
 }
+// let the browser paint (used so batched updates flow into the table one-by-one)
+function nextFrame(){ return new Promise(r=>requestAnimationFrame(()=>r())); }
+// refresh only the cells that citation/corresponding updates touch, in place, so
+// data appears live during a refresh without the cost of a full renderList per item
+const LIVE_UPDATE_COLS = ['authors','corresponding','citedBy'];
+function refreshRowCells(it){
+  if(!it || !it.id) return;
+  document.querySelectorAll('#itemRows tr' + dataIdSelector(it.id)).forEach(tr=>{
+    LIVE_UPDATE_COLS.forEach(k=>{
+      const d = COLUMN_DEFS[k];
+      const td = tr.querySelector('.col-' + k);
+      if(!d || !td) return;
+      td.innerHTML = d.cell(it);
+      const tip = d.tip ? d.tip(it) : '';
+      if(tip) td.title = tip; else td.removeAttribute('title');
+    });
+  });
+  const card = document.querySelector('#itemCards .cardRow' + dataIdSelector(it.id));
+  if(card){
+    const tmp = document.createElement('div');
+    tmp.innerHTML = cardRowHTML(it);
+    const fresh = tmp.firstElementChild;
+    if(fresh){ card.replaceWith(fresh); renderIcons(fresh); }
+  }
+}
 function logStatusText(status){
   if(status==='running') return t('logRunning');
   if(status==='ok') return t('logUpdated');
@@ -4657,14 +4840,40 @@ function logFetchFailure(entry){
   updateFetchLogBadge();
   if($('#dlgFetchLog').open) renderFetchLog();
 }
-function updateFetchLogBadge(){
-  const badge = $('#fetchLogBadge');
-  if(!badge) return;
-  const n = fetchLog.length;
-  badge.textContent = n;
-  badge.style.display = n ? 'inline-flex' : 'none';
-  $('#btnFetchLog').style.display = n ? 'inline-flex' : 'none';
+// ---- consolidated "alerts" button (fix suggestions / empty data / duplicates /
+// update log) ----------------------------------------------------------------
+// The three problem counts are cached so the fetch-log tick (called per item in a
+// refresh loop) can re-render cheaply without re-running duplicate detection.
+let _alertCounts = { fix:0, empty:0, dup:0 };
+const ALERT_DEFS = {
+  fix:   { icon:'alert', label:'fixSuggestions',       open:()=>openFixSuggestionsFromAlert() },
+  empty: { icon:'trash', label:'emptyRecords',         open:()=>openEmptyRecordsFromAlert() },
+  dup:   { icon:'alert', label:'duplicateCandidates',  open:()=>openDuplicatesFromAlert() },
+  log:   { icon:'alert', label:'fetchLog',             open:()=>{ renderFetchLog(); $('#dlgFetchLog').showModal(); } },
+};
+function updateAlerts(){
+  _alertCounts = {
+    fix:   findFixSuggestions().length,
+    empty: findEmptyRecords().length,
+    dup:   findLibraryDuplicateCandidates(50).length,
+  };
+  renderAlerts();
 }
+function renderAlerts(){
+  const wrap = $('#alertsWrap');
+  if(!wrap) return;
+  const counts = { fix:_alertCounts.fix, empty:_alertCounts.empty, dup:_alertCounts.dup, log:fetchLog.length };
+  const keys = Object.keys(ALERT_DEFS).filter(k=>counts[k] > 0);
+  if(!keys.length){ wrap.style.display = 'none'; $('#menuAlerts').innerHTML = ''; return; }
+  wrap.style.display = '';
+  $('#alertsBadge').textContent = keys.reduce((s,k)=>s + counts[k], 0);
+  $('#menuAlerts').innerHTML = keys.map(k=>{
+    const d = ALERT_DEFS[k];
+    return `<button data-alert="${k}"><span class="ic" data-ic="${d.icon}"></span><span>${esc(t(d.label))}</span><span class="logBadge alertItemBadge">${counts[k]}</span></button>`;
+  }).join('');
+  renderIcons($('#menuAlerts'));
+}
+function updateFetchLogBadge(){ renderAlerts(); }
 function reasonText(e){
   if(e && e.rateLimited) return t('oaBudgetErr');
   return (e && e.message) || String(e);
@@ -4705,7 +4914,14 @@ async function retryLogEntry(en){
   else await refreshCitedByCounts([it]);
   renderFetchLog();
 }
-$('#btnFetchLog').addEventListener('click', ()=>{ renderFetchLog(); $('#dlgFetchLog').showModal(); });
+bindMenu('#btnAlerts','#menuAlerts');
+$('#menuAlerts').addEventListener('click', (e)=>{
+  const b = e.target.closest('[data-alert]');
+  if(!b) return;
+  closeMenus();
+  const d = ALERT_DEFS[b.dataset.alert];
+  if(d) d.open();
+});
 $('#btnLogClear').addEventListener('click', ()=>{ fetchLog.length = 0; updateFetchLogBadge(); renderFetchLog(); });
 $('#btnLogRetryAll').addEventListener('click', async ()=>{
   const citedIds = Array.from(new Set(fetchLog.filter(e=>e.kind!=='corresponding').map(e=>e.itemId).filter(Boolean)));
@@ -4751,10 +4967,22 @@ async function fetchOpenAlexReferences(work){
   out.sort((a,b)=>(order.get(oaId(a.id))??0)-(order.get(oaId(b.id))??0));
   return out;
 }
-async function fetchOpenAlexCitedBy(work, limit){
-  const d = await oaFetch('works?per-page=' + (limit||25) + '&sort=cited_by_count:desc&select=' + OA_SELECT +
-    '&filter=cites:' + oaId(work.id));
-  return { total: (d.meta && d.meta.count) || 0, works: d.results || [] };
+async function fetchOpenAlexCitedBy(work, cap){
+  // Fetch every citing work via cursor pagination (not just the top page). A
+  // generous safety cap keeps a pathologically-cited paper from flooding the
+  // dialog / OpenAlex; the count label still reports the true total.
+  const MAX = cap || 2000;
+  const out = [];
+  let cursor = '*', total = 0;
+  while(cursor && out.length < MAX){
+    const d = await oaFetch('works?per-page=200&sort=cited_by_count:desc&select=' + OA_SELECT +
+      '&cursor=' + encodeURIComponent(cursor) + '&filter=cites:' + oaId(work.id));
+    total = (d.meta && d.meta.count) || total;
+    (d.results || []).forEach(w=>out.push(w));
+    cursor = d.meta && d.meta.next_cursor;
+    if(!d.results || !d.results.length) break;
+  }
+  return { total, works: out.slice(0, MAX) };
 }
 
 async function fetchArxiv(id){
@@ -5528,6 +5756,7 @@ function visibleItems(){
         va = nm(a); vb = nm(b); break;
       }
       case 'type': va = (I18N[lang].typeNames[a.type]||a.type||'').toLowerCase(); vb = (I18N[lang].typeNames[b.type]||b.type||'').toLowerCase(); break;
+      case 'category': va = (I18N[lang].categoryNames[a.category]||a.category||'').toLowerCase(); vb = (I18N[lang].categoryNames[b.category]||b.category||'').toLowerCase(); break;
       case 'doi': va = (a.doi||'').toLowerCase(); vb = (b.doi||'').toLowerCase(); break;
       case 'added': va = a.dateAdded||''; vb = b.dateAdded||''; break;
       default: va = a.dateAdded; vb = b.dateAdded;
@@ -5738,7 +5967,7 @@ function renderListHeader(){
       const d = COLUMN_DEFS[k];
       const alignCls = d.align==='right' ? ' cell-right' : d.align==='center' ? ' cell-center' : '';
       const pdfCls = d.special==='pdf' ? ' pdfCol' : '';
-      const trashCls = k==='trashDelete' ? ' trashDelCol' : '';
+      const trashCls = (k==='trashDelete' || k==='trashRestore') ? ' trashDelCol' : '';
       const iconCls = d.headerIcon ? ' iconCol' : '';
       const fActive = !d.noFilter && colFilterActive(k);
       const funnel = d.noFilter ? '' : `<span class="thfilter${fActive?' on':''}" data-thfilter="${k}">${ic('funnel')}</span>`;
@@ -5764,7 +5993,7 @@ function renderList(opts){
       const d = COLUMN_DEFS[k];
       const tip = d.tip ? d.tip(it) : '';
       const alignCls = d.align==='right' ? ' cell-right' : d.align==='center' ? ' cell-center' : '';
-      const keyCls = ` col-${k}${k==='trashDelete' ? ' trashDelCol' : ''}`;
+      const keyCls = ` col-${k}${(k==='trashDelete' || k==='trashRestore') ? ' trashDelCol' : ''}`;
       return `<td class="${(alignCls + keyCls).trim()}"${tip?` title="${esc(tip)}"`:''}>${d.cell(it)}</td>`;
     }).join('');
     return `<tr class="row ${it.id===selectedId?'sel':''} ${multiSelectedIds.has(it.id)?'multiSel':''} ${updateClassForItem(it.id)} ${pickClassForItem(it.id)}" data-id="${it.id}" draggable="true">${cells}</tr>`;
@@ -5782,9 +6011,7 @@ function renderList(opts){
   // the collection/tag/search filter changes, so allow skipping their (heavy)
   // recomputation on pure view changes. Data mutations call renderList() plainly.
   if(!opts || !opts.skipBadges){
-    updateDuplicateButton();
-    updateEmptyRecordsButton();
-    updateFixSuggestionsButton();
+    updateAlerts(); // one pass computes fix/empty/duplicate counts for the alerts button
   }
 }
 function dataIdSelector(id){
@@ -5882,7 +6109,7 @@ function enterPickMode(kind){
   pickAnchorId = null;
   document.querySelectorAll('#itemRows tr.row, .cardRow').forEach(el=>el.classList.add('picking'));
   $('#pickBar').style.display = 'flex';
-  $('#pickBarHint').textContent = t(kind==='cited' ? 'pickHintCited' : 'pickHintCorresponding');
+  $('#pickBarHint').textContent = t(kind==='cited' ? 'pickHintCited' : kind==='corresponding' ? 'pickHintCorresponding' : 'pickHintAll');
   updatePickBar();
 }
 function exitPickMode(){
@@ -5952,6 +6179,14 @@ function cardRowHTML(it){
 function fieldRow(label, id, value, type){
   if(type==='textarea') return `<div class="fRow"><label>${esc(label)}</label><textarea data-f="${id}">${esc(value)}</textarea></div>`;
   return `<div class="fRow"><label>${esc(label)}</label><input type="text" data-f="${id}" value="${esc(value)}"></div>`;
+}
+function selectRow(label, id, value, options){
+  const opts = options.map(o=>`<option value="${esc(o.v)}"${o.v===(value||'')?' selected':''}>${esc(o.label)}</option>`).join('');
+  return `<div class="fRow"><label>${esc(label)}</label><select data-f="${id}">${opts}</select></div>`;
+}
+function categoryOptions(){
+  return [{v:'',label:t('categoryNone')}].concat(
+    Object.keys(I18N[lang].categoryNames).map(v=>({v,label:I18N[lang].categoryNames[v]})));
 }
 function citationStyleOptions(){
   const curStyle = citationStyleKey(citationPrefs.style);
@@ -6054,6 +6289,7 @@ function renderDetail(){
       ${fieldRow(t('issue'),'issue',it.issue)}
       ${fieldRow(t('pages'),'pages',it.pages)}
     </div>
+    ${selectRow(t('colCategory'),'category',it.category,categoryOptions())}
     ${fieldRow(t('publisher'),'publisher',it.publisher)}
     ${fieldRow('DOI','doi',it.doi)}
     ${fieldRow(t('citekey'),'citekey',it.citekey)}
@@ -6115,6 +6351,7 @@ function renderDuplicateDialog(candidates){
     duplicateDialogCandidates.map((c,i)=>{
       const reason = c.skipped ? t('duplicateSkipped') : t(duplicateReasonKey(c.reason));
       const addedInLib = c.item && lib.items.some(x=>x.id===c.item.id);
+      const existingInLib = c.match && c.match.id && lib.items.some(x=>x.id===c.match.id);
       return `<div class="dupPair" data-dup="${i}">
         <span class="dupBadge">${ic('alert')}${esc(reason)} · ${esc(String(c.score || 0))}%</span>
         <div class="dupCols">
@@ -6124,6 +6361,8 @@ function renderDuplicateDialog(candidates){
         <div class="dupActions">
           ${c.match && c.match.id ? `<button class="tbtn" data-dup-open="match">${esc(t('duplicateOpenExisting'))}</button>` : ''}
           ${addedInLib ? `<button class="tbtn" data-dup-open="item">${esc(t('duplicateOpenAdded'))}</button>` : ''}
+          ${c.skipped && existingInLib ? `<button class="tbtn" data-dup-replace="${i}">${ic('retry')}${esc(t('duplicateReplaceExisting'))}</button>` : ''}
+          ${existingInLib ? `<button class="tbtn danger" data-dup-delete="${esc(c.match.id)}">${ic('trash')}${esc(t('duplicateDeleteExisting'))}</button>` : ''}
           ${addedInLib ? `<button class="tbtn danger" data-dup-delete="${esc(c.item.id)}">${ic('trash')}${esc(t('duplicateDeleteAdded'))}</button>` : ''}
         </div>
       </div>`;
@@ -6134,13 +6373,7 @@ function openDuplicateDialog(candidates){
   renderDuplicateDialog(candidates);
   $('#dlgDuplicates').showModal();
 }
-function updateDuplicateButton(){
-  const btn = $('#btnDuplicates');
-  if(!btn) return;
-  const n = findLibraryDuplicateCandidates(50).length;
-  $('#dupBadge').textContent = n;
-  btn.style.display = n ? 'inline-flex' : 'none';
-}
+function updateDuplicateButton(){ updateAlerts(); }
 function showDuplicateReviewAfterAdd(res){
   if(res && res.duplicateCandidates && res.duplicateCandidates.length){
     openDuplicateDialog(res.duplicateCandidates);
@@ -6183,13 +6416,7 @@ function openEmptyRecordsDialog(){
   renderEmptyRecordsDialog();
   $('#dlgEmptyRecords').showModal();
 }
-function updateEmptyRecordsButton(){
-  const btn = $('#btnEmptyRecords');
-  if(!btn) return;
-  const n = findEmptyRecords().length;
-  $('#emptyRecBadge').textContent = n;
-  btn.style.display = n ? 'inline-flex' : 'none';
-}
+function updateEmptyRecordsButton(){ updateAlerts(); }
 function fixSuggestionForItem(it){
   const fields = [it.journal, it.journalAbbr].filter(Boolean);
 
@@ -6287,13 +6514,7 @@ function openFixSuggestionsDialog(){
   renderFixSuggestionsDialog();
   $('#dlgFixSuggestions').showModal();
 }
-function updateFixSuggestionsButton(){
-  const btn = $('#btnFixSuggestions');
-  if(!btn) return;
-  const n = findFixSuggestions().length;
-  $('#fixSugBadge').textContent = n;
-  btn.style.display = n ? 'inline-flex' : 'none';
-}
+function updateFixSuggestionsButton(){ updateAlerts(); }
 
 /* ---------------------------------------------------------------
    Item operations
@@ -6322,6 +6543,20 @@ function addItems(items, opts){
   }
   if(added || skipped) touch();
   return {added, skipped, addedItems, skippedItems, duplicateCandidates};
+}
+// Overwrite an existing record's bibliographic fields with a newer candidate's,
+// keeping the user's local data (id, PDFs, notes, tags, collections, star, etc.).
+// Used when a same-DOI import was skipped but the fetched candidate is fresher.
+function replaceExistingWithCandidate(existing, cand){
+  if(!existing || !cand) return;
+  const strFields = ['type','title','journal','journalAbbr','year','volume','issue','pages',
+    'publisher','doi','arxiv','url','abstract','correspondingAuthors','correspondingCheckedAt',
+    'correspondingStatus','citedByAt','citedByStatus'];
+  strFields.forEach(k=>{ if(String(cand[k]||'').trim() !== '') existing[k] = cand[k]; });
+  if(Array.isArray(cand.authors) && cand.authors.length) existing.authors = cand.authors;
+  if(cand.citedByCount != null) existing.citedByCount = cand.citedByCount;
+  existing.dateModified = new Date().toISOString();
+  touch();
 }
 function collectionIdByName(name){
   name = String(name||'').trim();
@@ -6401,11 +6636,109 @@ async function deleteItem(id){
   touch(it); renderAll();
 }
 async function restoreItem(id){
-  const it = lib.items.find(x=>x.id===id);
-  if(!it) return;
-  it.trashed = false;
-  it.trashedAt = '';
-  touch(it); renderAll();
+  return restoreItemsByIds([id]);
+}
+// Restore one or more items out of the trash. Pushes a trash-undo entry so
+// Cmd+Z re-trashes them (undoTrashMove replays the captured trashed state).
+function restoreItemsByIds(ids){
+  const idSet = new Set(ids || []);
+  const targets = lib.items.filter(it=>idSet.has(it.id) && isItemTrashed(it));
+  if(!targets.length) return 0;
+  pushTrashUndo(targets.map(makeTrashUndoRecord));
+  targets.forEach(it=>{
+    it.trashed = false;
+    it.trashedAt = '';
+    it.dateModified = new Date().toISOString();
+  });
+  touch(); renderAll();
+  return targets.length;
+}
+async function restoreAllTrash(){
+  const ids = lib.items.filter(isItemTrashed).map(it=>it.id);
+  if(!ids.length){ showToast(t('trashEmptyMsg')); return 0; }
+  if(!confirm(I18N[lang].confirmRestoreAll(ids.length))) return 0;
+  const n = restoreItemsByIds(ids);
+  if(n) showToast(I18N[lang].itemsRestored(n));
+  return n;
+}
+// --- collection deletion (with keep / trash-items choices) ---
+let pendingDeleteCollIds = [];
+// Union of the given collections and all their descendants.
+function collectionSetWithDescendants(ids){
+  const out = new Set();
+  (ids || []).forEach(id=>collectionWithDescendants(id).forEach(x=>out.add(x)));
+  return out;
+}
+// Active (non-trashed) items that live in any of the given collections.
+function itemsInCollectionSet(collIdSet){
+  return lib.items.filter(it=>!isItemTrashed(it) && (it.collections||[]).some(cid=>collIdSet.has(cid)));
+}
+function openDeleteCollDialog(ids){
+  ids = (ids || []).filter(id=>lib.collections.find(c=>c.id===id));
+  if(!ids.length) return;
+  pendingDeleteCollIds = ids;
+  const allIds = collectionSetWithDescendants(ids);
+  const itemCount = itemsInCollectionSet(allIds).length;
+  const head = ids.length===1
+    ? I18N[lang].deleteCollHeadOne((lib.collections.find(c=>c.id===ids[0])||{}).name || '')
+    : I18N[lang].deleteCollHeadMany(ids.length);
+  $('#deleteCollBody').innerHTML = `
+    <div style="font-weight:700; margin-bottom:6px">${esc(head)}</div>
+    <div style="color:var(--text2); margin-bottom:10px">${esc(I18N[lang].deleteCollItemCount(itemCount))}</div>
+    <div style="margin-bottom:6px">${esc(t('deleteCollExplain'))}</div>
+    <ul style="margin:0 0 10px 18px; padding:0; color:var(--text2); line-height:1.7">
+      <li>${esc(t('deleteCollOptKeep'))}</li>
+      <li>${esc(t('deleteCollOptTrash'))}</li>
+      <li>${esc(t('deleteCollOptItemsOnly'))}</li>
+    </ul>
+    <div style="color:var(--danger); font-size:12.5px">${esc(t('deleteCollTrashWarn'))}</div>`;
+  // Buttons that only make sense with items present are disabled when empty.
+  $('#btnCollTrashItemsKeepColl').disabled = itemCount===0;
+  $('#dlgDeleteColl').showModal();
+}
+// Remove the given collections (and descendants) from lib.collections and from
+// every item's collections list, re-parenting orphaned sub-collections.
+function removeCollections(collIdSet){
+  lib.collections.forEach(x=>{
+    if(collIdSet.has(x.parent)){
+      // Walk up to the nearest surviving ancestor (or top level).
+      let p = x.parent;
+      while(p && collIdSet.has(p)){ const pc = lib.collections.find(c=>c.id===p); p = pc ? (pc.parent||'') : ''; }
+      x.parent = p;
+    }
+  });
+  lib.collections = lib.collections.filter(x=>!collIdSet.has(x.id));
+  lib.items.forEach(i=>{ i.collections = (i.collections||[]).filter(x=>!collIdSet.has(x)); });
+  collIdSet.forEach(id=>{
+    selectedCollectionIds.delete(id);
+    if(collectionSelectAnchorId===id) collectionSelectAnchorId = null;
+    if(filter.coll===id) filter.coll = 'all';
+  });
+}
+// mode: 'keep' (delete collections, keep items), 'trash' (delete collections
+// + trash items), 'itemsOnly' (keep collections, trash items).
+function performCollDelete(mode){
+  const ids = pendingDeleteCollIds || [];
+  if(!ids.length) return;
+  const allIds = collectionSetWithDescendants(ids);
+  let trashedCount = 0;
+  if(mode==='trash' || mode==='itemsOnly'){
+    const targets = itemsInCollectionSet(allIds).filter(it=>!isItemTrashed(it));
+    if(targets.length){
+      pushTrashUndo(targets.map(makeTrashUndoRecord));
+      const now = new Date().toISOString();
+      targets.forEach(it=>{
+        it.trashed = true; it.trashedAt = now; it.dateModified = now;
+        if(filter.coll!=='trash' && selectedId===it.id) selectedId = null;
+      });
+      trashedCount = targets.length;
+    }
+  }
+  if(mode==='keep' || mode==='trash') removeCollections(allIds);
+  touch(); renderAll();
+  if(mode==='keep' || mode==='trash') showToast(I18N[lang].collDeleted(ids.length));
+  if(trashedCount) showToast(I18N[lang].collItemsTrashed(trashedCount));
+  pendingDeleteCollIds = [];
 }
 async function deleteForever(id){
   const idx = lib.items.findIndex(x=>x.id===id);
@@ -6515,11 +6848,14 @@ async function tryAutoAttachPdf(item){
 /* ---------------------------------------------------------------
    Startup / library open
 ---------------------------------------------------------------- */
-async function startWithBackend(be){
+async function startWithBackend(be, opts){
+  const fresh = !!(opts && opts.fresh);
   backend = be;
   let data = null;
-  try{ data = await be.load(); }
-  catch(e){ console.error(e); showToast(t('libLoadFail') + ': ' + e.message, true); return; }
+  if(!fresh){
+    try{ data = await be.load(); }
+    catch(e){ console.error(e); showToast(t('libLoadFail') + ': ' + e.message, true); return; }
+  }
   lib = data && Array.isArray(data.items)
     ? Object.assign({version:APP_VERSION, items:[], collections:[], tagColors:{}}, data)
     : { version:APP_VERSION, items:[], collections:[], tagColors:{} };
@@ -6543,9 +6879,9 @@ async function startWithBackend(be){
   const shortLibPath = libPath ? String(libPath).split('/').filter(Boolean).pop() || libPath : '';
   libLabel.innerHTML = be.kind==='mem' ? '' : ic('folder') + '<span class="libNameText">' + esc(shortLibPath) + '</span>';
   libLabel.title = be.kind==='mem' ? t('demoLib') : libPath;
-  $('#btnChangeFolder').style.display = HAS_FS ? '' : 'none';
+  $('#changeFolderWrap').style.display = HAS_FS ? '' : 'none';
   $('#startScreen').style.display = 'none';
-  if(be.kind==='fs' && !data) await be.save(lib); // create library.json immediately
+  if(be.kind==='fs' && !data) await be.save(lib); // create (or overwrite, when fresh) library.json immediately
   if(be.kind==='mem') showToast(t('demoWarn'));
   dirty = false; updateSaveDot();
   renderAll();
@@ -6556,6 +6892,25 @@ async function pickFolder(){
     const dir = await window.showDirectoryPicker({ mode:'readwrite' });
     await idbSet('lastDir', dir);
     await startWithBackend(fsBackend(dir));
+  }catch(e){
+    if(e && e.name==='AbortError') return;
+    console.error(e); showToast(t('permDenied'), true);
+  }
+}
+async function newLibrary(){
+  try{
+    if(backend && backend.kind==='fs' && dirty) await saveNow();
+    const dir = await window.showDirectoryPicker({ mode:'readwrite' });
+    if(await dirHasLibrary(dir)){
+      // folder already holds a library — creating a fresh one would overwrite it
+      if(!confirm(t('newLibOverwriteConfirm'))){
+        await idbSet('lastDir', dir);
+        await startWithBackend(fsBackend(dir)); // fall back to just opening it
+        return;
+      }
+    }
+    await idbSet('lastDir', dir);
+    await startWithBackend(fsBackend(dir), { fresh:true });
   }catch(e){
     if(e && e.name==='AbortError') return;
     console.error(e); showToast(t('permDenied'), true);
@@ -6657,7 +7012,9 @@ $('#btnTheme').addEventListener('click', toggleTheme);
 // start screen
 $('#btnOpenFolder').addEventListener('click', pickFolder);
 $('#btnOpenLast').addEventListener('click', openLast);
-$('#btnChangeFolder').addEventListener('click', pickFolder);
+bindMenu('#btnChangeFolder','#menuChangeFolder');
+$('#miOpenFolder').addEventListener('click', ()=>{ closeMenus(); pickFolder(); });
+$('#miNewLibrary').addEventListener('click', ()=>{ closeMenus(); newLibrary(); });
 
 // manual
 // miFig(): renders an ICONS path inside the schematic figures
@@ -7010,9 +7367,38 @@ const MANUAL = {
       {sub:'他のソフトから移行する（インポート）'},
       {ul:[
         'Zotero・Mendeley・Paperpile などから書き出したファイル（BibTeX .bib / RIS .ris / CSV / JSON / Zotero RDF .rdf）を「追加」メニューの「インポート」[[ic:download]] から読み込めます。',
-        'コレクションやフォルダ階層まで引き継ぎたい場合は、Paper Library JSON・Paperpile JSON・Zotero RDF（.rdf）など、フォルダ情報を含む形式で読み込んでください。BibTeX / RIS では通常、フォルダ構成までは復元できません。',
-        'Zotero からは、右クリック →「コレクションを書き出し…」→ 形式「Zotero RDF」で書き出した .rdf を読み込むと、コレクション（入れ子構造・空のコレクション含む）と所属がそのまま復元されます。※リンクされた PDF やウェブスナップショット（files/ フォルダ）は取り込まれず、書誌データとフォルダ構成のみを取り込みます。',
-        '「keywords をタグとして読み込む」にチェックを入れると、書誌データのキーワードがそのままタグになります。',
+        'Paperpile・Zotero からの具体的な移行手順は、マニュアルの「他のソフトから移行」タブ [[ic:download]] を参照してください。',
+      ]},
+    ]},
+    { h:'他のソフトから移行', tab:'移行・インポート', icon:'download', blocks:[
+      {p:'Zotero・Mendeley・Paperpile など、他の文献管理ソフトからのデータ移行に対応しています。移行元でファイルを「書き出し（エクスポート）」し、Paper Library の「追加」[[ic:plus]] →「インポート」[[ic:download]] から読み込みます。'},
+      {p:'対応形式は BibTeX（.bib）／RIS（.ris）／CSV（.csv）／JSON（.json）／Zotero RDF（.rdf）です。コレクション（フォルダ階層）まで引き継ぎたい場合は、フォルダ情報を含む形式（Zotero RDF、Paper Library JSON、フォルダ列を含む CSV／JSON など）で書き出してください。BibTeX／RIS は書誌データのみで、フォルダ構成までは通常復元できません。'},
+      {sub:'共通の設定'},
+      {ul:[
+        'インポートのメニュー内にある「keywords をタグとして読み込む」にチェックを入れると、移行元のキーワード（keywords）がそのまま Paper Library のタグになります。',
+        '取り込み後は自動的に重複チェックが働き、DOI などが一致する文献は重複候補として通知されます（自動では消えません）。',
+        'PDF などの添付ファイルは移行元のエクスポートには含まれないため取り込まれません。書誌データ（タイトル・著者・DOI など）とフォルダ構成のみが移行されます。PDF は移行後に各文献へ改めて添付してください。',
+      ]},
+      {sub:'Zotero から移行する'},
+      {ul:[
+        'Zotero を開き、移行したいコレクションを右クリック →「コレクションを書き出し…」を選びます（ライブラリ全体を移す場合は、左上の「マイ・ライブラリ」を右クリック →「ライブラリを書き出し…」）。',
+        '形式（Format）で「Zotero RDF」を選択します。「ファイルを書き出す（Export Files）」のチェックは、PDF は取り込まれないため外して構いません（メモを移したい場合は「メモを書き出す（Export Notes）」を ON に）。',
+        '書き出してできた .rdf ファイルを、Paper Library の「追加」→「インポート」→「Zotero RDF (.rdf)」から読み込みます。',
+        'コレクション（入れ子構造・空のコレクションを含む）と、各文献の所属コレクションがそのまま復元されます。タグも引き継ぎたい場合は、読み込み前に「keywords をタグとして読み込む」にチェックを入れてください。',
+        '注意：リンクされた PDF やウェブスナップショット（.rdf と一緒に作られる files/ フォルダ）は取り込まれません。取り込まれるのは書誌データとフォルダ構成のみです。',
+      ]},
+      {sub:'Paperpile から移行する'},
+      {ul:[
+        'Paperpile（ブラウザ版）を開き、移行したい論文を選択します（左側のフォルダを選んでから、リスト上部のチェックで全選択も可能）。',
+        'メニューの「Export」から書き出し形式を選びます。書誌データだけを移すなら BibTeX（.bib）または RIS（.ris）が確実です。',
+        '書き出したファイルを、Paper Library の「追加」→「インポート」から対応する形式（BibTeX または RIS）で読み込みます。',
+        'Paperpile の「Labels（ラベル）」を Paper Library のタグとして引き継ぎたい場合は、読み込み前に「keywords をタグとして読み込む」にチェックを入れてください（ラベルが keywords として書き出されている場合に反映されます）。',
+        'Paperpile の Folders（フォルダ）構成は BibTeX／RIS では引き継げません。フォルダごとに分けて移したい場合は、Paperpile 側でフォルダ単位に書き出し、Paper Library 側で先にコレクションを作ってから、そのコレクションを選んだ状態でインポートすると整理しやすいです。',
+      ]},
+      {sub:'その他のソフト（Mendeley など）'},
+      {ul:[
+        'Mendeley・EndNote など多くのソフトは BibTeX（.bib）または RIS（.ris）で書き出せます。書き出したファイルを「インポート」から読み込めば、書誌データを移行できます。',
+        'フォルダ構成の移行が必要で、その形式でうまく引き継げない場合は、一度 Zotero に取り込んでから Zotero RDF で書き出す方法が確実です。',
       ]},
     ]},
     { h:'拡張機能で保存する', tab:'拡張機能', blocks:[
@@ -7192,9 +7578,38 @@ const MANUAL = {
       {sub:'Migrate from other software (import)'},
       {ul:[
         'Files exported from Zotero, Mendeley, Paperpile, etc. (BibTeX .bib / RIS .ris / CSV / JSON / Zotero RDF .rdf) can be loaded from “Import” [[ic:download]] in the “Add” menu.',
-        'To preserve collections or folder hierarchy, import a format that actually contains folder information, such as Paper Library JSON, Paperpile JSON, or Zotero RDF (.rdf). BibTeX / RIS usually cannot restore folder structure.',
-        'From Zotero, right-click a collection → “Export Collection…” → format “Zotero RDF”, then import the .rdf: your collections (including nested and empty ones) and their memberships are restored. Note: linked PDFs and web snapshots (the files/ folder) are not imported — only the reference metadata and folder structure.',
-        'Check “Import keywords as tags” to turn bibliographic keywords into tags automatically.',
+        'For step-by-step instructions for Paperpile and Zotero, see the “Migrate” tab [[ic:download]] of this manual.',
+      ]},
+    ]},
+    { h:'Migrate from other software', tab:'Migrate / import', icon:'download', blocks:[
+      {p:'You can migrate data from other reference managers such as Zotero, Mendeley and Paperpile. Export a file from the other app, then load it via “Add” [[ic:plus]] → “Import” [[ic:download]] in Paper Library.'},
+      {p:'Supported formats are BibTeX (.bib), RIS (.ris), CSV (.csv), JSON (.json) and Zotero RDF (.rdf). To carry over collections (folder hierarchy), export a format that actually contains folder information (Zotero RDF, Paper Library JSON, or a CSV/JSON with a folder column). BibTeX / RIS hold reference metadata only and usually cannot restore folder structure.'},
+      {sub:'Common options'},
+      {ul:[
+        'Tick “Import keywords as tags” in the Import menu to turn the source’s keywords into Paper Library tags.',
+        'After importing, a duplicate check runs automatically and flags references that match by DOI etc. as possible duplicates (nothing is deleted automatically).',
+        'Attachments such as PDFs are not part of these exports and are not imported — only reference metadata and folder structure migrate. Re-attach PDFs to each reference after migrating.',
+      ]},
+      {sub:'Migrate from Zotero'},
+      {ul:[
+        'In Zotero, right-click the collection you want to migrate → “Export Collection…” (or right-click “My Library” at the top left → “Export Library…” to move everything).',
+        'For Format, choose “Zotero RDF”. You can leave “Export Files” unchecked since PDFs are not imported (turn on “Export Notes” if you want to carry notes over).',
+        'Load the resulting .rdf file via “Add” → “Import” → “Zotero RDF (.rdf)” in Paper Library.',
+        'Your collections (including nested and empty ones) and each reference’s membership are restored as-is. To also carry over tags, tick “Import keywords as tags” before importing.',
+        'Note: linked PDFs and web snapshots (the files/ folder created next to the .rdf) are not imported — only reference metadata and folder structure.',
+      ]},
+      {sub:'Migrate from Paperpile'},
+      {ul:[
+        'Open Paperpile (web app) and select the papers to migrate (choose a folder on the left, then use the checkbox at the top of the list to select all).',
+        'Choose an export format from the “Export” menu. For reference metadata, BibTeX (.bib) or RIS (.ris) are the reliable choices.',
+        'Load the exported file via “Add” → “Import” in Paper Library, choosing the matching format (BibTeX or RIS).',
+        'To carry Paperpile “Labels” over as Paper Library tags, tick “Import keywords as tags” before importing (this applies when labels are exported as keywords).',
+        'Paperpile Folders cannot be preserved through BibTeX / RIS. To keep things organised by folder, export one Paperpile folder at a time, create the matching collection in Paper Library first, then import with that collection selected.',
+      ]},
+      {sub:'Other software (Mendeley, etc.)'},
+      {ul:[
+        'Most apps (Mendeley, EndNote, …) can export BibTeX (.bib) or RIS (.ris). Load the exported file from “Import” to migrate the reference metadata.',
+        'If you need to preserve folder structure and it doesn’t come through in that format, importing into Zotero first and then exporting as Zotero RDF is the most reliable route.',
       ]},
     ]},
     { h:'Save with the extension', tab:'Extension', blocks:[
@@ -7394,11 +7809,11 @@ $('#manualContent').addEventListener('click', (e)=>{
 });
 
 document.querySelectorAll('dialog [data-close]').forEach(b=>b.addEventListener('click', ()=>b.closest('dialog').close()));
-$('#btnDuplicates').addEventListener('click', ()=>{
+function openDuplicatesFromAlert(){
   const cands = findLibraryDuplicateCandidates(80);
-  if(!cands.length){ showToast(t('duplicateNone')); updateDuplicateButton(); return; }
+  if(!cands.length){ showToast(t('duplicateNone')); updateAlerts(); return; }
   openDuplicateDialog(cands);
-});
+}
 $('#duplicateBody').addEventListener('click', async (e)=>{
   const row = e.target.closest('[data-dup]');
   if(!row) return;
@@ -7413,6 +7828,16 @@ $('#duplicateBody').addEventListener('click', async (e)=>{
     }
     return;
   }
+  const rep = e.target.closest('[data-dup-replace]');
+  if(rep){
+    if(cand.match && cand.item){
+      replaceExistingWithCandidate(cand.match, cand.item);
+      renderList(); renderDetail();
+      showToast(t('duplicateReplacedExisting'));
+    }
+    renderDuplicateDialog(findLibraryDuplicateCandidates(80));
+    return;
+  }
   const del = e.target.closest('[data-dup-delete]');
   if(del){
     await deleteItem(del.dataset.dupDelete);
@@ -7422,11 +7847,17 @@ $('#duplicateBody').addEventListener('click', async (e)=>{
 $('#btnEmptyTrash').addEventListener('click', async ()=>{
   await emptyTrashForever();
 });
-$('#btnEmptyRecords').addEventListener('click', ()=>{
-  const empties = findEmptyRecords();
-  if(!empties.length){ showToast(t('emptyRecordsNone')); updateEmptyRecordsButton(); return; }
-  openEmptyRecordsDialog();
+$('#btnRestoreAllTrash').addEventListener('click', async ()=>{
+  await restoreAllTrash();
 });
+$('#btnCollDelKeep').addEventListener('click', ()=>{ $('#dlgDeleteColl').close(); performCollDelete('keep'); });
+$('#btnCollDelTrash').addEventListener('click', ()=>{ $('#dlgDeleteColl').close(); performCollDelete('trash'); });
+$('#btnCollTrashItemsKeepColl').addEventListener('click', ()=>{ $('#dlgDeleteColl').close(); performCollDelete('itemsOnly'); });
+function openEmptyRecordsFromAlert(){
+  const empties = findEmptyRecords();
+  if(!empties.length){ showToast(t('emptyRecordsNone')); updateAlerts(); return; }
+  openEmptyRecordsDialog();
+}
 $('#emptyRecordsBody').addEventListener('click', async (e)=>{
   const open = e.target.closest('[data-empty-open]');
   if(open){
@@ -7448,11 +7879,11 @@ $('#btnDeleteAllEmpty').addEventListener('click', async ()=>{
   await deleteItemsByIds(ids);
   renderEmptyRecordsDialog([]);
 });
-$('#btnFixSuggestions').addEventListener('click', ()=>{
+function openFixSuggestionsFromAlert(){
   const fixes = findFixSuggestions();
-  if(!fixes.length){ showToast(t('fixSuggestionsNone')); updateFixSuggestionsButton(); return; }
+  if(!fixes.length){ showToast(t('fixSuggestionsNone')); updateAlerts(); return; }
   openFixSuggestionsDialog();
-});
+}
 $('#fixSuggestionsBody').addEventListener('click', (e)=>{
   const open = e.target.closest('[data-fix-open]');
   if(open){
@@ -7651,14 +8082,12 @@ $('#sidebar').addEventListener('click', async (e)=>{
       const name = prompt(t('promptRename'), c.name);
       if(name && name.trim()){ c.name = name.trim(); touch(); renderAll(); }
     }else{
-      if(!confirm(I18N[lang].confirmDeleteColl(c.name))) return;
-      lib.collections = lib.collections.filter(x=>x.id!==c.id);
-      lib.collections.forEach(x=>{ if(x.parent===c.id) x.parent = c.parent || ''; });
-      lib.items.forEach(i=>{ i.collections = i.collections.filter(x=>x!==c.id); });
-      selectedCollectionIds.delete(c.id);
-      if(collectionSelectAnchorId===c.id) collectionSelectAnchorId = null;
-      if(filter.coll===c.id) filter.coll = 'all';
-      touch(); renderAll();
+      // Delete: if this collection is part of a multi-selection, act on all of
+      // them; otherwise just this one. Offers keep-items / trash-items choices.
+      const ids = (selectedCollectionIds.size > 1 && selectedCollectionIds.has(c.id))
+        ? Array.from(selectedCollectionIds)
+        : [c.id];
+      openDeleteCollDialog(ids);
     }
     return;
   }
@@ -7739,7 +8168,9 @@ $('#sidebar').addEventListener('dragover', (e)=>{
   if(!collEl) return;
   const isFixedAction = !!collEl.dataset.dropAction;
   const draggingColl = dataTransferHasCollections(e);
-  const acceptable = isFixedAction ? dataTransferHasItems(e) : (dataTransferHasItems(e) || draggingColl);
+  // the trash target also accepts whole collections (drop = delete that collection)
+  const fixedAccepts = dataTransferHasItems(e) || (collEl.dataset.dropAction==='trash' && draggingColl);
+  const acceptable = isFixedAction ? fixedAccepts : (dataTransferHasItems(e) || draggingColl);
   if(!acceptable) return;
   e.preventDefault();
   // A collection drag starts with effectAllowed='move' (see dragstart). Chrome
@@ -7762,6 +8193,15 @@ $('#sidebar').addEventListener('drop', (e)=>{
   collEl.classList.remove('dropTarget');
   const action = collEl.dataset.dropAction || '';
   if(action){
+    // a collection dropped on the trash means "delete this collection"
+    if(action==='trash' && dataTransferHasCollections(e)){
+      let collIds = [];
+      try{ collIds = JSON.parse(e.dataTransfer.getData('application/x-paper-library-collections') || '[]'); }catch(_e){ collIds = []; }
+      const one = e.dataTransfer.getData('application/x-refshelf-collection');
+      if(!collIds.length && one) collIds = [one];
+      if(collIds.length) openDeleteCollDialog(collIds);
+      return;
+    }
     const ids = draggedItemIds(e);
     const changed = applyFixedFilterDrop(ids, action);
     if(changed){
@@ -8071,6 +8511,13 @@ $('#cardFilterMenu').addEventListener('click', (e)=>{
 $('#itemRows').addEventListener('click', (e)=>{
   const tr = e.target.closest('tr.row');
   if(pickMode){ if(tr) handlePickClick(tr.dataset.id, e); return; }
+  const restoreBtn = e.target.closest('[data-restore-id]');
+  if(restoreBtn){
+    e.stopPropagation();
+    const n = restoreItemsByIds([restoreBtn.dataset.restoreId]);
+    if(n) showToast(I18N[lang].itemsRestored(n));
+    return;
+  }
   const delForeverBtn = e.target.closest('[data-delete-forever-id]');
   if(delForeverBtn){
     e.stopPropagation();
@@ -8096,6 +8543,13 @@ $('#itemRows').addEventListener('click', (e)=>{
 $('#itemCards').addEventListener('click', (e)=>{
   const row = e.target.closest('.cardRow');
   if(pickMode){ if(row) handlePickClick(row.dataset.id, e); return; }
+  const restoreBtn = e.target.closest('[data-restore-id]');
+  if(restoreBtn){
+    e.stopPropagation();
+    const n = restoreItemsByIds([restoreBtn.dataset.restoreId]);
+    if(n) showToast(I18N[lang].itemsRestored(n));
+    return;
+  }
   const delForeverBtn = e.target.closest('[data-delete-forever-id]');
   if(delForeverBtn){
     e.stopPropagation();
@@ -8338,7 +8792,7 @@ $('#itemHead').addEventListener('pointerup', (e)=>{
 
 // column menu (show/hide + reset)
 function renderColumnMenu(){
-  const rows = Object.keys(COLUMN_DEFS).map(k=>{
+  const rows = Object.keys(COLUMN_DEFS).filter(k=>!COLUMN_DEFS[k].trashOnly).map(k=>{
     const on = !columnConfig.hidden.includes(k) && columnConfig.order.includes(k);
     return `<label class="cmItem"><input type="checkbox" data-coltoggle="${k}" ${on?'checked':''}> ${esc(t(COLUMN_DEFS[k].i18n))}</label>`;
   }).join('');
@@ -8348,7 +8802,7 @@ $('#btnColMenu').addEventListener('click', (e)=>{
   e.stopPropagation();
   const m = $('#colMenu'), was = m.classList.contains('open');
   closeMenus();
-  if(!was){ renderColumnMenu(); m.classList.add('open'); }
+  if(!was){ renderColumnMenu(); m.classList.add('open'); positionFloatingMenu($('#btnColMenu'), m); }
 });
 $('#colMenu').addEventListener('click', (e)=>{
   const cb = e.target.closest('[data-coltoggle]');
@@ -8373,24 +8827,49 @@ $('#colMenu').addEventListener('click', (e)=>{
 // only for unresolved items. Corresponding authors are refreshed separately.
 // Main button = automatic (as before). The caret opens a menu offering the
 // same automatic action, or "select items" (pick mode) to target specific papers.
-$('#btnRefreshCited').addEventListener('click', ()=>refreshCitedByCounts());
-$('#btnRefreshCorresponding').addEventListener('click', ()=>refreshCorrespondingAuthors());
-bindMenu('#btnRefreshCitedCaret','#menuRefreshCited');
-bindMenu('#btnRefreshCorrespondingCaret','#menuRefreshCorresponding');
-function refreshFnForKind(kind){ return kind==='cited' ? refreshCitedByCounts : refreshCorrespondingAuthors; }
-$('#menuRefreshCited').addEventListener('click', (e)=>{
+// The main button updates everything (cited-by + corresponding + category) for
+// the visible items; the caret menu offers the same over a hand-picked set, or a
+// single field only.
+$('#btnRefreshAll').addEventListener('click', ()=>refreshAll());
+bindMenu('#btnRefreshAllCaret','#menuRefreshAll');
+function refreshFnForKind(kind){
+  return kind==='cited' ? refreshCitedByCounts
+    : kind==='corresponding' ? refreshCorrespondingAuthors
+    : kind==='category' ? refreshCategories
+    : refreshAll;
+}
+// Update cited-by, corresponding authors and category in one pass. Category is
+// filled opportunistically inside the two OpenAlex passes above (no extra calls).
+async function refreshAll(explicitItems, opts){
+  await refreshCitedByCounts(explicitItems, opts);
+  await refreshCorrespondingAuthors(explicitItems, opts);
+}
+// Category-only bulk fill for items that don't have one yet.
+async function refreshCategories(explicitItems){
+  const items = (explicitItems || visibleItems()).filter(it=>(it.doi || it.arxiv) && !it.category);
+  if(!items.length){ showToast(t('citeNotFound'), false); return; }
+  const btn = $('#btnRefreshAll'); btn.disabled = true;
+  clearUpdateStates();
+  let updated = 0;
+  for(const it of items){
+    setItemUpdateState(it, 'running');
+    try{ if(await enrichCategory(it)) updated++; }catch(e){ /* skip */ }
+    setItemUpdateState(it, it.category ? 'ok' : 'none');
+    refreshRowCells(it);
+  }
+  if(updated) touch();
+  clearUpdateStates();
+  renderList(); renderDetail();
+  btn.disabled = false;
+  showToast(I18N[lang].refreshedCategory(updated));
+}
+$('#menuRefreshAll').addEventListener('click', (e)=>{
   const b = e.target.closest('[data-refresh-mode]');
   if(!b) return;
   closeMenus();
-  if(b.dataset.refreshMode==='auto') refreshCitedByCounts();
-  else enterPickMode('cited');
-});
-$('#menuRefreshCorresponding').addEventListener('click', (e)=>{
-  const b = e.target.closest('[data-refresh-mode]');
-  if(!b) return;
-  closeMenus();
-  if(b.dataset.refreshMode==='auto') refreshCorrespondingAuthors();
-  else enterPickMode('corresponding');
+  const kind = b.dataset.refreshKind || 'all';
+  if(b.dataset.refreshMode==='pick') enterPickMode(kind);
+  else refreshFnForKind(kind)();
 });
 $('#btnPickCancel').addEventListener('click', exitPickMode);
 $('#btnPickClear').addEventListener('click', ()=>{
@@ -8432,77 +8911,71 @@ async function refreshCitedByCounts(explicitItems, opts){
   const items = (opts.force || explicitItems) ? all : all.filter(it=>!isFresh(it.citedByAt));
   const skipped = all.length - items.length;
   if(!items.length){ showToast(skipped ? I18N[lang].allFresh(skipped) : t('citeNotFound'), false); return; }
-  const btn = $('#btnRefreshCited');
+  const btn = $('#btnRefreshAll');
   btn.disabled = true;
   clearUpdateStates();
-  $('#btnFetchLog').style.display = 'inline-flex';
+  renderAlerts();
   if($('#dlgFetchLog').open) renderFetchLog();
   const label = btn.querySelector('span[data-i18n]'); const orig = label ? label.textContent : '';
   if(label) label.textContent = t('refreshingCited');
-  let updated = 0, s2Updated = 0, oaUpdated = 0, rateLimited = false;
+  let s2Updated = 0, oaUpdated = 0, rateLimited = false, oaTitleBudget = 5;
   const updatedIds = new Set();
-  const unresolved = [];
-  items.forEach(it=>{
+  const stillFailed = [];
+  // One batched Semantic Scholar lookup up front; its answers are then applied
+  // per-item below so the table fills in one row at a time (same feel as the
+  // corresponding-author refresh) rather than all at once.
+  let counts = new Map();
+  try{ counts = await s2BatchCitedBy(items); }
+  catch(e){ console.warn('Semantic Scholar cited-by refresh failed', e); }
+  for(const it of items){
     setItemUpdateState(it, 'running');
     logUpdateProgress(it, 'cited', 'running', `${t('logRunning')} · Semantic Scholar`);
-  });
-  try{
-    const counts = await s2BatchCitedBy(items);
-    for(const it of items){
-      if(counts.has(it.id)){
-        it.citedByCount = counts.get(it.id);
-        it.citedByAt = new Date().toISOString();
-        it.citedByStatus = '';
-        s2Updated++; updatedIds.add(it.id);
-        setItemUpdateState(it, 'ok');
-        logUpdateProgress(it, 'cited', 'ok', `${t('logUpdated')} · Semantic Scholar`, String(it.citedByCount));
-      }else{
-        unresolved.push(it);
-        setItemUpdateState(it, 'running');
-        logUpdateProgress(it, 'cited', 'running', `${t('logRunning')} · OpenAlex`);
-      }
+    await nextFrame(); // let the highlight paint before this row resolves
+    if(counts.has(it.id)){
+      it.citedByCount = counts.get(it.id);
+      it.citedByAt = new Date().toISOString();
+      it.citedByStatus = '';
+      s2Updated++; updatedIds.add(it.id);
+      setItemUpdateState(it, 'ok');
+      logUpdateProgress(it, 'cited', 'ok', `${t('logUpdated')} · Semantic Scholar`, String(it.citedByCount));
+      refreshRowCells(it);
+      continue;
     }
-  }catch(e){
-    console.warn('Semantic Scholar cited-by refresh failed', e);
-    unresolved.push(...items);
-    items.forEach(it=>logUpdateProgress(it, 'cited', 'running', `${t('logRunning')} · OpenAlex`));
-  }
-
-  // OpenAlex is now secondary: use it only where Semantic Scholar had no answer.
-  const stillFailed = [];
-  const oaCandidates = unresolved.filter(it=>it.doi || it.arxiv).concat(unresolved.filter(it=>!it.doi && !it.arxiv).slice(0, 5));
-  if(oaCandidates.length){
+    // Semantic Scholar had no answer: fall back to OpenAlex (secondary).
+    // Skip OpenAlex once rate-limited, and cap title-only lookups.
+    const canOa = !rateLimited && (it.doi || it.arxiv || oaTitleBudget > 0);
+    if(!canOa){
+      it.citedByStatus = 'fail';
+      setItemUpdateState(it, 'fail');
+      stillFailed.push(it);
+      refreshRowCells(it);
+      continue;
+    }
+    if(!it.doi && !it.arxiv) oaTitleBudget--;
     try{
-      for(const it of oaCandidates){
-        try{
-          setItemUpdateState(it, 'running');
-          logUpdateProgress(it, 'cited', 'running', `${t('logRunning')} · OpenAlex`);
-          const w = await fetchOneOaByItem(it, 'doi,cited_by_count');
-          if(applyOaCitedBy(it, w)){
-            updatedIds.add(it.id); oaUpdated++;
-            setItemUpdateState(it, 'ok');
-            logUpdateProgress(it, 'cited', 'ok', `${t('logUpdated')} · OpenAlex`, String(it.citedByCount));
-          }else{
-            it.citedByCount = null;
-            it.citedByAt = new Date().toISOString();
-            it.citedByStatus = 'none';
-            setItemUpdateState(it, 'none');
-            logUpdateProgress(it, 'cited', 'none');
-          }
-        }catch(e){
-          if(e && e.rateLimited) rateLimited = true;
-          it.citedByStatus = 'fail';
-          setItemUpdateState(it, 'fail');
-          stillFailed.push(it);
-        }
+      logUpdateProgress(it, 'cited', 'running', `${t('logRunning')} · OpenAlex`);
+      const w = await fetchOneOaByItem(it, 'doi,cited_by_count,type');
+      if(!it.category){ const c = detectCategoryFromLabel(w.type); if(c) it.category = c; }
+      if(applyOaCitedBy(it, w)){
+        updatedIds.add(it.id); oaUpdated++;
+        setItemUpdateState(it, 'ok');
+        logUpdateProgress(it, 'cited', 'ok', `${t('logUpdated')} · OpenAlex`, String(it.citedByCount));
+      }else{
+        it.citedByCount = null;
+        it.citedByAt = new Date().toISOString();
+        it.citedByStatus = 'none';
+        setItemUpdateState(it, 'none');
+        logUpdateProgress(it, 'cited', 'none');
       }
     }catch(e){
-      stillFailed.push(...oaCandidates);
-      console.warn('OpenAlex secondary refresh failed', e);
+      if(e && e.rateLimited) rateLimited = true;
+      it.citedByStatus = 'fail';
+      setItemUpdateState(it, 'fail');
+      stillFailed.push(it);
     }
+    refreshRowCells(it);
   }
-  unresolved.filter(it=>!oaCandidates.includes(it)).forEach(it=>stillFailed.push(it));
-  updated = updatedIds.size;
+  const updated = updatedIds.size;
 
   stillFailed.forEach(it=>{
     it.citedByStatus = 'fail';
@@ -8511,7 +8984,8 @@ async function refreshCitedByCounts(explicitItems, opts){
       reason: rateLimited ? t('oaBudgetErr') : t('citeNotFound'), itemId: it.id, kind:'cited'
     });
   });
-  if(updated || stillFailed.length || oaCandidates.length) touch();
+  if(updated || stillFailed.length) touch();
+  clearUpdateStates();
   renderList(); renderDetail();
   if(label) label.textContent = orig; btn.disabled = false;
   const failed = stillFailed.length;
@@ -8527,14 +9001,14 @@ async function refreshCorrespondingAuthors(explicitItems, opts){
   // already have a corresponding author, since the user asked for this one on purpose
   const all = (explicitItems || visibleItems()).filter(it=>(it.doi || it.arxiv) && (opts.force || !it.correspondingAuthors));
   const fresh = opts.force ? all : all.filter(it=>!isFresh(it.correspondingCheckedAt));
-  // the 25-item cap only protects the automatic "whatever is visible" run; an
-  // explicit selection (single item or user-picked set) is honored in full
-  const items = explicitItems ? fresh : fresh.slice(0, 25);
+  // the automatic "whatever is visible" run now processes every eligible item,
+  // just like an explicit selection
+  const items = fresh;
   if(!items.length){ showToast(all.length ? t('recentlyCheckedNoCorresponding') : t('noCorrespondingTargets')); return; }
-  const btn = $('#btnRefreshCorresponding');
+  const btn = $('#btnRefreshAll');
   btn.disabled = true;
   clearUpdateStates();
-  $('#btnFetchLog').style.display = 'inline-flex';
+  renderAlerts();
   if($('#dlgFetchLog').open) renderFetchLog();
   const label = btn.querySelector('span[data-i18n]'); const orig = label ? label.textContent : '';
   if(label) label.textContent = t('refreshingCorresponding');
@@ -8543,7 +9017,8 @@ async function refreshCorrespondingAuthors(explicitItems, opts){
     try{
       setItemUpdateState(it, 'running');
       logUpdateProgress(it, 'corresponding', 'running');
-      const w = await fetchOneOaByItem(it, 'doi,authorships');
+      const w = await fetchOneOaByItem(it, 'doi,authorships,type');
+      if(!it.category){ const c = detectCategoryFromLabel(w.type); if(c) it.category = c; }
       const corr = oaCorrespondingAuthors(w.authorships);
       if(corr){
         it.correspondingAuthors = corr;
@@ -8575,10 +9050,12 @@ async function refreshCorrespondingAuthors(explicitItems, opts){
         label: it.title || it.doi || it.arxiv, detail: it.doi || it.arxiv || '',
         reason: rateLimited ? t('oaBudgetErr') : reasonText(e), itemId: it.id, kind:'corresponding'
       });
-      if(rateLimited) break;
+      if(rateLimited){ refreshRowCells(it); break; }
     }
+    refreshRowCells(it); // show this row's result live before moving on
   }
   if(updated || checked || failed) touch();
+  clearUpdateStates();
   renderList(); renderDetail();
   if(label) label.textContent = orig; btn.disabled = false;
   if(failed) showToast(I18N[lang].refreshedCorrespondingPartial(updated, failed), !updated);
@@ -8674,6 +9151,7 @@ $('#detail').addEventListener('click', async (e)=>{
 async function updateSingleItem(it){
   await refreshCitedByCounts([it], {force:true});
   await refreshCorrespondingAuthors([it], {force:true});
+  if(await enrichCategory(it)){ touch(); refreshRowCells(it); renderDetail(); }
 }
 $('#filePdf').addEventListener('change', async ()=>{
   const it = lib.items.find(x=>x.id===selectedId);
@@ -8692,7 +9170,12 @@ function isInLibrary(it){
   return key && lib.items.some(x=>(x.title||'').toLowerCase().trim()===key);
 }
 function citRowHTML(it, listName, idx){
-  const meta = [authorsShort(it.authors), it.journal, it.year].filter(Boolean).join(' · ');
+  // Render the same formatted citation as the citation preview (current style /
+  // author scope / title setting), so entries read like "K. Kawabata et al.,
+  // J. Am. Chem. Soc. 2016, 138, …". The row already has a link button, so the
+  // inline DOI URL is dropped to keep it compact.
+  const cite = itemToCitationHtml(it, Object.assign({}, citationPrefs, {includeUrl:false}))
+    || esc(it.title || t('newItem'));
   const inLib = isInLibrary(it);
   const linkBtn = (it.doi || it.url)
     ? `<button data-cit-open="${listName}:${idx}" title="${esc(t('openLink'))}">${ic('link')}</button>` : '';
@@ -8700,7 +9183,7 @@ function citRowHTML(it, listName, idx){
     ? `<button class="cIn" disabled>${ic('check')}${esc(t('citeInLib'))}</button>`
     : `<button class="cAdd" data-cit-add="${listName}:${idx}">${ic('plus')}${esc(t('citeAdd'))}</button>`;
   return `<div class="citRow">
-    <div class="cbody"><div class="ct">${esc(it.title || t('newItem'))}</div><div class="cm">${esc(meta)}</div></div>
+    <div class="cbody"><div class="cCite">${cite}</div></div>
     <div class="cbtns">${linkBtn}${addBtn}</div>
   </div>`;
 }
@@ -8732,7 +9215,7 @@ async function openCitationsDialog(item){
     renderCitList('ref');
   }).catch(e=>{ $('#citRefList').innerHTML = `<div class="citEmpty">${esc(e.message)}</div>`; });
   // cited-by
-  fetchOpenAlexCitedBy(work, 25).then(res=>{
+  fetchOpenAlexCitedBy(work).then(res=>{
     citState.cited = res.works.map(openAlexToItem);
     $('#citCitedCnt').textContent = I18N[lang].citeCountCited(citState.cited.length, res.total);
     renderCitList('cited');
