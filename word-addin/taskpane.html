@@ -31,8 +31,8 @@
   .btn.ghost{background:#fff; color:var(--accent)}
   .btn.ghost:hover{background:var(--accent-soft)}
   .btn:disabled{opacity:.5; cursor:default}
-  .libraryPicker{display:inline-flex; align-items:center; min-width:0; max-width:48%; border:1px solid var(--accent); border-radius:6px; overflow:hidden; background:#fff; color:var(--accent);}
-  .libraryPicker .libNameBtn{font:inherit; border:0; background:#fff; color:var(--accent); padding:5px 9px; min-width:0; overflow:hidden; white-space:nowrap; font-weight:600; cursor:pointer; max-width:178px; display:inline-flex; align-items:center; gap:4px;}
+  .libraryPicker{display:flex; align-items:center; width:100%; min-width:0; border:1px solid var(--accent); border-radius:6px; overflow:hidden; background:#fff; color:var(--accent);}
+  .libraryPicker .libNameBtn{font:inherit; border:0; background:#fff; color:var(--accent); padding:5px 9px; flex:1 1 auto; min-width:0; overflow:hidden; white-space:nowrap; font-weight:600; cursor:pointer; max-width:none; display:inline-flex; align-items:center; justify-content:flex-start; gap:5px;}
   .libraryPicker .libNameBtn:hover{background:var(--accent-soft)}
   .libraryPicker .libNameBtn .libNameIcon{width:14px; height:14px; flex:0 0 auto;}
   .libraryPicker .libNameBtn #libButtonLabel{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
@@ -41,6 +41,12 @@
   .libraryPicker .libIconBtn:disabled{opacity:.45; cursor:default;}
   .libraryPicker .libIconBtn:disabled:hover{background:#fff;}
   .libraryPicker .libIconBtn svg{width:14px; height:14px; flex:0 0 auto;}
+  .seg{display:inline-flex; border:1px solid var(--border); border-radius:8px; overflow:hidden; background:#fff}
+  .seg .segBtn{font:inherit; border:0; border-left:1px solid var(--border); background:#fff; color:var(--text2); padding:5px 12px; cursor:pointer; min-width:36px; line-height:1.15; text-align:center}
+  .seg .segBtn:first-child{border-left:0}
+  .seg .segBtn:hover{background:var(--accent-soft); color:var(--accent)}
+  .seg .segBtn.active{background:var(--accent); color:#fff}
+  .seg .segBtn sup{font-size:.72em; line-height:0}
   .check{display:inline-flex; align-items:center; gap:4px; font-size:11.5px; color:var(--text2)}
   #results{flex:1; overflow-y:auto; padding:6px 8px}
   .card{border:1px solid var(--border); border-radius:8px; padding:8px 10px; margin-bottom:7px; background:#fff}
@@ -139,7 +145,6 @@ input:focus{
 
   <div class="controls">
     <div class="row">
-      <input type="search" id="q" data-i18n-ph="searchPh">
       <div class="libraryPicker" id="libraryPicker">
         <button type="button" class="libNameBtn" id="btnLoad" data-i18n-title="loadTitle">
           <svg class="libNameIcon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.4 5.1h4.5l1.2 1.5h5.5v6.2H2.4z" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round"/><path d="M2.4 5.1V3.6h4.1l1.1 1.5" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -151,6 +156,9 @@ input:focus{
       </div>
       <input type="file" id="file" accept=".json,application/json" class="hidden">
       <input type="file" id="folder" webkitdirectory directory multiple class="hidden">
+    </div>
+    <div class="row">
+      <input type="search" id="q" data-i18n-ph="searchPh">
     </div>
     <div class="fields">
       <div class="field">
@@ -177,11 +185,11 @@ input:focus{
     </div>
     <div class="row">
       <label data-i18n="numberLabel">番号</label>
-      <select id="markerStyle">
-        <option value="bracket">[1]</option>
-        <option value="super" data-i18n="superOpt">上付き ¹</option>
-        <option value="superBracket" data-i18n="superBracketOpt">上付き [1]</option>
-      </select>
+      <div class="seg" id="markerStyle" role="group" aria-label="番号スタイル">
+        <button type="button" class="segBtn" data-val="bracket" data-i18n-title="bracketOpt">[1]</button>
+        <button type="button" class="segBtn" data-val="super" data-i18n-title="superOpt"><sup>1</sup></button>
+        <button type="button" class="segBtn" data-val="superBracket" data-i18n-title="superBracketOpt"><sup>[1]</sup></button>
+      </div>
       <span style="flex:1"></span>
       <button class="btn ghost" id="btnRefresh" data-i18n-title="refreshTitle"><svg class="refreshSvg" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.1 6.2A5.2 5.2 0 1 0 12 11.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.1 2.9v3.3H9.8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="refreshLabel">文献リストを更新</span></button>
     </div>
@@ -329,7 +337,7 @@ var I18N = {
     notLoaded:'未読み込み', nRefs:function(n){return n+' 件の文献';}, nRefsCached:function(n){return n+' 件の文献（前回）';},
     searchPh:'タイトル・著者・雑誌・DOI で検索…', loadBtn:'ライブラリを選択', loadTitle:'ライブラリフォルダを選択', reloadLibTitle:'library.json を再読み込み', changeLibTitle:'ライブラリフォルダを変更',
     styleLabel:'スタイル', collLabel:'コレクション', allColl:'すべてのコレクション',
-    incTitle:'タイトル', incUrl:'DOI/URL', numberLabel:'番号', superOpt:'上付き ¹', superBracketOpt:'上付き [1]',
+    incTitle:'タイトル', incUrl:'DOI/URL', numberLabel:'番号', bracketOpt:'括弧 [1]', superOpt:'上付き ¹', superBracketOpt:'上付き [1]',
     refreshBtn:'文献リストを更新', refreshTitle:'本文の番号と末尾の文献リストを再同期します',
     insertBtn:'挿入', copyBtn:'コピー',
     insertTitle:'番号を本文に挿入し、末尾リストと連動',
@@ -347,7 +355,7 @@ var I18N = {
     notLoaded:'Not loaded', nRefs:function(n){return n+' references';}, nRefsCached:function(n){return n+' references (cached)';},
     searchPh:'Search title, author, journal, DOI…', loadBtn:'Select library', loadTitle:'Select library folder', reloadLibTitle:'Reload library.json', changeLibTitle:'Change library folder',
     styleLabel:'Style', collLabel:'Collection', allColl:'All collections',
-    incTitle:'Title', incUrl:'DOI/URL', numberLabel:'Number', superOpt:'Superscript ¹', superBracketOpt:'Superscript [1]',
+    incTitle:'Title', incUrl:'DOI/URL', numberLabel:'Number', bracketOpt:'Brackets [1]', superOpt:'Superscript ¹', superBracketOpt:'Superscript [1]',
     refreshBtn:'Update bibliography', refreshTitle:'Re-sync the in-text numbers and the reference list',
     insertBtn:'Insert', copyBtn:'Copy',
     insertTitle:'Insert a number in the text, linked to the reference list',
@@ -451,8 +459,11 @@ function loadLibraryData(data, file){
   render();
 }
 function currentOpts(){ return { style: $('#style').value, includeTitle: $('#incTitle').checked, includeUrl: $('#incUrl').checked, authorScope:'all' }; }
+function segButtons(){ return Array.prototype.slice.call(document.querySelectorAll('#markerStyle .segBtn')); }
+function currentMarker(){ var b = document.querySelector('#markerStyle .segBtn.active'); return b ? b.dataset.val : 'bracket'; }
+function setMarkerActive(val){ segButtons().forEach(function(b){ b.classList.toggle('active', b.dataset.val === val); }); }
 function savePrefs(){
-  PREFS = { style: $('#style').value, includeTitle: $('#incTitle').checked, includeUrl: $('#incUrl').checked, marker: $('#markerStyle').value };
+  PREFS = { style: $('#style').value, includeTitle: $('#incTitle').checked, includeUrl: $('#incUrl').checked, marker: currentMarker() };
   try{ localStorage.setItem(LS_PREFS, JSON.stringify(PREFS)); }catch(e){}
 }
 function authorsShort(authors){ return (authors||[]).map(function(a){ return a.family || a.given; }).filter(Boolean).join('; '); }
@@ -523,6 +534,26 @@ function markerText(n){
   if(PREFS.marker === 'superBracket') return '[' + n + ']';
   return '[' + n + ']';
 }
+// collapse a set of numbers into a compact string: runs of 3+ become ranges (1–4),
+// everything else is comma separated (1, 3, 5).
+function collapseNums(nums){
+  var u = Array.from(new Set(nums)).filter(function(x){ return x; }).sort(function(a,b){ return a - b; });
+  var parts = [], i = 0;
+  while(i < u.length){
+    var j = i;
+    while(j + 1 < u.length && u[j + 1] === u[j] + 1) j++;
+    if(j - i >= 2) parts.push(u[i] + '–' + u[j]);
+    else for(var k = i; k <= j; k++) parts.push(String(u[k]));
+    i = j + 1;
+  }
+  return parts.join(', ');
+}
+// in-text text for a group of adjacent citations (e.g. "[1–4]" or superscript "1–4")
+function groupMarkerText(nums, marker){
+  var inner = collapseNums(nums);
+  if(!inner) return '';
+  return marker === 'super' ? inner : ('[' + inner + ']');
+}
 function bibLabel(n){ return PREFS.marker === 'super' ? (n + '.') : ('[' + n + ']'); }
 function assignNumbers(idsInOrder){
   var order = [], numById = {};
@@ -530,9 +561,10 @@ function assignNumbers(idsInOrder){
   return { order: order, numById: numById };
 }
 // hanging-indent paragraphs, Times New Roman 10.5pt, number floating at the left
+var BIB_INDENT = 22; // pt — hanging indent / gap between number and citation
 function buildBibliographyHtml(items, opts){
   if(!items.length) return '';
-  var base = "font-family:'Times New Roman',serif;font-size:10.5pt;margin:0pt 0pt 6pt 36pt;text-indent:-36pt;";
+  var base = "font-family:'Times New Roman',serif;font-size:10.5pt;text-align:left;margin:0pt 0pt 6pt " + BIB_INDENT + "pt;text-indent:-" + BIB_INDENT + "pt;";
   return items.map(function(it, i){
     var body = it ? itemToCitationHtml(it, opts) : esc(tr('notFound'));
     return '<p style="' + base + '">' + esc(bibLabel(i + 1)) + '&#9;' + body + '</p>';
@@ -577,11 +609,41 @@ async function refreshCitations(o){
       var num = assignNumbers(ids);
       var sup = (PREFS.marker === 'super' || PREFS.marker === 'superBracket');
 
-      cites.forEach(function(c){
-        var n = num.numById[c.tag.slice(CITE_TAG.length)];
-        var r = c.insertText(markerText(n), 'Replace');
-        applyInsertFont(r, sup);
-      });
+      // group adjacent in-text citations so consecutive numbers collapse (1234 -> 1–4)
+      var clusters = null;
+      if(cites.length){
+        try{
+          var ranges = cites.map(function(c){ return c.getRange('Whole'); });
+          var cmps = [];
+          for(var ci = 0; ci < cites.length - 1; ci++) cmps.push(ranges[ci].compareLocationWith(ranges[ci + 1]));
+          await context.sync();
+          clusters = [];
+          var cur = [0];
+          for(var cj = 1; cj < cites.length; cj++){
+            if(cmps[cj - 1] && cmps[cj - 1].value === 'AdjacentBefore') cur.push(cj);
+            else { clusters.push(cur); cur = [cj]; }
+          }
+          clusters.push(cur);
+        }catch(e){ clusters = null; }
+      }
+
+      if(clusters){
+        clusters.forEach(function(cluster){
+          var nums = cluster.map(function(idx){ return num.numById[ids[idx]]; });
+          var text = groupMarkerText(nums, PREFS.marker);
+          cluster.forEach(function(idx, k){
+            // first control carries the whole group text; the rest are hidden with a zero-width space
+            var r = cites[idx].insertText(k === 0 ? text : '\u200B', 'Replace');
+            applyInsertFont(r, sup);
+          });
+        });
+      }else{
+        cites.forEach(function(c){
+          var n = num.numById[c.tag.slice(CITE_TAG.length)];
+          var r = c.insertText(markerText(n), 'Replace');
+          applyInsertFont(r, sup);
+        });
+      }
 
       var items = num.order.map(function(id){
         var f = null; STATE.items.forEach(function(x){ if(x.id === id) f = x; }); return f;
@@ -600,6 +662,21 @@ async function refreshCitations(o){
       else bib.insertText(tr('noCites'), 'Replace');
       bib.font.name = INS_FONT; bib.font.size = INS_SIZE;
       await context.sync();
+
+      // enforce the hanging indent + left alignment reliably (insertHtml CSS is flaky)
+      if(html){
+        try{
+          var bibParas = bib.paragraphs;
+          bibParas.load('items');
+          await context.sync();
+          bibParas.items.forEach(function(p2){
+            p2.leftIndent = BIB_INDENT;
+            p2.firstLineIndent = -BIB_INDENT;
+            p2.alignment = 'Left';
+          });
+          await context.sync();
+        }catch(e){ /* older Word: rely on the inline CSS hanging indent */ }
+      }
     });
     if(!o.silent) toast(tr('updated'));
   }catch(e){ console.error(e); toast(tr('updateFail', e && e.message), true); }
@@ -684,7 +761,9 @@ $('#coll').addEventListener('change', render);
 $('#style').addEventListener('change', function(){ savePrefs(); render(); });
 $('#incTitle').addEventListener('change', function(){ savePrefs(); render(); });
 $('#incUrl').addEventListener('change', function(){ savePrefs(); render(); });
-$('#markerStyle').addEventListener('change', function(){ savePrefs(); refreshCitations({ silent: true }); });
+segButtons().forEach(function(b){
+  b.addEventListener('click', function(){ setMarkerActive(b.dataset.val); savePrefs(); refreshCitations({ silent: true }); });
+});
 $('#btnRefresh').addEventListener('click', function(){ refreshCitations(); });
 $('#btnLang').addEventListener('click', function(){ setLang(LANG === 'ja' ? 'en' : 'ja'); });
 $('#results').addEventListener('click', function(e){
@@ -716,7 +795,7 @@ function restore(){
   $('#style').value = PREFS.style || 'acs';
   $('#incTitle').checked = !!PREFS.includeTitle;
   $('#incUrl').checked = !!PREFS.includeUrl;
-  $('#markerStyle').value = PREFS.marker || 'bracket';
+  setMarkerActive(PREFS.marker || 'bracket');
   try{
     var cached = JSON.parse(localStorage.getItem(LS_LIB)||'null');
     if(cached && cached.items){ STATE.items = cached.items; STATE.collections = cached.collections||[]; STATE.libraryLabel = cached.libraryLabel || ''; STATE.cached = true; }
