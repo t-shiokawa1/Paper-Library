@@ -3828,8 +3828,20 @@ const JOURNAL_FULL_NORMALIZED = new Map(Array.from(JOURNAL_FULL_NAMES, ([k,v])=>
 function mappedJournalAbbr(s){ return JOURNAL_ABBR_NORMALIZED.get(normalizeJournalKey(s)) || ''; }
 function mappedJournalFull(s){ return JOURNAL_FULL_NORMALIZED.get(normalizeJournalKey(s)) || ''; }
 function canonicalJournalAbbr(s){ return mappedJournalAbbr(s) || String(s || ''); }
+// The MDPI journal "Chemistry" (DOI 10.3390/chemistry…) collides with "Chemistry",
+// the informal registration of "Chemistry – A European Journal" (Chem. Eur. J.).
+// Only the DOI / publisher can tell them apart, so bare "Chemistry" is treated as
+// Chem. Eur. J. EXCEPT when the item is actually the MDPI journal.
+function isMdpiChemistry(item){
+  if(!item) return false;
+  if(/^\s*10\.3390\/chemistry\d/i.test(String(item.doi || ''))) return true;
+  return /\bmdpi\b/i.test(String(item.publisher || '')) &&
+    (normalizeJournalKey(item.journal) === 'chemistry' || normalizeJournalKey(item.journalAbbr) === 'chemistry');
+}
 function journalDisplay(item){
   const j = item.journal || '';
+  // keep the bare-"Chemistry" → Chem. Eur. J. mapping from hijacking the MDPI journal
+  if(isMdpiChemistry(item)) return item.journalAbbr || j || 'Chemistry';
   return mappedJournalAbbr(j) || mappedJournalAbbr(item.journalAbbr) || item.journalAbbr || j;
 }
 function isAngewEnglVariant(s){
@@ -4440,6 +4452,35 @@ function parseIdInput(raw){
   if(m){ const acc = m[1].replace(/\.pdf$/i,''); if(acc && !/^10\./.test(acc)) return { kind:'doi', id:'10.1038/' + acc }; }
   return null;
 }
+// MDPI article URLs (e.g. https://www.mdpi.com/2624-8549/6/6/103) don't contain the
+// DOI, but the path /{issn}/{volume}/{issue}/{article} encodes it. The DOI is
+// 10.3390/{abbrev}{volume}{issue:2}{article:4}, where {abbrev} depends on the journal.
+// We resolve {abbrev} from the ISSN via CrossRef (once, then cached) since a static
+// map of every MDPI journal would be large and quickly go stale.
+function parseMdpiUrl(s){
+  const m = String(s||'').match(/mdpi\.com\/(\d{4}-\d{3}[\dxX])\/(\d+)\/(\d+)\/(\d+)/i);
+  if(!m) return null;
+  return { issn:m[1], volume:m[2], issue:m[3], article:m[4] };
+}
+const MDPI_ABBREV_CACHE = {};
+async function mdpiAbbrevFromIssn(issn){
+  const key = String(issn).toLowerCase();
+  if(MDPI_ABBREV_CACHE[key]) return MDPI_ABBREV_CACHE[key];
+  const r = await fetch('https://api.crossref.org/journals/' + encodeURIComponent(issn) +
+    '/works?rows=1&filter=prefix:10.3390&select=DOI');
+  if(!r.ok) throw new Error('MDPI journal lookup failed (' + r.status + ')');
+  const items = (((await r.json()).message) || {}).items || [];
+  const mm = items.length && String(items[0].DOI || '').match(/^10\.3390\/([a-z]+)\d/i);
+  if(!mm) throw new Error('Could not determine the MDPI journal abbreviation for ISSN ' + issn);
+  return (MDPI_ABBREV_CACHE[key] = mm[1].toLowerCase());
+}
+async function mdpiUrlToDoi(s){
+  const p = parseMdpiUrl(s);
+  if(!p) return '';
+  const abbrev = await mdpiAbbrevFromIssn(p.issn);
+  const num = String(p.volume) + String(p.issue).padStart(2,'0') + String(p.article).padStart(4,'0');
+  return '10.3390/' + abbrev + num;
+}
 function isChemRxivDoi(doi){
   return /^10\.26434\/chemrxiv[-_/]/i.test(normDoi(doi||''));
 }
@@ -4519,13 +4560,15 @@ function extractCorrespondingAuthors(msg){
 function crossrefMsgToItem(msg){
   const dp = (msg.issued && msg.issued['date-parts'] && msg.issued['date-parts'][0]) || [];
   const doi = normDoi(msg.DOI || '');
-  return normalizeRepositoryPreprintItem(newItem({
+  const journal = (msg['container-title'] && msg['container-title'][0]) || '';
+  const rawAbbr = (msg['short-container-title'] && msg['short-container-title'][0]) || '';
+  const it = normalizeRepositoryPreprintItem(newItem({
     type: CROSSREF_TYPE_MAP[msg.type] || 'article',
     category: crossrefCategory(msg),
     title: stripTags((msg.title && msg.title[0]) || ''),
     authors: (msg.author||[]).map(a=>({ family:a.family||a.name||'', given:a.given||'' })),
-    journal: (msg['container-title'] && msg['container-title'][0]) || '',
-    journalAbbr: (msg['short-container-title'] && msg['short-container-title'][0]) || '',
+    journal,
+    journalAbbr: rawAbbr,
     year: dp[0] ? String(dp[0]) : '',
     volume: msg.volume || '', issue: msg.issue || '', pages: normalizeRange(msg.page || ''),
     publisher: msg.publisher || '',
@@ -4534,6 +4577,14 @@ function crossrefMsgToItem(msg){
     abstract: stripTags(msg.abstract || ''),
     correspondingAuthors: extractCorrespondingAuthors(msg),
   }));
+  // CrossRef's short-container-title often drops periods (e.g. "Nat Commun").
+  // Prefer the canonical, period-correct abbreviation when we know it — but keep
+  // the MDPI journal *Chemistry* as-is (its bare name must not become "Chem. Eur. J.").
+  if(!isMdpiChemistry(it)){
+    const canon = mappedJournalAbbr(journal) || mappedJournalAbbr(rawAbbr);
+    if(canon) it.journalAbbr = canon;
+  }
+  return it;
 }
 async function fetchCrossref(doi){
   const r = await fetch('https://api.crossref.org/works/' + encodeURIComponent(doi));
@@ -6435,7 +6486,7 @@ function fixSuggestionForItem(it){
   }
 
   const formal = mappedJournalFull(it.journal) || mappedJournalFull(it.journalAbbr);
-  if(formal){
+  if(formal && !isMdpiChemistry(it)){
     const abbr = mappedJournalAbbr(it.journalAbbr) || mappedJournalAbbr(it.journal) || mappedJournalAbbr(formal);
     const changes = [];
     if(normalizeJournalKey(it.journal) !== normalizeJournalKey(formal)){
@@ -6456,7 +6507,7 @@ function fixSuggestionForItem(it){
   }
 
   const chemEurJCur = fields.filter(isChemEurJPaperpileVariant);
-  if(chemEurJCur.length){
+  if(chemEurJCur.length && !isMdpiChemistry(it)){
     return {
       id: it.id, kind:'chemEurJ',
       item: it,
@@ -9830,6 +9881,12 @@ $('#btnFetchId').addEventListener('click', async ()=>{
       // Even when the input resolves to a single unambiguous paper (DOI/arXiv),
       // show it as a one-item candidate list so the user confirms before adding
       // — consistent with the multi-candidate title-search flow.
+      renderCandidates([it], errbox);
+    }else if(parseMdpiUrl(raw)){
+      // MDPI article URL: derive the DOI (10.3390/…) from the path + ISSN, then fetch
+      btn.textContent = t('fetching');
+      $('#idResults').innerHTML = `<div class="candLoading">${esc(t('fetching'))}</div>`;
+      const it = await fetchCrossref(await mdpiUrlToDoi(raw));
       renderCandidates([it], errbox);
     }else{
       // no DOI/arXiv → title search via CrossRef
