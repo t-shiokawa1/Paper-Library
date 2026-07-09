@@ -31,6 +31,16 @@
   .btn.ghost{background:#fff; color:var(--accent)}
   .btn.ghost:hover{background:var(--accent-soft)}
   .btn:disabled{opacity:.5; cursor:default}
+  .libraryPicker{display:inline-flex; align-items:center; min-width:0; max-width:48%; border:1px solid var(--accent); border-radius:6px; overflow:hidden; background:#fff; color:var(--accent);}
+  .libraryPicker .libNameBtn{font:inherit; border:0; background:#fff; color:var(--accent); padding:5px 9px; min-width:0; overflow:hidden; white-space:nowrap; font-weight:600; cursor:pointer; max-width:178px; display:inline-flex; align-items:center; gap:4px;}
+  .libraryPicker .libNameBtn:hover{background:var(--accent-soft)}
+  .libraryPicker .libNameBtn .libNameIcon{width:14px; height:14px; flex:0 0 auto;}
+  .libraryPicker .libNameBtn #libButtonLabel{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .libraryPicker .libIconBtn{width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; border:0; border-left:1px solid var(--border); background:#fff; color:var(--accent); cursor:pointer; padding:0;}
+  .libraryPicker .libIconBtn:hover{background:var(--accent-soft)}
+  .libraryPicker .libIconBtn:disabled{opacity:.45; cursor:default;}
+  .libraryPicker .libIconBtn:disabled:hover{background:#fff;}
+  .libraryPicker .libIconBtn svg{width:14px; height:14px; flex:0 0 auto;}
   .check{display:inline-flex; align-items:center; gap:4px; font-size:11.5px; color:var(--text2)}
   #results{flex:1; overflow-y:auto; padding:6px 8px}
   .card{border:1px solid var(--border); border-radius:8px; padding:8px 10px; margin-bottom:7px; background:#fff}
@@ -42,12 +52,69 @@
   .card .acts{display:flex; gap:6px; margin-left:auto}
   .card .acts .btn{display:inline-flex; align-items:center; gap:4px; padding:3px 9px}
   .card .acts .btn svg{width:13px; height:13px; flex:0 0 auto}
+
+  #btnRefresh{display:inline-flex; align-items:center; gap:4px;}
+  #btnRefresh .refreshSvg{width:14px; height:14px; flex:0 0 auto;}
   .empty{color:var(--text3); text-align:center; padding:26px 16px; line-height:1.6}
   .toast{position:fixed; left:50%; bottom:12px; transform:translateX(-50%); background:#1c2430; color:#fff; padding:7px 13px; border-radius:8px; font-size:12px; opacity:0; transition:opacity .2s; pointer-events:none; max-width:88%}
   .toast.show{opacity:.96}
   .toast.err{background:#b42318}
   .hidden{display:none !important}
   a{color:var(--accent)}
+
+
+/* === Final CSS: reference card hover + refined control focus === */
+/* 02: richer reference cards */
+#results{
+  padding:8px;
+  background:linear-gradient(180deg,#f8fafc 0%,#ffffff 100%);
+}
+.card{
+  border-radius:11px;
+  padding:9px 10px;
+  box-shadow:0 1px 3px rgba(15,23,42,.035);
+  transition:border-color .15s ease,box-shadow .15s ease,transform .15s ease;
+}
+.card:hover{
+  border-color:rgba(37,99,235,.48);
+  box-shadow:0 5px 14px rgba(15,23,42,.075);
+  transform:translateY(-1px);
+}
+.card .ct{font-weight:700;}
+.card .cmeta .journal{
+  background:#eef5ff;
+  color:#1d4ed8;
+  border-radius:999px;
+  padding:1px 6px;
+}
+
+/* 03: refined controls and focus states */
+.controls{
+  background:#fbfcff;
+  gap:8px;
+}
+select,
+input[type=search],
+input[type=text]{
+  padding:6px 9px;
+  border-radius:8px;
+  transition:border-color .15s ease,box-shadow .15s ease,background .15s ease;
+}
+select:hover,
+input[type=search]:hover,
+input[type=text]:hover{border-color:#cbd5e1;}
+select:focus,
+input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(37,99,235,.12);
+}
+.check{
+  padding:2px 4px;
+  border-radius:6px;
+}
+.check:hover{background:#f1f5f9;}
+.btn{border-radius:8px;}
+
 </style>
 </head>
 <body>
@@ -73,8 +140,17 @@
   <div class="controls">
     <div class="row">
       <input type="search" id="q" data-i18n-ph="searchPh">
-      <button class="btn ghost" id="btnLoad" data-i18n="loadBtn" data-i18n-title="loadTitle">ライブラリ</button>
+      <div class="libraryPicker" id="libraryPicker">
+        <button type="button" class="libNameBtn" id="btnLoad" data-i18n-title="loadTitle">
+          <svg class="libNameIcon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.4 5.1h4.5l1.2 1.5h5.5v6.2H2.4z" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round"/><path d="M2.4 5.1V3.6h4.1l1.1 1.5" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="libButtonLabel" data-i18n="loadBtn">ライブラリを選択</span>
+        </button>
+        <button type="button" class="libIconBtn" id="btnReloadLib" data-i18n-title="reloadLibTitle" aria-label="ライブラリを再読み込み">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.1 6.2A5.2 5.2 0 1 0 12 11.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.1 2.9v3.3H9.8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
       <input type="file" id="file" accept=".json,application/json" class="hidden">
+      <input type="file" id="folder" webkitdirectory directory multiple class="hidden">
     </div>
     <div class="fields">
       <div class="field">
@@ -84,8 +160,8 @@
           <option value="nature">Nature</option>
           <option value="science">Science</option>
           <option value="rsc">RSC</option>
-          <option value="csj">CSJ (Chem. Lett.)</option>
-          <option value="gdch">Angew./Wiley (GDCh)</option>
+          <option value="csj">CSJ</option>
+          <option value="gdch">Wiley</option>
         </select>
       </div>
       <div class="field">
@@ -104,9 +180,10 @@
       <select id="markerStyle">
         <option value="bracket">[1]</option>
         <option value="super" data-i18n="superOpt">上付き ¹</option>
+        <option value="superBracket" data-i18n="superBracketOpt">上付き [1]</option>
       </select>
       <span style="flex:1"></span>
-      <button class="btn ghost" id="btnRefresh" data-i18n="refreshBtn" data-i18n-title="refreshTitle">文献リストを更新</button>
+      <button class="btn ghost" id="btnRefresh" data-i18n-title="refreshTitle"><svg class="refreshSvg" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.1 6.2A5.2 5.2 0 1 0 12 11.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.1 2.9v3.3H9.8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="refreshLabel">文献リストを更新</span></button>
     </div>
   </div>
 
@@ -250,16 +327,16 @@ function itemToCitationHtml(item, opts){
 var I18N = {
   ja: {
     notLoaded:'未読み込み', nRefs:function(n){return n+' 件の文献';}, nRefsCached:function(n){return n+' 件の文献（前回）';},
-    searchPh:'タイトル・著者・雑誌・DOI で検索…', loadBtn:'ライブラリ', loadTitle:'library.json を読み込む',
+    searchPh:'タイトル・著者・雑誌・DOI で検索…', loadBtn:'ライブラリを選択', loadTitle:'ライブラリフォルダを選択', reloadLibTitle:'library.json を再読み込み', changeLibTitle:'ライブラリフォルダを変更',
     styleLabel:'スタイル', collLabel:'コレクション', allColl:'すべてのコレクション',
-    incTitle:'タイトル', incUrl:'DOI/URL', numberLabel:'番号', superOpt:'上付き ¹',
+    incTitle:'タイトル', incUrl:'DOI/URL', numberLabel:'番号', superOpt:'上付き ¹', superBracketOpt:'上付き [1]',
     refreshBtn:'文献リストを更新', refreshTitle:'本文の番号と末尾の文献リストを再同期します',
     insertBtn:'挿入', copyBtn:'コピー',
     insertTitle:'番号を本文に挿入し、末尾リストと連動',
     count:function(n,m){return n+' / '+m+' 件';},
     emptyLoad:'まず「ライブラリ」ボタンから library.json を読み込んでください。（Paper Library の保存フォルダ内、または「エクスポート → ライブラリ全体 → JSON」）',
     moreItems:function(n){return '上位 '+n+' 件を表示（絞り込んでください）';}, noTitle:'(無題)',
-    loaded:'ライブラリを読み込みました', loadFail:function(e){return '読み込み失敗: '+e;},
+    loaded:'ライブラリを読み込みました', reloaded:'ライブラリを再読み込みしました', loadFail:function(e){return '読み込み失敗: '+e;}, folderNoJson:'選択したフォルダに library.json が見つかりません', reloadNeedsSelect:'この環境では自動再読み込みできません。もう一度ライブラリフォルダを選択してください',
     inserted:'引用を挿入しました', insertFail:function(e){return '挿入に失敗: '+e;},
     updated:'文献リストを更新しました', updateFail:function(e){return '更新に失敗: '+e;},
     copied:'引用をコピーしました', copyFail:'コピーできませんでした',
@@ -268,16 +345,16 @@ var I18N = {
   },
   en: {
     notLoaded:'Not loaded', nRefs:function(n){return n+' references';}, nRefsCached:function(n){return n+' references (cached)';},
-    searchPh:'Search title, author, journal, DOI…', loadBtn:'Library', loadTitle:'Load library.json',
+    searchPh:'Search title, author, journal, DOI…', loadBtn:'Select library', loadTitle:'Select library folder', reloadLibTitle:'Reload library.json', changeLibTitle:'Change library folder',
     styleLabel:'Style', collLabel:'Collection', allColl:'All collections',
-    incTitle:'Title', incUrl:'DOI/URL', numberLabel:'Number', superOpt:'Superscript ¹',
+    incTitle:'Title', incUrl:'DOI/URL', numberLabel:'Number', superOpt:'Superscript ¹', superBracketOpt:'Superscript [1]',
     refreshBtn:'Update bibliography', refreshTitle:'Re-sync the in-text numbers and the reference list',
     insertBtn:'Insert', copyBtn:'Copy',
     insertTitle:'Insert a number in the text, linked to the reference list',
     count:function(n,m){return n+' / '+m;},
     emptyLoad:'Load library.json with the “Library” button. (It is in your Paper Library folder, or export via Export → Whole library → JSON.)',
     moreItems:function(n){return 'Showing top '+n+' (refine your search)';}, noTitle:'(untitled)',
-    loaded:'Library loaded', loadFail:function(e){return 'Load failed: '+e;},
+    loaded:'Library loaded', reloaded:'Library reloaded', loadFail:function(e){return 'Load failed: '+e;}, folderNoJson:'library.json was not found in the selected folder', reloadNeedsSelect:'Automatic reload is not available in this environment. Select the library folder again',
     inserted:'Citation inserted', insertFail:function(e){return 'Insert failed: '+e;},
     updated:'Bibliography updated', updateFail:function(e){return 'Update failed: '+e;},
     copied:'Citation copied', copyFail:'Could not copy',
@@ -292,7 +369,7 @@ function tr(k){ var a=[].slice.call(arguments,1); var v=I18N[LANG][k]; return ty
    Add-in state + UI
 ================================================================ */
 var $ = (s)=>document.querySelector(s);
-var STATE = { items: [], collections: [], cached:false };
+var STATE = { items: [], collections: [], cached:false, libraryLabel:'', dirHandle:null, libraryFileHandle:null, lastFolderFiles:null };
 var PREFS = { style:'acs', includeTitle:false, includeUrl:false, marker:'bracket' };
 var officeReady = false;
 var LS_LIB = 'plWordAddin.library';
@@ -323,19 +400,54 @@ function buildCollOptions(){
   })('', 0);
   sel.innerHTML = opts.join('');
 }
+function cleanLibraryLabel(s){
+  s = String(s || '').trim();
+  if(!s) return '';
+  s = s.split(/[\\/]/).filter(Boolean).pop() || s;
+  return s.replace(/\.json$/i, '') || s;
+}
+function libraryLabelFromFile(file){
+  if(!file) return '';
+  if(file.libraryFolderName) return cleanLibraryLabel(file.libraryFolderName);
+  var rel = file.webkitRelativePath || '';
+  if(rel && rel.indexOf('/') >= 0){
+    var parts = rel.split('/').filter(Boolean);
+    if(parts.length > 1) return cleanLibraryLabel(parts[parts.length - 2]);
+  }
+  return '';
+}
+function libraryLabelFromData(data, file){
+  var fromData = data && (data.libraryFolderName || data.libraryFolder || data.libraryDir || data.folderName || data.folder || data.path);
+  return cleanLibraryLabel(fromData) || libraryLabelFromFile(file);
+}
+function updateLibraryButton(){
+  var btn = $('#btnLoad'); if(!btn) return;
+  var label = $('#libButtonLabel');
+  if(label) label.textContent = STATE.libraryLabel || tr('loadBtn');
+  btn.title = STATE.libraryLabel ? tr('changeLibTitle') : tr('loadTitle');
+  btn.setAttribute('aria-label', btn.title);
+  var reload = $('#btnReloadLib');
+  if(reload){
+    reload.title = tr('reloadLibTitle');
+    reload.setAttribute('aria-label', tr('reloadLibTitle'));
+    reload.disabled = !STATE.items.length;
+  }
+}
 function updateLibInfo(){
   var el = $('#libInfo'); if(!el) return;
-  if(!STATE.items.length){ el.textContent = tr('notLoaded'); return; }
+  if(!STATE.items.length){ el.textContent = tr('notLoaded'); updateLibraryButton(); return; }
   el.textContent = STATE.cached ? tr('nRefsCached', STATE.items.length) : tr('nRefs', STATE.items.length);
+  updateLibraryButton();
 }
-function loadLibraryData(data){
+function loadLibraryData(data, file){
   var items = Array.isArray(data) ? data : (data && Array.isArray(data.items) ? data.items : null);
   if(!items) throw new Error(tr('badFormat'));
   STATE.items = items; STATE.cached = false;
   STATE.collections = (data && Array.isArray(data.collections)) ? data.collections : [];
+  STATE.libraryLabel = libraryLabelFromData(data, file);
   buildCollOptions();
   updateLibInfo();
-  try{ localStorage.setItem(LS_LIB, JSON.stringify({items:STATE.items, collections:STATE.collections})); }catch(e){ /* too big for LS? keep in memory */ }
+  try{ localStorage.setItem(LS_LIB, JSON.stringify({items:STATE.items, collections:STATE.collections, libraryLabel:STATE.libraryLabel})); }catch(e){ /* too big for LS? keep in memory */ }
   render();
 }
 function currentOpts(){ return { style: $('#style').value, includeTitle: $('#incTitle').checked, includeUrl: $('#incUrl').checked, authorScope:'all' }; }
@@ -406,7 +518,11 @@ async function copyCitation(it){
 var CITE_TAG = 'PLCITE:';
 var BIB_TAG = 'PLBIB';
 // in-text marker text; bibliography number label matches the same style
-function markerText(n){ return PREFS.marker === 'super' ? String(n) : '[' + n + ']'; }
+function markerText(n){
+  if(PREFS.marker === 'super') return String(n);
+  if(PREFS.marker === 'superBracket') return '[' + n + ']';
+  return '[' + n + ']';
+}
 function bibLabel(n){ return PREFS.marker === 'super' ? (n + '.') : ('[' + n + ']'); }
 function assignNumbers(idsInOrder){
   var order = [], numById = {};
@@ -438,7 +554,7 @@ async function insertCitationNumber(it){
       cc.tag = CITE_TAG + it.id;
       cc.title = 'Paper Library citation';
       cc.appearance = 'Hidden';
-      applyInsertFont(r, PREFS.marker === 'super');
+      applyInsertFont(r, PREFS.marker === 'super' || PREFS.marker === 'superBracket');
       await context.sync();
     });
     await refreshCitations({ silent: true });
@@ -459,7 +575,7 @@ async function refreshCitations(o){
       var cites = ccs.items.filter(function(c){ return (c.tag || '').indexOf(CITE_TAG) === 0; });
       var ids = cites.map(function(c){ return c.tag.slice(CITE_TAG.length); });
       var num = assignNumbers(ids);
-      var sup = (PREFS.marker === 'super');
+      var sup = (PREFS.marker === 'super' || PREFS.marker === 'superBracket');
 
       cites.forEach(function(c){
         var n = num.numById[c.tag.slice(CITE_TAG.length)];
@@ -490,14 +606,78 @@ async function refreshCitations(o){
 }
 
 /* ---- events ---- */
-$('#btnLoad').addEventListener('click', function(){ $('#file').click(); });
-$('#file').addEventListener('change', function(e){
+async function readLibraryFileObject(f, label, silent){
+  var text = await f.text();
+  if(label) f.libraryFolderName = label;
+  loadLibraryData(JSON.parse(text), f);
+  toast(silent ? tr('reloaded') : tr('loaded'));
+}
+async function loadLibraryFromHandle(silent){
+  if(!STATE.libraryFileHandle && STATE.dirHandle){
+    STATE.libraryFileHandle = await STATE.dirHandle.getFileHandle('library.json');
+  }
+  if(!STATE.libraryFileHandle) return false;
+  var f = await STATE.libraryFileHandle.getFile();
+  if(STATE.dirHandle && STATE.dirHandle.name) f.libraryFolderName = STATE.dirHandle.name;
+  await readLibraryFileObject(f, f.libraryFolderName, !!silent);
+  return true;
+}
+async function reloadLibrary(){
+  try{
+    if(await loadLibraryFromHandle(true)) return;
+    toast(tr('reloadNeedsSelect'), true);
+    chooseLibrary();
+  }catch(err){
+    console.error(err);
+    toast(tr('loadFail', err && err.message ? err.message : err), true);
+  }
+}
+async function loadLibraryFromSelectedFolder(files){
+  files = Array.from(files || []);
+  if(!files.length) return;
+  var f = files.find(function(x){ return /(^|\/)library\.json$/i.test(x.webkitRelativePath || x.name); })
+       || files.find(function(x){ return /library\.json$/i.test(x.name); });
+  if(!f){ toast(tr('folderNoJson'), true); return; }
+  // File objects obtained via <input webkitdirectory> are snapshots.
+  // Keep the latest selection for display, but ask the user to reselect the folder for future updates.
+  STATE.lastFolderFiles = files;
+  var text = await f.text();
+  try{ loadLibraryData(JSON.parse(text), f); toast(tr('loaded')); }
+  catch(err){ toast(tr('loadFail', err.message), true); }
+}
+async function chooseLibrary(){
+  if(window.showDirectoryPicker){
+    try{
+      var dir = await window.showDirectoryPicker();
+      var h = await dir.getFileHandle('library.json');
+      STATE.dirHandle = dir;
+      STATE.libraryFileHandle = h;
+      await loadLibraryFromHandle(false);
+      return;
+    }catch(err){
+      if(err && (err.name === 'AbortError' || err.name === 'NotAllowedError')) return;
+      toast(tr('loadFail', err && err.message ? err.message : err), true);
+      return;
+    }
+  }
+  if($('#folder') && 'webkitdirectory' in $('#folder')) $('#folder').click();
+  else $('#file').click();
+}
+async function libraryButtonAction(){
+  if(STATE.items.length) await reloadLibrary();
+  else await chooseLibrary();
+}
+$('#btnLoad').addEventListener('click', function(){ chooseLibrary(); });
+$('#btnReloadLib').addEventListener('click', function(){ reloadLibrary(); });
+$('#folder').addEventListener('change', function(e){
+  loadLibraryFromSelectedFolder(e.target.files);
+  e.target.value = '';
+});
+$('#file').addEventListener('change', async function(e){
   var f = e.target.files[0]; e.target.value = '';
   if(!f) return;
-  var r = new FileReader();
-  r.onload = function(){ try{ loadLibraryData(JSON.parse(r.result)); toast(tr('loaded')); }
-    catch(err){ toast(tr('loadFail', err.message), true); } };
-  r.readAsText(f);
+  try{ await readLibraryFileObject(f, '', false); }
+  catch(err){ toast(tr('loadFail', err.message), true); }
 });
 $('#q').addEventListener('input', render);
 $('#coll').addEventListener('change', render);
@@ -519,6 +699,7 @@ function applyI18n(){
   document.querySelectorAll('[data-i18n]').forEach(function(el){ var v = I18N[LANG][el.dataset.i18n]; if(typeof v === 'string') el.textContent = v; });
   document.querySelectorAll('[data-i18n-ph]').forEach(function(el){ var v = I18N[LANG][el.dataset.i18nPh]; if(typeof v === 'string') el.placeholder = v; });
   document.querySelectorAll('[data-i18n-title]').forEach(function(el){ var v = I18N[LANG][el.dataset.i18nTitle]; if(typeof v === 'string') el.title = v; });
+  var refreshLabel = $('#refreshLabel'); if(refreshLabel) refreshLabel.textContent = tr('refreshBtn');
   $('#btnLang').textContent = (LANG === 'ja') ? 'EN' : '日本語';
   document.documentElement.lang = LANG;
   if(STATE.collections.length) buildCollOptions();
@@ -538,7 +719,7 @@ function restore(){
   $('#markerStyle').value = PREFS.marker || 'bracket';
   try{
     var cached = JSON.parse(localStorage.getItem(LS_LIB)||'null');
-    if(cached && cached.items){ STATE.items = cached.items; STATE.collections = cached.collections||[]; STATE.cached = true; }
+    if(cached && cached.items){ STATE.items = cached.items; STATE.collections = cached.collections||[]; STATE.libraryLabel = cached.libraryLabel || ''; STATE.cached = true; }
   }catch(e){}
   applyI18n();
 }
