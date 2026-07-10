@@ -1,6 +1,6 @@
 'use strict';
 /* =====================================================================
-   Paper Library — reference manager in a single HTML file
+   Paper Library — GitHub Pages reference manager
    Storage: local folder via File System Access API (library.json + attachments/)
    ===================================================================== */
 
@@ -108,7 +108,7 @@ const CHANGELOG = [
   { v:'1.0', date:'2026-07-05',
     ja:[
       'Paper Library v1.0 を公開しました',
-      'ローカルフォルダに library.json と attachments/ を保存する、単一 HTML の文献管理アプリとして利用できます',
+      'ローカルフォルダに library.json と attachments/ を保存する、GitHub Pages 配信の文献管理アプリとして利用できます',
       'DOI / arXiv / URL / タイトルからの文献追加、手動追加、BibTeX / RIS / CSV / JSON インポートに対応しています',
       'コレクション、タグ、スター、検索、詳細検索、表表示 / カード表示で文献を整理できます',
       'PDF 添付、引用コピー、相関図、被引用数・責任著者の更新、重複・空データ・修正候補の確認に対応しています',
@@ -117,7 +117,7 @@ const CHANGELOG = [
     ],
     en:[
       'Release Paper Library v1.0',
-      'Use it as a single-HTML reference manager that stores library.json and attachments/ in a local folder',
+      'Use it as a GitHub Pages reference manager that stores library.json and attachments/ in a local folder',
       'Add references from DOI / arXiv / URL / title, add manually, and import BibTeX / RIS / CSV / JSON',
       'Organize references with collections, tags, stars, search, advanced search, table view, and card view',
       'Attach PDFs, copy citations, open the graph view, refresh cited-by / corresponding-author data, and review duplicates, empty records, and fix suggestions',
