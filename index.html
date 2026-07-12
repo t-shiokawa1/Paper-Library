@@ -70,7 +70,15 @@
     <div id="fixedFilters"></div>
     <div class="sideHead" id="collectionsHead" data-drop-root="1" data-section-toggle="collections" role="button" tabindex="0">
       <span class="headLabel"><button id="btnToggleCollections" class="headToggle" data-i18n-title="collapse" title="折りたたみ"><span class="ic" data-ic="folderOpen"></span></button><span data-i18n="collections">コレクション</span></span>
-      <button id="btnAddColl" data-i18n-title="newCollection" title="新規コレクション"><span class="ic" data-ic="plus"></span></button>
+      <span class="headBtns">
+        <button id="btnSearchColl" data-i18n-title="searchCollTip" title="コレクションを検索"><span class="ic" data-ic="search"></span></button>
+        <button id="btnAddColl" data-i18n-title="newCollection" title="新規コレクション"><span class="ic" data-ic="plus"></span></button>
+      </span>
+    </div>
+    <div id="collSearchBar" hidden>
+      <span class="ic collSearchIcon" data-ic="search"></span>
+      <input id="collSearchInput" type="text" data-i18n-ph="searchCollPh" placeholder="コレクション名で絞り込み" autocomplete="off" spellcheck="false">
+      <button id="collSearchClear" data-i18n-title="clear" title="クリア"><span class="ic" data-ic="x"></span></button>
     </div>
     <div id="collList"></div>
     <div class="sideHead" id="tagsHead" data-section-toggle="tags" role="button" tabindex="0">
@@ -95,6 +103,8 @@
         <tbody id="itemRows"></tbody>
       </table>
       <div id="itemCards"></div>
+      <div id="itemShelves"></div>
+      <div id="itemKanban"></div>
       <div id="emptyMsg" style="display:none" data-i18n="emptyMsg">文献がありません。「＋ DOI / arXiv」から追加してください。</div>
       <div id="listMore" style="display:none"><button class="tbtn" id="btnLoadMore"></button></div>
     </div>
@@ -120,8 +130,13 @@
       <div class="menuwrap">
         <button class="lsbtn" id="btnCardViewMenu"><span class="ic" data-ic="rows"></span><span data-i18n="viewMenu">表示</span><span class="ic" data-ic="chevron"></span></button>
         <div class="menu" id="cardViewMenu" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto">
+          <div class="menuLabel" data-i18n="viewStyle">表示スタイル</div>
+          <button data-list-view="table"><span class="ic" data-ic="table"></span><span data-i18n="viewTable">表表示</span></button>
+          <button data-list-view="cards"><span class="ic" data-ic="rows"></span><span data-i18n="viewCards">カード表示</span></button>
+          <button data-list-view="shelves"><span class="ic" data-ic="book"></span><span data-i18n="viewShelves">文献棚</span></button>
+          <button data-list-view="kanban"><span class="ic" data-ic="kanban"></span><span data-i18n="viewKanban">カンバン</span></button>
+          <hr>
           <button data-card-view-act="wrap"><span class="ic" data-ic="wrap"></span><span data-i18n="wrapToggle">折り返し</span></button>
-          <button data-card-view-act="mode"><span class="ic" data-ic="table"></span><span id="cardViewModeMenuLabel" data-i18n="viewTable">表表示</span></button>
           <button id="cardViewColsMenuItem" data-card-view-act="cols"><span class="ic" data-ic="rows"></span><span id="cardViewColsMenuLabel">1列</span></button>
           <button id="cardViewFiltersMenuItem" data-card-view-act="filters"><span class="ic" data-ic="funnel"></span><span data-i18n="filters">フィルタ</span></button>
           <hr>
@@ -245,6 +260,25 @@
   <div class="dlgFoot">
     <button class="tbtn primary" id="btnApplyAllFixes" data-i18n="applyAllFixes">すべて修正</button>
     <button class="tbtn" data-close data-i18n="close">閉じる</button>
+  </div>
+</dialog>
+
+<!-- ============ journal name dictionary dialog ============ -->
+<dialog id="dlgJournalDict">
+  <div class="dlgHead"><span data-i18n="journalDictTitle">雑誌名の辞書</span><button id="dictClose"><span class="ic" data-ic="x"></span></button></div>
+  <div class="dlgBody" id="journalDictBody">
+    <p class="dictIntro" data-i18n="journalDictIntro"></p>
+    <div class="dictAddRow">
+      <input id="dictMatch" type="text" data-i18n-ph="journalDictMatchPh" placeholder="取得される表記・別名" autocomplete="off" spellcheck="false">
+      <input id="dictFull" type="text" data-i18n-ph="journalDictFullPh" placeholder="正式名（雑誌欄・任意）" autocomplete="off" spellcheck="false">
+      <input id="dictAbbr" type="text" data-i18n-ph="journalDictAbbrPh" placeholder="略称（表示・任意）" autocomplete="off" spellcheck="false">
+      <button class="tbtn primary" id="dictAdd" data-i18n="journalDictAdd">辞書に追加</button>
+    </div>
+    <div class="dictBar">
+      <span class="dictCount" id="dictCount"></span>
+      <input id="dictSearch" type="text" data-i18n-ph="journalDictBuiltinPh" placeholder="辞書を検索" autocomplete="off" spellcheck="false">
+    </div>
+    <div id="dictList" class="dictTable"></div>
   </div>
 </dialog>
 
