@@ -826,8 +826,24 @@
   .sideHead .headToggle .ic svg{width:1.1em; height:1.1em}
   .sideHead .headToggle.closed{color:var(--text2)}
   .sideHead .headToggle.closed .ic{color:var(--text2)}
+  .sideHead .headBtns{display:inline-flex; align-items:center; gap:2px; flex:0 0 auto}
   .sideHead button{border:none; background:none; color:var(--text2); font-size:14px; padding:0 4px; border-radius:4px}
   .sideHead button:hover{background:var(--border2); color:var(--text)}
+  .sideHead #btnSearchColl.on{background:var(--sel); color:var(--accent)}
+  /* collection filter box (toggled by the magnifier in the section header) */
+  #collSearchBar{display:flex; align-items:center; gap:5px; margin:2px 6px 4px; padding:4px 8px;
+    background:var(--bg); border:1px solid var(--border); border-radius:6px}
+  #collSearchBar[hidden]{display:none}
+  #collSearchBar .collSearchIcon{color:var(--text3); flex:0 0 auto}
+  #collSearchBar .collSearchIcon svg{width:14px; height:14px}
+  #collSearchBar input{flex:1; min-width:0; border:none; background:none; color:var(--text);
+    font-size:13px; padding:0; outline:none}
+  #collSearchBar input::placeholder{color:var(--text3)}
+  #collSearchBar #collSearchClear{border:none; background:none; color:var(--text3); padding:0 2px;
+    border-radius:4px; display:inline-flex; align-items:center}
+  #collSearchBar #collSearchClear:hover{background:var(--border2); color:var(--text)}
+  #collSearchBar #collSearchClear svg{width:13px; height:13px}
+  .collSearchEmpty{color:var(--text3); font-size:12px; padding:4px 10px}
   .sideItem{
     display:flex; align-items:center; gap:6px; padding:5px 8px; border-radius:6px;
     cursor:pointer; user-select:none; position:relative; white-space:nowrap;
@@ -870,13 +886,58 @@
   #listPane{flex:1 1 auto; min-width:0; display:flex; flex-direction:column; background:var(--panel); container-type:inline-size}
   #listScroller{flex:1; overflow:auto}
   #itemCards{display:none}
+  #itemShelves,#itemKanban{display:none}
   #listScroller.cardView table#itemTable{display:none}
   #listScroller.cardView #itemCards{display:grid}
+  #listScroller.shelfView table#itemTable,#listScroller.shelfView #itemCards{display:none}
+  #listScroller.shelfView #itemShelves{display:block}
+  #listScroller.kanbanView table#itemTable,#listScroller.kanbanView #itemCards{display:none}
+  #listScroller.kanbanView #itemKanban{display:block}
+  .menu button.viewActive{background:var(--accent-soft); color:var(--accent); font-weight:700}
+  .menu button.viewActive .ic{color:var(--accent)}
+
+  /* ---------- literature shelves ---------- */
+  #itemShelves{padding:14px 14px 22px; background:linear-gradient(180deg,var(--bg),var(--panel)); min-height:100%}
+  .paperShelf{--shelf-color:var(--accent); margin-bottom:20px}
+  .paperShelfHead{display:flex; align-items:center; gap:7px; min-height:30px; padding:0 3px 6px; color:var(--text)}
+  .paperShelfIcon{display:inline-flex; color:var(--shelf-color); font-size:14px}
+  .paperShelfTitle{font-size:12.5px; font-weight:750}
+  .paperShelfCount{font-size:10.5px; color:var(--text3); padding:1px 7px; border-radius:999px; background:var(--chip)}
+  .paperShelfRail{display:flex;gap:10px;min-height:116px;overflow-x:auto;overflow-y:hidden;padding:5px 5px 10px;scrollbar-width:thin;scroll-snap-type:x proximity}
+  .shelfPeriod{margin-left:auto;display:inline-flex;align-items:center;gap:4px;color:var(--text3);font-size:10.5px;font-weight:500}
+  .shelfPeriod input{width:58px;height:24px;padding:2px 5px;border:1px solid var(--border);border-radius:6px;background:var(--panel);color:var(--text);font:inherit;text-align:right;outline:none}
+  .shelfPeriod input:focus{border-color:var(--accent)}
+  .shelfPaper{
+    flex:0 0 310px; min-width:0; min-height:98px; scroll-snap-align:start;
+    box-shadow:0 3px 10px rgba(15,23,42,.055); transition:transform .13s ease,box-shadow .13s ease,border-color .13s ease;
+  }
+  .shelfPaper:hover{transform:translateY(-3px); border-color:var(--accent-border); box-shadow:0 8px 20px rgba(15,23,42,.11)}
+  .paperShelfEmpty{display:flex; align-items:center; justify-content:center; width:100%; min-height:88px; color:var(--text3); font-size:11.5px}
+  .paperShelfMore{flex:0 0 90px;display:flex;align-items:center;justify-content:center;min-height:98px;color:var(--text3);font-size:10.5px;border:1px dashed var(--border);border-radius:7px;background:color-mix(in srgb,var(--panel) 70%,transparent)}
+
+  /* ---------- reading kanban ---------- */
+  #itemKanban{min-width:820px; min-height:100%; padding:12px; background:var(--bg)}
+  .kanbanHint{display:flex; align-items:center; gap:7px; min-height:30px; margin:0 2px 10px; color:var(--text3); font-size:11px}
+  .kanbanHint .ic{font-size:13px;color:var(--accent)}
+  .kanbanLimit{margin-left:auto;padding:2px 7px;border-radius:999px;background:var(--chip)}
+  .kanbanBoard{display:grid; grid-template-columns:repeat(3,minmax(260px,1fr)); gap:10px; align-items:start}
+  .kanbanCol{--status-color:var(--text3); min-height:420px; padding:8px; border:1px solid var(--border); border-radius:11px; background:color-mix(in srgb,var(--panel) 86%,var(--bg))}
+  .kanbanCol.status-reading{--status-color:#d97706}.kanbanCol.status-read{--status-color:var(--green)}
+  .kanbanHead{display:flex; align-items:center; gap:6px; min-height:30px; padding:0 3px 7px; color:var(--status-color); font-size:11.5px}
+  .kanbanHead .ic{font-size:13px}.kanbanHead b{color:var(--text)}
+  .kanbanCount{margin-left:auto;min-width:20px;text-align:center;padding:1px 6px;border-radius:999px;background:var(--chip);color:var(--text3);font-size:10px}
+  .kanbanCards{display:flex; flex-direction:column; gap:7px; min-height:365px; border-radius:8px; transition:background .12s ease,box-shadow .12s ease}
+  .kanbanCol.dragOver .kanbanCards{background:color-mix(in srgb,var(--status-color) 9%,transparent);box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--status-color) 42%,transparent)}
+  .kanbanPaper{min-width:0; min-height:91px; box-shadow:0 2px 8px rgba(15,23,42,.055); cursor:grab}
+  .kanbanPaper:hover{border-color:var(--border);box-shadow:0 5px 14px rgba(15,23,42,.09)}
+  .kanbanPaper.dragging{opacity:.38}
+  .shelfPaper.picking,.kanbanPaper.picking{cursor:pointer}
+  .shelfPaper.picked,.kanbanPaper.picked{background:var(--pick-bg);border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
   table#itemTable{width:100%; min-width:100%; border-collapse:collapse; table-layout:fixed}
   #itemTable th{
     position:sticky; top:0; z-index:5; background:var(--bg);
     border-bottom:1px solid var(--border); padding:6px 8px; text-align:left;
-    font-size:12px; color:var(--text2); cursor:pointer; user-select:none; white-space:nowrap;
+    font-size:12px; color:var(--text2); cursor:default; user-select:none; white-space:nowrap;
     overflow:hidden; text-overflow:ellipsis;
   }
   #itemTable th.thmove{position:sticky; cursor:grab}
@@ -889,6 +950,12 @@
     position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:2px;
     line-height:1; padding:0; text-align:center;
   }
+  #itemTable th.iconCol:hover .thlabel,
+  #itemTable th.iconCol:focus-within .thlabel,
+  #itemTable th.iconCol.sort-active .thlabel{opacity:0}
+  /* header icons inherit the 12px header font, making them smaller than the
+     14px row icons (e.g. the star). match them to the row icons */
+  #itemTable th.iconCol .thlabel .ic{font-size:14px}
   #itemTable th .thlabel{pointer-events:none}
   #itemTable th:hover{color:var(--text)}
   #itemTable th.col-drag{opacity:.4}
@@ -935,6 +1002,9 @@
     vertical-align:-0.15em;
   }
   .starBtn.starCell{margin-right:0}
+  /* the star column is intentionally narrow; the generic 8px cell padding clips
+     the star button, so tighten it and keep the icon centred */
+  #itemTable td.col-starred{padding-left:2px; padding-right:2px; text-align:center}
   .starBtn:hover{background:var(--accent-soft); color:var(--accent)}
   .starBtn.on{color:var(--accent)}
   .starBtn.on svg{fill:currentColor}
@@ -955,16 +1025,25 @@
   /* single-line mode (toggle button under the table) */
   #itemTable.nowrap td{white-space:nowrap; text-overflow:ellipsis; vertical-align:middle}
   /* per-column filter funnel */
-  .thfilter,.thdisplay{
+  .thsort,.thfilter,.thdisplay{
     display:none; position:absolute; right:11px; top:50%; transform:translateY(-50%);
     width:16px; height:16px; align-items:center; justify-content:center;
     border-radius:4px; color:var(--text3); cursor:pointer; z-index:7;
   }
-  .thdisplay{right:30px}
+  .thsort{
+    appearance:none; border:0; background:transparent; padding:0; font:inherit;
+    line-height:1;
+  }
+  #itemTable th.iconCol .thsort{right:50%; transform:translate(50%,-50%)}
+  .thfilter{right:31px}
+  .thdisplay{right:50px}
   .thfilter svg,.thdisplay svg{width:12px; height:12px}
   #itemTable th{position:sticky}
-  #itemTable th:hover .thfilter,#itemTable th:hover .thdisplay{display:inline-flex}
-  .thfilter:hover,.thdisplay:hover{background:var(--border2); color:var(--text)}
+  #itemTable th:hover .thsort,#itemTable th:hover .thfilter,#itemTable th:hover .thdisplay,
+  #itemTable th:focus-within .thsort,#itemTable th:focus-within .thfilter,#itemTable th:focus-within .thdisplay{display:inline-flex}
+  .thsort.active{display:inline-flex; color:var(--accent)}
+  .thsort:hover,.thsort:focus-visible,.thfilter:hover,.thdisplay:hover{background:var(--border2); color:var(--text); outline:none}
+  .thsort:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
   .thfilter.on{display:inline-flex; color:var(--accent)}
   .thdisplay.on{display:inline-flex; color:var(--accent)}
   .miniPop{
@@ -1046,14 +1125,14 @@
     margin-bottom:3px;
   }
   .cardTitleText{overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical}
-  .cardAuthors{color:var(--text2); font-size:12px; line-height:1.25; margin-bottom:4px}
+  .cardAuthors{color:var(--text2); font-size:12px; line-height:1.25; margin-bottom:4px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical}
   .cardMeta{display:flex; flex-wrap:wrap; gap:4px; align-items:center; color:var(--text3); font-size:11.5px; font-weight:600}
   .cardMeta span{display:inline-flex; align-items:center; min-height:16px}
   .cardMeta .journal{color:var(--accent)}
   .cardMeta .type{padding:1px 6px; border-radius:5px; background:var(--chip); color:var(--text2)}
   .cardMeta .dot{display:none}
   #itemCards.nowrap .cardTitleText{display:block; white-space:nowrap; text-overflow:ellipsis; -webkit-line-clamp:unset}
-  #itemCards.nowrap .cardAuthors{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  #itemCards.nowrap .cardAuthors{display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:unset}
   #itemCards.nowrap .cardMeta{flex-wrap:nowrap; overflow:hidden}
   #itemCards.nowrap .cardMeta span{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
   .cardSide{display:flex; align-items:center; justify-content:center; padding:7px 10px 7px 0}
@@ -1334,6 +1413,9 @@
     border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow);
     padding:0; max-width:560px; width:min(560px,92vw); max-height:90vh; color:var(--text);
   }
+  /* the modal itself can take focus (e.g. after clicking a non-focusable row);
+     don't paint a focus ring around the whole dialog when a key is then pressed */
+  dialog:focus, dialog:focus-visible{outline:none}
   dialog::backdrop{background:rgba(15,23,42,.35)}
   .dlgHead{
     display:flex; align-items:center; justify-content:space-between;
@@ -1389,6 +1471,46 @@
   .candLoading{padding:10px; color:var(--text2); font-size:13px}
   #dlgDuplicates{max-width:760px; width:min(760px,94vw)}
   .dupSummary{font-size:12.5px; color:var(--text2); margin-bottom:10px}
+
+  /* journal name dictionary editor */
+  #dlgJournalDict{width:680px; max-width:94vw}
+  .dictIntro{font-size:12.5px; color:var(--text2); line-height:1.6; margin:0 0 12px}
+  .dictAddRow{display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:10px}
+  .dictAddRow input{flex:1 1 150px; min-width:0; font:inherit; font-size:13px; padding:6px 9px;
+    border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--text); outline:none}
+  .dictAddRow input:focus{border-color:var(--accent)}
+  .dictAddRow #dictAdd{flex:0 0 auto}
+  .dictBar{display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    margin:14px 0 6px; padding-top:12px; border-top:1px solid var(--border2)}
+  .dictCount{font-size:11.5px; color:var(--text3); flex:0 0 auto; white-space:nowrap}
+  #dictSearch{flex:1 1 180px; min-width:0; font:inherit; font-size:12.5px; padding:5px 9px;
+    border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--text); outline:none}
+  #dictSearch:focus{border-color:var(--accent)}
+  .dictTable{max-height:44vh; overflow-y:auto}
+  .dictRow{display:grid; grid-template-columns:1.1fr 1.2fr 1fr 30px; gap:8px; align-items:center;
+    padding:6px 4px 6px 8px; border-radius:6px}
+  .dictRow + .dictRow{border-top:1px solid var(--border2)}
+  .dictRow.dictExpandable{cursor:pointer}
+  .dictRow:not(.dictHead):hover{background:var(--bg)}
+  .dictHead{font-size:11px; font-weight:700; letter-spacing:.03em; color:var(--text3);
+    text-transform:uppercase; border-radius:0; position:sticky; top:0; z-index:1;
+    background:var(--panel); border-bottom:1px solid var(--border2)}
+  .dictHead + .dictRow{border-top:none}
+  .dictCell{font-size:12.5px; color:var(--text); min-width:0; overflow-wrap:anywhere}
+  .dictAbbr{color:var(--text)}
+  /* variants stay on one line until the row is expanded */
+  .dictAlias{color:var(--text2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .dictRow.expanded .dictAlias{white-space:normal; overflow:visible; text-overflow:clip}
+  /* the user's own rows are lightly tinted (same layout/width as built-in rows) */
+  .dictUser{background:color-mix(in srgb, var(--accent) 8%, transparent)}
+  .dictUser:hover{background:color-mix(in srgb, var(--accent) 13%, transparent)}
+  .dictUser .dictAlias{color:var(--text)}
+  .dictAct{display:inline-block}
+  .dictDel{border:none; background:none; color:var(--text3); padding:3px; border-radius:5px;
+    display:inline-flex; align-items:center; cursor:pointer}
+  .dictDel:hover{background:var(--border2); color:var(--red, #d64545)}
+  .dictDel svg{width:15px; height:15px}
+  .dictEmpty{font-size:12.5px; color:var(--text3); padding:10px 4px}
   .dupPair{
     border:1px solid var(--border); border-radius:8px; background:var(--panel);
     padding:10px; margin-bottom:8px;

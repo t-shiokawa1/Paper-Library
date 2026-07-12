@@ -35,6 +35,7 @@ const ICONS = {
   wrap:'<path d="M4 6.5h16M4 12h11.5a3 3 0 0 1 0 6H13m0 0 2-2m-2 2 2 2M4 17.5h5"/>',
   rows:'<path d="M4 6.5h16M4 12h16M4 17.5h16"/>',
   table:'<path d="M4 5.5h16v13H4z"/><path d="M4 10h16M4 14.5h16M10 5.5v13M15 5.5v13"/>',
+  kanban:'<rect x="3.5" y="4.5" width="5" height="15" rx="1"/><rect x="9.5" y="4.5" width="5" height="10" rx="1"/><rect x="15.5" y="4.5" width="5" height="13" rx="1"/>',
   note:'<path d="M6 4.5h12A1.5 1.5 0 0 1 19.5 6v12A1.5 1.5 0 0 1 18 19.5H6A1.5 1.5 0 0 1 4.5 18V6A1.5 1.5 0 0 1 6 4.5z"/><path d="M8 8.5h8M8 12h8M8 15.5h5"/>',
   message:'<path d="M5.5 5.5h13A1.5 1.5 0 0 1 20 7v8a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 3v-3A1.5 1.5 0 0 1 4 15V7a1.5 1.5 0 0 1 1.5-1.5z"/><path d="M8 9.5h8M8 13h5"/>',
   palette:'<path d="M12 3.5a8.5 8.5 0 1 0 0 17c1.4 0 2-.8 2-1.7 0-.8-.6-1.2-.6-2 0-1 .8-1.8 2-1.8h1.6c2 0 3.5-1.4 3.5-3.4C20.5 6.8 16.7 3.5 12 3.5z"/><circle cx="7.8" cy="10.2" r="1.2"/><circle cx="12" cy="7.6" r="1.2"/><circle cx="16.2" cy="10.2" r="1.2"/>',
@@ -133,7 +134,7 @@ const I18N = {
     addById:'DOI / arXiv', addManual:'手動追加', import:'インポート', importKeywordsAsTags:'keywords をタグとして読み込む', export:'エクスポート',
     expBibShown:'表示中の文献 → BibTeX', expRisShown:'表示中の文献 → RIS', expCsvShown:'表示中の文献 → CSV', expJsonShown:'表示中の文献 → JSON', expJson:'ライブラリ全体 → JSON',
     searchPh:'検索ワードを入力して Enter', advancedSearch:'詳細検索', quickAddTitle:'この DOI / URL を取得して追加', addBoxPh:'URL を入力して Enter', addMoreTitle:'手動追加・インポート', library:'ライブラリ', collections:'コレクション', tags:'タグ',
-    newCollection:'新規コレクション', allItems:'すべての文献', starred:'スター', starItem:'スターを付ける', unstarItem:'スターを外す', myPublication:'自分の論文', markMyPublication:'自分の論文にする', unmarkMyPublication:'自分の論文から外す', trash:'ゴミ箱', emptyTrash:'完全に削除する', trashPermanentNote:'完全削除すると元に戻せません。', restoreItem:'復元', deleteForever:'完全に削除', deleteSingle:'削除', colTrashDelete:'操作', uncategorized:'未分類',
+    newCollection:'新規コレクション', searchCollTip:'コレクションを検索', searchCollPh:'コレクション名で絞り込み', searchCollEmpty:'一致するコレクションはありません', allItems:'すべての文献', starred:'スター', starItem:'スターを付ける', unstarItem:'スターを外す', myPublication:'自分の論文', markMyPublication:'自分の論文にする', unmarkMyPublication:'自分の論文から外す', trash:'ゴミ箱', emptyTrash:'完全に削除する', trashPermanentNote:'完全削除すると元に戻せません。', restoreItem:'復元', deleteForever:'完全に削除', deleteSingle:'削除', colTrashDelete:'操作', uncategorized:'未分類',
     colStar:'スター', colPdf:'pdf', colTitle:'タイトル', colAuthors:'著者', colYear:'年', colJournal:'出版物', colCitedBy:'被引用数', colType:'種別', colCategory:'種類', colDoi:'DOI', colAdded:'追加日',
     colTrashRestore:'復元',
     columns:'列', colReset:'既定に戻す', refreshCited:'被引用数を更新', refreshCorresponding:'責任著者を更新',
@@ -168,15 +169,36 @@ const I18N = {
     fixChemCommunCamb:'Chem. Commun. (Camb.) は Chem. Commun. に統一できます',
     currentValue:'現在', suggestedValue:'修正案', applyFix:'修正', applyAllFixes:'すべて修正',
     confirmApplyAllFixes:(n)=>`${n} 件の修正候補を適用しますか？`,
+    journalDictTitle:'雑誌名の辞書',
+    journalDictOpen:'雑誌名の辞書を開く',
+    journalDictIntro:'取得された雑誌名の表記ゆれを、正しい正式名・略称に対応づける辞書です。ここに追加した対応は、修正候補と雑誌名の表示に反映され、library.json に保存されます（バックアップや別PCへの移行でもそのまま使えます）。標準の辞書より優先されるので、既定の対応を上書きすることもできます。',
+    journalDictMatchPh:'取得される表記・別名（例: Adv. Sci. (Weinh.)）',
+    journalDictFullPh:'正式名（雑誌欄・任意）',
+    journalDictAbbrPh:'略称（表示・任意）',
+    journalDictColMatch:'取得される表記・別名', journalDictColAlias:'表記揺れ・別名', journalDictColFull:'正式名', journalDictColAbbr:'略称',
+    journalDictAdd:'辞書に追加', journalDictRemove:'削除',
+    journalDictCount:(u,b)=>`自分 ${u}件 ・ 標準 ${b}件`,
+    journalDictBuiltinPh:'辞書を検索（雑誌名・略称・表記揺れ）',
+    journalDictBuiltinEmpty:'一致する項目はありません。',
+    journalDictEmpty:'まだ辞書に登録がありません。',
+    journalDictMatchReq:'「取得される表記・別名」を入力してください。',
+    journalDictNeedValue:'「正式名」か「略称」のどちらかを入力してください。',
+    journalDictAdded:'辞書に追加しました。',
+    journalDictUpdated:'辞書を更新しました。',
+    journalDictRemoved:'辞書から削除しました。',
     wrapToggle:'折り返し', newSubCollection:'サブフォルダを作成', collColor:'色を変更',
     collColorCustom:'カスタム：', collColorDefault:'既定',
     filterContains:'…を含む', filterFrom:'から', filterTo:'まで', filterClear:'クリア',
-    filters:'フィルタ', viewMenu:'表示', cardCols:(n)=>`${n}列`, filterOptions:'候補', filterNoOptions:'候補がありません', themeDark:'Dark', themeLight:'Light',
+    filters:'フィルタ', viewMenu:'表示', viewStyle:'表示スタイル', cardCols:(n)=>`${n}列`, filterOptions:'候補', filterNoOptions:'候補がありません', themeDark:'Dark', themeLight:'Light',
     authorDisplay:'著者表示', authorNameStyle:'名前形式', authorLimit:'表示人数', authorSeparator:'区切り',
     authorMarkCorresponding:'責任著者に * を表示',
     authorFamily:'姓のみ', authorInitial:'姓 + イニシャル', authorFull:'フルネーム',
     authorAll:'全員', authorFirst3:'3名まで + et al.', authorFirst1:'1名のみ + et al.',
-    viewCards:'カード表示', viewTable:'表表示',
+    viewCards:'カード表示', viewTable:'表表示', viewShelves:'文献棚', viewKanban:'カンバン',
+    shelfRecent:'最近追加した文献', shelfStarred:'スター付き', shelfReading:'読書中', shelfPdf:'PDFあり', shelfCollections:'コレクション',
+    shelfItems:(n)=>`${n} 件`, shelfMore:(n)=>`ほか ${n} 件`, shelfEmpty:'この棚に文献はありません', shelfRecentDays:'日以内',
+    readingStatus:'読書状態', statusUnread:'未読', statusReading:'読書中', statusRead:'読了',
+    kanbanHint:'カードをドラッグして読書状態を変更できます',
     filterTitle:(c)=>`${c} で絞り込み`,
     refreshingCited:'被引用数を取得中…', refreshedCited:(n)=>`${n} 件の被引用数を更新しました`,
     refreshedCitedPartial:(n,f)=>`${n} 件を更新しました（${f} 件は取得失敗 — 取得ログを確認）`,
@@ -195,6 +217,7 @@ const I18N = {
     logKindCited:'被引用数', logKindCorresponding:'責任著者', recentlyCheckedNoCorresponding:'最近確認済みのためスキップ',
     oaBudgetErr:'OpenAlex の1日あたりの利用上限に達しました（UTC 0時にリセット）。相関図などで多数取得すると枯渇します。時間をおいて再試行してください。',
     colHint:'ヘッダーをドラッグで並べ替え／右端をドラッグで幅調整',
+    sortColumn:'この列で並べ替え',
     emptyMsg:'文献がありません。「＋ DOI / arXiv」から追加してください。',
     trashEmptyMsg:'ゴミ箱に文献はありません。',
     noSelect:'文献を選択してください',
@@ -285,7 +308,7 @@ const I18N = {
     addById:'DOI / arXiv', addManual:'Add manually', import:'Import', importKeywordsAsTags:'Import keywords as tags', export:'Export',
     expBibShown:'Shown items → BibTeX', expRisShown:'Shown items → RIS', expCsvShown:'Shown items → CSV', expJsonShown:'Shown items → JSON', expJson:'Whole library → JSON',
     searchPh:'Enter search keywords and press Enter', advancedSearch:'Advanced search', quickAddTitle:'Fetch and add this DOI / URL', addBoxPh:'Enter URL and press Enter', addMoreTitle:'Manual add / import', library:'Library', collections:'Collections', tags:'Tags',
-    newCollection:'New collection', allItems:'All items', starred:'Starred', starItem:'Star', unstarItem:'Unstar', myPublication:'My publications', markMyPublication:'Mark as my publication', unmarkMyPublication:'Remove from my publications', trash:'Trash', emptyTrash:'Delete forever', trashPermanentNote:'This cannot be undone.', restoreItem:'Restore', deleteForever:'Delete forever', deleteSingle:'Delete', colTrashDelete:'Actions', uncategorized:'Uncategorized',
+    newCollection:'New collection', searchCollTip:'Search collections', searchCollPh:'Filter by name', searchCollEmpty:'No matching collections', allItems:'All items', starred:'Starred', starItem:'Star', unstarItem:'Unstar', myPublication:'My publications', markMyPublication:'Mark as my publication', unmarkMyPublication:'Remove from my publications', trash:'Trash', emptyTrash:'Delete forever', trashPermanentNote:'This cannot be undone.', restoreItem:'Restore', deleteForever:'Delete forever', deleteSingle:'Delete', colTrashDelete:'Actions', uncategorized:'Uncategorized',
     colStar:'Star', colPdf:'pdf', colTitle:'Title', colAuthors:'Authors', colYear:'Year', colJournal:'Publication', colCitedBy:'Cited by', colType:'Type', colCategory:'Category', colDoi:'DOI', colAdded:'Added',
     colTrashRestore:'Restore',
     columns:'Columns', colReset:'Reset to default', refreshCited:'Refresh citations', refreshCorresponding:'Refresh corresponding authors',
@@ -320,15 +343,36 @@ const I18N = {
     fixChemCommunCamb:'Chem. Commun. (Camb.) can be normalized to Chem. Commun.',
     currentValue:'Current', suggestedValue:'Suggested', applyFix:'Apply', applyAllFixes:'Apply all',
     confirmApplyAllFixes:(n)=>`Apply ${n} fix suggestion${n===1?'':'s'}?`,
+    journalDictTitle:'Journal name dictionary',
+    journalDictOpen:'Open the journal name dictionary',
+    journalDictIntro:'A dictionary that maps journal-name variants to the correct full name and abbreviation. Entries you add here feed the fix suggestions and journal-name display, and are stored in library.json (so they survive backups and moving to another computer). They take precedence over the built-in dictionary, so you can override the defaults too.',
+    journalDictMatchPh:'Fetched form / alias (e.g. Adv. Sci. (Weinh.))',
+    journalDictFullPh:'Full name (journal field, optional)',
+    journalDictAbbrPh:'Abbreviation (display, optional)',
+    journalDictColMatch:'Fetched form / alias', journalDictColAlias:'Variants / aliases', journalDictColFull:'Full name', journalDictColAbbr:'Abbreviation',
+    journalDictAdd:'Add to dictionary', journalDictRemove:'Remove',
+    journalDictCount:(u,b)=>`Yours ${u} · Built-in ${b}`,
+    journalDictBuiltinPh:'Search the dictionary (name, abbreviation, variant)',
+    journalDictBuiltinEmpty:'No matching entries.',
+    journalDictEmpty:'No entries in the dictionary yet.',
+    journalDictMatchReq:'Please enter the fetched form / alias.',
+    journalDictNeedValue:'Please enter a full name or an abbreviation.',
+    journalDictAdded:'Added to the dictionary.',
+    journalDictUpdated:'Dictionary updated.',
+    journalDictRemoved:'Removed from the dictionary.',
     wrapToggle:'Wrap', newSubCollection:'New subfolder', collColor:'Change color',
     collColorCustom:'Custom:', collColorDefault:'Default',
     filterContains:'Contains…', filterFrom:'From', filterTo:'To', filterClear:'Clear',
-    filters:'Filters', viewMenu:'View', cardCols:(n)=>`${n} column${n===1?'':'s'}`, filterOptions:'Options', filterNoOptions:'No options', themeDark:'Dark', themeLight:'Light',
+    filters:'Filters', viewMenu:'View', viewStyle:'View style', cardCols:(n)=>`${n} column${n===1?'':'s'}`, filterOptions:'Options', filterNoOptions:'No options', themeDark:'Dark', themeLight:'Light',
     authorDisplay:'Author display', authorNameStyle:'Name style', authorLimit:'Authors shown', authorSeparator:'Separator',
     authorMarkCorresponding:'Show * for corresponding authors',
     authorFamily:'Family only', authorInitial:'Family + initials', authorFull:'Full name',
     authorAll:'All authors', authorFirst3:'First 3 + et al.', authorFirst1:'First author + et al.',
-    viewCards:'Card view', viewTable:'Table view',
+    viewCards:'Card view', viewTable:'Table view', viewShelves:'Literature shelves', viewKanban:'Kanban',
+    shelfRecent:'Recently added', shelfStarred:'Starred', shelfReading:'Reading', shelfPdf:'PDF attached', shelfCollections:'Collections',
+    shelfItems:(n)=>`${n} item${n===1?'':'s'}`, shelfMore:(n)=>`${n} more`, shelfEmpty:'No papers on this shelf', shelfRecentDays:'days',
+    readingStatus:'Reading status', statusUnread:'Unread', statusReading:'Reading', statusRead:'Read',
+    kanbanHint:'Drag cards between columns to update their reading status',
     filterTitle:(c)=>`Filter by ${c}`,
     refreshingCited:'Fetching citation counts…', refreshedCited:(n)=>`Updated cited-by counts for ${n} item(s)`,
     refreshedCitedPartial:(n,f)=>`Updated ${n} item(s) (${f} failed — see the fetch log)`,
@@ -347,6 +391,7 @@ const I18N = {
     logKindCited:'Cited by', logKindCorresponding:'Corresponding', recentlyCheckedNoCorresponding:'Skipped: recently checked',
     oaBudgetErr:'OpenAlex daily request budget exhausted (resets at 00:00 UTC). Heavy use such as the graph view can exhaust it. Please retry later.',
     colHint:'Drag headers to reorder / drag the right edge to resize',
+    sortColumn:'Sort by this column',
     emptyMsg:'No items. Add one via “+ DOI / arXiv”.',
     trashEmptyMsg:'Trash is empty.',
     noSelect:'Select an item',
@@ -772,7 +817,49 @@ const JOURNAL_ABBR = new Map([
   ['plos biology','PLOS Biol.'],
   ['plos one','PLOS One'],
   ['bmc biology','BMC Biol.'],
-  ['frontiers in plant science','Front. Plant Sci.'],]);
+  ['frontiers in plant science','Front. Plant Sci.'],
+  // Journals that often arrive already abbreviated, plus OpenAlex/Weinheim
+  // container-title variants. Keyed by the full name so mappedJournalAbbr(formal)
+  // resolves for the "Fixes" panel, and by messy variants to clean up the display.
+  ['advanced materials technologies','Adv. Mater. Technol.'],
+  ['adv sci weinh','Adv. Sci.'],
+  ['angew chem weinheim bergstr ger','Angew. Chem.'],
+  ['asian journal of organic chemistry','Asian J. Org. Chem.'],
+  ['berichte der deutschen chemischen gesellschaft','Ber. Dtsch. Chem. Ges.'],
+  ['cell reports physical science','Cell Rep. Phys. Sci.'],
+  ['the chemical record','Chem. Rec.'],
+  ['chemical record','Chem. Rec.'],
+  ['chemical society reviews','Chem. Soc. Rev.'],
+  ['commun chem','Commun. Chem.'],
+  ['chemphyschem','ChemPhysChem'],
+  ['frontiers in chemistry','Front. Chem.'],
+  ['front chem','Front. Chem.'],
+  ['helvetica chimica acta','Helv. Chim. Acta'],
+  ['journal of macromolecular science part a pure and applied chemistry','J. Macromol. Sci. Part A'],
+  ['j macromol sci part a pure appl chem','J. Macromol. Sci. Part A'],
+  ['journal of materials chemistry','J. Mater. Chem.'],
+  ['j mater chem a mater energy sustain','J. Mater. Chem. A'],
+  ['journal of medicinal chemistry','J. Med. Chem.'],
+  ['the journal of physical chemistry a','J. Phys. Chem. A'],
+  ['journal of physical chemistry a','J. Phys. Chem. A'],
+  ['j phys chem c nanomater interfaces','J. Phys. Chem. C'],
+  ['journal of physical organic chemistry','J. Phys. Org. Chem.'],
+  ['journal of polymer science part c polymer symposia','J. Polym. Sci. C Polym. Symp.'],
+  ['new journal of chemistry','New J. Chem.'],
+  ['organic and biomolecular chemistry','Org. Biomol. Chem.'],
+  ['organic process research and development','Org. Process Res. Dev.'],
+  ['photochemical and photobiological sciences','Photochem. Photobiol. Sci.'],
+  ['physical review','Phys. Rev.'],
+  ['polymer chemistry','Polym. Chem.'],
+  ['polymer journal','Polym. J.'],
+  ['proceedings of the royal society of london','Proc. R. Soc. Lond.'],
+  ['proceedings of the royal society of london series a','Proc. R. Soc. London Ser. A'],
+  ['rsc advances','RSC Adv.'],
+  ['solar energy materials and solar cells','Sol. Energy Mater. Sol. Cells'],
+  ['structural chemistry','Struct. Chem.'],
+  ['synthetic metals','Synth. Met.'],
+  ['topics in current chemistry','Top. Curr. Chem.'],
+  ['top curr chem j','Top. Curr. Chem.'],]);
 const JOURNAL_ABBR_NORMALIZED = new Map(Array.from(JOURNAL_ABBR, ([k,v])=>[normalizeJournalKey(k), v]));
 const JOURNAL_FULL_NAMES = new Map([
   ['chemrxiv','ChemRxiv'],
@@ -820,10 +907,173 @@ const JOURNAL_FULL_NAMES = new Map([
   ['nat chem','Nature Chemistry'],
   ['proceedings of the national academy of sciences','Proceedings of the National Academy of Sciences of the United States of America'],
   ['proc natl acad sci u s a','Proceedings of the National Academy of Sciences of the United States of America'],
+  // Journals that arrive already abbreviated: keyed by the abbreviation (and its
+  // messy OpenAlex/Weinheim variants) so the "Fixes" panel can restore the full
+  // 雑誌 name. journalDisplay still shows the abbreviation via JOURNAL_ABBR.
+  ['adv funct mater','Advanced Functional Materials'],
+  ['adv mater','Advanced Materials'],
+  ['adv mater technol','Advanced Materials Technologies'],
+  ['adv sci','Advanced Science'],
+  ['adv sci weinh','Advanced Science'],
+  ['angew chem','Angewandte Chemie'],
+  ['angew chem weinheim bergstr ger','Angewandte Chemie'],
+  ['asian j org chem','Asian Journal of Organic Chemistry'],
+  ['ber dtsch chem ges','Berichte der deutschen chemischen Gesellschaft'],
+  ['cell rep phys sci','Cell Reports Physical Science'],
+  ['chem lett','Chemistry Letters'],
+  ['chem phys lett','Chemical Physics Letters'],
+  ['chem rec','The Chemical Record'],
+  ['chem soc rev','Chemical Society Reviews'],
+  ['commun chem','Communications Chemistry'],
+  ['dalton trans','Dalton Transactions'],
+  ['front chem','Frontiers in Chemistry'],
+  ['helv chim acta','Helvetica Chimica Acta'],
+  ['j macromol sci part a pure appl chem','Journal of Macromolecular Science, Part A: Pure and Applied Chemistry'],
+  ['j comput chem','Journal of Computational Chemistry'],
+  ['j mater chem','Journal of Materials Chemistry'],
+  ['j mater chem a mater energy sustain','Journal of Materials Chemistry A'],
+  ['j med chem','Journal of Medicinal Chemistry'],
+  ['j phys chem a','The Journal of Physical Chemistry A'],
+  ['j phys chem b','The Journal of Physical Chemistry B'],
+  ['j phys chem c','The Journal of Physical Chemistry C'],
+  ['j phys chem c nanomater interfaces','The Journal of Physical Chemistry C'],
+  ['j phys chem lett','The Journal of Physical Chemistry Letters'],
+  ['j phys org chem','Journal of Physical Organic Chemistry'],
+  ['j polym sci c polym symp','Journal of Polymer Science Part C: Polymer Symposia'],
+  ['new j chem','New Journal of Chemistry'],
+  ['org biomol chem','Organic & Biomolecular Chemistry'],
+  ['org chem front','Organic Chemistry Frontiers'],
+  ['org process res dev','Organic Process Research & Development'],
+  ['photochem photobiol sci','Photochemical & Photobiological Sciences'],
+  ['phys chem chem phys','Physical Chemistry Chemical Physics'],
+  ['phys rev','Physical Review'],
+  ['phys rev lett','Physical Review Letters'],
+  ['polym chem','Polymer Chemistry'],
+  ['polym j','Polymer Journal'],
+  ['proc r soc lond','Proceedings of the Royal Society of London'],
+  ['proc r soc london ser a','Proceedings of the Royal Society of London, Series A'],
+  ['rsc adv','RSC Advances'],
+  ['sol energy mater sol cells','Solar Energy Materials and Solar Cells'],
+  ['struct chem','Structural Chemistry'],
+  ['synth met','Synthetic Metals'],
+  ['tetrahedron lett','Tetrahedron Letters'],
+  ['top curr chem j','Topics in Current Chemistry'],
+  ['top curr chem','Topics in Current Chemistry'],
+  ['chemphyschem','ChemPhysChem'],
+  // Full names for the remaining built-in abbreviations, so every entry in the
+  // built-in dictionary shows a proper journal name (keyed by the abbreviation).
+  ['acs catal','ACS Catalysis'],
+  ['acs cent sci','ACS Central Science'],
+  ['acs chem biol','ACS Chemical Biology'],
+  ['acs energy lett','ACS Energy Letters'],
+  ['acs mater lett','ACS Materials Letters'],
+  ['acs nano','ACS Nano'],
+  ['acs sens','ACS Sensors'],
+  ['adv energy mater','Advanced Energy Materials'],
+  ['adv healthc mater','Advanced Healthcare Materials'],
+  ['adv opt mater','Advanced Optical Materials'],
+  ['adv sustainable syst','Advanced Sustainable Systems'],
+  ['anal chem','Analytical Chemistry'],
+  ['annu rev plant biol','Annual Review of Plant Biology'],
+  ['biochemistry','Biochemistry'],
+  ['bioorg med chem','Bioorganic & Medicinal Chemistry'],
+  ['bioorg med chem lett','Bioorganic & Medicinal Chemistry Letters'],
+  ['bmc biol','BMC Biology'],
+  ['cell','Cell'],
+  ['chem','Chem'],
+  ['chem asian j','Chemistry – An Asian Journal'],
+  ['commun biol','Communications Biology'],
+  ['commun earth environ','Communications Earth & Environment'],
+  ['commun mater','Communications Materials'],
+  ['comput theor chem','Computational and Theoretical Chemistry'],
+  ['curr biol','Current Biology'],
+  ['curr opin plant biol','Current Opinion in Plant Biology'],
+  ['dev cell','Developmental Cell'],
+  ['elife','eLife'],
+  ['energy environ sci','Energy & Environmental Science'],
+  ['faraday discuss','Faraday Discussions'],
+  ['front plant sci','Frontiers in Plant Science'],
+  ['green chem','Green Chemistry'],
+  ['j am soc mass spectrom','Journal of the American Society for Mass Spectrometry'],
+  ['j chem phys','The Journal of Chemical Physics'],
+  ['j exp bot','Journal of Experimental Botany'],
+  ['j macromol sci part a','Journal of Macromolecular Science, Part A: Pure and Applied Chemistry'],
+  ['j mater chem a','Journal of Materials Chemistry A'],
+  ['j mater chem b','Journal of Materials Chemistry B'],
+  ['j mater chem c','Journal of Materials Chemistry C'],
+  ['joule','Joule'],
+  ['macromolecules','Macromolecules'],
+  ['mater chem front','Materials Chemistry Frontiers'],
+  ['mater horiz','Materials Horizons'],
+  ['matter','Matter'],
+  ['mol cell','Molecular Cell'],
+  ['mol plant','Molecular Plant'],
+  ['nano lett','Nano Letters'],
+  ['nanoscale','Nanoscale'],
+  ['nat biomed eng','Nature Biomedical Engineering'],
+  ['nat biotechnol','Nature Biotechnology'],
+  ['nat catal','Nature Catalysis'],
+  ['nat cell biol','Nature Cell Biology'],
+  ['nat chem biol','Nature Chemical Biology'],
+  ['nat ecol evol','Nature Ecology & Evolution'],
+  ['nat electron','Nature Electronics'],
+  ['nat energy','Nature Energy'],
+  ['nat food','Nature Food'],
+  ['nat genet','Nature Genetics'],
+  ['nat mater','Nature Materials'],
+  ['nat med','Nature Medicine'],
+  ['nat methods','Nature Methods'],
+  ['nat microbiol','Nature Microbiology'],
+  ['nat nanotechnol','Nature Nanotechnology'],
+  ['nat photonics','Nature Photonics'],
+  ['nat phys','Nature Physics'],
+  ['nat plants','Nature Plants'],
+  ['nat protoc','Nature Protocols'],
+  ['nat rev chem','Nature Reviews Chemistry'],
+  ['nat rev mater','Nature Reviews Materials'],
+  ['nat struct mol biol','Nature Structural & Molecular Biology'],
+  ['nat sustain','Nature Sustainability'],
+  ['nat synth','Nature Synthesis'],
+  ['nat water','Nature Water'],
+  ['nature','Nature'],
+  ['new phytol','New Phytologist'],
+  ['npj comput mater','npj Computational Materials'],
+  ['organometallics','Organometallics'],
+  ['phys rev b','Physical Review B'],
+  ['plant cell','The Plant Cell'],
+  ['plant cell physiol','Plant and Cell Physiology'],
+  ['plant j','The Plant Journal'],
+  ['plant physiol','Plant Physiology'],
+  ['plos biol','PLOS Biology'],
+  ['plos one','PLOS One'],
+  ['sci rep','Scientific Reports'],
+  ['science','Science'],
+  ['small','Small'],
+  ['tetrahedron','Tetrahedron'],
+  ['trends chem','Trends in Chemistry'],
+  ['wires comput mol sci','Wiley Interdisciplinary Reviews: Computational Molecular Science'],
 ]);
 const JOURNAL_FULL_NORMALIZED = new Map(Array.from(JOURNAL_FULL_NAMES, ([k,v])=>[normalizeJournalKey(k), v]));
-function mappedJournalAbbr(s){ return JOURNAL_ABBR_NORMALIZED.get(normalizeJournalKey(s)) || ''; }
-function mappedJournalFull(s){ return JOURNAL_FULL_NORMALIZED.get(normalizeJournalKey(s)) || ''; }
+// User-defined journal dictionary, stored in library.json (lib.journalDict) so it
+// travels with the library and is backed up alongside it. Each entry is
+// { match, full, abbr }; `match` is normalized on lookup. User entries take
+// precedence over the built-in maps above, so a user can override any of them.
+let userJournalAbbr = new Map();
+let userJournalFull = new Map();
+function rebuildUserJournalDict(){
+  userJournalAbbr = new Map();
+  userJournalFull = new Map();
+  const entries = (typeof lib !== 'undefined' && Array.isArray(lib.journalDict)) ? lib.journalDict : [];
+  entries.forEach(e=>{
+    if(!e || !e.match) return;
+    const k = normalizeJournalKey(e.match);
+    if(!k) return;
+    if(e.abbr) userJournalAbbr.set(k, e.abbr);
+    if(e.full) userJournalFull.set(k, e.full);
+  });
+}
+function mappedJournalAbbr(s){ const k = normalizeJournalKey(s); return userJournalAbbr.get(k) || JOURNAL_ABBR_NORMALIZED.get(k) || ''; }
+function mappedJournalFull(s){ const k = normalizeJournalKey(s); return userJournalFull.get(k) || JOURNAL_FULL_NORMALIZED.get(k) || ''; }
 function canonicalJournalAbbr(s){ return mappedJournalAbbr(s) || String(s || ''); }
 // The MDPI journal "Chemistry" (DOI 10.3390/chemistry…) collides with "Chemistry",
 // the informal registration of "Chemistry – A European Journal" (Chem. Eur. J.).
@@ -1035,7 +1285,7 @@ function newItem(partial){
     id: uid(), type:'article', category:'', title:'', authors:[], journal:'', journalAbbr:'', year:'',
     volume:'', issue:'', pages:'', publisher:'', doi:'', arxiv:'', url:'',
     abstract:'', notes:'', correspondingAuthors:'', correspondingCheckedAt:'', correspondingStatus:'', tags:[], collections:[], citekey:'', attachments:[],
-    citedByCount:null, citedByAt:'', citedByStatus:'', starred:false, myPublication:false, trashed:false, trashedAt:'',
+    citedByCount:null, citedByAt:'', citedByStatus:'', starred:false, myPublication:false, readingStatus:'unread', trashed:false, trashedAt:'',
     dateAdded: new Date().toISOString(), dateModified: new Date().toISOString(),
   }, partial||{});
 }
@@ -1132,7 +1382,7 @@ function memBackend(){
    Global state
 ---------------------------------------------------------------- */
 let backend = null;
-let lib = { version: APP_VERSION, items: [], collections: [], tagColors: {} };
+let lib = { version: APP_VERSION, items: [], collections: [], tagColors: {}, journalDict: [] };
 let selectedId = null;
 let multiSelectedIds = new Set();
 let multiSelectAnchorId = null;
@@ -2881,6 +3131,32 @@ function orderedCollections(parent, depth, out){
     });
   return out;
 }
+// Text used to filter the collection tree in the sidebar (empty = no filter).
+let collSearchQuery = '';
+// Collections to show in the sidebar, honouring the search box. With no query
+// this is just orderedCollections() (respecting collapse). With a query we show
+// every collection whose name matches, plus its ancestors (for tree context)
+// and its descendants (so the matched subtree is visible), ignoring collapse.
+function collectionsForSidebar(){
+  const q = collSearchQuery.trim().toLowerCase();
+  if(!q) return orderedCollections();
+  const keep = new Set();
+  lib.collections.forEach(c=>{
+    if((c.name||'').toLowerCase().includes(q)){
+      collectionWithDescendants(c.id).forEach(id=>keep.add(id));
+      let cur = c;
+      while(cur && cur.parent){ keep.add(cur.parent); cur = lib.collections.find(x=>x.id===cur.parent); }
+    }
+  });
+  const out = [];
+  (function walk(parent, depth){
+    lib.collections
+      .filter(c=>(c.parent||'')===(parent||''))
+      .sort((a,b)=>a.name.localeCompare(b.name))
+      .forEach(c=>{ if(keep.has(c.id)){ out.push({c, depth}); walk(c.id, depth+1); } });
+  })('', 0);
+  return out;
+}
 function orderedAllCollections(parent, depth, out){
   depth = depth || 0;
   out = out || [];
@@ -2982,11 +3258,14 @@ function renderSidebar(){
     <div class="sideItem ${filter.coll==='starred'?'active':''}" data-coll="starred" data-drop-action="starred">${ic('star')}${esc(t('starred'))}<span class="cnt">${counts.starred}</span></div>
     <div class="sideItem ${filter.coll==='myPublication'?'active':''}" data-coll="myPublication" data-drop-action="myPublication">${ic('check')}${esc(t('myPublication'))}<span class="cnt">${counts.myPublication}</span></div>
     <div class="sideItem ${filter.coll==='trash'?'active':''}" data-coll="trash" data-drop-action="trash">${ic('trash')}${esc(t('trash'))}<span class="cnt">${counts.trash}</span></div>`;
-  $('#collList').innerHTML = orderedCollections().map(({c, depth})=>{
+  const searching = !!collSearchQuery.trim();
+  const collRows = collectionsForSidebar();
+  $('#collList').innerHTML = collRows.map(({c, depth})=>{
     const ids = collectionWithDescendants(c.id);
     const n = lib.items.filter(i=>!isItemTrashed(i) && i.collections.some(id=>ids.includes(id))).length;
     const hasKids = hasChildCollections(c.id);
-    const closed = collapsedCollectionIds.has(c.id);
+    // while searching we force the tree open, so never show a collapsed folder
+    const closed = !searching && collapsedCollectionIds.has(c.id);
     // No chevron slot: a collection with sub-collections shows an open folder
     // when expanded and a closed folder when collapsed (same convention as the
     // "Collections" section header). Clicking the folder icon toggles it; leaf
@@ -3006,7 +3285,7 @@ function renderSidebar(){
         <button data-act="del" data-id="${c.id}">${ic('x')}</button>
       </span>
       <span class="cnt">${n}</span></div>`;
-  }).join('');
+  }).join('') || (searching ? `<div class="collSearchEmpty">${esc(t('searchCollEmpty'))}</div>` : '');
   // tags
   const tagCount = new Map();
   lib.items.filter(i=>!isItemTrashed(i)).forEach(i=>(i.tags||[]).forEach(tg=>tagCount.set(tg,(tagCount.get(tg)||0)+1))); 
@@ -3052,7 +3331,7 @@ function renderListHeader(){
   const total = keys.reduce((s,k)=>s + colWidth(k), 0);
   $('#itemTable').style.width = total + 'px';
   // header cells
-  const arrow = (k)=> k===sortKey ? (sortAsc?' ▲':' ▼') : '';
+  const sortGlyph = (k)=> k===sortKey ? (sortAsc ? '▲' : '▼') : '▼';
   $('#itemHead').innerHTML =
     keys.map(k=>{
       const d = COLUMN_DEFS[k];
@@ -3064,13 +3343,14 @@ function renderListHeader(){
       const funnel = d.noFilter ? '' : `<span class="thfilter${fActive?' on':''}" data-thfilter="${k}">${ic('funnel')}</span>`;
       const display = (k==='authors' || k==='corresponding') ? `<span class="thdisplay" data-author-display="${k}" title="${esc(t('authorDisplay'))}">${ic('sliders')}</span>` : '';
       const label = d.headerIcon ? ic(d.headerIcon) : esc(t(d.i18n));
-      const sortAttr = d.sortable === false ? '' : ` data-sort="${k}"`;
+      const sort = d.sortable === false ? '' : `<button type="button" class="thsort${k===sortKey?' active':''}" data-sort="${k}" title="${esc(t('sortColumn'))}" aria-label="${esc(t('sortColumn'))}: ${esc(t(d.i18n))}"><span aria-hidden="true">${sortGlyph(k)}</span></button>`;
       const dragAttr = d.sortable === false ? ' draggable="false"' : ' draggable="true"';
       const resize = d.sortable === false ? '' : `<span class="colresize" data-resize="${k}"></span>`;
       const title = d.sortable === false ? esc(t(d.i18n)) : `${esc(t(d.i18n))} — ${esc(t('colHint'))}`;
-      return `<th class="thmove${alignCls}${pdfCls}${trashCls}${iconCls}" data-col="${k}"${sortAttr}${dragAttr} title="${title}">`+
-        `<span class="thlabel">${label}${d.sortable===false?'':arrow(k)}</span>`+
-        display+funnel+resize+`</th>`;
+      const ariaSort = k===sortKey ? ` aria-sort="${sortAsc?'ascending':'descending'}"` : '';
+      return `<th class="thmove${alignCls}${pdfCls}${trashCls}${iconCls}${k===sortKey?' sort-active':''}" data-col="${k}"${dragAttr} title="${title}"${ariaSort}>`+
+        `<span class="thlabel">${label}</span>`+
+        sort+display+funnel+resize+`</th>`;
     }).join('');
   renderIcons($('#itemHead'));
 }
@@ -3084,9 +3364,12 @@ function renderList(opts){
   const shown = items.slice(0, listRenderLimit);
   lastVisibleListItems = items;
   const cardsActive = listView === 'cards';
-  if(!cardsActive) renderListHeader();
+  const shelvesActive = listView === 'shelves';
+  const kanbanActive = listView === 'kanban';
+  const tableActive = listView === 'table';
+  if(tableActive) renderListHeader();
   const tbody = $('#itemRows');
-  tbody.innerHTML = cardsActive ? '' : shown.map(it=>{
+  tbody.innerHTML = tableActive ? shown.map(it=>{
     const cells = keys.map(k=>{
       const d = COLUMN_DEFS[k];
       const tip = d.tip ? d.tip(it) : '';
@@ -3095,12 +3378,14 @@ function renderList(opts){
       return `<td class="${(alignCls + keyCls).trim()}"${tip?` title="${esc(tip)}"`:''}>${d.cell(it)}</td>`;
     }).join('');
     return `<tr class="row ${it.id===selectedId?'sel':''} ${multiSelectedIds.has(it.id)?'multiSel':''} ${updateClassForItem(it.id)} ${pickClassForItem(it.id)}" data-id="${it.id}" draggable="true">${cells}</tr>`;
-  }).join('');
+  }).join('') : '';
   $('#itemCards').innerHTML = cardsActive ? shown.map(it=>cardRowHTML(it)).join('') : '';
   if(cardsActive) renderIcons($('#itemCards'));
+  if(shelvesActive&&items.length) renderShelves(items); else $('#itemShelves').innerHTML='';
+  if(kanbanActive&&items.length) renderKanban(items); else $('#itemKanban').innerHTML='';
   $('#emptyMsg').textContent = filter.coll==='trash' ? t('trashEmptyMsg') : t('emptyMsg');
   $('#emptyMsg').style.display = items.length ? 'none' : '';
-  $('#listMore').style.display = shown.length < items.length ? '' : 'none';
+  $('#listMore').style.display = (tableActive||cardsActive) && shown.length < items.length ? '' : 'none';
   $('#btnLoadMore').textContent = I18N[lang].showMoreItems(shown.length, items.length);
   $('#listCount').textContent = (items.length===lib.items.length)
     ? I18N[lang].itemsCount(lib.items.length)
@@ -3198,7 +3483,7 @@ function toggleStar(id){
   it.starred = !it.starred;
   touch(it);
   renderSidebar();
-  if(filter.coll==='starred' || sortKey==='starred') renderList();
+  if(filter.coll==='starred' || sortKey==='starred' || listView==='shelves' || listView==='kanban') renderList();
   else updateStarMarks(id);
   if(selectedId===id) renderDetail();
 }
@@ -3220,14 +3505,14 @@ function enterPickMode(kind){
   pickMode = kind;
   pickedIds = new Set();
   pickAnchorId = null;
-  document.querySelectorAll('#itemRows tr.row, .cardRow').forEach(el=>el.classList.add('picking'));
+  document.querySelectorAll('#itemRows tr.row, .cardRow, .shelfPaper, .kanbanPaper').forEach(el=>el.classList.add('picking'));
   $('#pickBar').style.display = 'flex';
   $('#pickBarHint').textContent = t(kind==='cited' ? 'pickHintCited' : kind==='corresponding' ? 'pickHintCorresponding' : 'pickHintAll');
   updatePickBar();
 }
 function exitPickMode(){
-  document.querySelectorAll('#itemRows tr.row.picked, .cardRow.picked').forEach(el=>el.classList.remove('picked'));
-  document.querySelectorAll('#itemRows tr.row.picking, .cardRow.picking').forEach(el=>el.classList.remove('picking'));
+  document.querySelectorAll('#itemRows tr.row.picked, .cardRow.picked, .shelfPaper.picked, .kanbanPaper.picked').forEach(el=>el.classList.remove('picked'));
+  document.querySelectorAll('#itemRows tr.row.picking, .cardRow.picking, .shelfPaper.picking, .kanbanPaper.picking').forEach(el=>el.classList.remove('picking'));
   pickMode = null;
   pickedIds = new Set();
   pickAnchorId = null;
@@ -3287,6 +3572,56 @@ function cardRowHTML(it){
       ${filter.coll === 'trash' ? cardTrashDeleteHTML(it) : `<button class="cardPdfBtn ${hasPdf?'hasPdf':'noPdf'}" data-row-addpdf="${it.id}" title="${pdfTip}" aria-label="${pdfTip}">${hasPdf?ic('file') + '<span>PDF</span>':'<span>PDF</span><span>+</span>'}</button>`}
     </div>
   </div>`;
+}
+
+const READING_STATUSES = ['unread','reading','read'];
+let shelfRecentDays=parseInt(localStorage.getItem('refshelf.shelfRecentDays')||'30',10);
+if(!Number.isFinite(shelfRecentDays)||shelfRecentDays<1)shelfRecentDays=30;
+shelfRecentDays=Math.min(3650,shelfRecentDays);
+function normalizedReadingStatus(it){ return READING_STATUSES.includes(it.readingStatus) ? it.readingStatus : 'unread'; }
+function readingStatusLabel(status){ return t({unread:'statusUnread',reading:'statusReading',read:'statusRead'}[status] || 'statusUnread'); }
+function readingStatusIcon(status){ return {unread:'book',reading:'text',read:'check'}[status] || 'book'; }
+function readingStatusOptions(){ return READING_STATUSES.map(v=>({v,label:readingStatusLabel(v)})); }
+function compactPaperCardHTML(it, kind){
+  return cardRowHTML(it).replace('class="cardRow ',`class="${kind}Paper cardRow `);
+}
+function shelfSectionHTML(title,items,opts){
+  opts=opts||{}; const shown=items.slice(0,opts.limit||30);
+  return `<section class="paperShelf"${opts.color?` style="--shelf-color:${esc(opts.color)}"`:''}>
+    <div class="paperShelfHead"><span class="paperShelfIcon">${ic(opts.icon||'book')}</span><span class="paperShelfTitle">${esc(title)}</span><span class="paperShelfCount">${esc(I18N[lang].shelfItems(items.length))}</span>${opts.controls||''}</div>
+    <div class="paperShelfRail">${shown.length?shown.map(it=>compactPaperCardHTML(it,'shelf')).join('')+(items.length>shown.length?`<div class="paperShelfMore">${esc(I18N[lang].shelfMore(items.length-shown.length))}</div>`:''):`<div class="paperShelfEmpty">${esc(t('shelfEmpty'))}</div>`}</div>
+  </section>`;
+}
+function renderShelves(items){
+  const cutoff=Date.now()-shelfRecentDays*86400000;
+  const sortedRecent=items.filter(it=>{const ts=Date.parse(it.dateAdded||'');return Number.isFinite(ts)&&ts>=cutoff;}).sort((a,b)=>String(b.dateAdded||'').localeCompare(String(a.dateAdded||'')));
+  const recentControl=`<label class="shelfPeriod"><input type="number" id="shelfRecentDays" min="1" max="3650" value="${shelfRecentDays}"><span>${esc(t('shelfRecentDays'))}</span></label>`;
+  const sections=[
+    shelfSectionHTML(t('shelfRecent'),sortedRecent,{icon:'clock',limit:18,controls:recentControl}),
+    shelfSectionHTML(t('shelfStarred'),items.filter(x=>x.starred),{icon:'star',limit:30}),
+    shelfSectionHTML(t('shelfReading'),items.filter(x=>normalizedReadingStatus(x)==='reading'),{icon:'text',limit:30}),
+    shelfSectionHTML(t('shelfPdf'),items.filter(x=>x.attachments&&x.attachments.length),{icon:'file',limit:30})
+  ];
+  lib.collections.slice(0,12).forEach(c=>{
+    const members=items.filter(it=>(it.collections||[]).includes(c.id));
+    if(members.length) sections.push(shelfSectionHTML(c.name,members,{icon:'folder',color:c.color||'',limit:30}));
+  });
+  $('#itemShelves').innerHTML=sections.join('');
+  renderIcons($('#itemShelves'));
+}
+function renderKanban(items){
+  const perColumn=100;
+  let renderedCount=0;
+  const cols=READING_STATUSES.map(status=>{
+    const all=items.filter(it=>normalizedReadingStatus(it)===status);
+    const cards=all.slice(0,perColumn); renderedCount+=cards.length;
+    return `<section class="kanbanCol status-${status}" data-kanban-status="${status}">
+      <div class="kanbanHead"><span>${ic(readingStatusIcon(status))}</span><b>${esc(readingStatusLabel(status))}</b><span class="kanbanCount">${all.length}</span></div>
+      <div class="kanbanCards">${cards.map(it=>compactPaperCardHTML(it,'kanban')).join('')}</div>
+    </section>`;
+  }).join('');
+  $('#itemKanban').innerHTML=`<div class="kanbanHint">${ic('kanban')}<span>${esc(t('kanbanHint'))}</span>${items.length>renderedCount?`<span class="kanbanLimit">${renderedCount} / ${items.length}</span>`:''}</div><div class="kanbanBoard">${cols}</div>`;
+  renderIcons($('#itemKanban'));
 }
 
 function fieldRow(label, id, value, type){
@@ -3403,6 +3738,7 @@ function renderDetail(){
       ${fieldRow(t('pages'),'pages',it.pages)}
     </div>
     ${selectRow(t('colCategory'),'category',it.category,categoryOptions())}
+    ${selectRow(t('readingStatus'),'readingStatus',normalizedReadingStatus(it),readingStatusOptions())}
     ${fieldRow(t('publisher'),'publisher',it.publisher)}
     ${fieldRow('DOI','doi',it.doi)}
     ${fieldRow(t('citekey'),'citekey',it.citekey)}
@@ -3975,9 +4311,10 @@ async function startWithBackend(be, opts){
     return false;
   }
   const nextLib = data
-    ? Object.assign({version:APP_VERSION, items:[], collections:[], tagColors:{}}, data)
-    : { version:APP_VERSION, items:[], collections:[], tagColors:{} };
+    ? Object.assign({version:APP_VERSION, items:[], collections:[], tagColors:{}, journalDict:[]}, data)
+    : { version:APP_VERSION, items:[], collections:[], tagColors:{}, journalDict:[] };
   if(!Array.isArray(nextLib.collections)) nextLib.collections = [];
+  if(!Array.isArray(nextLib.journalDict)) nextLib.journalDict = [];
   nextLib.items.forEach(it=>{ // ensure fields exist on items from older versions / hand-edited files
     const fresh = newItem({id:it.id});
     for(const k in fresh) if(it[k]===undefined) it[k] = fresh[k];
@@ -3993,6 +4330,7 @@ async function startWithBackend(be, opts){
   clearTimeout(saveTimer); saveTimer = null;
   backend = be;
   lib = nextLib;
+  rebuildUserJournalDict();
   changeVersion++;
   savedVersion = changeVersion;
   pendingAttachmentDeletes.clear();
@@ -4578,10 +4916,12 @@ const MANUAL = {
       {ul:[
         '上部の検索欄 [[ic:search]]：タイトル・著者・雑誌名・DOI・タグなどをまとめて検索できます。',
         '「詳細検索」：「著者に◯◯を含み、2020年以降」のような、条件を組み合わせた検索ができます。',
-        '並べ替え：表の見出し（「年」「タイトル」など）をクリックすると、その項目で並べ替わります。もう一度クリックすると昇順・降順が切り替わります。',
+        '並べ替え：表の見出し（「年」「タイトル」など）にマウスを重ね、表示される ▲／▼ ボタンを押します。もう一度押すと昇順・降順が切り替わります。',
         '列のカスタマイズ：見出しをドラッグすると列の順番を変更、見出しの右端をドラッグすると幅を変更できます。下部バーの「列」メニューで表示する項目を選べます。',
         '絞り込み [[ic:funnel]]：列の見出しにある漏斗アイコンから、その列の値で絞り込めます。',
-        '表示の切替：下部バーで「表表示」[[ic:table]] と「カード表示」[[ic:rows]] を切り替えられます。',
+        '表示の切替：下部バーの「表示」メニューで、表 [[ic:table]]、カード [[ic:rows]]、文献棚 [[ic:book]]、カンバンを切り替えられます。検索やコレクションの絞り込みは、どの表示にも反映されます。',
+        '文献棚：最近追加、スター、読書中、PDFあり、各コレクションを横方向の棚として表示します。「最近追加」は日数を入力して対象期間を変更できます。文献をクリックすると通常どおり詳細パネルが開きます。',
+        'カンバン：文献を「未読」「読書中」「読了」の3列で管理します。カードを別の列へドラッグすると状態が保存されます。読書状態は詳細パネルからも変更できます。',
       ]},
     ]},
     { h:'詳細パネルと PDF', blocks:[
@@ -4619,6 +4959,15 @@ const MANUAL = {
         '修正候補では、Angew. Chem. Int. Ed. Engl. / Engle. / Eng. Ed. のような旧・誤略称を検出し、1998年以降の文献では Angew. Chem. Int. Ed. への修正を提案します。',
         '更新ログ：情報の自動取得に失敗した場合はここに記録され、あとから再試行 [[ic:retry]] できます。',
       ]},
+      {sub:'雑誌名の辞書'},
+      {p:'雑誌名の表記ゆれ（取得された略称・別名）を、正しい正式名・略称に対応づける辞書を自分で編集できます。ここに追加した対応は、修正候補と一覧の雑誌名表示に反映されます。'},
+      {ul:[
+        '「取得される表記・別名」に、実際に登録された雑誌名（例：[[code:Adv. Sci. (Weinh.)]]）を入れます。大文字・小文字や記号の違いは無視して照合されます。',
+        '「正式名」は雑誌欄に入れたい正式名称、「略称」は一覧に表示したい略称です。どちらか一方だけでも登録できます。',
+        '辞書は library.json に保存されるので、バックアップや別のパソコンへの移行でもそのまま引き継がれます。標準の辞書より優先されるため、既定の対応を上書きすることもできます。',
+        '同じ雑誌名（別名）をもう一度追加すると、既存の登録が上書きされます。',
+      ]},
+      {dict:'雑誌名の辞書を開く'},
     ]},
     { h:'エクスポート・バックアップ', tab:'エクスポート', blocks:[
       {fig:'exportfig'},
@@ -4790,10 +5139,12 @@ const MANUAL = {
       {ul:[
         'The search box [[ic:search]] at the top matches titles, authors, journals, DOIs, tags, and more, all at once.',
         '“Advanced search” combines conditions, e.g. “author contains X, published after 2020”.',
-        'Sorting: click a table header (“Year”, “Title”, …) to sort by that column; click again to reverse the order.',
+        'Sorting: hover a table header (“Year”, “Title”, …) and click the ▲/▼ control that appears; click it again to reverse the order.',
         'Customizing columns: drag headers to reorder, drag a header’s right edge to resize, and choose visible columns from the “Columns” menu in the bottom bar.',
         'Filtering [[ic:funnel]]: the funnel icon in each column header filters by that column’s values.',
-        'View switching: the bottom bar toggles between table view [[ic:table]] and card view [[ic:rows]].',
+        'View switching: use the “View” menu in the bottom bar to choose table [[ic:table]], cards [[ic:rows]], literature shelves [[ic:book]], or Kanban. Search and collection filters apply to every view.',
+        'Literature shelves: shows recently added, starred, currently reading, PDF-attached, and collection-specific shelves in horizontal rows. Enter a number of days to control the “Recently added” period. Click a paper to open its usual detail pane.',
+        'Kanban: manages papers in three columns — Unread, Reading, and Read. Drag a card to another column to save its status; the same status can be changed in the detail pane.',
       ]},
     ]},
     { h:'Detail pane & PDFs', blocks:[
@@ -4831,6 +5182,15 @@ const MANUAL = {
         'Fix suggestions also detect old or mistyped Angewandte abbreviations such as Angew. Chem. Int. Ed. Engl. / Engle. / Eng. Ed., and suggest Angew. Chem. Int. Ed. for papers from 1998 onward.',
         'Update log: failed fetches are recorded here and can be retried [[ic:retry]] later.',
       ]},
+      {sub:'Journal name dictionary'},
+      {p:'You can edit your own dictionary that maps journal-name variants (fetched abbreviations or aliases) to the correct full name and abbreviation. Entries you add feed the fix suggestions and the journal name shown in the list.'},
+      {ul:[
+        'In “Fetched form / alias”, enter the journal name as it was actually saved (e.g. [[code:Adv. Sci. (Weinh.)]]). Matching ignores differences in case and punctuation.',
+        '“Full name” is what you want in the journal field; “Abbreviation” is what you want shown in the list. Either one alone is enough.',
+        'The dictionary is stored in library.json, so it carries over through backups and to other computers. It takes precedence over the built-in dictionary, so you can override the defaults too.',
+        'Adding the same journal name (alias) again overwrites the existing entry.',
+      ]},
+      {dict:'Open the journal name dictionary'},
     ]},
     { h:'Export & backup', blocks:[
       {fig:'exportfig'},
@@ -4889,7 +5249,7 @@ function renderChangelogHtml(){
      <ul>${c[lang].map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`).join('');
 }
 
-function openManual(){
+function openManual(initial){
   const secs = MANUAL[lang];
   const rich = x => esc(x)
     // Chrome refuses to navigate to chrome:// URLs from a web-page link, so this
@@ -4922,20 +5282,168 @@ function openManual(){
       b.changelog ? renderChangelogHtml() :
       b.dl  ? `<p><button class="tbtn primary" data-connector-dl>${ic('download')}${esc(b.dl)}</button></p>` :
       b.dlword ? `<p><button class="tbtn primary" data-wordaddin-dl>${ic('download')}${esc(b.dlword)}</button></p>` :
+      b.dict ? `<p><button class="tbtn primary" data-journaldict-open>${ic('book')}${esc(b.dict)}</button></p>` :
       b.p   ? `<p>${rich(b.p)}</p>` :
               `<ul>${b.ul.map(x=>`<li>${rich(x)}</li>`).join('')}</ul>`).join('');
     $('#manualContent').scrollTop = 0;
   };
   tabs.querySelectorAll('button').forEach((b,i)=>b.addEventListener('click', ()=>show(i)));
-  show(0);
+  show(typeof initial === 'number' && initial >= 0 ? initial : 0);
   $('#dlgManual').showModal();
 }
-$('#btnManual').addEventListener('click', openManual);
-$('#startManual').addEventListener('click', openManual);
+$('#btnManual').addEventListener('click', ()=>openManual());
+$('#startManual').addEventListener('click', ()=>openManual());
+// The dictionary is opened from the manual, so remember which manual tab we came
+// from and reopen it when the dictionary closes (× or Esc).
+let journalDictReturnTab = -1;
 $('#manualContent').addEventListener('click', (e)=>{
   if(e.target.closest('[data-connector-dl]')) downloadConnectorZip();
   if(e.target.closest('[data-wordaddin-dl]')) downloadWordManifest();
+  if(e.target.closest('[data-journaldict-open]')){
+    journalDictReturnTab = [...$('#manualTabs').children].findIndex(b=>b.classList.contains('active'));
+    $('#dlgManual').close();
+    openJournalDictDialog();
+  }
 });
+
+// ---- Journal dictionary editor (user entries in lib.journalDict + built-in) ----
+// The two built-in maps (JOURNAL_ABBR / JOURNAL_FULL_NAMES) key the same journal
+// under different forms (full name, abbreviation, spelling variants). We resolve
+// each key to a (full, abbr) pair, de-duplicate to one row per journal, and keep
+// the remaining keys as "variants" (表記揺れ). Built once, lazily.
+let builtinJournalRowsCache = null;
+function builtinJournalRows(){
+  if(builtinJournalRowsCache) return builtinJournalRowsCache;
+  const bAbbr = k => JOURNAL_ABBR_NORMALIZED.get(normalizeJournalKey(k)) || '';
+  const bFull = k => JOURNAL_FULL_NORMALIZED.get(normalizeJournalKey(k)) || '';
+  const byId = new Map();
+  const add = (origKey)=>{
+    let abbr = bAbbr(origKey), full = bFull(origKey);
+    if(!full && abbr) full = bFull(abbr);
+    if(!abbr && full) abbr = bAbbr(full);
+    const id = (full + '|' + abbr).toLowerCase();
+    if(!byId.has(id)) byId.set(id, {full, abbr, aliases:new Set()});
+    byId.get(id).aliases.add(String(origKey).trim());
+  };
+  JOURNAL_ABBR.forEach((v,k)=>add(k));
+  JOURNAL_FULL_NAMES.forEach((v,k)=>add(k));
+  const rows = [...byId.values()].map(r=>{
+    // keep only genuine variants: drop aliases identical to the canonical full / abbr
+    const fn = normalizeJournalKey(r.full), an = normalizeJournalKey(r.abbr);
+    const variants = [...r.aliases]
+      .filter(a=>{ const n = normalizeJournalKey(a); return n && n!==fn && n!==an; })
+      .sort((a,b)=>a.localeCompare(b));
+    return { full:r.full, abbr:r.abbr, variants };
+  });
+  rows.sort((a,b)=>(a.abbr||a.full).toLowerCase().localeCompare((b.abbr||b.full).toLowerCase()));
+  return (builtinJournalRowsCache = rows);
+}
+// One merged table: the user's own entries (tinted, deletable) first, then the
+// built-in journals. Clicking a built-in row with variants expands them.
+function renderJournalDictTable(){
+  const list = $('#dictList');
+  if(!list) return;
+  const q = ($('#dictSearch') && $('#dictSearch').value.trim().toLowerCase()) || '';
+  const userEntries = Array.isArray(lib.journalDict) ? lib.journalDict : [];
+  const builtins = builtinJournalRows();
+  const cnt = $('#dictCount');
+  if(cnt) cnt.textContent = t('journalDictCount')(userEntries.length, builtins.length);
+  const hit = s => !q || String(s).toLowerCase().includes(q);
+  const dash = '—';
+  const userRows = userEntries
+    .map((e,i)=>({e,i}))
+    .filter(({e})=> hit((e.match||'') + ' ' + (e.full||'') + ' ' + (e.abbr||'')))
+    .map(({e,i})=>`<div class="dictRow dictUser" data-dict-row="${i}">
+      <div class="dictCell dictAlias">${e.match ? esc(e.match) : dash}</div>
+      <div class="dictCell">${e.full ? esc(e.full) : dash}</div>
+      <div class="dictCell dictAbbr">${e.abbr ? esc(e.abbr) : dash}</div>
+      <button class="dictDel" data-dict-del="${i}" title="${esc(t('journalDictRemove'))}" aria-label="${esc(t('journalDictRemove'))}">${ic('trash')}</button>
+    </div>`).join('');
+  const builtinRows = builtins
+    .filter(r=> hit(r.variants.join(' ') + ' ' + r.full + ' ' + r.abbr))
+    .map(r=>{
+      const hasV = r.variants.length > 0;
+      return `<div class="dictRow dictBuiltin${hasV ? ' dictExpandable' : ''}">
+      <div class="dictCell dictAlias">${hasV ? esc(r.variants.join(' / ')) : dash}</div>
+      <div class="dictCell">${r.full ? esc(r.full) : dash}</div>
+      <div class="dictCell dictAbbr">${r.abbr ? esc(r.abbr) : dash}</div>
+      <span class="dictAct"></span>
+    </div>`;
+    }).join('');
+  const header = `<div class="dictRow dictHead">
+      <div class="dictCell">${esc(t('journalDictColAlias'))}</div>
+      <div class="dictCell">${esc(t('journalDictColFull'))}</div>
+      <div class="dictCell">${esc(t('journalDictColAbbr'))}</div>
+      <span class="dictAct"></span>
+    </div>`;
+  list.innerHTML = header + ((userRows + builtinRows) || `<div class="dictEmpty">${esc(t('journalDictBuiltinEmpty'))}</div>`);
+}
+function openJournalDictDialog(){
+  $('#dictMatch').value=''; $('#dictFull').value=''; $('#dictAbbr').value='';
+  if($('#dictSearch')) $('#dictSearch').value='';
+  renderJournalDictTable();
+  $('#dlgJournalDict').showModal();
+  $('#dictMatch').focus();
+}
+function addJournalDictEntry(){
+  const match = $('#dictMatch').value.trim();
+  const full = $('#dictFull').value.trim();
+  const abbr = $('#dictAbbr').value.trim();
+  if(!match){ showToast(t('journalDictMatchReq'), true); $('#dictMatch').focus(); return; }
+  if(!full && !abbr){ showToast(t('journalDictNeedValue'), true); $('#dictFull').focus(); return; }
+  if(!Array.isArray(lib.journalDict)) lib.journalDict = [];
+  // Overwrite an entry whose match normalizes to the same key instead of duplicating.
+  const key = normalizeJournalKey(match);
+  const existing = lib.journalDict.find(e=>normalizeJournalKey(e.match)===key);
+  if(existing){ existing.match = match; existing.full = full; existing.abbr = abbr; }
+  else lib.journalDict.push({match, full, abbr});
+  rebuildUserJournalDict();
+  touch();
+  renderJournalDictTable();
+  renderList(); renderDetail(); updateAlerts();
+  $('#dictMatch').value=''; $('#dictFull').value=''; $('#dictAbbr').value='';
+  $('#dictMatch').focus();
+  showToast(existing ? t('journalDictUpdated') : t('journalDictAdded'));
+}
+$('#dictAdd').addEventListener('click', addJournalDictEntry);
+$('#dictSearch').addEventListener('input', renderJournalDictTable);
+$('#dlgJournalDict').addEventListener('keydown', (e)=>{
+  if(e.key==='Enter' && ['dictMatch','dictFull','dictAbbr'].includes(e.target.id)){
+    e.preventDefault(); addJournalDictEntry();
+  }
+  // intercept Esc so the return-to-manual runs (native close skips our handler)
+  if(e.key==='Escape'){ e.preventDefault(); closeJournalDict(); }
+});
+$('#dictList').addEventListener('click', (e)=>{
+  const del = e.target.closest('[data-dict-del]');
+  if(del){
+    const i = +del.dataset.dictDel;
+    if(!Array.isArray(lib.journalDict) || !lib.journalDict[i]) return;
+    lib.journalDict.splice(i,1);
+    rebuildUserJournalDict();
+    touch();
+    renderJournalDictTable();
+    renderList(); renderDetail(); updateAlerts();
+    showToast(t('journalDictRemoved'));
+    return;
+  }
+  // Selecting a built-in row that has spelling variants expands them.
+  const row = e.target.closest('.dictExpandable');
+  if(row) row.classList.toggle('expanded');
+});
+// Closing the dictionary (× or Esc) returns to the manual it was opened from.
+// (The dialog's native 'close' event is unreliable across engines, so close
+// explicitly here instead of listening for it.)
+function closeJournalDict(){
+  const dlg = $('#dlgJournalDict');
+  if(dlg.open) dlg.close();
+  if(journalDictReturnTab >= 0){
+    const i = journalDictReturnTab;
+    journalDictReturnTab = -1;
+    openManual(i);
+  }
+}
+$('#dictClose').addEventListener('click', closeJournalDict);
 
 document.querySelectorAll('dialog [data-close]').forEach(b=>b.addEventListener('click', ()=>b.closest('dialog').close()));
 function openDuplicatesFromAlert(){
@@ -5168,7 +5676,7 @@ function toggleSidebarSection(section){
   updateSidebarSectionVisibility();
 }
 $('#collectionsHead').addEventListener('click', (e)=>{
-  if(e.target.closest('#btnAddColl')) return;
+  if(e.target.closest('.headBtns')) return;
   toggleSidebarSection('collections');
 });
 $('#tagsHead').addEventListener('click', ()=>{
@@ -5394,6 +5902,39 @@ $('#sidebar').addEventListener('dragstart', (e)=>{
   e.dataTransfer.setData('application/x-paper-library-collections', JSON.stringify(ids));
   e.dataTransfer.effectAllowed = 'move';
 });
+// Collection search: the magnifier toggles a filter box; typing narrows the tree.
+function setCollSearchOpen(open){
+  const bar = $('#collSearchBar');
+  const btn = $('#btnSearchColl');
+  bar.hidden = !open;
+  btn.classList.toggle('on', open);
+  if(open){
+    collectionsSectionCollapsed = false;
+    updateSidebarSectionVisibility();
+    $('#collSearchInput').focus();
+    $('#collSearchInput').select();
+  }else{
+    if(collSearchQuery){ collSearchQuery = ''; $('#collSearchInput').value = ''; renderSidebar(); }
+  }
+}
+$('#btnSearchColl').addEventListener('click', (e)=>{
+  e.stopPropagation();
+  setCollSearchOpen($('#collSearchBar').hidden);
+});
+$('#collSearchInput').addEventListener('input', (e)=>{
+  collSearchQuery = e.target.value;
+  renderSidebar();
+});
+$('#collSearchInput').addEventListener('keydown', (e)=>{
+  if(e.key==='Escape'){ e.preventDefault(); setCollSearchOpen(false); }
+});
+$('#collSearchClear').addEventListener('click', (e)=>{
+  e.stopPropagation();
+  collSearchQuery = '';
+  $('#collSearchInput').value = '';
+  renderSidebar();
+  $('#collSearchInput').focus();
+});
 $('#btnAddColl').addEventListener('click', ()=>{
   const name = prompt(t('promptCollName'));
   if(name && name.trim()){
@@ -5479,6 +6020,7 @@ document.addEventListener('click', (e)=>{
 let listWrap = localStorage.getItem('refshelf.listWrap') !== '0'; // default: wrap on
 let listView = localStorage.getItem('refshelf.listView') || 'table';
 let cardCols = localStorage.getItem('refshelf.cardCols') || '1';
+if(!['table','cards','shelves','kanban'].includes(listView)) listView = 'table';
 if(cardCols!=='2') cardCols = '1';
 function applyWrapMode(){
   $('#itemTable').classList.toggle('nowrap', !listWrap);
@@ -5489,11 +6031,15 @@ function updateListViewButton(){
   const btn = $('#btnViewStyle');
   if(!btn) return;
   const isCards = listView === 'cards';
+  const isShelves = listView === 'shelves';
+  const isKanban = listView === 'kanban';
   const nextCards = listView !== 'cards';
   btn.innerHTML = `${ic(nextCards ? 'rows' : 'table')}<span id="viewStyleLabel">${esc(t(nextCards ? 'viewCards' : 'viewTable'))}</span>`;
   btn.style.color = isCards ? 'var(--accent)' : '';
   btn.style.display = 'none';
   $('#listStatus').classList.toggle('cardMode', isCards);
+  $('#listStatus').classList.toggle('shelfMode', isShelves);
+  $('#listStatus').classList.toggle('kanbanMode', isKanban);
   const wrapBtn = $('#btnWrap');
   if(wrapBtn) wrapBtn.style.display = 'none';
   const filterBtn = $('#btnCardFilters');
@@ -5513,26 +6059,37 @@ function updateListViewButton(){
   const viewMenu = $('#btnCardViewMenu');
   if(viewMenu){
     viewMenu.closest('.menuwrap').style.display = '';
-    viewMenu.style.color = '';
+    const viewIcon=isShelves?'book':isKanban?'kanban':isCards?'rows':'table';
+    viewMenu.innerHTML=`${ic(viewIcon)}<span data-i18n="viewMenu">${esc(t('viewMenu'))}</span>${ic('chevron')}`;
+    viewMenu.style.color=(isShelves||isKanban)?'var(--accent)':'';
   }
   const colsMenu = $('#btnColMenu');
-  if(colsMenu) colsMenu.closest('.menuwrap').style.display = isCards ? 'none' : '';
-  const modeLbl = $('#cardViewModeMenuLabel');
-  if(modeLbl) modeLbl.textContent = t(isCards ? 'viewTable' : 'viewCards');
+  if(colsMenu) colsMenu.closest('.menuwrap').style.display = listView==='table' ? '' : 'none';
+  document.querySelectorAll('#cardViewMenu [data-list-view]').forEach(el=>{
+    el.classList.toggle('viewActive',el.dataset.listView===listView);
+    el.setAttribute('aria-current',el.dataset.listView===listView?'true':'false');
+  });
   const colsItem = $('#cardViewColsMenuItem');
   if(colsItem) colsItem.style.display = isCards ? '' : 'none';
   const filtersItem = $('#cardViewFiltersMenuItem');
-  if(filtersItem) filtersItem.style.display = isCards ? '' : 'none';
+  if(filtersItem) filtersItem.style.display = listView==='table' ? 'none' : '';
+  const wrapItem=$('#cardViewMenu [data-card-view-act="wrap"]');
+  if(wrapItem) wrapItem.style.display=(isShelves||isKanban)?'none':'';
   const lbl = $('#cardViewColsMenuLabel');
   if(lbl){
     const next = cardCols === '2' ? 1 : 2;
     lbl.textContent = I18N[lang].cardCols(next);
   }
   const corrStar = $('#cardViewCorrStar');
-  if(corrStar) corrStar.checked = !!authorDisplayPrefs.markCorresponding;
+  if(corrStar){
+    corrStar.checked = !!authorDisplayPrefs.markCorresponding;
+    corrStar.closest('.menuCheck').style.display=isCards?'':'none';
+  }
 }
 function applyListView(){
   $('#listScroller').classList.toggle('cardView', listView === 'cards');
+  $('#listScroller').classList.toggle('shelfView', listView === 'shelves');
+  $('#listScroller').classList.toggle('kanbanView', listView === 'kanban');
   $('#itemCards').classList.toggle('cardCols2', cardCols === '2');
   $('#itemCards').classList.toggle('cardCols1', cardCols !== '2');
   updateListViewButton();
@@ -5566,11 +6123,16 @@ $('#btnCardViewMenu').addEventListener('click', (e)=>{
 });
 $('#cardViewMenu').addEventListener('click', (e)=>{
   e.stopPropagation();
+  const viewBtn=e.target.closest('[data-list-view]');
+  if(viewBtn){
+    listView=viewBtn.dataset.listView;
+    localStorage.setItem('refshelf.listView',listView);
+    applyListView(); closeMenus(); renderList({skipBadges:true}); return;
+  }
   const btn = e.target.closest('[data-card-view-act]');
   if(!btn) return;
   const act = btn.dataset.cardViewAct;
   if(act==='wrap') $('#btnWrap').click();
-  else if(act==='mode') $('#btnViewStyle').click();
   else if(act==='cols') $('#btnCardCols').click();
   else if(act==='filters'){
     closeMenus();
@@ -5635,7 +6197,7 @@ $('#cardFilterMenu').addEventListener('click', (e)=>{
   if(!btn) return;
   const key = btn.dataset.cardFilter;
   closeMenus();
-  setTimeout(()=>openColFilterPop(key, listView === 'cards' ? $('#btnCardViewMenu') : $('#btnCardFilters')), 0);
+  setTimeout(()=>openColFilterPop(key, listView === 'table' ? $('#btnCardFilters') : $('#btnCardViewMenu')), 0);
 });
 
 // list
@@ -5719,16 +6281,72 @@ $('#itemCards').addEventListener('dragstart', (e)=>{
   e.dataTransfer.setData('application/x-paper-library-items', JSON.stringify(ids));
   e.dataTransfer.effectAllowed = 'copyMove';
 });
-// header: sort on click (delegated, headers are re-rendered)
+function handleCompactViewClick(e){
+  const paper=e.target.closest('.shelfPaper,.kanbanPaper');
+  if(!paper)return;
+  if(pickMode){handlePickClick(paper.dataset.id,e);return;}
+  const restoreBtn=e.target.closest('[data-restore-id]');
+  if(restoreBtn){e.stopPropagation();const n=restoreItemsByIds([restoreBtn.dataset.restoreId]);if(n)showToast(I18N[lang].itemsRestored(n));return;}
+  const delForeverBtn=e.target.closest('[data-delete-forever-id]');
+  if(delForeverBtn){e.stopPropagation();deleteForever(delForeverBtn.dataset.deleteForeverId);return;}
+  const starBtn=e.target.closest('[data-star-id]');
+  if(starBtn){e.stopPropagation();toggleStar(starBtn.dataset.starId);return;}
+  const pdfBtn=e.target.closest('[data-row-addpdf]');
+  if(pdfBtn){e.stopPropagation();selectItem(pdfBtn.dataset.rowAddpdf);$('#filePdf').click();return;}
+  handleListSelection(paper.dataset.id,e);
+}
+function startCompactPaperDrag(e){
+  const paper=e.target.closest('.shelfPaper,.kanbanPaper');
+  if(!paper)return;
+  const ids=multiSelectedIds.has(paper.dataset.id)?Array.from(multiSelectedIds):[paper.dataset.id];
+  e.dataTransfer.setData('text/plain',paper.dataset.id);
+  e.dataTransfer.setData('application/x-paper-library-items',JSON.stringify(ids));
+  e.dataTransfer.effectAllowed='copyMove';
+  paper.classList.add('dragging');
+}
+$('#itemShelves').addEventListener('click',handleCompactViewClick);
+$('#itemKanban').addEventListener('click',handleCompactViewClick);
+$('#itemShelves').addEventListener('change',e=>{
+  if(e.target.id!=='shelfRecentDays')return;
+  const days=Math.max(1,Math.min(3650,parseInt(e.target.value,10)||30));
+  shelfRecentDays=days;localStorage.setItem('refshelf.shelfRecentDays',String(days));
+  renderList({skipBadges:true});
+});
+$('#itemShelves').addEventListener('dragstart',startCompactPaperDrag);
+$('#itemKanban').addEventListener('dragstart',startCompactPaperDrag);
+$('#itemShelves').addEventListener('dragend',()=>$('#itemShelves').querySelectorAll('.dragging').forEach(x=>x.classList.remove('dragging')));
+$('#itemKanban').addEventListener('dragover',e=>{
+  const col=e.target.closest('[data-kanban-status]');
+  if(!col||!dataTransferHasItems(e))return;
+  e.preventDefault();e.dataTransfer.dropEffect='move';
+  $('#itemKanban').querySelectorAll('.kanbanCol').forEach(x=>x.classList.toggle('dragOver',x===col));
+});
+$('#itemKanban').addEventListener('dragleave',e=>{
+  if(!e.relatedTarget||!$('#itemKanban').contains(e.relatedTarget)) $('#itemKanban').querySelectorAll('.kanbanCol').forEach(x=>x.classList.remove('dragOver'));
+});
+$('#itemKanban').addEventListener('drop',e=>{
+  const col=e.target.closest('[data-kanban-status]');
+  if(!col||!dataTransferHasItems(e))return;
+  e.preventDefault();
+  const ids=draggedItemIds(e),status=col.dataset.kanbanStatus,now=new Date().toISOString();
+  let changed=0;
+  ids.forEach(id=>{const it=lib.items.find(x=>x.id===id);if(it&&normalizedReadingStatus(it)!==status){it.readingStatus=status;it.dateModified=now;changed++;}});
+  $('#itemKanban').querySelectorAll('.kanbanCol').forEach(x=>x.classList.remove('dragOver'));
+  if(changed){touch();renderList();if(selectedId&&ids.includes(selectedId))renderDetail();}
+});
+$('#itemKanban').addEventListener('dragend',()=>{
+  $('#itemKanban').querySelectorAll('.dragging,.dragOver').forEach(x=>x.classList.remove('dragging','dragOver'));
+});
+// header: sort only from the dedicated control (headers are re-rendered)
 $('#itemHead').addEventListener('click', (e)=>{
   if(colResizing || e.target.closest('.colresize')) return;
   const displayEl = e.target.closest('[data-author-display]');
   if(displayEl){ e.stopPropagation(); openAuthorDisplayPop(displayEl); return; }
   const fEl = e.target.closest('.thfilter');
   if(fEl){ e.stopPropagation(); openColFilterPop(fEl.dataset.thfilter, fEl); return; }
-  const th = e.target.closest('th[data-sort]');
-  if(!th || th.dataset.suppressClick) return;
-  const key = th.dataset.sort;
+  const sortButton = e.target.closest('[data-sort]');
+  if(!sortButton || sortButton.dataset.suppressClick) return;
+  const key = sortButton.dataset.sort;
   if(sortKey===key) sortAsc = !sortAsc;
   else { sortKey = key; sortAsc = (key==='citedBy' || key==='pdf' || key==='starred') ? false : true; }
   renderList();
@@ -6372,7 +6990,6 @@ $('#citBody').addEventListener('click', (e)=>{
     renderCitList('ref'); renderCitList('cited'); // refresh "in library" markers
   }
 });
-
 /* ---------------------------------------------------------------
    Related-papers graph (Connected Papers style)
    Neighborhood = seed refs + top cited-by; similarity = bibliographic
