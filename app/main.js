@@ -104,8 +104,26 @@ function renderIcons(root){
 // Final logo style: 81 Premium page turn is fixed via body.brandStyle-81.
 
 
-const APP_VERSION = '1.6';
+const APP_VERSION = '1.7';
 const CHANGELOG = [
+  { v:'1.7', date:'2026-07-15',
+    ja:[
+      '相関図機能を大幅に改善しました',
+      '関連論文の選び方を見直し、候補を広く集めたうえで関連度（参照文献の重なり・共引用・被引用数）でスコアリングして表示するようにしました（表示数も最大 42 件に拡大）',
+      '種論文を二重リングと太字ラベルで強調し、ひと目で見つけられるようにしました',
+      'ノードをダブルクリック（またはサイドパネルの「相関図」ボタン）で、その論文を中心にした相関図へ移動できるようになりました',
+      'サイドパネルのアブストラクトに見出しを付け、関連論文のハイライトはホバーではなくクリックで切り替わるようにしました',
+      '再取得に失敗したときはキャッシュ済みの相関図を表示するなど、動作の安定性を改善しました',
+    ],
+    en:[
+      'Major improvements to the related-papers graph',
+      'Reworked how related papers are chosen: a wider candidate pool is scored by relevance (shared references, co-citations, and citation counts), and the map now shows up to 42 papers',
+      'The seed paper is now highlighted with a double ring and a bold label so it is easy to spot',
+      'Double-click a node (or use the “Graph” button in the side panel) to jump to the map centred on that paper',
+      'The abstract in the side panel now has a heading, and the neighbourhood highlight switches on click instead of hover',
+      'Improved robustness — for example, the cached map is shown when a refetch fails',
+    ],
+  },
   { v:'1.0', date:'2026-07-05',
     ja:[
       'Paper Library v1.0 を公開しました',
@@ -251,12 +269,13 @@ const I18N = {
     graphLegendSize:'大きさ = 被引用数', graphLegendColor:'色 = 出版年', graphLegendEdge:'線 = 参照文献の重なり',
     graphSeed:'種論文', graphNotFound:'OpenAlex にこの文献が見つかりませんでした',
     graphTooFew:'関連論文が十分に見つかりませんでした（参照・被引用が少ない可能性）',
-    graphHint:'ドラッグで移動 / ホイールで拡大縮小 / ノードをクリックで詳細',
+    graphHint:'ドラッグで移動 / ホイールで拡大縮小 / クリックで詳細 / ダブルクリックでその論文の相関図へ',
     graphOpenPage:'ページを開く', graphRelayout:'再レイアウト', graphRefetch:'再取得',
     graphFit:'全体表示', graphLabels:'ラベル', graphRelToSeed:'種論文との関係',
     graphSharedRefs:(n)=>`共通参照 ${n} 件`, graphDirectCites:'この論文が種論文を引用', graphDirectCitedBy:'種論文がこの論文を引用',
     graphNearest:'近い論文', graphStats:(n,e)=>`${n} 論文 / ${e} 関係`,
     graphCached:(d)=>`キャッシュ表示（${d} 取得・API 呼び出しなし）`,
+    graphPartial:(n)=>`関連論文 ${n} 件を取得できませんでした（表示が不完全な可能性があります）`,
     addedFromCite:'ライブラリに追加しました',
     searchTerms:'検索語', searchMode:'条件', searchField:'対象', fieldAll:'すべて', yearFrom:'年（開始）', yearTo:'年（終了）', clear:'クリア', apply:'適用',
     deleteItem:'ゴミ箱に移動',
@@ -425,12 +444,13 @@ const I18N = {
     graphLegendSize:'Size = citations', graphLegendColor:'Color = year', graphLegendEdge:'Edge = shared references',
     graphSeed:'Seed paper', graphNotFound:'This item was not found in OpenAlex',
     graphTooFew:'Not enough related papers found (few references / citations)',
-    graphHint:'Drag to pan / wheel to zoom / click a node for details',
+    graphHint:'Drag to pan / wheel to zoom / click a node for details / double-click to map that paper',
     graphOpenPage:'Open page', graphRelayout:'Re-layout', graphRefetch:'Refetch',
     graphFit:'Fit', graphLabels:'Labels', graphRelToSeed:'Relation to seed',
     graphSharedRefs:(n)=>`${n} shared references`, graphDirectCites:'This paper cites the seed', graphDirectCitedBy:'The seed cites this paper',
     graphNearest:'Closest papers', graphStats:(n,e)=>`${n} papers / ${e} links`,
     graphCached:(d)=>`Cached (fetched ${d}, no API calls)`,
+    graphPartial:(n)=>`Failed to fetch ${n} related papers (the map may be incomplete)`,
     addedFromCite:'Added to library',
     searchTerms:'Search terms', searchMode:'Mode', searchField:'Field', fieldAll:'All', yearFrom:'Year from', yearTo:'Year to', clear:'Clear', apply:'Apply',
     deleteItem:'Move to trash',
@@ -600,7 +620,7 @@ function authorsShort(authors){
 let authorDisplayPrefs;
 try{ authorDisplayPrefs = JSON.parse(localStorage.getItem('refshelf.authorDisplay') || '{}'); }
 catch(e){ authorDisplayPrefs = {}; }
-authorDisplayPrefs = Object.assign({style:'full', limit:'all', sep:'; ', markCorresponding:false}, authorDisplayPrefs);
+authorDisplayPrefs = Object.assign({style:'family', limit:'all', sep:'; ', markCorresponding:true}, authorDisplayPrefs);
 function authorInitials(given){
   return String(given||'').split(/[\s.]+/).filter(Boolean).map(x=>x[0].toUpperCase()+'.').join(' ');
 }
@@ -5245,7 +5265,7 @@ const MANUAL = {
 };
 function renderChangelogHtml(){
   return CHANGELOG.map(c=>
-    `<div class="changelog-item"><span class="cv">v${c.v}</span><span class="cd">${c.date}</span>
+    `<div class="changelog-item"><span class="cd">${c.date}</span>
      <ul>${c[lang].map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`).join('');
 }
 
@@ -6017,7 +6037,7 @@ document.addEventListener('click', (e)=>{
 });
 
 /* ---- list wrap toggle ---- */
-let listWrap = localStorage.getItem('refshelf.listWrap') !== '0'; // default: wrap on
+let listWrap = localStorage.getItem('refshelf.listWrap') === '1'; // default: wrap off
 let listView = localStorage.getItem('refshelf.listView') || 'table';
 let cardCols = localStorage.getItem('refshelf.cardCols') || '1';
 if(!['table','cards','shelves','kanban'].includes(listView)) listView = 'table';
@@ -6991,46 +7011,114 @@ $('#citBody').addEventListener('click', (e)=>{
   }
 });
 /* ---------------------------------------------------------------
-   Related-papers graph (Connected Papers style)
-   Neighborhood = seed refs + top cited-by; similarity = bibliographic
-   coupling (shared references) + direct citation links; force layout.
+   Related-papers graph (Connected Papers style).
+   Pool = seed refs + citing works (with their reference lists), scored by
+   cosine-normalised bibliographic coupling + co-citation with the seed;
+   top-N by relevance become nodes. Edges use normalised coupling so long
+   reference lists (reviews) do not dominate the layout.
 ---------------------------------------------------------------- */
 const GRAPH_MAX_NODES = 42;      // seed + neighbours
 const GRAPH_MIN_SHARED = 1;      // min shared refs for an edge; later thinned visually
+const GRAPH_POOL_CITING = 100;   // citing works pulled into the candidate pool
+const GRAPH_POOL_REFS = 100;     // seed references considered (ranked by co-citation)
+const GRAPH_CACHE_V = 2;         // bump to invalidate graphs cached by older logic
 let graphState = null;           // { nodes, edges, view, selId, anim }
 let graphShowLabels = true;
+
+// Fetch works by OpenAlex id: batched list queries first (1 request / 50 ids),
+// falling back to the un-metered single-entity endpoint for chunks the list
+// tier could not serve (rate limit etc.). Calls cb(work) for each record.
+async function fetchWorksByIds(ids, select, cb){
+  const missing = [];
+  for(let i=0; i<ids.length; i+=50){
+    const chunk = ids.slice(i, i+50);
+    try{
+      const d = await oaFetch('works?per-page=50&select=' + select + '&filter=openalex:' + chunk.join('|'));
+      (d.results||[]).forEach(cb);
+    }catch(e){ missing.push(...chunk); }
+  }
+  const CONC = 6;
+  let idx = 0;
+  async function worker(){
+    while(idx < missing.length){
+      const id = missing[idx++];
+      try{ cb(await oaFetch('works/' + id + '?select=' + select)); }
+      catch(e){ /* skip this candidate */ }
+    }
+  }
+  await Promise.all(Array.from({length:Math.min(CONC, missing.length)}, worker));
+}
+
+function sharedCount(a, b){
+  let n = 0;
+  const small = a.size < b.size ? a : b;
+  const large = small===a ? b : a;
+  small.forEach(r=>{ if(large.has(r)) n++; });
+  return n;
+}
+// cosine-normalised bibliographic coupling: shared / sqrt(|A|·|B|)
+function couplingSim(shared, sizeA, sizeB){
+  return (shared && sizeA && sizeB) ? shared / Math.sqrt(sizeA * sizeB) : 0;
+}
 
 async function buildGraphData(seedItem, onProgress){
   onProgress(t('graphLoading1'));
   const seedWork = await resolveOpenAlexWork(seedItem); // single-entity, throws if not found
   const seedId = oaId(seedWork.id);
-  const refIds = (seedWork.referenced_works||[]).map(oaId);
-  // top citing works — the only list query; optional (skipped if rate-limited)
-  let citing = [];
-  try{
-    const d = await oaFetch('works?per-page=25&sort=cited_by_count:desc&select=id&filter=cites:' + seedId);
-    citing = (d.results||[]).map(w=>oaId(w.id));
-  }catch(e){ /* citing list optional under budget limits */ }
-  // Bound the candidate set BEFORE fetching, then pull each record via the
-  // single-entity endpoint (works even when list queries are rate-limited).
-  const candIds = Array.from(new Set([...citing, ...refIds]))
-    .filter(id=>id!==seedId)
-    .slice(0, GRAPH_MAX_NODES - 1);
-
-  onProgress(t('graphLoading2'));
-  const works = new Map();  // id -> work (with referenced_works)
-  // fetch candidate records concurrently (bounded) via the single-entity endpoint
-  const CONC = 6;
-  let idx = 0;
-  async function worker(){
-    while(idx < candIds.length){
-      const id = candIds[idx++];
-      try{ works.set(id, await oaFetch('works/' + id + '?select=' + OA_SELECT)); }
-      catch(e){ /* skip this candidate */ }
-    }
-  }
-  await Promise.all(Array.from({length:Math.min(CONC, candIds.length)}, worker));
+  const refIds = (seedWork.referenced_works||[]).map(oaId).filter(id=>id!==seedId);
   const seedRefs = new Set(refIds);
+
+  // ---- candidate pool (light select: reference lists drive the scoring) ----
+  const POOL_SELECT = 'id,referenced_works,cited_by_count';
+  const pool = new Map();   // id -> { refs:Set, cited }
+  const addPool = (w)=>{
+    const id = oaId(w.id);
+    if(!id || id===seedId || pool.has(id)) return;
+    pool.set(id, { refs:new Set((w.referenced_works||[]).map(oaId)), cited:w.cited_by_count||0 });
+  };
+  // citing works — one list query; optional (skipped if rate-limited)
+  let citingList = [];
+  try{
+    const d = await oaFetch('works?per-page=' + GRAPH_POOL_CITING + '&sort=cited_by_count:desc&select=' + POOL_SELECT + '&filter=cites:' + seedId);
+    citingList = d.results||[];
+  }catch(e){ /* citing list optional under budget limits */ }
+  citingList.forEach(addPool);
+  // co-citation with the seed: how often each work appears in a citing work's
+  // reference list alongside the seed
+  const cocit = new Map();  // id -> count
+  citingList.forEach(w=>{
+    (w.referenced_works||[]).forEach(r=>{
+      const id = oaId(r);
+      if(id && id!==seedId) cocit.set(id, (cocit.get(id)||0)+1);
+    });
+  });
+  // seed references: rank by co-citation before capping, so the refs most
+  // entangled with the seed's citation neighbourhood survive the cut
+  const refPick = refIds.slice()
+    .sort((a,b)=>(cocit.get(b)||0)-(cocit.get(a)||0))
+    .slice(0, GRAPH_POOL_REFS)
+    .filter(id=>!pool.has(id));
+  onProgress(t('graphLoading2'));
+  await fetchWorksByIds(refPick, POOL_SELECT, addPool);
+
+  // ---- score pool: coupling + co-citation (+ tiny prominence tie-breaker) ----
+  const maxCocit = Math.max(1, ...Array.from(pool.keys(), id=>cocit.get(id)||0));
+  const maxCited = Math.max(10, ...Array.from(pool.values(), p=>p.cited));
+  const scored = [];
+  pool.forEach((p, id)=>{
+    const coupling = couplingSim(sharedCount(p.refs, seedRefs), p.refs.size, seedRefs.size);
+    const co = (cocit.get(id)||0) / maxCocit;
+    const prominence = Math.log10(1+p.cited) / Math.log10(1+maxCited);
+    scored.push({ id, score: coupling + 0.8*co + 0.08*prominence });
+  });
+  scored.sort((a,b)=>b.score-a.score);
+  const chosenIds = scored.slice(0, GRAPH_MAX_NODES-1).map(s=>s.id);
+
+  // ---- full metadata for the chosen candidates only ----
+  const works = new Map();  // id -> work (with referenced_works)
+  await fetchWorksByIds(chosenIds, OA_SELECT, w=>{ const id = oaId(w.id); if(id && id!==seedId) works.set(id, w); });
+  const fetchFailed = chosenIds.length - works.size;
+
   // nodes: seed + every candidate we managed to fetch
   const nodes = [{ id:seedId, w:seedWork, wRefs:seedRefs, seed:true }];
   works.forEach((w, id)=>{
@@ -7042,32 +7130,24 @@ async function buildGraphData(seedItem, onProgress){
     n.cited = n.w.cited_by_count || 0;
     n.label = ((n.item.authors[0]||{}).family || '') + (n.year ? ' ' + n.year : '');
     n.seedRel = n.seed ? null : {
-      shared: 0,
+      shared: sharedCount(n.wRefs, seedRefs),
       citesSeed: n.wRefs.has(seedId),
       citedBySeed: seedRefs.has(n.id)
     };
-    if(!n.seed){
-      const small = n.wRefs.size < seedRefs.size ? n.wRefs : seedRefs;
-      const large = small===n.wRefs ? seedRefs : n.wRefs;
-      small.forEach(r=>{ if(large.has(r)) n.seedRel.shared++; });
-    }
   });
-  // edges: bibliographic coupling between all node pairs + direct citations
+  // edges: normalised bibliographic coupling between node pairs + direct citations
   const edges = [];
   for(let i=0;i<nodes.length;i++){
     for(let j=i+1;j<nodes.length;j++){
       const A = nodes[i], B = nodes[j];
-      let shared = 0;
-      const small = A.wRefs.size < B.wRefs.size ? A.wRefs : B.wRefs;
-      const large = small===A.wRefs ? B.wRefs : A.wRefs;
-      small.forEach(r=>{ if(large.has(r)) shared++; });
+      const shared = sharedCount(A.wRefs, B.wRefs);
       const direct = A.wRefs.has(B.id) || B.wRefs.has(A.id);
       if(shared >= GRAPH_MIN_SHARED || direct){
-        edges.push({ a:i, b:j, w: shared + (direct ? 2 : 0), shared, direct });
+        edges.push({ a:i, b:j, w: couplingSim(shared, A.wRefs.size, B.wRefs.size) + (direct ? 0.25 : 0), shared, direct });
       }
     }
   }
-  return { nodes, edges };
+  return { nodes, edges, fetchFailed };
 }
 
 // Reduce the hairball: keep a maximum spanning tree (connectivity via the
@@ -7101,8 +7181,9 @@ function graphLayout(nodes, edges, W, H, iterations){
   nodes.forEach((n,i)=>{
     if(n.seed){ n.x = 0; n.y = 0; }
     else{
-      const a = (i / N) * Math.PI * 2;
-      const r = 120 + (i % 5) * 30;
+      // jittered start so "re-layout" explores a genuinely different arrangement
+      const a = (i / N) * Math.PI * 2 + (Math.random() - 0.5) * 0.9;
+      const r = 100 + (i % 5) * 30 + Math.random() * 50;
       n.x = Math.cos(a) * r; n.y = Math.sin(a) * r;
     }
     n.vx = 0; n.vy = 0;
@@ -7198,7 +7279,9 @@ function fitGraphView(pad){
   const boxW = Math.max(1, maxX-minX), boxH = Math.max(1, maxY-minY);
   const p = pad == null ? 46 : pad;
   const k = Math.max(0.3, Math.min(5, Math.min((g.W - p*2)/boxW, (g.H - p*2)/boxH)));
-  g.view = { x:minX - p/k, y:minY - p/k, k };
+  // centre the bounding box on both axes — the non-constraining axis has slack,
+  // and clamping k can leave asymmetric padding otherwise
+  g.view = { x: minX - (g.W/k - boxW)/2, y: minY - (g.H/k - boxH)/2, k };
 }
 function updateGraphStats(){
   const el = $('#graphStats');
@@ -7206,12 +7289,18 @@ function updateGraphStats(){
   el.textContent = I18N[lang].graphStats(graphState.nodes.length, graphState.edges.length);
 }
 
+// pan / zoom / resize only move the camera — updating the viewBox is enough,
+// no need to rebuild the SVG DOM
+function updateGraphViewBox(){
+  const g = graphState;
+  if(!g) return;
+  $('#graphSvg').setAttribute('viewBox', `${g.view.x} ${g.view.y} ${g.W/g.view.k} ${g.H/g.view.k}`);
+}
 function renderGraph(){
   const g = graphState;
   if(!g) return;
   const svg = $('#graphSvg');
-  const W = g.W, H = g.H;
-  svg.setAttribute('viewBox', `${g.view.x} ${g.view.y} ${W/g.view.k} ${H/g.view.k}`);
+  updateGraphViewBox();
   svg.classList.toggle('hideLabels', !graphShowLabels);
   const years = g.nodes.map(n=>n.year).filter(Boolean);
   const minY = Math.min(...years), maxY = Math.max(...years);
@@ -7221,23 +7310,34 @@ function renderGraph(){
   const edgeHtml = g.edges.map((e,ei)=>{
     const A = g.nodes[e.a], B = g.nodes[e.b];
     const title = graphEdgeShared(e) ? I18N[lang].graphSharedRefs(graphEdgeShared(e)) : '';
-    return `<line class="gEdge" data-e="${ei}" x1="${A.x.toFixed(1)}" y1="${A.y.toFixed(1)}" x2="${B.x.toFixed(1)}" y2="${B.y.toFixed(1)}" stroke-width="${(0.7 + 2.8*e.w/maxW).toFixed(2)}" opacity="${(0.18 + 0.4*e.w/maxW).toFixed(2)}">${title ? `<title>${esc(title)}</title>` : ''}</line>`;
+    return `<line class="gEdge${e.direct ? ' direct' : ''}" data-e="${ei}" x1="${A.x.toFixed(1)}" y1="${A.y.toFixed(1)}" x2="${B.x.toFixed(1)}" y2="${B.y.toFixed(1)}" stroke-width="${(0.7 + 2.8*e.w/maxW).toFixed(2)}" opacity="${(0.18 + 0.4*e.w/maxW).toFixed(2)}">${title ? `<title>${esc(title)}</title>` : ''}</line>`;
   }).join('');
   const nodeHtml = g.nodes.map((n,i)=>{
-    const r = graphNodeR(n.cited, maxCited);
+    // the seed gets a size floor — a modestly-cited seed must not vanish among
+    // the classics it pulled in
+    const r = Math.max(graphNodeR(n.cited, maxCited), n.seed ? 13 : 0);
     const fill = graphYearColor(n.year, minY, maxY);
     const inLib = isInLibrary(n.item);
     const cls = ['gNode', n.seed?'seed':'', (!n.seed && inLib)?'inlib':''].filter(Boolean).join(' ');
     return `<g class="${cls}" data-node="${i}" transform="translate(${n.x.toFixed(1)},${n.y.toFixed(1)})">`+
+      (n.seed ? `<circle class="gSeedHalo" r="${(r+5).toFixed(1)}"></circle>` : '')+
       `<circle r="${r.toFixed(1)}" fill="${fill}"><title>${esc(n.item.title)}</title></circle></g>`+
-      `<text class="gLabel" data-lbl="${i}" x="${n.x.toFixed(1)}" y="${(n.y + r + 10).toFixed(1)}" text-anchor="middle">${esc(n.label)}</text>`;
+      `<text class="gLabel${n.seed?' seed':''}" data-lbl="${i}" x="${n.x.toFixed(1)}" y="${(n.y + r + (n.seed?16:10)).toFixed(1)}" text-anchor="middle">${esc(n.label)}</text>`;
   }).join('');
   svg.innerHTML = `<g>${edgeHtml}${nodeHtml}</g>`;
+  // the seed must never hide behind a bigger neighbour
+  const seedIdx = g.nodes.findIndex(n=>n.seed);
+  if(seedIdx >= 0){
+    const sl = svg.querySelector(`[data-lbl="${seedIdx}"]`);
+    if(sl) sl.parentNode.appendChild(sl);
+    const sn = svg.querySelector(`[data-node="${seedIdx}"]`);
+    if(sn) sn.parentNode.appendChild(sn);
+  }
   updateGraphStats();
   applyHighlight();
 }
-// Dim everything except the focused node (hover takes priority over selection)
-// and its neighbours. Class toggling only — no re-render, so it is cheap.
+// Dim everything except the selected node and its neighbours.
+// Class toggling only — no re-render, so it is cheap.
 function applyHighlight(){
   const g = graphState;
   if(!g) return;
@@ -7245,9 +7345,15 @@ function applyHighlight(){
   svg.querySelectorAll('.gNode.sel').forEach(el=>el.classList.remove('sel'));
   if(g.selIdx!=null){
     const el = svg.querySelector(`[data-node="${g.selIdx}"]`);
-    if(el) el.classList.add('sel');
+    if(el){
+      el.classList.add('sel');
+      // raise above neighbouring nodes so the selection ring is never hidden
+      const lbl = svg.querySelector(`[data-lbl="${g.selIdx}"]`);
+      if(lbl) lbl.parentNode.appendChild(lbl);
+      el.parentNode.appendChild(el);
+    }
   }
-  const focus = g.hoverIdx!=null ? g.hoverIdx : g.selIdx;
+  const focus = g.selIdx;
   if(focus==null){
     svg.querySelectorAll('.dim').forEach(el=>el.classList.remove('dim'));
     return;
@@ -7286,11 +7392,12 @@ function renderGraphSide(){
     ${nearest.length ? `<div class="gsLinks"><b>${esc(t('graphNearest'))}</b>${nearest.map(x=>`<div class="gsLink">${esc(x.node.label || x.node.item.title || '')} · ${esc(I18N[lang].graphSharedRefs(graphEdgeShared(x.edge)))}</div>`).join('')}</div>` : ''}
     <div class="gsBtns">
       ${(it.doi||it.url) ? `<button class="tbtn" data-gs="open">${ic('link')}${esc(t('graphOpenPage'))}</button>` : ''}
+      ${n.seed ? '' : `<button class="tbtn" data-gs="graph">${ic('graph')}${esc(t('graphView'))}</button>`}
       ${n.seed ? '' : inLib
         ? `<span class="gsInLib">${ic('check')}${esc(t('citeInLib'))}</span>`
         : `<button class="tbtn" data-gs="add">${ic('plus')}${esc(t('citeAdd'))}</button>`}
     </div>
-    ${it.abstract ? `<div class="gsAbs">${esc(it.abstract)}</div>` : ''}
+    ${it.abstract ? `<div class="gsAbsHead">${esc(t('abstract'))}</div><div class="gsAbs">${esc(it.abstract)}</div>` : ''}
   `;
 }
 
@@ -7299,56 +7406,86 @@ function graphCacheKey(item){ return item.doi ? 'doi:'+normDoi(item.doi) : item.
 function leanGraph(data){
   return { nodes: data.nodes.map(n=>({ id:n.id, item:n.item, year:n.year, cited:n.cited, seed:!!n.seed, label:n.label, seedRel:n.seedRel||null })), edges: data.edges };
 }
+// Generation guard: each open (or refetch) bumps the generation, and a build
+// still in flight for an older generation must not touch state/UI afterwards —
+// otherwise a slow build A can clobber a dialog that meanwhile shows graph B.
+let graphGen = 0;
 async function openGraphDialog(item, opts){
   opts = opts || {};
+  const gen = ++graphGen;
   $('#graphHeadTitle').textContent = I18N[lang].graphTitle(item.title || t('newItem'));
   const svg = $('#graphSvg');
   svg.innerHTML = '';
   $('#graphStats').textContent = '';
+  $('#graphCacheNote').textContent = '';
   graphState = null; graphSeedItem = item;
   renderGraphSide();
   $('#dlgGraph').showModal();
-  const wrap = $('#graphCanvasWrap');
-  const W = wrap.clientWidth || 900, H = wrap.clientHeight || 600;
 
   lib.graphCache = lib.graphCache || {};
   const key = graphCacheKey(item);
   const cached = lib.graphCache[key];
+  const cacheUsable = !!(cached && cached.v === GRAPH_CACHE_V && cached.nodes && cached.nodes.length >= 3);
+  const useCached = ()=>({ nodes: cached.nodes.map(n=>Object.assign({}, n)), edges: cached.edges });
   let data, fromCache = false;
-  if(cached && !opts.force && isFresh(cached.ts) && cached.nodes && cached.nodes.length >= 3){
-    data = { nodes: cached.nodes.map(n=>Object.assign({}, n)), edges: cached.edges };
+  if(cacheUsable && !opts.force && isFresh(cached.ts)){
+    data = useCached();
     fromCache = true;
   }else{
     $('#graphLoading').textContent = t('graphLoading1');
+    let err = null;
     try{
-      data = await buildGraphData(item, msg=>{ $('#graphLoading').textContent = msg; });
-    }catch(e){
-      console.error(e);
-      $('#graphLoading').textContent = (e && e.rateLimited) ? t('oaBudgetErr') : t('graphNotFound');
-      return;
+      data = await buildGraphData(item, msg=>{ if(gen===graphGen) $('#graphLoading').textContent = msg; });
+    }catch(e){ console.error(e); err = e; }
+    if(!err && data.nodes.length < 3) err = { tooFew:true };
+    if(!err){
+      data.edges = thinEdges(data.nodes, data.edges);
+      // persist a lean snapshot so re-opening this graph costs no API calls —
+      // even for a superseded build (the data is valid; only the UI is stale).
+      // Skipped when too much is missing, so a later retry can heal the gap.
+      const wanted = data.nodes.length - 1 + (data.fetchFailed||0);
+      if(!data.fetchFailed || data.fetchFailed <= wanted * 0.25){
+        lib.graphCache[key] = Object.assign({ ts: new Date().toISOString(), v: GRAPH_CACHE_V }, leanGraph(data));
+        // cap the cache: keep the 40 most recent seeds
+        const keys = Object.keys(lib.graphCache);
+        if(keys.length > 40){
+          keys.sort((a,b)=>(lib.graphCache[a].ts||'').localeCompare(lib.graphCache[b].ts||''));
+          keys.slice(0, keys.length-40).forEach(k=>delete lib.graphCache[k]);
+        }
+        touch();
+      }
     }
-    if(data.nodes.length < 3){ $('#graphLoading').textContent = t('graphTooFew'); return; }
-    data.edges = thinEdges(data.nodes, data.edges);
-    // persist a lean snapshot so re-opening this graph costs no API calls
-    lib.graphCache[key] = Object.assign({ ts: new Date().toISOString() }, leanGraph(data));
-    // cap the cache: keep the 40 most recent seeds
-    const keys = Object.keys(lib.graphCache);
-    if(keys.length > 40){
-      keys.sort((a,b)=>(lib.graphCache[a].ts||'').localeCompare(lib.graphCache[b].ts||''));
-      keys.slice(0, keys.length-40).forEach(k=>delete lib.graphCache[k]);
+    if(gen !== graphGen) return; // superseded by a newer open / dialog close
+    if(err){
+      const msg = err.tooFew ? t('graphTooFew') : (err.rateLimited ? t('oaBudgetErr') : t('graphNotFound'));
+      if(!cacheUsable){ $('#graphLoading').textContent = msg; return; }
+      // keep showing the last good graph (even a stale one) instead of wiping it
+      data = useCached();
+      fromCache = true;
+      showToast(msg);
+    }else if(data.fetchFailed){
+      showToast(I18N[lang].graphPartial(data.fetchFailed));
     }
-    touch();
   }
   $('#graphLoading').textContent = t('graphLoading3');
   await new Promise(r=>setTimeout(r, 20)); // let the message paint
+  if(gen !== graphGen) return;
+  // measure the canvas only now (after the build) — right after showModal()
+  // the dialog may not have its final size yet. A tiny/hidden viewport gets
+  // sane fallbacks; the ResizeObserver below re-layouts once real dims arrive.
+  const wrap = $('#graphCanvasWrap');
+  let W = wrap.clientWidth, H = wrap.clientHeight;
+  if(W < 200 || H < 200){ W = 900; H = 600; }
   graphLayout(data.nodes, data.edges, W, H);
-  graphState = { nodes:data.nodes, edges:data.edges, W, H, view:{x:0,y:0,k:1}, selIdx:null, hoverIdx:null };
+  graphState = { nodes:data.nodes, edges:data.edges, W, H, view:{x:0,y:0,k:1}, selIdx:null };
   fitGraphView();
   $('#graphLoading').textContent = '';
   $('#graphCacheNote').textContent = fromCache ? I18N[lang].graphCached(cached.ts.slice(0,10)) : '';
   renderGraph();
 }
 let graphSeedItem = null;
+// closing the dialog abandons any in-flight build (state stays untouched)
+$('#dlgGraph').addEventListener('close', ()=>{ graphGen++; });
 
 // interactions: select, pan, zoom, node drag
 (function(){
@@ -7375,17 +7512,34 @@ let graphSeedItem = null;
       n.y += (e.clientY - dragNode.py)/k;
       dragNode.px = e.clientX; dragNode.py = e.clientY;
       moved = true;
+      graphState.userView = true;
       renderGraph();
     }else if(pan){
       const k = graphState.view.k;
       graphState.view.x = pan.vx - (e.clientX - pan.x)/k;
       graphState.view.y = pan.vy - (e.clientY - pan.y)/k;
       moved = true;
-      renderGraph();
+      graphState.userView = true;
+      updateGraphViewBox();
     }
   });
+  // double-click detection lives here rather than on the dblclick event —
+  // synthetic/touch input often produces two clicks without one
+  let lastClick = { i:-1, t:0 };
   svg.addEventListener('pointerup', (e)=>{
     if(dragNode && !moved){
+      const i = dragNode.i;
+      const now = Date.now();
+      if(lastClick.i === i && now - lastClick.t < 400){
+        // double-click: rebuild the map around that paper (Connected Papers-style hop)
+        lastClick = { i:-1, t:0 };
+        const n = graphState.nodes[i];
+        dragNode = null; pan = null;
+        svg.classList.remove('panning');
+        if(n && !n.seed) openGraphDialog(n.item);
+        return;
+      }
+      lastClick = { i, t:now };
       // click: select node (or toggle off)
       graphState.selIdx = graphState.selIdx===dragNode.i ? null : dragNode.i;
       applyHighlight(); renderGraphSide();
@@ -7395,16 +7549,6 @@ let graphSeedItem = null;
     }
     dragNode = null; pan = null;
     svg.classList.remove('panning');
-  });
-  // hover: highlight the node's neighbourhood without clicking
-  svg.addEventListener('mouseover', (e)=>{
-    if(!graphState) return;
-    const el = e.target.closest('[data-node]');
-    const i = el ? +el.dataset.node : null;
-    if(graphState.hoverIdx !== i){ graphState.hoverIdx = i; applyHighlight(); }
-  });
-  svg.addEventListener('mouseleave', ()=>{
-    if(graphState && graphState.hoverIdx!=null){ graphState.hoverIdx = null; applyHighlight(); }
   });
   svg.addEventListener('wheel', (e)=>{
     if(!graphState) return;
@@ -7417,20 +7561,45 @@ let graphSeedItem = null;
     v.x = mx - (e.clientX - rect.left)/k2;
     v.y = my - (e.clientY - rect.top)/k2;
     v.k = k2;
-    renderGraph();
+    graphState.userView = true;
+    updateGraphViewBox();
   }, {passive:false});
+  // Canvas resizes (window resized, or the dialog opened before the window had
+  // its final size): update the px ↔ graph-unit mapping immediately, and — as
+  // long as the user hasn't started arranging the view by hand — re-run the
+  // layout against the new dimensions after the resize settles.
+  let roTimer = null;
+  new ResizeObserver(()=>{
+    const g = graphState;
+    if(!g) return;
+    const wrap = $('#graphCanvasWrap');
+    const W = wrap.clientWidth, H = wrap.clientHeight;
+    if(W < 200 || H < 200 || (W===g.W && H===g.H)) return;
+    g.W = W; g.H = H;
+    updateGraphViewBox();
+    if(g.userView) return; // keep a hand-arranged view intact
+    clearTimeout(roTimer);
+    roTimer = setTimeout(()=>{
+      if(graphState !== g) return;
+      graphLayout(g.nodes, g.edges, g.W, g.H);
+      fitGraphView();
+      renderGraph();
+    }, 120);
+  }).observe($('#graphCanvasWrap'));
 })();
 $('#btnGraphRelayout').addEventListener('click', ()=>{
   const g = graphState;
   if(!g) return;
+  g.userView = false; // back to an automatic arrangement
   graphLayout(g.nodes, g.edges, g.W, g.H);
   fitGraphView();
   renderGraph();
 });
 $('#btnGraphFit').addEventListener('click', ()=>{
   if(!graphState) return;
+  graphState.userView = false;
   fitGraphView();
-  renderGraph();
+  updateGraphViewBox();
 });
 $('#btnGraphLabels').addEventListener('click', ()=>{
   graphShowLabels = !graphShowLabels;
@@ -7446,6 +7615,8 @@ $('#graphSide').addEventListener('click', (e)=>{
   const it = g.nodes[g.selIdx].item;
   if(btn.dataset.gs==='open'){
     openExternalLink(it.doi ? 'https://doi.org/' + it.doi : it.url);
+  }else if(btn.dataset.gs==='graph'){
+    openGraphDialog(it); // hop the map to this paper (Connected Papers-style browsing)
   }else if(btn.dataset.gs==='add'){
     const clone = JSON.parse(JSON.stringify(it));
     clone.id = uid(); clone.citekey = '';
