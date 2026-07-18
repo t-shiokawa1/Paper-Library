@@ -813,11 +813,11 @@
   }
   .sideHead{
     display:flex; align-items:center; justify-content:space-between; gap:6px;
-    position:relative; padding:5px 8px; border-radius:6px; min-height:30px;
+    position:relative; padding:5px 3px 5px 6px; border-radius:6px; min-height:30px;
     font-size:14px; font-weight:600; color:var(--text2); letter-spacing:0;
   }
   .sideHead:hover{background:var(--bg)}
-  .sideHead .headLabel{display:inline-flex; align-items:center; gap:6px; min-width:0}
+  .sideHead .headLabel{display:inline-flex; align-items:center; gap:4px; min-width:0}
   .sideHead .headLabel > span:last-child{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
   .sideHead .headToggle{
     width:1.1em; height:20px; display:inline-flex; align-items:center; justify-content:center; padding:0;
@@ -826,8 +826,9 @@
   .sideHead .headToggle .ic svg{width:1.1em; height:1.1em}
   .sideHead .headToggle.closed{color:var(--text2)}
   .sideHead .headToggle.closed .ic{color:var(--text2)}
-  .sideHead .headBtns{display:inline-flex; align-items:center; gap:2px; flex:0 0 auto}
+  .sideHead .headBtns{display:inline-flex; align-items:center; gap:0; flex:0 0 auto; margin-right:-2px}
   .sideHead button{border:none; background:none; color:var(--text2); font-size:14px; padding:0 4px; border-radius:4px}
+  .sideHead .headBtns button{padding-left:2px; padding-right:2px}
   .sideHead button:hover{background:var(--border2); color:var(--text)}
   .sideHead #btnSearchColl.on{background:var(--sel); color:var(--accent)}
   /* collection filter box (toggled by the magnifier in the section header) */
