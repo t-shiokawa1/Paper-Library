@@ -14,7 +14,7 @@ const ICONS = {
   inbox:'<path d="M20 12h-4l-1.5 2.5h-5L8 12H4"/><path d="M6.2 5.3 4 12v5.5A1.5 1.5 0 0 0 5.5 19h13a1.5 1.5 0 0 0 1.5-1.5V12l-2.2-6.7A1.5 1.5 0 0 0 16.4 4H7.6a1.5 1.5 0 0 0-1.4 1.3z"/>',
   folder:'<path d="M4 19.5A1.5 1.5 0 0 1 2.5 18V6A1.5 1.5 0 0 1 4 4.5h4.3a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h6.6A1.5 1.5 0 0 1 21 8.5V18a1.5 1.5 0 0 1-1.5 1.5z"/>',
   folderOpen:'<path d="M4.5 19.5 6.4 12a1.5 1.5 0 0 1 1.45-1.1H21a1 1 0 0 1 .96 1.26l-1.6 6a1.5 1.5 0 0 1-1.45 1.1z"/><path d="M4.5 19.5A1.5 1.5 0 0 1 3 18V6a1.5 1.5 0 0 1 1.5-1.5h3.8a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h5.6A1.5 1.5 0 0 1 19.8 9v1.9"/>',
-  folders:'<path d="M8 17h11.5a1.5 1.5 0 0 0 1.5-1.5V9a1.5 1.5 0 0 0-1.5-1.5h-5.6a1.5 1.5 0 0 1-1.2-.6l-1-1.3a1.5 1.5 0 0 0-1.2-.6H8a1.5 1.5 0 0 0-1.5 1.5v9A1.5 1.5 0 0 0 8 17z"/><path d="M3.5 8.5V19a1.5 1.5 0 0 0 1.5 1.5h13"/>',
+  folders:'<path d="M5.5 4V3.7A1.2 1.2 0 0 1 6.7 2.5h3.7a1.3 1.3 0 0 1 1 .5l.9 1.1a1.3 1.3 0 0 0 1 .5h5.2A1.5 1.5 0 0 1 20 6.1v.5" opacity=".68" stroke-width="1.55"/><path d="M4 19.5A1.5 1.5 0 0 1 2.5 18V6A1.5 1.5 0 0 1 4 4.5h4.3a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h6.6A1.5 1.5 0 0 1 21 8.5V18a1.5 1.5 0 0 1-1.5 1.5z"/>',
   paperclip:'<path d="M20.4 11.5 12 19.9a5 5 0 0 1-7.1-7.1l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7l-8.5 8.5a1.7 1.7 0 0 1-2.4-2.4l7.8-7.8"/>',
   link:'<path d="M10.5 13.5a3.5 3.5 0 0 0 5 0l3-3a3.5 3.5 0 0 0-5-5l-1.5 1.5"/><path d="M13.5 10.5a3.5 3.5 0 0 0-5 0l-3 3a3.5 3.5 0 0 0 5 5l1.5-1.5"/>',
   quote:'<path d="M9.5 6.5C7 7 5.5 9 5.5 12v5.5h5V12H8c0-1.5.8-2.6 2.3-3l-.8-2.5z"/><path d="M18 6.5C15.5 7 14 9 14 12v5.5h5V12h-2.5c0-1.5.8-2.6 2.3-3L18 6.5z"/>',
@@ -104,8 +104,32 @@ function renderIcons(root){
 // Final logo style: 81 Premium page turn is fixed via body.brandStyle-81.
 
 
-const APP_VERSION = '1.7';
+const APP_VERSION = '1.8';
 const CHANGELOG = [
+  { v:'1.8', date:'2026-07-19',
+    ja:[
+      'コレクション整理と表表示の操作性を改善しました',
+      'コレクションツリーをライブラリ読込時に折りたたむようにし、すべてのフォルダをまとめて開閉できるボタンを追加しました',
+      '文献やコレクションのドラッグ＆ドロップ移動を Command / Ctrl + Z で取り消せるようにし、コレクションへの移動時の再描画を減らして動作を軽くしました',
+      '表の列移動を高速化し、「メモ」列を追加しました。スター・PDF・種類・メモ列は初期状態では非表示になります',
+      'コレクションの色とアイコンを左パネル・表・右パネルで統一し、ライトモードでの視認性、複数コレクションのアイコン、右パネルの表示を改善しました',
+      '表のタグ列にタグアイコンを追加し、左パネルと同じタグ色を背景・枠線・文字へ反映するようにしました',
+      'ScienceDirect の PII を含む論文 URL から文献を追加できない問題を修正しました',
+      '引用プレビューで「et al..」になる問題を修正し、Science は「et al.,」、Nature・ACS は文末の「et al.」となるよう句読点をスタイル別に整えました',
+      '右パネル上部からドラッグ＆ドロップで代替できるスター・自分の論文の操作を除き、表示を整理しました',
+    ],
+    en:[
+      'Improved collection organisation and table-view usability',
+      'Collection trees now start collapsed when a library is loaded, with a button to expand or collapse every folder at once',
+      'Collection and paper moves made by drag and drop can now be undone with Command / Ctrl + Z, and collection drops are faster by avoiding unnecessary re-rendering',
+      'Made table-column reordering faster and added a Notes column. Star, PDF, Category, and Notes columns are hidden by default',
+      'Unified collection colours and icons across the left pane, table, and detail pane, with better light-mode contrast, a refined multiple-collection icon, and cleaner detail-pane rendering',
+      'Added tag icons to the table and applied each tag colour consistently to its background, border, and text, matching the left pane',
+      'Fixed adding papers from ScienceDirect article URLs containing a PII',
+      'Fixed citation previews producing “et al..” and applied style-specific punctuation: “et al.,” for Science and sentence-final “et al.” for Nature and ACS',
+      'Simplified the detail-pane actions by removing Star and My Publication controls that can be handled by drag and drop',
+    ],
+  },
   { v:'1.7', date:'2026-07-15',
     ja:[
       '相関図機能を大幅に改善しました',
@@ -572,6 +596,7 @@ function toggleTheme(){
   theme = theme==='dark' ? 'light' : 'dark';
   localStorage.setItem('refshelf.theme', theme);
   applyTheme();
+  if(backend){ renderSidebar(); renderList({skipBadges:true}); renderDetail(); }
 }
 
 /* ---------------------------------------------------------------
@@ -1478,7 +1503,7 @@ const COLUMN_DEFS = {
              cell:(it)=> it.correspondingAuthors ? esc(textAuthorsForTable(it.correspondingAuthors)) : missingDataHTML(it.correspondingStatus, it.correspondingCheckedAt),
              tip:(it)=>it.correspondingAuthors || (it.correspondingStatus==='fail' ? t('fetchFail') : it.correspondingCheckedAt ? t('logNoData') : '') },
   tags:    { i18n:'tags', w:140, min:70, sortable:true,
-             cell:(it)=>(it.tags||[]).map(tg=>`<span class="tdChip" ${tagChipStyle(tg)}>${esc(tg)}</span>`).join('') },
+             cell:(it)=>(it.tags||[]).map(tg=>`<span class="tdChip tag" ${tagChipStyle(tg)}>${ic('tag')}${esc(tg)}</span>`).join('') },
   collections: { i18n:'collections', w:140, min:70, sortable:true,
              cell:(it)=>(it.collections||[]).map(id=>{const c=lib.collections.find(x=>x.id===id); return c?`<span class="tdChip coll" ${collectionChipStyle(c)}>${ic('folder')}${esc(c.name)}</span>`:'';}).join('') },
   year:    { i18n:'colYear',    w:56,  min:40,  sortable:true, cell:(it)=>esc(it.year) },
@@ -1536,8 +1561,26 @@ const PICK_FILTER_COLS = ['tags','journal','collections','category'];
 function collectionChipStyle(c){
   if(!c) return '';
   if(!c.color) return '';
-  const col = esc(c.color);
-  return `style="color:${col}"`;
+  return `style="color:${esc(collectionDisplayColor(c.color))}"`;
+}
+function collectionLightDisplayColor(color){
+  const m = String(color||'').trim().match(/^#([0-9a-f]{6})$/i);
+  if(!m) return color;
+  let r = parseInt(m[1].slice(0,2),16);
+  let g = parseInt(m[1].slice(2,4),16);
+  let b = parseInt(m[1].slice(4,6),16);
+  const linear = v=>{
+    v /= 255;
+    return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  };
+  const contrastOnWhite = ()=>1.05 / (0.2126*linear(r) + 0.7152*linear(g) + 0.0722*linear(b) + 0.05);
+  // Darken only as much as necessary for readable text/icons on white.
+  while(contrastOnWhite() < 4.5){ r *= 0.92; g *= 0.92; b *= 0.92; }
+  const hex = v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0');
+  return `#${hex(r)}${hex(g)}${hex(b)}`;
+}
+function collectionDisplayColor(color){
+  return theme==='dark' ? color : collectionLightDisplayColor(color);
 }
 function tagChipStyle(tg){
   const col = lib.tagColors && lib.tagColors[tg];
@@ -3440,7 +3483,7 @@ function renderSidebar(){
     // folders keep the plain closed-folder icon. This keeps every folder icon
     // at the same left edge for a given depth.
     const folderName = hasKids ? (closed ? 'folders' : 'folderOpen') : 'folder';
-    const folderIcInner = ic(folderName, c.color ? {style:`color:${esc(c.color)}`} : undefined);
+    const folderIcInner = ic(folderName, c.color ? {style:`color:${esc(collectionDisplayColor(c.color))}`} : undefined);
     const folderIc = hasKids
       ? `<span class="collFolderToggle" data-act="toggleColl" data-id="${c.id}" title="${esc(closed ? t('expand') : t('collapse'))}">${folderIcInner}</span>`
       : folderIcInner;
@@ -3524,6 +3567,21 @@ function renderListHeader(){
         sort+display+funnel+resize+`</th>`;
     }).join('');
   renderIcons($('#itemHead'));
+}
+function reorderRenderedTableColumns(){
+  const keys = tableColumnKeys();
+  // Column reordering does not change filtering, sorting, cell contents, or
+  // alert counts. Rebuild only the lightweight header/colgroup, then move the
+  // existing cells in each rendered row instead of recreating the whole table.
+  renderListHeader();
+  $('#itemRows').querySelectorAll('tr.row').forEach(row=>{
+    const cells = document.createDocumentFragment();
+    keys.forEach(k=>{
+      const cell = row.querySelector(`td.col-${k}`);
+      if(cell) cells.appendChild(cell);
+    });
+    row.appendChild(cells);
+  });
 }
 const LIST_RENDER_CHUNK = 250;
 let listRenderLimit = LIST_RENDER_CHUNK;
@@ -3758,7 +3816,7 @@ function compactPaperCardHTML(it, kind){
 }
 function shelfSectionHTML(title,items,opts){
   opts=opts||{}; const shown=items.slice(0,opts.limit||30);
-  return `<section class="paperShelf"${opts.color?` style="--shelf-color:${esc(opts.color)}"`:''}>
+  return `<section class="paperShelf"${opts.color?` style="--shelf-color:${esc(collectionDisplayColor(opts.color))}"`:''}>
     <div class="paperShelfHead"><span class="paperShelfIcon">${ic(opts.icon||'book')}</span><span class="paperShelfTitle">${esc(title)}</span><span class="paperShelfCount">${esc(I18N[lang].shelfItems(items.length))}</span>${opts.controls||''}</div>
     <div class="paperShelfRail">${shown.length?shown.map(it=>compactPaperCardHTML(it,'shelf')).join('')+(items.length>shown.length?`<div class="paperShelfMore">${esc(I18N[lang].shelfMore(items.length-shown.length))}</div>`:''):`<div class="paperShelfEmpty">${esc(t('shelfEmpty'))}</div>`}</div>
   </section>`;
@@ -3849,9 +3907,9 @@ function detailCollectionsDisplay(it){
   const rows = (it.collections||[]).map(id=>{
     const c = lib.collections.find(x=>x.id===id);
     if(!c) return '';
-    const folderIc = ic('folder', c.color ? {style:`color:${esc(c.color)}`} : undefined);
-    return `<span class="detailCollBtn on" title="${esc(collectionPathLabel(id))}">
-      ${folderIc}<span class="collName">${esc(collectionPathLabel(id) || c.name)}</span>
+    const label = collectionPathLabel(id) || c.name;
+    return `<span class="detailCollBtn" ${collectionChipStyle(c)} title="${esc(label)}">
+      ${ic('folder')}<span class="collName">${esc(label)}</span>
     </span>`;
   }).filter(Boolean).join('');
   return rows || `<span style="color:var(--text3);font-size:12px">—</span>`;
@@ -6649,10 +6707,18 @@ function openColFilterPop(key, anchorEl){
 
 // header: drag to reorder columns (distinct dataTransfer type, no conflict with row DnD)
 let colDragKey = null;
+let colDropTarget = null;
+let colDropAfter = false;
+function clearColumnDropMarker(){
+  if(colDropTarget) colDropTarget.classList.remove('col-drop-before','col-drop-after');
+  colDropTarget = null;
+  colDropAfter = false;
+}
 $('#itemHead').addEventListener('dragstart', (e)=>{
   if(colResizing || e.target.closest('.colresize')){ e.preventDefault(); return; }
   const th = e.target.closest('th.thmove');
   if(!th){ e.preventDefault(); return; }
+  clearColumnDropMarker();
   colDragKey = th.dataset.col;
   e.dataTransfer.effectAllowed = 'move';
   e.dataTransfer.setData('application/x-refshelf-col', colDragKey);
@@ -6665,7 +6731,10 @@ $('#itemHead').addEventListener('dragover', (e)=>{
   e.preventDefault();
   const r = th.getBoundingClientRect();
   const after = (e.clientX - r.left) > r.width/2;
-  $('#itemHead').querySelectorAll('th').forEach(x=>x.classList.remove('col-drop-before','col-drop-after'));
+  if(colDropTarget===th && colDropAfter===after) return;
+  clearColumnDropMarker();
+  colDropTarget = th;
+  colDropAfter = after;
   th.classList.add(after ? 'col-drop-after' : 'col-drop-before');
 });
 $('#itemHead').addEventListener('drop', (e)=>{
@@ -6681,12 +6750,16 @@ $('#itemHead').addEventListener('drop', (e)=>{
     order.splice(idx, 0, colDragKey);
     columnConfig.order = order;
     saveColumns();
-    renderList();
+    clearColumnDropMarker();
+    reorderRenderedTableColumns();
+    colDragKey = null;
   }
 });
 $('#itemHead').addEventListener('dragend', ()=>{
   colDragKey = null;
-  $('#itemHead').querySelectorAll('th').forEach(x=>x.classList.remove('col-drag','col-drop-before','col-drop-after'));
+  clearColumnDropMarker();
+  const dragged = $('#itemHead').querySelector('th.col-drag');
+  if(dragged) dragged.classList.remove('col-drag');
 });
 
 // header: drag right edge to resize

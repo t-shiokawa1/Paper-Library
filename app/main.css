@@ -977,6 +977,7 @@
     background:var(--chip); border-radius:9px; font-size:11px; color:var(--text2);
     white-space:nowrap;
   }
+  .tdChip.tag{border:1px solid transparent}
   .tdChip.coll{background:transparent; color:var(--text2); border:none; padding:0 3px}
   .tdChip.cat{font-weight:600}
   .tdChip.cat-review, .tdChip.cat-minireview{background:color-mix(in srgb, var(--accent) 16%, transparent); color:var(--accent)}
@@ -1396,16 +1397,13 @@
   .detailFoldToggle:hover{background:var(--bg); color:var(--text)}
   .detailFoldToggle .ic svg{width:12px; height:12px}
   .detailFoldToggle.closed .ic{transform:rotate(-90deg)}
-  .detailCollections{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:6px}
+  .detailCollections{display:flex; flex-wrap:wrap; align-items:center; gap:6px 12px}
   .detailCollBtn{
-    min-width:0; display:flex; align-items:center; gap:6px; min-height:28px;
-    border:1px solid var(--border); background:var(--panel); border-radius:6px;
-    padding:4px 7px; font-size:12.5px; text-align:left; cursor:default;
+    min-width:0; max-width:100%; display:inline-flex; align-items:center; gap:6px; min-height:24px;
+    padding:2px 0; color:var(--text2); font-size:12.5px; font-weight:500; cursor:default;
   }
-  button.detailCollBtn:hover{background:var(--bg)}
-  .detailCollBtn.on{background:var(--accent-soft); border-color:var(--accent-border); color:var(--accent); font-weight:600}
+  .detailCollBtn .ic{flex:0 0 auto}
   .detailCollBtn .collName{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
-  @media(max-width:980px){.detailCollections{grid-template-columns:minmax(0,1fr)}}
   .danger.tbtn{color:var(--danger); border-color:#efc4c4}
   .danger.tbtn:hover{background:var(--danger-soft)}
 
