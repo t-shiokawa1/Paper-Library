@@ -290,10 +290,21 @@ const I18N = {
     citeAdd:'追加', citeInLib:'登録済み', citeSource:'データ提供: OpenAlex',
     graphView:'相関図', graphTitle:(t)=>`「${t}」の関連論文マップ`,
     graphLoading1:'関連論文を収集中…', graphLoading2:'参照文献を照合中…', graphLoading3:'レイアウト計算中…',
-    graphLegendSize:'大きさ = 被引用数', graphLegendColor:'色 = 出版年', graphLegendEdge:'線 = 参照文献の重なり',
+    graphLegendSize:'大きさ = 被引用数', graphLegendColor:'色 = 出版年', graphLegendEdge:'灰色の線 = 参照文献の重なり',
+    graphLegendCite:'流れる青い破線 = 引用された論文 → 引用した論文',
+    graphCitationTitle:(from,to,reversed)=>`${from} → ${to}${reversed ? '（逆方向表示）' : '（順方向表示）'}`,
+    graphCitationStyle:'表示', graphCitationStyleLabel:'直接引用の表示スタイル',
+    graphStyleSolid:'灰色の実線', graphStyleArrow:'矢印', graphStyleParticle:'発光粒子', graphStyleDash:'流れる破線',
+    graphZoom:'拡大・縮小', graphZoomLabel:'相関図の表示倍率', graphZoomValue:(n)=>`${n}%`,
+    graphWheel:'ホイール', graphWheelLabel:'ホイールによる拡大縮小の感度', graphWheelValue:(n)=>`${n}%`,
+    graphSpacing:'間隔', graphSpacingLabel:'円とラベルの間隔', graphSpacingValue:(n)=>`${n}%`,
+    graphReverse:'方向を反転', graphReverseOn:'標準方向に戻す',
+    graphDirectionNormal:'引用された論文 → 引用した論文', graphDirectionReversed:'引用した論文 → 引用された論文（表示を反転中）',
+    graphLegendSolid:'灰色の実線 = 関係（引用方向は表示しません）',
+    graphLegendArrow:'グレーの矢印 = ', graphLegendParticle:'発光粒子 = ', graphLegendDash:'流れる破線 = ',
     graphSeed:'種論文', graphNotFound:'OpenAlex にこの文献が見つかりませんでした',
     graphTooFew:'関連論文が十分に見つかりませんでした（参照・被引用が少ない可能性）',
-    graphHint:'ドラッグで移動 / ホイールで拡大縮小 / クリックで詳細 / ダブルクリックでその論文の相関図へ',
+    graphHint:'ドラッグで移動 / ホイールで拡大縮小（感度調整可） / ホバーで情報表示 / クリックで選択 / ダブルクリックでその論文の相関図へ',
     graphOpenPage:'ページを開く', graphRelayout:'再レイアウト', graphRefetch:'再取得',
     graphFit:'全体表示', graphLabels:'ラベル', graphRelToSeed:'種論文との関係',
     graphSharedRefs:(n)=>`共通参照 ${n} 件`, graphDirectCites:'この論文が種論文を引用', graphDirectCitedBy:'種論文がこの論文を引用',
@@ -465,10 +476,21 @@ const I18N = {
     citeAdd:'Add', citeInLib:'In library', citeSource:'Data: OpenAlex',
     graphView:'Graph', graphTitle:(t)=>`Related-papers map for “${t}”`,
     graphLoading1:'Collecting related papers…', graphLoading2:'Matching reference lists…', graphLoading3:'Computing layout…',
-    graphLegendSize:'Size = citations', graphLegendColor:'Color = year', graphLegendEdge:'Edge = shared references',
+    graphLegendSize:'Size = citations', graphLegendColor:'Color = year', graphLegendEdge:'Gray edge = shared references',
+    graphLegendCite:'Flowing blue dash = cited paper → citing paper',
+    graphCitationTitle:(from,to,reversed)=>`${from} → ${to}${reversed ? ' (reversed display)' : ' (normal display)'}`,
+    graphCitationStyle:'Style', graphCitationStyleLabel:'Direct-citation display style',
+    graphStyleSolid:'Gray solid', graphStyleArrow:'Arrow', graphStyleParticle:'Glow particle', graphStyleDash:'Flowing dash',
+    graphZoom:'Zoom', graphZoomLabel:'Graph zoom level', graphZoomValue:(n)=>`${n}%`,
+    graphWheel:'Wheel', graphWheelLabel:'Mouse-wheel zoom sensitivity', graphWheelValue:(n)=>`${n}%`,
+    graphSpacing:'Spacing', graphSpacingLabel:'Spacing between circles and labels', graphSpacingValue:(n)=>`${n}%`,
+    graphReverse:'Reverse direction', graphReverseOn:'Restore citation direction',
+    graphDirectionNormal:'cited paper → citing paper', graphDirectionReversed:'citing paper → cited paper (display reversed)',
+    graphLegendSolid:'Gray solid = relationship (citation direction is hidden)',
+    graphLegendArrow:'Gray arrow = ', graphLegendParticle:'Glow particle = ', graphLegendDash:'Flowing dash = ',
     graphSeed:'Seed paper', graphNotFound:'This item was not found in OpenAlex',
     graphTooFew:'Not enough related papers found (few references / citations)',
-    graphHint:'Drag to pan / wheel to zoom / click a node for details / double-click to map that paper',
+    graphHint:'Drag to pan / wheel to zoom (adjustable sensitivity) / hover for details / click to select / double-click to map that paper',
     graphOpenPage:'Open page', graphRelayout:'Re-layout', graphRefetch:'Refetch',
     graphFit:'Fit', graphLabels:'Labels', graphRelToSeed:'Relation to seed',
     graphSharedRefs:(n)=>`${n} shared references`, graphDirectCites:'This paper cites the seed', graphDirectCitedBy:'The seed cites this paper',
@@ -575,6 +597,7 @@ function applyI18n(){
   document.getElementById('startLang').textContent = lang==='ja' ? 'EN' : '日本語';
   updateThemeButton();
   updateListViewButton();
+  if(typeof updateGraphCitationControls === 'function') updateGraphCitationControls();
   renderIcons();
   if(typeof applyAdvSearchStyle === 'function') applyAdvSearchStyle(advSearchStyle);
 }
@@ -7261,9 +7284,35 @@ const GRAPH_MAX_NODES = 42;      // seed + neighbours
 const GRAPH_MIN_SHARED = 1;      // min shared refs for an edge; later thinned visually
 const GRAPH_POOL_CITING = 100;   // citing works pulled into the candidate pool
 const GRAPH_POOL_REFS = 100;     // seed references considered (ranked by co-citation)
-const GRAPH_CACHE_V = 2;         // bump to invalidate graphs cached by older logic
+const GRAPH_CACHE_V = 3;         // bump to invalidate graphs cached without citation direction
 let graphState = null;           // { nodes, edges, view, selId, anim }
 let graphShowLabels = true;
+const GRAPH_PREFS_KEY = 'refshelf.graphPrefs';
+let graphCitationStyle = 'dash'; // solid | arrow | particle | dash
+// Normal direction is cited paper → citing paper. The reverse button changes
+// only this visual convention; the underlying citation relation is unchanged.
+let graphReverseDirection = false;
+let graphDirectionChosen = false;
+let graphZoom = 100;
+let graphNodeSpacing = 100;
+let graphWheelSensitivity = 50;
+try{
+  const graphPrefs = JSON.parse(localStorage.getItem(GRAPH_PREFS_KEY) || '{}');
+  if(['solid','arrow','particle','dash'].includes(graphPrefs.style)) graphCitationStyle = graphPrefs.style;
+  graphDirectionChosen = graphPrefs.reverseChoice === true;
+  if(graphDirectionChosen){
+    // v2 called cited → citing "reversed". Preserve the visible direction
+    // while migrating to v3, where that direction is the normal convention.
+    graphReverseDirection = graphPrefs.v >= 3 ? !!graphPrefs.reverse : !graphPrefs.reverse;
+  }
+  const savedZoom = Number.isFinite(+graphPrefs.zoom) ? +graphPrefs.zoom : +graphPrefs.spread;
+  if(Number.isFinite(savedZoom)) graphZoom = Math.max(70, Math.min(180, savedZoom));
+  if(Number.isFinite(+graphPrefs.spacing)) graphNodeSpacing = Math.max(80, Math.min(180, +graphPrefs.spacing));
+  if(Number.isFinite(+graphPrefs.wheel)) graphWheelSensitivity = Math.max(20, Math.min(100, +graphPrefs.wheel));
+}catch(e){}
+function saveGraphPrefs(){
+  try{ localStorage.setItem(GRAPH_PREFS_KEY, JSON.stringify({v:4, style:graphCitationStyle, reverse:graphReverseDirection, reverseChoice:graphDirectionChosen, zoom:graphZoom, spacing:graphNodeSpacing, wheel:graphWheelSensitivity})); }catch(e){}
+}
 
 // Fetch works by OpenAlex id: batched list queries first (1 request / 50 ids),
 // falling back to the un-metered single-entity endpoint for chunks the list
@@ -7381,9 +7430,15 @@ async function buildGraphData(seedItem, onProgress){
     for(let j=i+1;j<nodes.length;j++){
       const A = nodes[i], B = nodes[j];
       const shared = sharedCount(A.wRefs, B.wRefs);
-      const direct = A.wRefs.has(B.id) || B.wRefs.has(A.id);
+      const citeAToB = A.wRefs.has(B.id);
+      const citeBToA = B.wRefs.has(A.id);
+      const direct = citeAToB || citeBToA;
       if(shared >= GRAPH_MIN_SHARED || direct){
-        edges.push({ a:i, b:j, w: couplingSim(shared, A.wRefs.size, B.wRefs.size) + (direct ? 0.25 : 0), shared, direct });
+        edges.push({
+          a:i, b:j,
+          w: couplingSim(shared, A.wRefs.size, B.wRefs.size) + (direct ? 0.25 : 0),
+          shared, direct, citeAToB, citeBToA
+        });
       }
     }
   }
@@ -7415,6 +7470,20 @@ function thinEdges(nodes, edges){
   return edges.filter(e=>keep.has(e));
 }
 
+// Keep a stable 100% layout and move only node/label coordinates for the
+// spacing control. Circle radii and font sizes do not scale, so increasing
+// this value creates real whitespace rather than behaving like camera zoom.
+function applyGraphNodeSpacing(nodes, W, H){
+  const factor = graphNodeSpacing / 100;
+  const cx = W/2, cy = H/2;
+  nodes.forEach(n=>{
+    if(!Number.isFinite(n.layoutX)) n.layoutX = n.x;
+    if(!Number.isFinite(n.layoutY)) n.layoutY = n.y;
+    n.x = cx + (n.layoutX-cx) * factor;
+    n.y = cy + (n.layoutY-cy) * factor;
+  });
+}
+
 function graphLayout(nodes, edges, W, H, iterations){
   // simple force-directed layout (repulsion + edge springs + centering)
   const N = nodes.length;
@@ -7429,6 +7498,8 @@ function graphLayout(nodes, edges, W, H, iterations){
     n.vx = 0; n.vy = 0;
   });
   const maxW = Math.max(1, ...edges.map(e=>e.w));
+  const maxCited = Math.max(...nodes.map(n=>n.cited));
+  const radii = nodes.map(n=>graphNodeR(n.cited, maxCited));
   for(let it=0; it<(iterations||260); it++){
     const temp = 1 - it/(iterations||260);
     // repulsion
@@ -7436,12 +7507,21 @@ function graphLayout(nodes, edges, W, H, iterations){
       const A = nodes[i], B = nodes[j];
       let dx = A.x-B.x, dy = A.y-B.y;
       let d2 = dx*dx + dy*dy || 0.01;
+      const d = Math.sqrt(d2);
+      const ux = dx/d, uy = dy/d;
       if(d2 < 90000){
         const f = 2600 / d2;
-        const d = Math.sqrt(d2);
-        dx/=d; dy/=d;
-        A.vx += dx*f; A.vy += dy*f;
-        B.vx -= dx*f; B.vy -= dy*f;
+        A.vx += ux*f; A.vy += uy*f;
+        B.vx -= ux*f; B.vy -= uy*f;
+      }
+      // Keep paper nodes from collapsing into a dense, unreadable clump. The
+      // margin follows their actual radii, so large highly-cited papers retain
+      // enough breathing room too.
+      const minD = radii[i] + radii[j] + 20;
+      if(d < minD){
+        const push = (minD-d) * 0.13;
+        A.vx += ux*push; A.vy += uy*push;
+        B.vx -= ux*push; B.vy -= uy*push;
       }
     }
     // springs
@@ -7471,7 +7551,10 @@ function graphLayout(nodes, edges, W, H, iterations){
   nodes.forEach(n=>{
     n.x = (n.x - (minX+maxX)/2) * sc + W/2;
     n.y = (n.y - (minY+maxY)/2) * sc + H/2;
+    n.layoutX = n.x;
+    n.layoutY = n.y;
   });
+  applyGraphNodeSpacing(nodes, W, H);
 }
 
 function graphYearColor(year, minY, maxY){
@@ -7485,6 +7568,21 @@ function graphNodeR(cited, maxCited){
   return 6 + 16 * Math.sqrt(Math.log10(1+cited) / Math.log10(1+Math.max(10,maxCited)));
 }
 function graphEdgeShared(e){ return e.shared!=null ? e.shared : Math.max(0, (e.w||0) - (e.direct ? 2 : 0)); }
+function graphCitationSegment(from, to, fromR, toR, offset){
+  const dx = to.x-from.x, dy = to.y-from.y;
+  const d = Math.sqrt(dx*dx+dy*dy) || 1;
+  const ux = dx/d, uy = dy/d;
+  const ox = -uy*(offset||0), oy = ux*(offset||0);
+  return {
+    // Leave only a hairline gap at each node. Keeping the target endpoint just
+    // outside the circle lets an SVG marker remain visible instead of being
+    // painted over by the node itself.
+    x1:from.x + ux*(fromR+1) + ox,
+    y1:from.y + uy*(fromR+1) + oy,
+    x2:to.x - ux*(toR+2) + ox,
+    y2:to.y - uy*(toR+2) + oy
+  };
+}
 function graphSeedRelation(g, idx){
   const n = g.nodes[idx];
   if(!n || n.seed) return null;
@@ -7510,15 +7608,18 @@ function graphNearestLinks(g, idx){
       return { node:g.nodes[otherIdx], edge:e };
     });
 }
-function fitGraphView(pad){
+function fitGraphView(pad, useDisplayedPositions){
   const g = graphState;
   if(!g || !g.nodes.length) return;
   const rs = g.nodes.map(n=>graphNodeR(n.cited, Math.max(...g.nodes.map(x=>x.cited))));
-  const minX = Math.min(...g.nodes.map((n,i)=>n.x-rs[i])), maxX = Math.max(...g.nodes.map((n,i)=>n.x+rs[i]));
-  const minY = Math.min(...g.nodes.map((n,i)=>n.y-rs[i])), maxY = Math.max(...g.nodes.map((n,i)=>n.y+rs[i]));
+  const nodeX = n=>useDisplayedPositions ? n.x : (Number.isFinite(n.layoutX) ? n.layoutX : n.x);
+  const nodeY = n=>useDisplayedPositions ? n.y : (Number.isFinite(n.layoutY) ? n.layoutY : n.y);
+  const minX = Math.min(...g.nodes.map((n,i)=>nodeX(n)-rs[i])), maxX = Math.max(...g.nodes.map((n,i)=>nodeX(n)+rs[i]));
+  const minY = Math.min(...g.nodes.map((n,i)=>nodeY(n)-rs[i])), maxY = Math.max(...g.nodes.map((n,i)=>nodeY(n)+rs[i]));
   const boxW = Math.max(1, maxX-minX), boxH = Math.max(1, maxY-minY);
   const p = pad == null ? 46 : pad;
-  const k = Math.max(0.3, Math.min(5, Math.min((g.W - p*2)/boxW, (g.H - p*2)/boxH)));
+  const fitK = Math.min((g.W - p*2)/boxW, (g.H - p*2)/boxH);
+  const k = Math.max(0.3, Math.min(5, fitK * graphZoom / 100));
   // centre the bounding box on both axes — the non-constraining axis has slack,
   // and clamping k can leave asymmetric padding otherwise
   g.view = { x: minX - (g.W/k - boxW)/2, y: minY - (g.H/k - boxH)/2, k };
@@ -7527,6 +7628,39 @@ function updateGraphStats(){
   const el = $('#graphStats');
   if(!el || !graphState){ if(el) el.textContent = ''; return; }
   el.textContent = I18N[lang].graphStats(graphState.nodes.length, graphState.edges.length);
+}
+function updateGraphCitationControls(){
+  const select = $('#graphCitationStyle');
+  if(select) select.value = graphCitationStyle;
+  const reverseBtn = $('#btnGraphReverse');
+  if(reverseBtn){
+    reverseBtn.classList.toggle('active', graphReverseDirection);
+    reverseBtn.setAttribute('aria-pressed', String(graphReverseDirection));
+    const key = graphReverseDirection ? 'graphReverseOn' : 'graphReverse';
+    reverseBtn.title = t(key);
+    const label = $('#graphReverseLabel'); if(label) label.textContent = t(key);
+  }
+  const zoom = $('#graphZoom');
+  if(zoom) zoom.value = String(graphZoom);
+  const zoomValue = $('#graphZoomValue');
+  if(zoomValue) zoomValue.textContent = I18N[lang].graphZoomValue(graphZoom);
+  const wheel = $('#graphWheelSensitivity');
+  if(wheel) wheel.value = String(graphWheelSensitivity);
+  const wheelValue = $('#graphWheelSensitivityValue');
+  if(wheelValue) wheelValue.textContent = I18N[lang].graphWheelValue(graphWheelSensitivity);
+  const spacing = $('#graphNodeSpacing');
+  if(spacing) spacing.value = String(graphNodeSpacing);
+  const spacingValue = $('#graphNodeSpacingValue');
+  if(spacingValue) spacingValue.textContent = I18N[lang].graphSpacingValue(graphNodeSpacing);
+  const legend = $('#graphCitationLegend');
+  const legendText = $('#graphCitationLegendText');
+  if(legend) legend.className = `glCitation gl${graphCitationStyle}`;
+  if(legendText){
+    const key = graphCitationStyle==='solid' ? 'graphLegendSolid' :
+      graphCitationStyle==='arrow' ? 'graphLegendArrow' :
+      graphCitationStyle==='particle' ? 'graphLegendParticle' : 'graphLegendDash';
+    legendText.textContent = graphCitationStyle==='solid' ? t(key) : t(key) + t(graphReverseDirection ? 'graphDirectionReversed' : 'graphDirectionNormal');
+  }
 }
 
 // pan / zoom / resize only move the camera — updating the viewBox is enough,
@@ -7546,16 +7680,46 @@ function renderGraph(){
   const minY = Math.min(...years), maxY = Math.max(...years);
   $('#glYears').textContent = years.length ? `${minY}–${maxY}` : '';
   const maxCited = Math.max(...g.nodes.map(n=>n.cited));
+  const citationStyle = graphCitationStyle;
+  const nodeRadii = g.nodes.map(n=>Math.max(graphNodeR(n.cited, maxCited), n.seed ? 13 : 0));
   const maxW = Math.max(1, ...g.edges.map(e=>e.w));
   const edgeHtml = g.edges.map((e,ei)=>{
+    if(!graphEdgeShared(e) && citationStyle!=='solid') return '';
     const A = g.nodes[e.a], B = g.nodes[e.b];
     const title = graphEdgeShared(e) ? I18N[lang].graphSharedRefs(graphEdgeShared(e)) : '';
-    return `<line class="gEdge${e.direct ? ' direct' : ''}" data-e="${ei}" x1="${A.x.toFixed(1)}" y1="${A.y.toFixed(1)}" x2="${B.x.toFixed(1)}" y2="${B.y.toFixed(1)}" stroke-width="${(0.7 + 2.8*e.w/maxW).toFixed(2)}" opacity="${(0.18 + 0.4*e.w/maxW).toFixed(2)}">${title ? `<title>${esc(title)}</title>` : ''}</line>`;
+    return `<line class="gEdge${!graphEdgeShared(e) ? ' directOnly' : ''}" data-e="${ei}" x1="${A.x.toFixed(1)}" y1="${A.y.toFixed(1)}" x2="${B.x.toFixed(1)}" y2="${B.y.toFixed(1)}" stroke-width="${(0.7 + 2.8*e.w/maxW).toFixed(2)}" opacity="${(0.18 + 0.4*e.w/maxW).toFixed(2)}">${title ? `<title>${esc(title)}</title>` : ''}</line>`;
+  }).join('');
+  const citeHtml = citationStyle==='solid' ? '' : g.edges.map((e,ei)=>{
+    if(!e.citeAToB && !e.citeBToA) return '';
+    const mutualOffset = e.citeAToB && e.citeBToA ? 3.5 : 0;
+    const flows = [];
+    const addFlow = (citingIdx, citedIdx)=>{
+      const fromIdx = graphReverseDirection ? citingIdx : citedIdx;
+      const toIdx = graphReverseDirection ? citedIdx : citingIdx;
+      const from = g.nodes[fromIdx], to = g.nodes[toIdx];
+      const p = graphCitationSegment(from, to, nodeRadii[fromIdx], nodeRadii[toIdx], mutualOffset);
+      const fromLabel = from.label || from.item.title || '';
+      const toLabel = to.label || to.item.title || '';
+      const dx = p.x2-p.x1, dy = p.y2-p.y1;
+      const duration = Math.max(1.25, Math.min(2.8, Math.sqrt(dx*dx+dy*dy)/135));
+      const path = `M ${p.x1.toFixed(1)} ${p.y1.toFixed(1)} L ${p.x2.toFixed(1)} ${p.y2.toFixed(1)}`;
+      const title = esc(I18N[lang].graphCitationTitle(fromLabel,toLabel,graphReverseDirection));
+      const line = `data-cite-e="${ei}" x1="${p.x1.toFixed(1)}" y1="${p.y1.toFixed(1)}" x2="${p.x2.toFixed(1)}" y2="${p.y2.toFixed(1)}"`;
+      if(citationStyle==='arrow') flows.push(`<line class="gCiteArrowLine" ${line} marker-end="url(#gCiteArrow)"><title>${title}</title></line>`);
+      else if(citationStyle==='particle') flows.push(
+        `<line class="gCiteTrack" ${line}><title>${title}</title></line>`+
+        `<circle class="gCiteParticle" data-cite-e="${ei}" r="2.8" filter="url(#gCiteGlow)"><animateMotion dur="${duration.toFixed(2)}s" begin="${(-duration*.12).toFixed(2)}s" repeatCount="indefinite" path="${path}"></animateMotion></circle>`
+      );
+      else flows.push(`<line class="gCiteTrack" ${line}><title>${title}</title></line><line class="gCiteFlow" ${line}></line>`);
+    };
+    if(e.citeAToB) addFlow(e.a, e.b);
+    if(e.citeBToA) addFlow(e.b, e.a);
+    return flows.join('');
   }).join('');
   const nodeHtml = g.nodes.map((n,i)=>{
     // the seed gets a size floor — a modestly-cited seed must not vanish among
     // the classics it pulled in
-    const r = Math.max(graphNodeR(n.cited, maxCited), n.seed ? 13 : 0);
+    const r = nodeRadii[i];
     const fill = graphYearColor(n.year, minY, maxY);
     const inLib = isInLibrary(n.item);
     const cls = ['gNode', n.seed?'seed':'', (!n.seed && inLib)?'inlib':''].filter(Boolean).join(' ');
@@ -7564,7 +7728,7 @@ function renderGraph(){
       `<circle r="${r.toFixed(1)}" fill="${fill}"><title>${esc(n.item.title)}</title></circle></g>`+
       `<text class="gLabel${n.seed?' seed':''}" data-lbl="${i}" x="${n.x.toFixed(1)}" y="${(n.y + r + (n.seed?16:10)).toFixed(1)}" text-anchor="middle">${esc(n.label)}</text>`;
   }).join('');
-  svg.innerHTML = `<g>${edgeHtml}${nodeHtml}</g>`;
+  svg.innerHTML = `<defs><filter id="gCiteGlow" x="-150%" y="-150%" width="400%" height="400%"><feGaussianBlur stdDeviation="2.2" result="blur"></feGaussianBlur><feMerge><feMergeNode in="blur"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter><marker id="gCiteArrow" class="gCiteArrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L8,4 L0,8 Z"></path></marker></defs><g>${edgeHtml}${citeHtml}${nodeHtml}</g>`;
   // the seed must never hide behind a bigger neighbour
   const seedIdx = g.nodes.findIndex(n=>n.seed);
   if(seedIdx >= 0){
@@ -7574,6 +7738,7 @@ function renderGraph(){
     if(sn) sn.parentNode.appendChild(sn);
   }
   updateGraphStats();
+  updateGraphCitationControls();
   applyHighlight();
 }
 // Dim everything except the selected node and its neighbours.
@@ -7606,16 +7771,21 @@ function applyHighlight(){
     const e = g.edges[+el.dataset.e];
     el.classList.toggle('dim', !(e.a===focus || e.b===focus));
   });
+  svg.querySelectorAll('[data-cite-e]').forEach(el=>{
+    const e = g.edges[+el.dataset.citeE];
+    el.classList.toggle('dim', !(e.a===focus || e.b===focus));
+  });
 }
 
 function renderGraphSide(){
   const g = graphState;
   const side = $('#graphSide');
-  if(!g || g.selIdx==null){
+  const activeIdx = g && g.hoverIdx!=null ? g.hoverIdx : g && g.selIdx;
+  if(!g || activeIdx==null){
     side.innerHTML = `<div class="noselect">${esc(t('graphHint'))}</div>`;
     return;
   }
-  const n = g.nodes[g.selIdx];
+  const n = g.nodes[activeIdx];
   const it = n.item;
   const inLib = isInLibrary(it);
   const meta1 = [authorsShort(it.authors)].filter(Boolean).join('');
@@ -7731,6 +7901,20 @@ $('#dlgGraph').addEventListener('close', ()=>{ graphGen++; });
 (function(){
   const svg = $('#graphSvg');
   let pan = null, dragNode = null, moved = false;
+  svg.addEventListener('pointerover', (e)=>{
+    const nodeEl = e.target.closest('[data-node]');
+    if(!graphState || !nodeEl) return;
+    const idx = +nodeEl.dataset.node;
+    if(graphState.hoverIdx===idx) return;
+    graphState.hoverIdx = idx;
+    renderGraphSide();
+  });
+  svg.addEventListener('pointerout', (e)=>{
+    const nodeEl = e.target.closest('[data-node]');
+    if(!graphState || !nodeEl || nodeEl.contains(e.relatedTarget)) return;
+    graphState.hoverIdx = null;
+    renderGraphSide();
+  });
   svg.addEventListener('pointerdown', (e)=>{
     if(!graphState) return;
     const nodeEl = e.target.closest('[data-node]');
@@ -7750,6 +7934,9 @@ $('#dlgGraph').addEventListener('close', ()=>{ graphGen++; });
       const n = graphState.nodes[dragNode.i];
       n.x += (e.clientX - dragNode.px)/k;
       n.y += (e.clientY - dragNode.py)/k;
+      const spacingFactor = graphNodeSpacing / 100;
+      n.layoutX = graphState.W/2 + (n.x-graphState.W/2)/spacingFactor;
+      n.layoutY = graphState.H/2 + (n.y-graphState.H/2)/spacingFactor;
       dragNode.px = e.clientX; dragNode.py = e.clientY;
       moved = true;
       graphState.userView = true;
@@ -7797,7 +7984,11 @@ $('#dlgGraph').addEventListener('close', ()=>{ graphGen++; });
     const rect = svg.getBoundingClientRect();
     const mx = v.x + (e.clientX - rect.left)/v.k;
     const my = v.y + (e.clientY - rect.top)/v.k;
-    const k2 = Math.max(0.3, Math.min(5, v.k * (e.deltaY < 0 ? 1.15 : 1/1.15)));
+    const delta = e.deltaY * (e.deltaMode===1 ? 16 : 1);
+    const wheelSteps = Math.min(1.5, Math.max(.06, Math.abs(delta)/100));
+    const step = 1 + .15 * (graphWheelSensitivity/100);
+    const factor = Math.pow(step, wheelSteps);
+    const k2 = Math.max(0.3, Math.min(5, v.k * (delta < 0 ? factor : 1/factor)));
     v.x = mx - (e.clientX - rect.left)/k2;
     v.y = my - (e.clientY - rect.top)/k2;
     v.k = k2;
@@ -7837,13 +8028,51 @@ $('#btnGraphRelayout').addEventListener('click', ()=>{
 });
 $('#btnGraphFit').addEventListener('click', ()=>{
   if(!graphState) return;
+  graphZoom = 100;
+  saveGraphPrefs();
+  updateGraphCitationControls();
   graphState.userView = false;
-  fitGraphView();
+  fitGraphView(46, true);
   updateGraphViewBox();
 });
 $('#btnGraphLabels').addEventListener('click', ()=>{
   graphShowLabels = !graphShowLabels;
   renderGraph();
+});
+$('#graphCitationStyle').addEventListener('change', e=>{
+  const style = e.target.value;
+  if(!['solid','arrow','particle','dash'].includes(style)) return;
+  graphCitationStyle = style; saveGraphPrefs(); renderGraph();
+});
+$('#graphZoom').addEventListener('input', e=>{
+  graphZoom = Math.max(70, Math.min(180, +e.target.value || 100));
+  saveGraphPrefs();
+  const zoomValue = $('#graphZoomValue');
+  if(zoomValue) zoomValue.textContent = I18N[lang].graphZoomValue(graphZoom);
+  const g = graphState;
+  if(!g) return;
+  g.userView = false;
+  fitGraphView();
+  updateGraphViewBox();
+});
+$('#graphWheelSensitivity').addEventListener('input', e=>{
+  graphWheelSensitivity = Math.max(20, Math.min(100, +e.target.value || 50));
+  saveGraphPrefs();
+  const wheelValue = $('#graphWheelSensitivityValue');
+  if(wheelValue) wheelValue.textContent = I18N[lang].graphWheelValue(graphWheelSensitivity);
+});
+$('#graphNodeSpacing').addEventListener('input', e=>{
+  graphNodeSpacing = Math.max(80, Math.min(180, +e.target.value || 100));
+  saveGraphPrefs();
+  const spacingValue = $('#graphNodeSpacingValue');
+  if(spacingValue) spacingValue.textContent = I18N[lang].graphSpacingValue(graphNodeSpacing);
+  const g = graphState;
+  if(!g) return;
+  applyGraphNodeSpacing(g.nodes, g.W, g.H);
+  renderGraph();
+});
+$('#btnGraphReverse').addEventListener('click', ()=>{
+  graphReverseDirection = !graphReverseDirection; graphDirectionChosen = true; saveGraphPrefs(); renderGraph();
 });
 $('#btnGraphRefetch').addEventListener('click', ()=>{
   if(graphSeedItem) openGraphDialog(graphSeedItem, {force:true}); // bypass cache, hit OpenAlex
