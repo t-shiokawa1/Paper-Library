@@ -316,6 +316,16 @@
       <div id="graphToolbar">
         <button class="tbtn" id="btnGraphFit"><span class="ic" data-ic="zoom"></span><span data-i18n="graphFit">全体表示</span></button>
         <button class="tbtn" id="btnGraphLabels"><span class="ic" data-ic="text"></span><span data-i18n="graphLabels">ラベル</span></button>
+        <select id="graphCitationStyle" data-i18n-title="graphCitationStyleLabel" title="直接引用の表示スタイル">
+          <option value="solid" data-i18n="graphStyleSolid">灰色の実線</option>
+          <option value="arrow" data-i18n="graphStyleArrow">矢印</option>
+          <option value="particle" data-i18n="graphStyleParticle">発光粒子</option>
+          <option value="dash" data-i18n="graphStyleDash">流れる破線</option>
+        </select>
+        <label id="graphZoomControl" data-i18n-title="graphZoomLabel" title="相関図の表示倍率"><span data-i18n="graphZoom">拡大・縮小</span><input id="graphZoom" type="range" min="70" max="180" step="5" value="100"><output id="graphZoomValue">100%</output></label>
+        <label id="graphWheelControl" data-i18n-title="graphWheelLabel" title="ホイールによる拡大縮小の感度"><span data-i18n="graphWheel">ホイール</span><input id="graphWheelSensitivity" type="range" min="20" max="100" step="5" value="50"><output id="graphWheelSensitivityValue">50%</output></label>
+        <label id="graphSpacingControl" data-i18n-title="graphSpacingLabel" title="円とラベルの間隔"><span data-i18n="graphSpacing">間隔</span><input id="graphNodeSpacing" type="range" min="80" max="180" step="5" value="100"><output id="graphNodeSpacingValue">100%</output></label>
+        <button class="tbtn" id="btnGraphReverse" type="button" aria-pressed="false" data-i18n-title="graphReverse" title="方向を反転"><span class="ic" data-ic="arrowDownLeft"></span><span id="graphReverseLabel" data-i18n="graphReverse">方向を反転</span></button>
         <span id="graphStats"></span>
       </div>
       <div id="graphLoading"></div>
@@ -323,6 +333,7 @@
         <span data-i18n="graphLegendSize">大きさ = 被引用数</span>
         <span class="glColor"><span data-i18n="graphLegendColor">色 = 出版年</span><span class="glGrad"></span><span id="glYears"></span></span>
         <span data-i18n="graphLegendEdge">線 = 参照文献の重なり</span>
+        <span class="glCitation gldash" id="graphCitationLegend"><span class="glCitationSample"></span><span id="graphCitationLegendText" data-i18n="graphLegendCite">流れる青い矢印 = 引用した論文 → 引用された論文</span></span>
         <span class="glColor"><span class="glRing glRingSeed"></span><span data-i18n="graphSeed">種論文</span></span>
         <span class="glColor"><span class="glRing glRingLib"></span><span data-i18n="citeInLib">登録済み</span></span>
       </div>
