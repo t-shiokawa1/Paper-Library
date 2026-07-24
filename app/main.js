@@ -104,8 +104,24 @@ function renderIcons(root){
 // Final logo style: 81 Premium page turn is fixed via body.brandStyle-81.
 
 
-const APP_VERSION = '1.8';
+const APP_VERSION = '1.9';
 const CHANGELOG = [
+  { v:'1.9', date:'2026-07-24',
+    ja:[
+      '相関図の直接引用表示と操作性を改善しました',
+      '直接引用の向きと流れを表示し、実線・矢印・発光粒子・流れる破線から表示スタイルを選べるようにしました',
+      '引用方向の反転、拡大率、ホイールによる拡大縮小の感度、ノード間隔を調整できるようにしました',
+      'ノードの重なりを抑え、ホバーで詳細を確認できるようにしました',
+      '相関図とダイアログのダークモード表示を改善し、動きを抑えるOS設定にも対応しました',
+    ],
+    en:[
+      'Improved direct-citation display and usability in the related-papers graph',
+      'Direct-citation direction and flow are now shown, with a choice of solid, arrow, glow-particle, or flowing-dash styles',
+      'Added controls for citation-direction reversal, zoom level, mouse-wheel zoom sensitivity, and node spacing',
+      'Reduced node overlap and added hover details',
+      'Improved dark-mode rendering for the graph and dialogs, with support for reduced-motion system preferences',
+    ],
+  },
   { v:'1.8', date:'2026-07-19',
     ja:[
       'コレクション整理と表表示の操作性を改善しました',
