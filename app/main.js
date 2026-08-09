@@ -106,6 +106,20 @@ function renderIcons(root){
 
 const APP_VERSION = '1.9';
 const CHANGELOG = [
+  { v:'2.0', date:'2026-08-10',
+    ja:[
+      '責任著者どうしの共同研究を可視化する「研究者マップ」を追加しました',
+      '選択中の論文の著者を中心に、探索深度を指定して共同研究ネットワークを表示できます。責任著者が複数いる論文は全組み合わせを共同研究として集計し、表記揺れを整理したうえで重複しない研究者・関係として表示します',
+      '研究者・共同研究をホバーまたはクリックすると、詳細と関連論文を確認でき、選択研究者・中心研究者・経由研究者・近接研究者を色の濃さで見分けられるようにしました',
+      '円、線、中心、流線の表示形式と、状態ごとの色の濃さ・探索深度を調整できるようにしました。背景クリックまたは Esc キーで選択を解除できます',
+    ],
+    en:[
+      'Added Researcher Map, which visualises collaborations between corresponding authors',
+      'Starting from the authors of the selected paper, you can explore a co-research network to a chosen depth. Papers with multiple corresponding authors contribute every pair, while name variants are normalised and duplicate researchers and links are merged',
+      'Hover or click a researcher or collaboration to view its details and related papers. Selected, central, path, and nearby researchers are distinguished by colour intensity',
+      'Added controls for circle, edge, centre, and flow styles, plus per-state colour intensity and exploration depth. Click the background or press Esc to clear the selection',
+    ],
+  },
   { v:'1.9', date:'2026-07-24',
     ja:[
       '相関図の直接引用表示と操作性を改善しました',
@@ -327,6 +341,26 @@ const I18N = {
     graphNearest:'近い論文', graphStats:(n,e)=>`${n} 論文 / ${e} 関係`,
     graphCached:(d)=>`キャッシュ表示（${d} 取得・API 呼び出しなし）`,
     graphPartial:(n)=>`関連論文 ${n} 件を取得できませんでした（表示が不完全な可能性があります）`,
+    researcherMap:'研究者マップ', researcherMapAria:'責任著者の共同研究ネットワーク',
+    researcherMapHint:'研究者または共同研究の線にカーソルを合わせると詳細を表示します',
+    researcherMapSource:'ライブラリ内の責任著者情報から作成',
+    researcherMapDepth:'深度', researcherMapDepthLabel:'中心研究者からたどる共同研究の深さ', researcherMapDepthValue:(n)=>`${n}`,
+    researcherMapStyle:'円', researcherMapStyleLabel:'研究者を表す円のスタイル',
+    researcherMapStyleAurora:'Aurora (Style 1)', researcherMapStylePulse:'Pulse (Style 2)',
+    researcherMapEdgeStyle:'線', researcherMapEdgeStyleLabel:'共同研究を表す線の種類', researcherMapEdgeSolid:'実線', researcherMapEdgeDashed:'破線',
+    researcherMapSeedStyle:'中心', researcherMapSeedStyleLabel:'基準となる中心研究者の強調方法',
+    researcherMapSeedDoubleGlow:'二重線 + Glow (Style 2)', researcherMapSeedPulseGlow:'Pulse + Glow (Style 1)',
+    researcherMapRouteStyle:'流線の表示形式', researcherMapRouteStyleLabel:'破線を選んだ場合に切り替えられる、中心へ向かう流線の見た目', researcherMapRouteFlow:'Style 1', researcherMapRouteFlowDepth:'Style 3', researcherMapRouteFlowSoft:'Style 4',
+    researcherMapOpacity:'色の濃さ', researcherMapOpacityLabel:'状態ごとの研究者の色の濃さ', researcherMapOpacityDetail:'詳細', researcherMapOpacityValue:(n)=>`${n}%`,
+    researcherMapOpacityActive:'選択研究者', researcherMapOpacityCenter:'中心研究者', researcherMapOpacityPath:'中心までの経由研究者', researcherMapOpacityNeighbor:'選択研究者から深度1', researcherMapOpacityOther:'その他',
+    researcherMapDistance:(n)=>`中心から ${n} 段階`,
+    researcherMapLegendSize:'円の大きさ = 責任著者論文数', researcherMapLegendEdge:'静的な線 = 共同責任著者論文数', researcherMapLegendRoute:'流線 = 深度1 → 選択研究者 → 中心研究者',
+    researcherMapEmpty:'共同責任著者による研究者ネットワークがありません。2人以上の責任著者が登録された論文が必要です。',
+    researcherMapSeedMissing:'選択した論文の最終著者には、共同責任著者による研究者ネットワークがありません。',
+    researcherMapStats:(n,e)=>`${n} 研究者 / ${e} 共同研究`,
+    researcherMapPaperCount:(n)=>`責任著者論文 ${n} 件`, researcherMapJointCount:(n)=>`共同責任著者論文 ${n} 件`,
+    researcherMapCollaborators:'共同研究者', researcherMapPapers:'論文', researcherMapCollaboration:'共同研究',
+    researcherMapAliases:'統合した表記', researcherMapOpenPaper:'ライブラリで表示',
     addedFromCite:'ライブラリに追加しました',
     searchTerms:'検索語', searchMode:'条件', searchField:'対象', fieldAll:'すべて', yearFrom:'年（開始）', yearTo:'年（終了）', clear:'クリア', apply:'適用',
     deleteItem:'ゴミ箱に移動',
@@ -513,6 +547,26 @@ const I18N = {
     graphNearest:'Closest papers', graphStats:(n,e)=>`${n} papers / ${e} links`,
     graphCached:(d)=>`Cached (fetched ${d}, no API calls)`,
     graphPartial:(n)=>`Failed to fetch ${n} related papers (the map may be incomplete)`,
+    researcherMap:'Researcher Map', researcherMapAria:'Corresponding-author collaboration network',
+    researcherMapHint:'Hover over a researcher or collaboration line to see details',
+    researcherMapSource:'Built from corresponding-author data in this library',
+    researcherMapDepth:'Depth', researcherMapDepthLabel:'Collaboration depth from the center researcher', researcherMapDepthValue:(n)=>`${n}`,
+    researcherMapStyle:'Circle', researcherMapStyleLabel:'Researcher circle style',
+    researcherMapStyleAurora:'Aurora (Style 1)', researcherMapStylePulse:'Pulse (Style 2)',
+    researcherMapEdgeStyle:'Line', researcherMapEdgeStyleLabel:'Collaboration line type', researcherMapEdgeSolid:'Solid', researcherMapEdgeDashed:'Dashed',
+    researcherMapSeedStyle:'Center', researcherMapSeedStyleLabel:'How to emphasize the center researcher',
+    researcherMapSeedDoubleGlow:'Double ring + Glow (Style 2)', researcherMapSeedPulseGlow:'Pulse + Glow (Style 1)',
+    researcherMapRouteStyle:'Flow appearance', researcherMapRouteStyleLabel:'Centerward flow appearance, selectable when dashed lines are chosen', researcherMapRouteFlow:'Style 1', researcherMapRouteFlowDepth:'Style 3', researcherMapRouteFlowSoft:'Style 4',
+    researcherMapOpacity:'Color intensity', researcherMapOpacityLabel:'Researcher color intensity for each state', researcherMapOpacityDetail:'Details', researcherMapOpacityValue:(n)=>`${n}%`,
+    researcherMapOpacityActive:'Selected researcher', researcherMapOpacityCenter:'Center researcher', researcherMapOpacityPath:'Researchers on the path to center', researcherMapOpacityNeighbor:'Depth 1 from selected', researcherMapOpacityOther:'Others',
+    researcherMapDistance:(n)=>`${n} hop${n===1?'':'s'} from center`,
+    researcherMapLegendSize:'Circle size = corresponding-author papers', researcherMapLegendEdge:'Static line = joint corresponding-author papers', researcherMapLegendRoute:'Flow = depth 1 → selected researcher → center',
+    researcherMapEmpty:'No corresponding-author network is available. At least one paper with two or more corresponding authors is required.',
+    researcherMapSeedMissing:'The selected paper’s final author has no corresponding-author collaboration network.',
+    researcherMapStats:(n,e)=>`${n} researchers / ${e} collaborations`,
+    researcherMapPaperCount:(n)=>`${n} corresponding-author paper${n===1?'':'s'}`, researcherMapJointCount:(n)=>`${n} joint corresponding-author paper${n===1?'':'s'}`,
+    researcherMapCollaborators:'Collaborators', researcherMapPapers:'Papers', researcherMapCollaboration:'Collaboration',
+    researcherMapAliases:'Merged name variants', researcherMapOpenPaper:'Show in library',
     addedFromCite:'Added to library',
     searchTerms:'Search terms', searchMode:'Mode', searchField:'Field', fieldAll:'All', yearFrom:'Year from', yearTo:'Year to', clear:'Clear', apply:'Apply',
     deleteItem:'Move to trash',
@@ -614,6 +668,14 @@ function applyI18n(){
   updateThemeButton();
   updateListViewButton();
   if(typeof updateGraphCitationControls === 'function') updateGraphCitationControls();
+  if(typeof updateResearcherMapControls === 'function') updateResearcherMapControls();
+  if(typeof researcherMapState !== 'undefined' && researcherMapState){
+    const rmStats = document.getElementById('researcherMapStats');
+    if(rmStats) rmStats.textContent = I18N[lang].researcherMapStats(researcherMapState.nodes.length, researcherMapState.edges.length);
+    const rmEmpty = document.getElementById('researcherMapEmpty');
+    if(rmEmpty) rmEmpty.textContent = researcherMapState.edges.length ? '' : t(researcherMapState.emptyKey||'researcherMapEmpty');
+    if(typeof renderResearcherMapSide === 'function') renderResearcherMapSide();
+  }
   renderIcons();
   if(typeof applyAdvSearchStyle === 'function') applyAdvSearchStyle(advSearchStyle);
 }
@@ -3968,6 +4030,7 @@ function renderDetail(){
       ${it.url||it.doi ? `<button class="tbtn" data-act="openlink">${ic('link')}${esc(t('openLink'))}</button>` : ''}
       <button class="tbtn" data-act="citations">${ic('citations')}${esc(t('citations'))}</button>
       <button class="tbtn" data-act="graph">${ic('graph')}${esc(t('graphView'))}</button>
+      <button class="tbtn" data-act="researcherMap">${ic('users')}${esc(t('researcherMap'))}</button>
       <button class="tbtn" data-act="updateThis" title="${esc(t('updateThisItemHint'))}">${ic('retry')}${esc(t('updateThisItem'))}</button>
     </div>
     <div class="citePreview" id="citePreview" title="${esc(t('citePreviewHint'))}">
@@ -7184,6 +7247,7 @@ $('#detail').addEventListener('click', async (e)=>{
     case 'deleteForever': await deleteForever(it.id); break;
     case 'citations': openCitationsDialog(it); break;
     case 'graph': openGraphDialog(it); break;
+    case 'researcherMap': openResearcherMap(it); break;
     case 'updateThis': await updateSingleItem(it); break;
     case 'applyJournalFix': {
       const sug = fixSuggestionForItem(it);
@@ -7289,6 +7353,667 @@ $('#citBody').addEventListener('click', (e)=>{
     renderCitList('ref'); renderCitList('cited'); // refresh "in library" markers
   }
 });
+
+/* ---------------------------------------------------------------
+   Researcher Map.
+   A node is one corresponding author and an edge is a pair who are
+   corresponding authors on the same paper. Data preparation, filtering,
+   layout and rendering are deliberately separate so ORCID/affiliation and
+   year/count filters can be added without changing the graph UI contract.
+---------------------------------------------------------------- */
+let researcherMapState = null; // {nodes, edges, W, H, view, selected, hovered}
+
+function researcherMapAuthorText(a){
+  if(!a) return '';
+  return a.given ? `${a.family || ''}, ${a.given}`.replace(/^,\s*/, '') : (a.family || '');
+}
+function researcherMapNameTokens(given){
+  return String(given||'').split(/[\s.\-]+/).map(normalizeAuthorToken).filter(Boolean);
+}
+function researcherMapNamesCompatible(a, b){
+  const af = normalizeAuthorToken(a && (a.family || a.given));
+  const bf = normalizeAuthorToken(b && (b.family || b.given));
+  if(!af || af!==bf) return false;
+  const at = researcherMapNameTokens(a.given), bt = researcherMapNameTokens(b.given);
+  if(!at.length || !bt.length) return !at.length && !bt.length;
+  const compatibleToken = (x,y)=>x===y || (x.length===1 && y.startsWith(x)) || (y.length===1 && x.startsWith(y));
+  const overlap = Math.min(at.length, bt.length);
+  for(let i=0;i<overlap;i++) if(!compatibleToken(at[i], bt[i])) return false;
+  // Missing middle names/initials are treated as a harmless abbreviation.
+  return true;
+}
+function researcherMapNameQuality(a){
+  const tokens = researcherMapNameTokens(a && a.given);
+  return tokens.reduce((n,x)=>n + (x.length>1 ? 8+x.length : 1), 0) + normalizeAuthorToken(a && a.family).length;
+}
+function researcherMapNameIsInitialOnly(a){
+  const tokens=researcherMapNameTokens(a && a.given);
+  return !!tokens.length && tokens.every(x=>x.length===1);
+}
+function researcherMapDisplayParts(a){
+  const raw = String(a && a.given || '').trim();
+  const givenTokens = raw.split(/[\s]+/).filter(Boolean);
+  const given = givenTokens.map((token,i)=>{
+    const clean = token.replace(/^[-.]+|[-.]+$/g,'');
+    if(!clean) return '';
+    if(i===0 && normalizeAuthorToken(clean).length>1) return clean;
+    return normalizeAuthorToken(clean).charAt(0).toUpperCase() + '.';
+  }).filter(Boolean).join(' ');
+  return { given, family:String(a && a.family || '').trim() };
+}
+function researcherMapResolvedAuthor(item, corr){
+  const family=normalizeAuthorToken(corr.family || corr.given), given=normalizeAuthorToken(corr.given);
+  const sameFamily=(item.authors||[]).filter(a=>normalizeAuthorToken(a.family || a.given)===family);
+  const exact=sameFamily.filter(a=>given && normalizeAuthorToken(a.given)===given);
+  const compatible=sameFamily.filter(a=>authorMatchesCorresponding(a,[corr]));
+  const match=exact.length===1 ? exact[0] : compatible.length===1 ? compatible[0] : null;
+  if(match && (match.family || match.given)) return { family:match.family||'', given:match.given||'' };
+  return { family:corr.family||'', given:corr.given||'' };
+}
+
+function buildResearcherMapData(items, options){
+  options = Object.assign({yearFrom:null, yearTo:null}, options||{});
+  const sourceItems = (items||[]).filter(it=>{
+    if(isItemTrashed(it) || !it.correspondingAuthors) return false;
+    const y = parseInt(it.year,10);
+    if(options.yearFrom!=null && (!y || y < options.yearFrom)) return false;
+    if(options.yearTo!=null && (!y || y > options.yearTo)) return false;
+    return true;
+  });
+  const occurrences = [];
+  sourceItems.forEach(item=>{
+    parseAuthorListText(item.correspondingAuthors).forEach(corr=>{
+      const resolved = researcherMapResolvedAuthor(item, corr);
+      if(!normalizeAuthorToken(resolved.family || resolved.given)) return;
+      occurrences.push({ item, name:resolved, alias:researcherMapAuthorText(corr) });
+    });
+  });
+
+  // Union compatible name variants within each family. Full names from the
+  // paper's author list are preferred over abbreviated corresponding-author
+  // strings, which keeps labels stable (e.g. "A. Yamada" -> "Akira Yamada").
+  const parent = occurrences.map((_,i)=>i);
+  const find = i=>{ while(parent[i]!==i){ parent[i]=parent[parent[i]]; i=parent[i]; } return i; };
+  const unite = (a,b)=>{ a=find(a); b=find(b); if(a!==b) parent[b]=a; };
+  const byFamily = new Map();
+  occurrences.forEach((o,i)=>{
+    const k = normalizeAuthorToken(o.name.family || o.name.given);
+    if(!byFamily.has(k)) byFamily.set(k, []);
+    byFamily.get(k).push(i);
+  });
+  byFamily.forEach(indices=>{
+    const full=indices.filter(i=>!researcherMapNameIsInitialOnly(occurrences[i].name));
+    const brief=indices.filter(i=>researcherMapNameIsInitialOnly(occurrences[i].name));
+    // Full forms may differ only by an omitted middle name/initial.
+    for(let x=0;x<full.length;x++) for(let y=x+1;y<full.length;y++){
+      if(researcherMapNamesCompatible(occurrences[full[x]].name,occurrences[full[y]].name)) unite(full[x],full[y]);
+    }
+    // An initial-only form joins a full-name cluster only when the match is
+    // unambiguous within this library. Thus "A. Yamada" will not collapse
+    // Akira Yamada and Ayako Yamada into one person when both are present.
+    brief.forEach(i=>{
+      const candidates=new Set(full.filter(j=>researcherMapNamesCompatible(occurrences[i].name,occurrences[j].name)).map(find));
+      if(candidates.size===1) unite(i,Array.from(candidates)[0]);
+    });
+    for(let x=0;x<brief.length;x++) for(let y=x+1;y<brief.length;y++){
+      if(normalizeAuthorToken(occurrences[brief[x]].name.given)===normalizeAuthorToken(occurrences[brief[y]].name.given)) unite(brief[x],brief[y]);
+    }
+  });
+
+  const peopleByRoot = new Map();
+  occurrences.forEach((o,i)=>{
+    const root = find(i);
+    if(!peopleByRoot.has(root)) peopleByRoot.set(root, { root, names:[], aliases:new Set(), papers:new Map(), orcid:'', institutions:[] });
+    const p = peopleByRoot.get(root);
+    p.names.push(o.name);
+    if(o.alias) p.aliases.add(o.alias);
+    p.papers.set(o.item.id, o.item);
+    o.person = p;
+  });
+  peopleByRoot.forEach(p=>{
+    p.name = p.names.slice().sort((a,b)=>researcherMapNameQuality(b)-researcherMapNameQuality(a))[0] || {family:'',given:''};
+    p.parts = researcherMapDisplayParts(p.name);
+    p.fullName = [p.name.given, p.name.family].filter(Boolean).join(' ') || p.name.family || p.name.given;
+  });
+
+  const edgeByPair = new Map();
+  sourceItems.forEach(item=>{
+    const people = [];
+    const seen = new Set();
+    occurrences.filter(o=>o.item===item).forEach(o=>{
+      if(!seen.has(o.person)){ seen.add(o.person); people.push(o.person); }
+    });
+    for(let i=0;i<people.length;i++) for(let j=i+1;j<people.length;j++){
+      const roots = [people[i].root,people[j].root].sort((a,b)=>a-b);
+      const key = roots.join('|');
+      if(!edgeByPair.has(key)) edgeByPair.set(key, {people:[people[i],people[j]], papers:new Map()});
+      edgeByPair.get(key).papers.set(item.id, item);
+    }
+  });
+  const connected = new Set();
+  edgeByPair.forEach(e=>e.people.forEach(p=>connected.add(p)));
+  const nodes = Array.from(connected).sort((a,b)=>b.papers.size-a.papers.size || a.fullName.localeCompare(b.fullName));
+  const nodeIndex = new Map(nodes.map((n,i)=>[n,i]));
+  const edges = Array.from(edgeByPair.values()).map(e=>({
+    a:nodeIndex.get(e.people[0]), b:nodeIndex.get(e.people[1]), papers:Array.from(e.papers.values()), count:e.papers.size
+  })).filter(e=>e.a!=null && e.b!=null).sort((a,b)=>b.count-a.count);
+  nodes.forEach((n,i)=>{ n.index=i; n.papers=Array.from(n.papers.values()); });
+  return {nodes, edges};
+}
+
+const RESEARCHER_MAP_MAX_NODES = 400; // safety limit for unusually large libraries
+const RESEARCHER_MAP_PREFS_KEY = 'refshelf.researcherMapPrefs';
+const RESEARCHER_MAP_OPACITY_DEFAULTS = {active:100,center:100,path:50,neighbor:100,other:10};
+let researcherMapDepth = 3;
+let researcherMapStyle = 'aurora';
+let researcherMapEdgeStyle = 'solid';
+let researcherMapSeedStyle = 'pulseGlow';
+let researcherMapRouteStyle = 'flow';
+let researcherMapOpacity = {...RESEARCHER_MAP_OPACITY_DEFAULTS};
+let researcherMapFullData = null;
+let researcherMapSeedItem = null;
+try{
+  const prefs=JSON.parse(localStorage.getItem(RESEARCHER_MAP_PREFS_KEY)||'{}');
+  const savedNodeStyle=prefs.nodeStyle||prefs.style;
+  if(Number.isFinite(+prefs.depth)) researcherMapDepth=Math.max(1,Math.min(8,Math.round(+prefs.depth)));
+  if(['aurora','pulse'].includes(savedNodeStyle)) researcherMapStyle=savedNodeStyle;
+  const oldEdgeStyle=String(prefs.edgeStyle||'');
+  const migratedEdgeStyle=['solid','dashed'].includes(oldEdgeStyle) ? oldEdgeStyle : oldEdgeStyle.startsWith('pulse')?'dashed':'solid';
+  researcherMapEdgeStyle=migratedEdgeStyle;
+  if(['doubleGlow','pulseGlow'].includes(prefs.seedStyle)) researcherMapSeedStyle=prefs.seedStyle;
+  if(['flow','flowDepth','flowSoft'].includes(prefs.routeStyle)) researcherMapRouteStyle=prefs.routeStyle;
+  if(prefs.opacity && typeof prefs.opacity==='object'){
+    Object.keys(RESEARCHER_MAP_OPACITY_DEFAULTS).forEach(key=>{
+      if(Number.isFinite(+prefs.opacity[key])) researcherMapOpacity[key]=Math.max(0,Math.min(100,Math.round(+prefs.opacity[key])));
+    });
+  }else if(Number.isFinite(+prefs.opacity)){
+    // v5 stored a single dim opacity. Keep it as the migrated "Other" value.
+    researcherMapOpacity.other=Math.max(0,Math.min(100,Math.round(+prefs.opacity)));
+  }
+}catch(e){}
+function saveResearcherMapPrefs(){
+  try{ localStorage.setItem(RESEARCHER_MAP_PREFS_KEY,JSON.stringify({v:7,depth:researcherMapDepth,nodeStyle:researcherMapStyle,edgeStyle:researcherMapEdgeStyle,seedStyle:researcherMapSeedStyle,routeStyle:researcherMapRouteStyle,opacity:researcherMapOpacity})); }catch(e){}
+}
+function researcherMapSeedCandidates(item){
+  const authors=(item && item.authors)||[];
+  if(authors.length) return [authors[authors.length-1]];
+  return parseAuthorListText(item && item.correspondingAuthors || '').reverse().filter(a=>a && normalizeAuthorToken(a.family || a.given));
+}
+function researcherMapFindSeed(data,item){
+  for(const target of researcherMapSeedCandidates(item)){
+    const family=normalizeAuthorToken(target.family || target.given), given=normalizeAuthorToken(target.given);
+    const exact=data.nodes.map((n,i)=>({n,i})).filter(x=>normalizeAuthorToken(x.n.name.family || x.n.name.given)===family && given && normalizeAuthorToken(x.n.name.given)===given);
+    if(exact.length===1) return exact[0].i;
+    const compatible=data.nodes.map((n,i)=>({n,i})).filter(x=>researcherMapNamesCompatible(target,x.n.name));
+    if(compatible.length===1) return compatible[0].i;
+  }
+  return -1;
+}
+function focusResearcherMapData(data,item,maxDepth,maxNodes){
+  const seedOld=researcherMapFindSeed(data,item);
+  if(seedOld<0) return {nodes:[],edges:[],seedIndex:null,emptyKey:'researcherMapSeedMissing'};
+  const depth=Math.max(1,Math.min(8,Math.round(+maxDepth||researcherMapDepth)));
+  const cap=Math.max(2,maxNodes||RESEARCHER_MAP_MAX_NODES);
+  const adjacency=new Map(data.nodes.map((_,i)=>[i,[]]));
+  data.edges.forEach(edge=>{
+    adjacency.get(edge.a).push({edge,other:edge.b});
+    adjacency.get(edge.b).push({edge,other:edge.a});
+  });
+  const rank=(a,b)=>b.edge.count-a.edge.count || data.nodes[b.other].papers.length-data.nodes[a.other].papers.length || data.nodes[a.other].fullName.localeCompare(data.nodes[b.other].fullName);
+  adjacency.forEach(list=>list.sort(rank));
+  const distance=new Map([[seedOld,0]]),parent=new Map(),routeEdges=new Set(),oldIndices=[seedOld],queue=[seedOld];
+  let hasMore=false;
+  while(queue.length){
+    const current=queue.shift(), nextDepth=distance.get(current)+1;
+    if(nextDepth>depth) continue;
+    for(const link of adjacency.get(current)){
+      if(distance.has(link.other)) continue;
+      if(oldIndices.length>=cap){ hasMore=true; continue; }
+      distance.set(link.other,nextDepth);
+      parent.set(link.other,current);
+      routeEdges.add(link.edge);
+      oldIndices.push(link.other);
+      queue.push(link.other);
+    }
+  }
+  const keep=new Set(oldIndices), remap=new Map(oldIndices.map((old,i)=>[old,i]));
+  const nodes=oldIndices.map((old,i)=>{
+    const n=data.nodes[old];
+    n.index=i; n.seed=i===0; n.depth=distance.get(old)||0;
+    n.parentIndex=parent.has(old)?remap.get(parent.get(old)):null;
+    return n;
+  });
+  const edges=data.edges.filter(e=>keep.has(e.a)&&keep.has(e.b)).map(e=>{
+    const a=remap.get(e.a),b=remap.get(e.b),route=routeEdges.has(e);
+    let routeFrom=null,routeTo=null;
+    if(route){
+      // Draw every route from the discovered child back to its BFS parent.
+      // This makes the animated stream consistently travel toward the center.
+      if(parent.get(e.b)===e.a){routeFrom=b;routeTo=a;}
+      else if(parent.get(e.a)===e.b){routeFrom=a;routeTo=b;}
+    }
+    return Object.assign({},e,{a,b,route,routeFrom,routeTo});
+  });
+  return {nodes,edges,seedIndex:0,depth,truncated:hasMore,emptyKey:edges.length?'':'researcherMapSeedMissing'};
+}
+
+function researcherMapNodeRadius(count, maxCount, totalNodes){
+  if(count<=1) return totalNodes>100 ? 12 : 25;
+  const f = maxCount>2 ? Math.sqrt(Math.log(Math.max(1,count-1))/Math.log(Math.max(2,maxCount-1))) : 0;
+  return (totalNodes>100 ? 23 : 30) + (totalNodes>100 ? 22 : 26)*f;
+}
+function researcherMapShowNodeName(node,totalNodes){
+  return totalNodes<=100 || node.papers.length>1;
+}
+function researcherMapEdgeColor(count, maxCount){
+  const f = maxCount>1 ? Math.sqrt((count-1)/(maxCount-1)) : 0;
+  const h = 215 + 55*f, s = 22 + 52*f, l = 64 - 19*f;
+  return `hsl(${h.toFixed(0)},${s.toFixed(0)}%,${l.toFixed(0)}%)`;
+}
+function researcherMapLayout(nodes, edges, W, H, iterations){
+  const N = nodes.length;
+  if(!N) return;
+  const maxPapers = Math.max(1,...nodes.map(n=>n.papers.length));
+  const radii = nodes.map(n=>researcherMapNodeRadius(n.papers.length,maxPapers,N));
+  const levels=new Map();
+  nodes.forEach((n,i)=>{
+    if(!n.seed){ const d=Math.max(1,n.depth||1); if(!levels.has(d)) levels.set(d,[]); levels.get(d).push(i); }
+  });
+  nodes.forEach((n,i)=>{
+    if(n.seed){ n.x=W/2; n.y=H/2; }
+    else{
+      const depth=Math.max(1,n.depth||1), level=levels.get(depth), pos=level.indexOf(i);
+      const a = Math.PI*2*pos/Math.max(1,level.length) + depth*.57 + Math.random()*.08;
+      const r = Math.max(150*depth,level.length*64/(Math.PI*2));
+      n.x = W/2 + Math.cos(a)*r; n.y = H/2 + Math.sin(a)*r;
+    }
+    n.vx=0; n.vy=0;
+  });
+  const maxEdge = Math.max(1,...edges.map(e=>e.count));
+  const runs = iterations || (N>300 ? 70 : N>150 ? 110 : 190);
+  for(let it=0;it<runs;it++){
+    const temp = 1-it/runs;
+    for(let i=0;i<N;i++) for(let j=i+1;j<N;j++){
+      const A=nodes[i], B=nodes[j];
+      let dx=A.x-B.x, dy=A.y-B.y, d2=dx*dx+dy*dy;
+      if(!d2){ dx=.1; dy=.1; d2=.02; }
+      const d=Math.sqrt(d2), ux=dx/d, uy=dy/d;
+      const minD=radii[i]+radii[j]+28;
+      if(d < Math.max(330,minD)){
+        const force = Math.min(8, 3600/d2 + Math.max(0,minD-d)*.12);
+        A.vx+=ux*force; A.vy+=uy*force; B.vx-=ux*force; B.vy-=uy*force;
+      }
+    }
+    edges.forEach(e=>{
+      const A=nodes[e.a], B=nodes[e.b], dx=B.x-A.x, dy=B.y-A.y, d=Math.sqrt(dx*dx+dy*dy)||1;
+      const strength=e.count/maxEdge;
+      const target=radii[e.a]+radii[e.b]+112-20*strength;
+      const force=(d-target)*(.009+.009*strength);
+      A.vx+=dx/d*force; A.vy+=dy/d*force; B.vx-=dx/d*force; B.vy-=dy/d*force;
+    });
+    nodes.forEach(n=>{
+      if(n.seed){ n.x=W/2; n.y=H/2; n.vx=0; n.vy=0; return; }
+      n.vx+=(W/2-n.x)*.0018; n.vy+=(H/2-n.y)*.0018;
+      n.x+=Math.max(-11,Math.min(11,n.vx*temp)); n.y+=Math.max(-11,Math.min(11,n.vy*temp));
+      n.vx*=.58; n.vy*=.58;
+    });
+  }
+  // Deterministic final collision pass. The force simulation improves the
+  // overall shape; this pass guarantees that the rendered circles themselves
+  // do not overlap, even in dense ego networks or after a random re-layout.
+  for(let pass=0;pass<100;pass++){
+    let adjusted=false;
+    for(let i=0;i<N;i++) for(let j=i+1;j<N;j++){
+      const A=nodes[i],B=nodes[j],minD=radii[i]+radii[j]+24;
+      let dx=B.x-A.x,dy=B.y-A.y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d>=minD) continue;
+      if(!d){ const a=(i+1)*(j+2);dx=Math.cos(a);dy=Math.sin(a);d=1; }
+      const ux=dx/d,uy=dy/d,push=minD-d+.2;
+      if(A.seed){ B.x+=ux*push;B.y+=uy*push; }
+      else if(B.seed){ A.x-=ux*push;A.y-=uy*push; }
+      else{ A.x-=ux*push/2;A.y-=uy*push/2;B.x+=ux*push/2;B.y+=uy*push/2; }
+      adjusted=true;
+    }
+    if(!adjusted) break;
+  }
+  const seed=nodes.find(n=>n.seed);
+  if(seed){
+    const dx=W/2-seed.x,dy=H/2-seed.y;
+    nodes.forEach(n=>{n.x+=dx;n.y+=dy;});
+  }
+}
+function fitResearcherMapView(useDisplayedPositions){
+  const g=researcherMapState;
+  if(!g || !g.nodes.length) return;
+  const maxPapers=Math.max(1,...g.nodes.map(n=>n.papers.length));
+  const radii=g.nodes.map(n=>researcherMapNodeRadius(n.papers.length,maxPapers,g.nodes.length));
+  const minX=Math.min(...g.nodes.map((n,i)=>n.x-radii[i])), maxX=Math.max(...g.nodes.map((n,i)=>n.x+radii[i]));
+  const minY=Math.min(...g.nodes.map((n,i)=>n.y-radii[i])), maxY=Math.max(...g.nodes.map((n,i)=>n.y+radii[i]));
+  const seed=g.nodes[g.seedIndex==null?g.nodes.findIndex(n=>n.seed):g.seedIndex];
+  const boxW=seed ? Math.max(1,2*Math.max(seed.x-minX,maxX-seed.x)) : Math.max(1,maxX-minX);
+  const boxH=seed ? Math.max(1,2*Math.max(seed.y-minY,maxY-seed.y)) : Math.max(1,maxY-minY);
+  const pad=58;
+  const k=Math.max(.18,Math.min(2.5,Math.min((g.W-pad*2)/boxW,(g.H-pad*2)/boxH)));
+  g.view=seed
+    ? {x:seed.x-g.W/(2*k),y:seed.y-g.H/(2*k),k}
+    : {x:minX-(g.W/k-boxW)/2,y:minY-(g.H/k-boxH)/2,k};
+  updateResearcherMapViewBox();
+}
+function updateResearcherMapViewBox(){
+  const g=researcherMapState;
+  if(g) $('#researcherMapSvg').setAttribute('viewBox',`${g.view.x} ${g.view.y} ${g.W/g.view.k} ${g.H/g.view.k}`);
+}
+function researcherMapShortLabel(text,max){
+  const chars=Array.from(String(text||''));
+  return chars.length>max ? chars.slice(0,Math.max(1,max-1)).join('')+'…' : chars.join('');
+}
+function renderResearcherMap(){
+  const g=researcherMapState, svg=$('#researcherMapSvg');
+  if(!g) return;
+  updateResearcherMapViewBox();
+  $('#researcherMapStats').textContent=I18N[lang].researcherMapStats(g.nodes.length,g.edges.length);
+  $('#researcherMapEmpty').textContent=g.edges.length ? '' : t(g.emptyKey||'researcherMapEmpty');
+  if(!g.nodes.length){ svg.innerHTML=''; renderResearcherMapSide(); return; }
+  const maxPapers=Math.max(1,...g.nodes.map(n=>n.papers.length));
+  const maxEdge=Math.max(1,...g.edges.map(e=>e.count));
+  const edgeVisible=g.edges.map((e,i)=>{
+    const A=g.nodes[e.a], B=g.nodes[e.b];
+    const depth=e.route?g.nodes[e.routeFrom].depth:Math.max(A.depth||0,B.depth||0);
+    return `<line class="rmEdge${e.route?' rmRouteEdge':''}" data-rm-edge-line="${i}" data-rm-depth="${depth}" x1="${A.x.toFixed(1)}" y1="${A.y.toFixed(1)}" x2="${B.x.toFixed(1)}" y2="${B.y.toFixed(1)}" stroke="${researcherMapEdgeColor(e.count,maxEdge)}" stroke-width="${(1.4+3.6*Math.sqrt(e.count/maxEdge)).toFixed(2)}" opacity="${(.42+.38*Math.sqrt(e.count/maxEdge)).toFixed(2)}"></line>`;
+  }).join('');
+  const edgeHits=g.edges.map((e,i)=>{
+    const A=g.nodes[e.a], B=g.nodes[e.b];
+    return `<line class="rmEdgeHit" data-rm-edge="${i}" x1="${A.x.toFixed(1)}" y1="${A.y.toFixed(1)}" x2="${B.x.toFixed(1)}" y2="${B.y.toFixed(1)}"></line>`;
+  }).join('');
+  const nodeHtml=g.nodes.map((n,i)=>{
+    const r=researcherMapNodeRadius(n.papers.length,maxPapers,g.nodes.length), parts=n.parts;
+    const showName=researcherMapShowNodeName(n,g.nodes.length);
+    const longest=Math.max(Array.from(parts.given).length,Array.from(parts.family).length,1);
+    const font=Math.max(8.5,Math.min(12,r*1.45/longest+5));
+    const given=researcherMapShortLabel(parts.given,Math.max(8,Math.floor(r/3.7)));
+    const family=researcherMapShortLabel(parts.family,Math.max(8,Math.floor(r/3.7)));
+    const lines=given && family
+      ? `<tspan x="0" y="-6">${esc(given)}</tspan><tspan x="0" y="9">${esc(family)}</tspan>`
+      : `<tspan x="0" y="1">${esc(family||given)}</tspan>`;
+    const seedMarks=n.seed?`<circle class="rmSeedHalo" r="${(r+5).toFixed(1)}"></circle><circle class="rmSeedOrbit" r="${(r+9).toFixed(1)}"></circle>`:'';
+    return `<g class="rmNode${n.seed?' seed':''}" data-rm-node="${i}" data-rm-depth="${n.depth||0}" transform="translate(${n.x.toFixed(1)},${n.y.toFixed(1)})">${seedMarks}<circle class="rmCore" r="${r.toFixed(1)}"></circle>${showName?`<text class="rmNodeLabel" style="font-size:${font.toFixed(1)}px">${lines}</text>`:''}<title>${esc(n.fullName)} · ${esc(I18N[lang].researcherMapPaperCount(n.papers.length))}</title></g>`;
+  }).join('');
+  svg.innerHTML=`<g>${edgeVisible}<g id="researcherMapFlowLayer"></g>${edgeHits}${nodeHtml}</g>`;
+  applyResearcherMapHighlight();
+}
+function researcherMapActive(){
+  const g=researcherMapState;
+  return g && (g.hovered || g.selected);
+}
+function applyResearcherMapHighlight(){
+  const g=researcherMapState;
+  if(!g) return;
+  const svg=$('#researcherMapSvg'), active=researcherMapActive();
+  const contextual=!!active;
+  const focusNodes=new Set(), neighborNodes=new Set(), pathNodes=new Set(), keepEdges=new Set(), pathEdges=new Set(), flowDirections=new Map();
+  if(active && active.type==='node'){
+    focusNodes.add(active.index);
+    g.edges.forEach((e,i)=>{
+      if(e.a===active.index || e.b===active.index){
+        const neighbor=e.a===active.index?e.b:e.a;
+        keepEdges.add(i);
+        neighborNodes.add(neighbor);
+        flowDirections.set(i,{from:neighbor,to:active.index,kind:'neighbor'});
+      }
+    });
+    let child=active.index,guard=0;
+    while(child!=null && child!==g.seedIndex && guard++<g.nodes.length){
+      const parent=g.nodes[child]&&g.nodes[child].parentIndex;
+      if(parent==null) break;
+      pathNodes.add(parent);
+      const edgeIndex=g.edges.findIndex(e=>e.route&&((e.a===parent&&e.b===child)||(e.b===parent&&e.a===child)));
+      if(edgeIndex>=0){ pathEdges.add(edgeIndex); flowDirections.set(edgeIndex,{from:child,to:parent,kind:'path'}); }
+      child=parent;
+    }
+  }else if(active && active.type==='edge'){
+    const e=g.edges[active.index];
+    if(e){ keepEdges.add(active.index); focusNodes.add(e.a); focusNodes.add(e.b); }
+  }
+  const foreground=[];
+  svg.querySelectorAll('[data-rm-node]').forEach(el=>{
+    const i=+el.dataset.rmNode;
+    const focused=focusNodes.has(i),onPath=pathNodes.has(i),neighbor=neighborNodes.has(i);
+    el.classList.toggle('dim',contextual&&!focused&&!onPath&&!neighbor);
+    el.classList.toggle('neighborContext',contextual&&neighbor);
+    el.classList.toggle('pathContext',contextual&&onPath);
+    el.classList.toggle('centerContext',contextual&&i===g.seedIndex);
+    el.classList.toggle('active',!!active&&focused);
+    // Keep contextual researchers physically above the static network as well as visually distinct.
+    if(contextual && !g.hovered){
+      const priority=focused?4:(i===g.seedIndex?3:(neighbor?2:(onPath?1:0)));
+      if(priority) foreground.push({el,priority});
+    }
+  });
+  svg.querySelectorAll('[data-rm-edge-line]').forEach(el=>{
+    const i=+el.dataset.rmEdgeLine;
+    const flowing=flowDirections.has(i);
+    el.classList.toggle('dim',contextual&&!keepEdges.has(i)&&!pathEdges.has(i));
+    el.classList.toggle('flowContext',flowing);
+    el.classList.toggle('pathContext',contextual&&pathEdges.has(i));
+    el.classList.toggle('active',!!active&&keepEdges.has(i));
+  });
+  const flowLayer=svg.querySelector('#researcherMapFlowLayer');
+  if(flowLayer){
+    flowLayer.innerHTML=Array.from(flowDirections.entries()).map(([edgeIndex,direction])=>{
+      const A=g.nodes[direction.from],B=g.nodes[direction.to];
+      if(!A||!B) return '';
+      const contextClass=direction.kind==='path'?'pathContext':'neighborFlowContext';
+      const depth=Math.max(A.depth||0,B.depth||0,1);
+      return `<line class="rmRouteTrack flowContext ${contextClass}" data-rm-depth="${depth}" x1="${A.x.toFixed(1)}" y1="${A.y.toFixed(1)}" x2="${B.x.toFixed(1)}" y2="${B.y.toFixed(1)}"></line>`;
+    }).join('');
+  }
+  // Appending only the contextual groups makes them the top-most SVG elements, so static edges
+  // cannot show through a researcher circle even when that researcher is visually de-emphasized.
+  foreground.sort((a,b)=>a.priority-b.priority).forEach(({el})=>el.parentNode.appendChild(el));
+}
+function researcherMapSortedPapers(papers){
+  return (papers||[]).slice().sort((a,b)=>(parseInt(b.year,10)||0)-(parseInt(a.year,10)||0) || String(a.title||'').localeCompare(String(b.title||'')));
+}
+function researcherMapPaperHtml(it){
+  const meta=[it.year,journalDisplay(it)].filter(Boolean).join(' · ');
+  return `<div class="rmPaper"><div class="rmPaperTitle">${esc(it.title||t('newItem'))}</div>${meta?`<div class="rmPaperMeta">${esc(meta)}</div>`:''}<button class="rmPaperOpen" data-rm-paper="${esc(it.id)}" title="${esc(t('researcherMapOpenPaper'))}">${ic('arrowUpRight')}</button></div>`;
+}
+function renderResearcherMapSide(){
+  const g=researcherMapState, side=$('#researcherMapSide'), active=researcherMapActive();
+  if(!g || !active){ side.innerHTML=`<div class="noselect">${esc(t('researcherMapHint'))}</div>`; return; }
+  if(active.type==='edge'){
+    const e=g.edges[active.index];
+    if(!e) return;
+    const A=g.nodes[e.a], B=g.nodes[e.b];
+    side.innerHTML=`<div class="rmSideKicker">${esc(t('researcherMapCollaboration'))}</div><div class="rmSideTitle">${esc(A.fullName)}<br>× ${esc(B.fullName)}</div><div class="rmSideMeta">${esc(I18N[lang].researcherMapJointCount(e.count))}</div><div class="rmSection"><div class="rmSectionHead">${esc(t('researcherMapPapers'))}</div>${researcherMapSortedPapers(e.papers).map(researcherMapPaperHtml).join('')}</div>`;
+    return;
+  }
+  const n=g.nodes[active.index];
+  if(!n) return;
+  const collaborators=g.edges.filter(e=>e.a===active.index||e.b===active.index).map(e=>({index:e.a===active.index?e.b:e.a,count:e.count})).sort((a,b)=>b.count-a.count || g.nodes[a.index].fullName.localeCompare(g.nodes[b.index].fullName));
+  const aliases=Array.from(n.aliases).filter(x=>normalizeAuthorToken(x)!==normalizeAuthorToken(researcherMapAuthorText(n.name)));
+  const pathMeta=n.seed?'':` · ${I18N[lang].researcherMapDistance(n.depth)}`;
+  side.innerHTML=`<div class="rmSideKicker">${esc(t('correspondingAuthors'))}</div><div class="rmSideTitle">${esc(n.fullName)}</div><div class="rmSideMeta">${esc(I18N[lang].researcherMapPaperCount(n.papers.length)+pathMeta)}</div>${collaborators.length?`<div class="rmSection"><div class="rmSectionHead">${esc(t('researcherMapCollaborators'))}</div><div class="rmCollaborators">${collaborators.map(c=>`<button class="rmCollaborator" data-rm-select-node="${c.index}">${esc(g.nodes[c.index].fullName)} · ${c.count}</button>`).join('')}</div></div>`:''}<div class="rmSection"><div class="rmSectionHead">${esc(t('researcherMapPapers'))}</div>${researcherMapSortedPapers(n.papers).map(researcherMapPaperHtml).join('')}</div>${aliases.length?`<div class="rmAliases"><b>${esc(t('researcherMapAliases'))}:</b> ${esc(aliases.join('; '))}</div>`:''}`;
+}
+function updateResearcherMapControls(){
+  const depth=$('#researcherMapDepth'),depthOut=$('#researcherMapDepthValue'),style=$('#researcherMapStyle'),edgeStyle=$('#researcherMapEdgeStyle'),seedStyle=$('#researcherMapSeedStyle'),routeStyle=$('#researcherMapRouteStyle'),dlg=$('#dlgResearcherMap');
+  const nodeStyles=['aurora','pulse'];
+  const edgeStyles=['solid','dashed'];
+  const seedStyles=['pulseGlow','doubleGlow'];
+  const routeStyles=['flow','flowDepth','flowSoft'];
+  if(depth){ depth.value=researcherMapDepth; depth.style.setProperty('--rm-fill',`${((researcherMapDepth-1)/7)*100}%`); }
+  if(depthOut) depthOut.textContent=I18N[lang].researcherMapDepthValue(researcherMapDepth);
+  if(style) style.value=researcherMapStyle;
+  if(edgeStyle) edgeStyle.value=researcherMapEdgeStyle;
+  if(seedStyle) seedStyle.value=researcherMapSeedStyle;
+  if(routeStyle) routeStyle.value=researcherMapRouteStyle;
+  const routeEnabled=researcherMapEdgeStyle==='dashed';
+  if(routeStyle) routeStyle.disabled=!routeEnabled;
+  if(routeStyle&&routeStyle.closest('.rmRouteStyleControl')) routeStyle.closest('.rmRouteStyleControl').classList.toggle('is-disabled',!routeEnabled);
+  Object.keys(RESEARCHER_MAP_OPACITY_DEFAULTS).forEach(key=>{
+    const input=$(`#researcherMapOpacity${key[0].toUpperCase()+key.slice(1)}`);
+    const output=$(`#researcherMapOpacity${key[0].toUpperCase()+key.slice(1)}Value`);
+    if(input){ input.value=researcherMapOpacity[key]; input.style.setProperty('--rm-fill',`${researcherMapOpacity[key]}%`); }
+    if(output) output.textContent=I18N[lang].researcherMapOpacityValue(researcherMapOpacity[key]);
+  });
+  if(dlg){
+    dlg.classList.remove(...nodeStyles.map(x=>`rmNodeStyle-${x}`));
+    dlg.classList.remove(...edgeStyles.map(x=>`rmEdgeStyle-${x}`));
+    dlg.classList.remove(...seedStyles.map(x=>`rmSeed-${x}`));
+    dlg.classList.remove(...routeStyles.map(x=>`rmRoute-${x}`));
+    dlg.classList.add(`rmNodeStyle-${researcherMapStyle}`);
+    dlg.classList.add(`rmEdgeStyle-${researcherMapEdgeStyle}`);
+    dlg.classList.add(`rmSeed-${researcherMapSeedStyle}`);
+    dlg.classList.add(`rmRoute-${routeEnabled?researcherMapRouteStyle:'flow'}`);
+    dlg.style.setProperty('--rm-active-tone',`${researcherMapOpacity.active}%`);
+    dlg.style.setProperty('--rm-center-tone',`${researcherMapOpacity.center}%`);
+    dlg.style.setProperty('--rm-path-tone',`${researcherMapOpacity.path}%`);
+    dlg.style.setProperty('--rm-neighbor-tone',`${researcherMapOpacity.neighbor}%`);
+    dlg.style.setProperty('--rm-other-tone',`${researcherMapOpacity.other}%`);
+  }
+}
+function refreshResearcherMapAppearance(){
+  updateResearcherMapControls();
+  if(researcherMapState) renderResearcherMap();
+}
+function rebuildResearcherMap(){
+  if(!researcherMapFullData || !researcherMapSeedItem) return;
+  const data=focusResearcherMapData(researcherMapFullData,researcherMapSeedItem,researcherMapDepth);
+  const dlg=$('#dlgResearcherMap');
+  const wrap=$('#researcherMapCanvasWrap');
+  let W=wrap.clientWidth,H=wrap.clientHeight;
+  if(W<200||H<200){W=900;H=640;}
+  researcherMapLayout(data.nodes,data.edges,W,H);
+  researcherMapState={nodes:data.nodes,edges:data.edges,W,H,view:{x:0,y:0,k:1},selected:null,hovered:null,userView:false,seedIndex:data.seedIndex,emptyKey:data.emptyKey,truncated:data.truncated,depth:data.depth};
+  if(data.nodes.length) fitResearcherMapView();
+  renderResearcherMap();
+  renderResearcherMapSide();
+}
+function openResearcherMap(item){
+  researcherMapFullData=buildResearcherMapData(lib.items);
+  researcherMapSeedItem=item;
+  const dlg=$('#dlgResearcherMap');
+  updateResearcherMapControls();
+  dlg.showModal();
+  rebuildResearcherMap();
+}
+$('#researcherMapStyle').addEventListener('change',e=>{
+  if(!['aurora','pulse'].includes(e.target.value)) return;
+  researcherMapStyle=e.target.value;
+  saveResearcherMapPrefs();
+  refreshResearcherMapAppearance();
+});
+$('#researcherMapEdgeStyle').addEventListener('change',e=>{
+  if(!['solid','dashed'].includes(e.target.value)) return;
+  researcherMapEdgeStyle=e.target.value;
+  saveResearcherMapPrefs();
+  refreshResearcherMapAppearance();
+});
+$('#researcherMapSeedStyle').addEventListener('change',e=>{
+  if(!['pulseGlow','doubleGlow'].includes(e.target.value)) return;
+  researcherMapSeedStyle=e.target.value;
+  saveResearcherMapPrefs();
+  refreshResearcherMapAppearance();
+});
+$('#researcherMapRouteStyle').addEventListener('change',e=>{
+  if(!['flow','flowDepth','flowSoft'].includes(e.target.value)) return;
+  researcherMapRouteStyle=e.target.value;
+  saveResearcherMapPrefs();
+  refreshResearcherMapAppearance();
+});
+$('#researcherMapDepth').addEventListener('input',e=>{
+  researcherMapDepth=Math.max(1,Math.min(8,Math.round(+e.target.value||3)));
+  saveResearcherMapPrefs();
+  updateResearcherMapControls();
+  rebuildResearcherMap();
+});
+Object.keys(RESEARCHER_MAP_OPACITY_DEFAULTS).forEach(key=>{
+  const id=`#researcherMapOpacity${key[0].toUpperCase()+key.slice(1)}`;
+  $(id).addEventListener('input',e=>{
+    researcherMapOpacity[key]=Math.max(0,Math.min(100,Math.round(+e.target.value||0)));
+    saveResearcherMapPrefs();
+    updateResearcherMapControls();
+    applyResearcherMapHighlight();
+  });
+});
+$('#btnResearcherMapRelayout').addEventListener('click',()=>{
+  const g=researcherMapState; if(!g||!g.nodes.length) return;
+  researcherMapLayout(g.nodes,g.edges,g.W,g.H); g.userView=false; fitResearcherMapView(); renderResearcherMap();
+});
+$('#btnResearcherMapFit').addEventListener('click',()=>{ if(researcherMapState){ researcherMapState.userView=false; fitResearcherMapView(true); } });
+$('#researcherMapSide').addEventListener('click',e=>{
+  const nodeBtn=e.target.closest('[data-rm-select-node]');
+  if(nodeBtn&&researcherMapState){ researcherMapState.selected={type:'node',index:+nodeBtn.dataset.rmSelectNode}; researcherMapState.hovered=null; applyResearcherMapHighlight(); renderResearcherMapSide(); return; }
+  const paperBtn=e.target.closest('[data-rm-paper]');
+  if(paperBtn){ $('#dlgResearcherMap').close(); selectItem(paperBtn.dataset.rmPaper); }
+});
+$('#dlgResearcherMap').addEventListener('cancel',e=>{
+  // Escape is reserved for clearing the current map focus; the close button remains available.
+  e.preventDefault();
+  if(!researcherMapState) return;
+  researcherMapState.selected=null;
+  researcherMapState.hovered=null;
+  applyResearcherMapHighlight();
+  renderResearcherMapSide();
+});
+(function(){
+  const svg=$('#researcherMapSvg');
+  let pan=null,dragNode=null,pressEdge=null,moved=false;
+  svg.addEventListener('pointerover',e=>{
+    if(!researcherMapState) return;
+    const node=e.target.closest('[data-rm-node]'), edge=e.target.closest('[data-rm-edge]');
+    const next=node?{type:'node',index:+node.dataset.rmNode}:edge?{type:'edge',index:+edge.dataset.rmEdge}:null;
+    if(!next) return;
+    researcherMapState.hovered=next; applyResearcherMapHighlight(); renderResearcherMapSide();
+  });
+  svg.addEventListener('pointerout',e=>{
+    if(!researcherMapState || !e.target.closest('[data-rm-node],[data-rm-edge]')) return;
+    if(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('[data-rm-node],[data-rm-edge]')===e.target.closest('[data-rm-node],[data-rm-edge]')) return;
+    researcherMapState.hovered=null; applyResearcherMapHighlight(); renderResearcherMapSide();
+  });
+  svg.addEventListener('pointerdown',e=>{
+    const g=researcherMapState; if(!g) return;
+    const node=e.target.closest('[data-rm-node]'), edge=e.target.closest('[data-rm-edge]');
+    moved=false; pressEdge=null;
+    if(node) dragNode={index:+node.dataset.rmNode,x:e.clientX,y:e.clientY};
+    else if(edge) pressEdge={index:+edge.dataset.rmEdge,x:e.clientX,y:e.clientY};
+    else{pan={x:e.clientX,y:e.clientY,vx:g.view.x,vy:g.view.y};svg.classList.add('panning');}
+    svg.setPointerCapture(e.pointerId);
+  });
+  svg.addEventListener('pointermove',e=>{
+    const g=researcherMapState; if(!g) return;
+    if(dragNode){
+      const n=g.nodes[dragNode.index]; n.x+=(e.clientX-dragNode.x)/g.view.k; n.y+=(e.clientY-dragNode.y)/g.view.k;
+      if(Math.abs(e.clientX-dragNode.x)+Math.abs(e.clientY-dragNode.y)>2)moved=true;
+      dragNode.x=e.clientX;dragNode.y=e.clientY;g.userView=true;renderResearcherMap();
+    }else if(pan){
+      if(Math.abs(e.clientX-pan.x)+Math.abs(e.clientY-pan.y)>2)moved=true;
+      g.view.x=pan.vx-(e.clientX-pan.x)/g.view.k;g.view.y=pan.vy-(e.clientY-pan.y)/g.view.k;g.userView=true;updateResearcherMapViewBox();
+    }else if(pressEdge&&Math.abs(e.clientX-pressEdge.x)+Math.abs(e.clientY-pressEdge.y)>2)moved=true;
+  });
+  svg.addEventListener('pointerup',e=>{
+    const g=researcherMapState;if(!g)return;
+    if(dragNode&&!moved) g.selected=g.selected&&g.selected.type==='node'&&g.selected.index===dragNode.index?null:{type:'node',index:dragNode.index};
+    else if(pressEdge&&!moved) g.selected=g.selected&&g.selected.type==='edge'&&g.selected.index===pressEdge.index?null:{type:'edge',index:pressEdge.index};
+    else if(pan&&!moved){ g.selected=null; g.hovered=null; }
+    dragNode=null;pressEdge=null;pan=null;svg.classList.remove('panning');applyResearcherMapHighlight();renderResearcherMapSide();
+  });
+  svg.addEventListener('wheel',e=>{
+    const g=researcherMapState;if(!g||!g.nodes.length)return;
+    e.preventDefault();const v=g.view,rect=svg.getBoundingClientRect(),mx=v.x+(e.clientX-rect.left)/v.k,my=v.y+(e.clientY-rect.top)/v.k;
+    const k=Math.max(.18,Math.min(4,v.k*(e.deltaY<0?1.04:1/1.04)));
+    v.x=mx-(e.clientX-rect.left)/k;v.y=my-(e.clientY-rect.top)/k;v.k=k;g.userView=true;updateResearcherMapViewBox();
+  },{passive:false});
+  let resizeTimer=null;
+  new ResizeObserver(()=>{
+    const g=researcherMapState;if(!g)return;
+    const wrap=$('#researcherMapCanvasWrap'),W=wrap.clientWidth,H=wrap.clientHeight;
+    if(W<200||H<200||(W===g.W&&H===g.H))return;
+    g.W=W;g.H=H;updateResearcherMapViewBox();
+    if(g.userView)return;
+    clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(researcherMapState!==g)return;researcherMapLayout(g.nodes,g.edges,W,H);fitResearcherMapView();renderResearcherMap();},120);
+  }).observe($('#researcherMapCanvasWrap'));
+})();
 /* ---------------------------------------------------------------
    Related-papers graph (Connected Papers style).
    Pool = seed refs + citing works (with their reference lists), scored by
@@ -8588,5 +9313,6 @@ window.__refshelf = { parseBibTeX, parseRIS, parseZoteroRdf, itemToBibTeX, itemT
   resolveOpenAlexWork, fetchOpenAlexReferences, fetchOpenAlexCitedBy, openAlexToItem, openCitationsDialog,
   enrichCorresponding, oaCorrespondingAuthors, refreshCitedByCounts, refreshCorrespondingAuthors,
   buildGraphData, graphLayout, openGraphDialog, get graphState(){ return graphState; },
+  buildResearcherMapData, focusResearcherMapData, researcherMapLayout, researcherMapNodeRadius, researcherMapShowNodeName, get researcherMapState(){ return researcherMapState; },
   get lib(){ return lib; }, startDemo: ()=>startWithBackend(memBackend()),
   buildZip, downloadConnectorZip, get connectorFiles(){ return CONNECTOR_FILES; } };
