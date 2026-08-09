@@ -345,6 +345,78 @@
   <div class="dlgFoot"><span class="citSource" data-i18n="citeSource">データ提供: OpenAlex</span><span style="flex:1"></span><button class="tbtn" data-close data-i18n="close">閉じる</button></div>
 </dialog>
 
+<!-- ============ corresponding-author collaboration map ============ -->
+<dialog id="dlgResearcherMap" class="rmNodeStyle-aurora rmEdgeStyle-solid rmSeed-pulseGlow rmRoute-flow">
+  <div class="dlgHead"><span data-i18n="researcherMap">Researcher Map</span>
+    <span style="flex:1"></span>
+    <button class="tbtn" id="btnResearcherMapRelayout" style="font-size:12px; margin-right:6px"><span class="ic" data-ic="graph"></span><span data-i18n="graphRelayout">再レイアウト</span></button>
+    <button data-close><span class="ic" data-ic="x"></span></button>
+  </div>
+  <div id="researcherMapBody">
+    <div id="researcherMapCanvasWrap">
+      <svg id="researcherMapSvg" role="img" data-i18n-title="researcherMapAria" aria-label="責任著者の共同研究ネットワーク"></svg>
+      <div id="researcherMapToolbar">
+        <button class="tbtn" id="btnResearcherMapFit"><span class="ic" data-ic="zoom"></span><span data-i18n="graphFit">全体表示</span></button>
+        <label class="rmDepthControl" data-i18n-title="researcherMapDepthLabel">
+          <span data-i18n="researcherMapDepth">深度</span>
+          <input id="researcherMapDepth" type="range" min="1" max="8" step="1" value="3">
+          <output id="researcherMapDepthValue">3</output>
+        </label>
+        <label class="rmNodeStyleControl" data-i18n-title="researcherMapStyleLabel">
+          <span data-i18n="researcherMapStyle">円</span>
+          <select id="researcherMapStyle">
+            <option value="aurora" data-i18n="researcherMapStyleAurora">Aurora (Style 1)</option>
+            <option value="pulse" data-i18n="researcherMapStylePulse">Pulse (Style 2)</option>
+          </select>
+        </label>
+        <label class="rmEdgeStyleControl" data-i18n-title="researcherMapEdgeStyleLabel">
+          <span data-i18n="researcherMapEdgeStyle">線</span>
+          <select id="researcherMapEdgeStyle">
+            <option value="solid" data-i18n="researcherMapEdgeSolid">実線</option>
+            <option value="dashed" data-i18n="researcherMapEdgeDashed">破線</option>
+          </select>
+        </label>
+        <label class="rmSeedStyleControl" data-i18n-title="researcherMapSeedStyleLabel">
+          <span data-i18n="researcherMapSeedStyle">中心</span>
+          <select id="researcherMapSeedStyle">
+            <option value="pulseGlow" data-i18n="researcherMapSeedPulseGlow">Pulse + Glow (Style 1)</option>
+            <option value="doubleGlow" data-i18n="researcherMapSeedDoubleGlow">二重線 + Glow (Style 2)</option>
+          </select>
+        </label>
+        <label class="rmRouteStyleControl" data-i18n-title="researcherMapRouteStyleLabel">
+          <span data-i18n="researcherMapRouteStyle">流線の表示形式</span>
+          <select id="researcherMapRouteStyle">
+            <option value="flow" data-i18n="researcherMapRouteFlow">Style 1</option>
+            <option value="flowDepth" data-i18n="researcherMapRouteFlowDepth">Style 3</option>
+            <option value="flowSoft" data-i18n="researcherMapRouteFlowSoft">Style 4</option>
+          </select>
+        </label>
+        <details class="rmOpacityControl" data-i18n-title="researcherMapOpacityLabel">
+          <summary><span data-i18n="researcherMapOpacity">色の濃さ</span><span class="rmOpacitySummary" data-i18n="researcherMapOpacityDetail">詳細</span></summary>
+          <div class="rmOpacityMenu">
+            <label><span data-i18n="researcherMapOpacityActive">選択研究者</span><input id="researcherMapOpacityActive" type="range" min="0" max="100" step="1" value="100"><output id="researcherMapOpacityActiveValue">100%</output></label>
+            <label><span data-i18n="researcherMapOpacityCenter">中心研究者</span><input id="researcherMapOpacityCenter" type="range" min="0" max="100" step="1" value="100"><output id="researcherMapOpacityCenterValue">100%</output></label>
+            <label><span data-i18n="researcherMapOpacityPath">中心までの経由研究者</span><input id="researcherMapOpacityPath" type="range" min="0" max="100" step="1" value="50"><output id="researcherMapOpacityPathValue">50%</output></label>
+            <label><span data-i18n="researcherMapOpacityNeighbor">選択研究者から深度1</span><input id="researcherMapOpacityNeighbor" type="range" min="0" max="100" step="1" value="100"><output id="researcherMapOpacityNeighborValue">100%</output></label>
+            <label><span data-i18n="researcherMapOpacityOther">その他</span><input id="researcherMapOpacityOther" type="range" min="0" max="100" step="1" value="10"><output id="researcherMapOpacityOtherValue">10%</output></label>
+          </div>
+        </details>
+        <span id="researcherMapStats"></span>
+      </div>
+      <div id="researcherMapEmpty"></div>
+      <div id="researcherMapLegend">
+        <span data-i18n="researcherMapLegendSize">円の大きさ = 責任著者論文数</span>
+        <span class="rmLegendEdge"><span data-i18n="researcherMapLegendEdge">線の色 = 共同責任著者論文数</span><span class="rmEdgeGradient"></span></span>
+        <span class="rmLegendRoute"><span class="rmRouteSample"></span><span data-i18n="researcherMapLegendRoute">流線 = ホバー／クリックした研究者から中心への経路</span></span>
+      </div>
+    </div>
+    <aside id="researcherMapSide">
+      <div class="noselect" data-i18n="researcherMapHint">研究者または共同研究の線にカーソルを合わせると詳細を表示します</div>
+    </aside>
+  </div>
+  <div class="dlgFoot"><span class="citSource" data-i18n="researcherMapSource">ライブラリ内の責任著者情報から作成</span><span style="flex:1"></span><button class="tbtn" data-close data-i18n="close">閉じる</button></div>
+</dialog>
+
 <!-- ============ advanced search dialog ============ -->
 <dialog id="dlgAdvancedSearch">
   <div class="dlgHead"><span data-i18n="advancedSearch">詳細検索</span><button data-close><span class="ic" data-ic="x"></span></button></div>
