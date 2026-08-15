@@ -51,6 +51,9 @@ const ICONS = {
   check:'<path d="M5 12.5 10 17.5 19.5 6.5"/>',
   arrowDownLeft:'<path d="M17 7 7 17M7 17h7M7 17v-7"/>',
   arrowUpRight:'<path d="M7 17 17 7M17 7h-7M17 7v7"/>',
+  grip:'<path d="M9 6h.01M9 12h.01M9 18h.01M15 6h.01M15 12h.01M15 18h.01"/>',
+  chevronUp:'<path d="M6 14.5 12 9l6 5.5"/>',
+  chevronDown:'<path d="M6 9.5 12 15l6-5.5"/>',
   download:'<path d="M12 4v10m0 0 4-4m-4 4-4-4"/><path d="M5 18.5h14"/>',
   upload:'<path d="M12 15V5m0 0 4 4m-4-4-4 4"/><path d="M5 18.5h14"/>',
   moon:'<path d="M20.5 15.2A8.2 8.2 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2z"/>',
@@ -61,6 +64,7 @@ const ICONS = {
   mapPin:'<path d="M12 21c4.5-4.6 7-8 7-11a7 7 0 1 0-14 0c0 3 2.5 6.4 7 11z"/><circle cx="12" cy="10" r="2.5"/>',
   globe:'<circle cx="12" cy="12" r="8.2"/><path d="M3.8 12h16.4M12 3.8c2.4 2.2 3.6 5.2 3.6 8.2s-1.2 6-3.6 8.2c-2.4-2.2-3.6-5.2-3.6-8.2S9.6 6 12 3.8z"/>',
   clipboard:'<rect x="5.5" y="5" width="13" height="15" rx="1.5"/><path d="M9 5V3.8h6V5M8.5 8.5h7M8.5 12h7M8.5 15.5h4"/>',
+  copy:'<rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15.5 8.5V6A1.5 1.5 0 0 0 14 4.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/>',
   eyeOff:'<path d="M4 4l16 16"/><path d="M9.9 5.2A9.6 9.6 0 0 1 12 5c5 0 8.5 4 9.5 7a12 12 0 0 1-2.2 3.3M6.5 6.8C4.2 8.2 2.8 10.4 2.5 12c1 3 4.5 7 9.5 7a9.3 9.3 0 0 0 3.6-.7"/><path d="M9.8 9.9a3 3 0 0 0 4.2 4.2"/>',
 };
 function ic(name, attrs){
@@ -313,6 +317,7 @@ const I18N = {
     authorAll:'全員', authorFirst3:'3名まで + et al.', authorFirst1:'1名のみ + et al.',
     viewCards:'カード表示', viewTable:'表表示', viewShelves:'文献棚', viewKanban:'カンバン', viewGallery:'ギャラリー', viewCompact:'画像リスト', viewMagazine:'マガジン',
     displaySettings:'表示設定', columnsLabel:'列数', cols2:'2列', cols3:'3列', cols4:'4列',
+    imageFitLabel:'画像の表示', imageFitCrop:'余白なし（トリミング）', imageFitContain:'全体表示（余白あり）',
     shelfRecent:'最近追加した文献', shelfStarred:'スター付き', shelfReading:'読書中', shelfPdf:'PDFあり', shelfCollections:'コレクション',
     shelfItems:(n)=>`${n} 件`, shelfMore:(n)=>`ほか ${n} 件`, shelfEmpty:'この棚に文献はありません', shelfRecentDays:'日以内',
     readingStatus:'読書状態', statusUnread:'未読', statusReading:'読書中', statusRead:'読了',
@@ -359,6 +364,8 @@ const I18N = {
     addPdf:'PDF を添付', openLink:'リンクを開く', openAttachment:'開く', copyCite:'引用をコピー', copyBib:'BibTeX をコピー',
     citationStyle:'引用スタイル', citationSettings:'引用設定', authorScope:'著者', authorScopeAll:'全著者', authorScopeFirst:'ファーストオーサーのみ', authorScopeCorresponding:'責任著者のみ', includeTitle:'タイトルを含める', includeUrl:'URL を含める',
     citePreview:'引用プレビュー', citePreviewHint:'現在の設定でコピーされる引用文', copy:'コピー',
+    detailEdit:'編集', detailEditHint:'この文献の情報を編集', detailDisplaySettings:'表示設定', detailDisplaySettingsHint:'表示する項目と並び順を設定', detailSettingsHint:'チェックで表示・非表示、⋮⋮ をドラッグ（または ↑↓）で並び替え。データがない項目は自動で非表示になります。', detailNoData:'データなし', detailMoveUp:'上へ', detailMoveDown:'下へ',
+    refAuthors:'著者', imageBorderToggle:'画像に枠線を表示', authorOpenResearcher:(n)=>`${n} の研究者情報を開く`, authorCorresponding:'責任著者',
     citations:'引用関係', citationsTitle:'引用関係', citationsFor:(t)=>`「${t}」の引用関係`,
     citeReferences:'引用している文献', citeCitedBy:'引用されている文献',
     citeLoading:'OpenAlex から取得中…', citeNotFound:'OpenAlex にこの文献が見つかりませんでした',
@@ -568,6 +575,7 @@ const I18N = {
     authorAll:'All authors', authorFirst3:'First 3 + et al.', authorFirst1:'First author + et al.',
     viewCards:'Card view', viewTable:'Table view', viewShelves:'Literature shelves', viewKanban:'Kanban', viewGallery:'Gallery', viewCompact:'Image list', viewMagazine:'Magazine',
     displaySettings:'Display', columnsLabel:'Columns', cols2:'2 columns', cols3:'3 columns', cols4:'4 columns',
+    imageFitLabel:'Image', imageFitCrop:'Fill (no margin)', imageFitContain:'Fit whole image (margin)',
     shelfRecent:'Recently added', shelfStarred:'Starred', shelfReading:'Reading', shelfPdf:'PDF attached', shelfCollections:'Collections',
     shelfItems:(n)=>`${n} item${n===1?'':'s'}`, shelfMore:(n)=>`${n} more`, shelfEmpty:'No papers on this shelf', shelfRecentDays:'days',
     readingStatus:'Reading status', statusUnread:'Unread', statusReading:'Reading', statusRead:'Read',
@@ -614,6 +622,8 @@ const I18N = {
     addPdf:'Attach PDF', openLink:'Open link', openAttachment:'Open', copyCite:'Copy citation', copyBib:'Copy BibTeX',
     citationStyle:'Citation style', citationSettings:'Citation settings', authorScope:'Authors', authorScopeAll:'All authors', authorScopeFirst:'First author only', authorScopeCorresponding:'Corresponding only', includeTitle:'Include title', includeUrl:'Include URL',
     citePreview:'Citation preview', citePreviewHint:'The citation that will be copied with the current settings', copy:'Copy',
+    detailEdit:'Edit', detailEditHint:'Edit this reference', detailDisplaySettings:'Display settings', detailDisplaySettingsHint:'Choose which items appear and their order', detailSettingsHint:'Toggle each item, and drag ⋮⋮ (or use ↑↓) to reorder. Items with no data are hidden automatically.', detailNoData:'no data', detailMoveUp:'Move up', detailMoveDown:'Move down',
+    refAuthors:'Authors', imageBorderToggle:'Show image border', authorOpenResearcher:(n)=>`Open researcher profile for ${n}`, authorCorresponding:'Corresponding author',
     citations:'Citations', citationsTitle:'Citation relations', citationsFor:(t)=>`Citation relations for “${t}”`,
     citeReferences:'References (this cites)', citeCitedBy:'Cited by',
     citeLoading:'Fetching from OpenAlex…', citeNotFound:'This item was not found in OpenAlex',
@@ -1775,6 +1785,37 @@ let researcherDetailPrefs;
 try{ researcherDetailPrefs=JSON.parse(localStorage.getItem('refshelf.researcherDetailPrefs')||'{}'); }catch(_e){ researcherDetailPrefs={}; }
 researcherDetailPrefs=Object.assign({sources:false,careerTypes:false},researcherDetailPrefs||{});
 function saveResearcherDetailPrefs(){ try{ localStorage.setItem('refshelf.researcherDetailPrefs',JSON.stringify(researcherDetailPrefs)); }catch(_e){} }
+// Reference (文献) detail pane: read-only by default, switch to the classic edit
+// form with the 編集 button. Which content blocks appear and their order are a
+// GLOBAL preference (shared by all references), stored in localStorage.
+let detailEditMode = false;
+let referenceDetailSettingsOpen = false;
+const REFERENCE_DETAIL_BLOCKS = ['image','authors','cite','abstract','attachments','organize','notes'];
+function sanitizeReferenceOrder(order){
+  const result = (Array.isArray(order)?order:[]).filter(k=>REFERENCE_DETAIL_BLOCKS.includes(k));
+  // Insert any block missing from a saved order at its canonical position
+  // (right after its preceding default block) instead of appending at the end,
+  // so newly added blocks like 'authors' land near where they belong.
+  REFERENCE_DETAIL_BLOCKS.forEach((k, idx)=>{
+    if(result.includes(k)) return;
+    let insertAt = result.length;
+    for(let p=idx-1; p>=0; p--){
+      const pos = result.indexOf(REFERENCE_DETAIL_BLOCKS[p]);
+      if(pos>=0){ insertAt = pos+1; break; }
+    }
+    result.splice(insertAt, 0, k);
+  });
+  return result;
+}
+let referenceDetailPrefs;
+try{ referenceDetailPrefs=JSON.parse(localStorage.getItem('refshelf.referenceDetailPrefs')||'{}'); }catch(_e){ referenceDetailPrefs={}; }
+referenceDetailPrefs.order = sanitizeReferenceOrder(referenceDetailPrefs.order);
+referenceDetailPrefs.visible = Object.assign(Object.fromEntries(REFERENCE_DETAIL_BLOCKS.map(k=>[k,true])), referenceDetailPrefs.visible||{});
+// Image frame off by default; toggled from the 表示設定 panel.
+referenceDetailPrefs.imageBorder = referenceDetailPrefs.imageBorder===true;
+// Corresponding-author "*" mark on the authors block; on by default.
+referenceDetailPrefs.authorCorrMark = referenceDetailPrefs.authorCorrMark!==false;
+function saveReferenceDetailPrefs(){ try{ localStorage.setItem('refshelf.referenceDetailPrefs',JSON.stringify({order:referenceDetailPrefs.order,visible:referenceDetailPrefs.visible,imageBorder:referenceDetailPrefs.imageBorder,authorCorrMark:referenceDetailPrefs.authorCorrMark})); }catch(_e){} }
 let researcherInstitutionDisplayPrefs;
 try{ researcherInstitutionDisplayPrefs=JSON.parse(localStorage.getItem('refshelf.researcherInstitutionDisplay')||'{}'); }catch(_e){ researcherInstitutionDisplayPrefs={}; }
 researcherInstitutionDisplayPrefs=Object.assign({past:false},researcherInstitutionDisplayPrefs||{});
@@ -3852,10 +3893,14 @@ function researcherDirectoryEntries(){
   if(researcherDirectoryCache.version===changeVersion) return researcherDirectoryCache.entries;
   const generated=new Map();
   lib.items.filter(it=>!isItemTrashed(it)).forEach(it=>parseAuthorListText(it.correspondingAuthors).forEach(a=>{
-    const name=researcherDisplayName(a), key=researcherKey(name);
+    // Corresponding-author text is often abbreviated ("Matsuda, K."); resolve
+    // it against this paper's own author list so the directory key matches the
+    // fuller name used by the author chips (same reconciliation as the map).
+    const resolved=researcherMapResolvedAuthor(it,a);
+    const name=researcherDisplayName(resolved), key=researcherKey(name);
     if(!name||!key) return;
     const entry=generated.get(key) || {key,name,aliases:new Set(),paperIds:new Set(),profile:null};
-    entry.aliases.add(name); entry.paperIds.add(it.id); generated.set(key,entry);
+    entry.aliases.add(name); entry.aliases.add(researcherDisplayName(a)); entry.paperIds.add(it.id); generated.set(key,entry);
   }));
   // A manually registered profile must remain reachable even before any of its
   // papers has been linked to the library (notably from related-researcher links).
@@ -3901,6 +3946,8 @@ function researcherExternalUrl(profile, type){
   // CiNii Research does not have one uniform researcher-ID URL pattern.  Keep
   // supplied profile URLs clickable and otherwise retain the verified ID only.
   if(type==='cinii') return /^https?:\/\//i.test(raw) ? raw : '';
+  // Chem-Station links are stored as full URLs; keep them clickable as-is.
+  if(type==='chemstation') return /^https?:\/\//i.test(raw) ? raw : '';
   return '';
 }
 function renderWorkspace(){
@@ -5277,15 +5324,15 @@ function openInstDict(){
   const s=$('#instDictSearch'); if(s){ s.value=''; }
 }
 function researcherLinksHtml(p){
-  const links=[['orcid','ORCID'],['googleScholar','Google Scholar'],['researchGate','ResearchGate'],['linkedin','LinkedIn'],['wikipedia','Wikipedia'],['researchmap','researchmap'],['openalex','OpenAlex'],['scopus','Scopus'],['researcherId','ResearcherID'],['dblp','DBLP'],['cinii','CiNii Research']].map(([type,label])=>{
+  const links=[['orcid','ORCID'],['googleScholar','Google Scholar'],['researchGate','ResearchGate'],['linkedin','LinkedIn'],['wikipedia','Wikipedia'],['researchmap','researchmap'],['openalex','OpenAlex'],['scopus','Scopus'],['researcherId','ResearcherID'],['dblp','DBLP'],['cinii','CiNii Research'],['chemstation','Chem-Station']].map(([type,label])=>{
     const url=researcherExternalUrl(p,type); return url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`:'';
   }).filter(Boolean);
   if(p.website&&/^https?:\/\//i.test(p.website)) links.push(`<a href="${esc(p.website)}" target="_blank" rel="noopener noreferrer">${esc(t('researcherWebsite'))}</a>`);
   return links.join('');
 }
 function researcherDetailLinksHtml(p){
-  const marks={orcid:'iD',googleScholar:'G',researchGate:'RG',linkedin:'in',wikipedia:'W',researchmap:'R',openalex:'OA',scopus:'S',researcherId:'W',dblp:'DB',cinii:'Ci'}, labels={orcid:'ORCID',googleScholar:'Scholar',researchGate:'ResearchGate',linkedin:'LinkedIn',wikipedia:'Wikipedia',researchmap:'researchmap',openalex:'OpenAlex',scopus:'Scopus',researcherId:'ResearcherID',dblp:'DBLP',cinii:'CiNii'};
-  const links=['orcid','googleScholar','researchmap','researchGate','linkedin','wikipedia','openalex','scopus','researcherId','dblp','cinii'].map(type=>{
+  const marks={orcid:'iD',googleScholar:'G',researchGate:'RG',linkedin:'in',wikipedia:'W',researchmap:'R',openalex:'OA',scopus:'S',researcherId:'W',dblp:'DB',cinii:'Ci',chemstation:'CS'}, labels={orcid:'ORCID',googleScholar:'Scholar',researchGate:'ResearchGate',linkedin:'LinkedIn',wikipedia:'Wikipedia',researchmap:'researchmap',openalex:'OpenAlex',scopus:'Scopus',researcherId:'ResearcherID',dblp:'DBLP',cinii:'CiNii',chemstation:'Chem-Station'};
+  const links=['orcid','googleScholar','researchmap','researchGate','linkedin','wikipedia','openalex','scopus','researcherId','dblp','cinii','chemstation'].map(type=>{
     const raw=String(p&&p.identifiers&&p.identifiers[type]||'').trim(), url=researcherExternalUrl(p,type);
     if(url) return `<a class="researcherExternalButton" href="${esc(url)}" target="_blank" rel="noopener noreferrer"><b>${esc(marks[type])}</b><span>${esc(labels[type])}</span></a>`;
     return raw?`<span class="researcherExternalButton" title="${esc(raw)}"><b>${esc(marks[type])}</b><span>${esc(labels[type])}: ${esc(raw)}</span></span>`:'';
@@ -5305,6 +5352,7 @@ function researcherSourceLabelForUrl(url){
     if(host==='researchmap.jp') return 'researchmap';
     if(host==='scholar.google.com') return 'Google Scholar';
     if(host.endsWith('researchgate.net')) return 'ResearchGate';
+    if(host==='chem-station.com') return 'Chem-Station';
     return host;
   }catch(_e){ return String(url||''); }
 }
@@ -5345,15 +5393,19 @@ function researcherImageEditorHtml(p){
   return `<div class="researcherImageEditor"><button class="researcherImageTap" data-researcher-image-paste title="${esc(t('researcherImagePaste'))}">${preview}</button><div class="researcherImageActions"><button class="tbtn" data-researcher-image-file>${ic('image')}${esc(t('researcherImageSelect'))}</button><button class="tbtn" data-researcher-image-paste>${ic('clipboard')}${esc(t('researcherImagePaste'))}</button></div></div>`;
 }
 function researcherImagePosition(profile){
-  const clamp=value=>Math.max(-100,Math.min(200,Number.isFinite(Number(value))?Number(value):50));
+  // x/y are literal object-position percentages (0=top/left edge, 100=bottom/right
+  // edge of the source image), not an offset from center — see researcherImagePositionStyle.
+  const clamp=value=>Math.max(0,Math.min(100,Number.isFinite(Number(value))?Number(value):50));
   return {x:clamp(profile&&profile.imagePositionX),y:clamp(profile&&profile.imagePositionY)};
 }
 function researcherImageScale(profile){ return Math.max(1,Math.min(3,Number.isFinite(Number(profile&&profile.imageScale))?Number(profile.imageScale):1)); }
+// object-fit:cover + object-position lets the browser compute the crop from the
+// image's real dimensions, so the full source (e.g. the top of a tall portrait)
+// stays reachable via x/y alone; zoom (scale) then magnifies around that same anchor.
 function researcherImagePositionStyle(profile){
   const {x,y}=researcherImagePosition(profile);
   const scale=researcherImageScale(profile);
-  const offset=value=>((50-value)/50)*(scale-1)*50;
-  return ` style="object-position:50% 50%;--researcher-image-scale:${scale};--researcher-image-offset-x:${offset(x).toFixed(3)}%;--researcher-image-offset-y:${offset(y).toFixed(3)}%"`;
+  return ` style="object-position:${x}% ${y}%;transform-origin:${x}% ${y}%;--researcher-image-scale:${scale}"`;
 }
 function researcherEntryForDetail(){
   return researcherEntryByIdentity(selectedResearcherKey, selectedResearcherId);
@@ -5392,10 +5444,10 @@ function researcherSourceLabel(source){
   return t('researcherSourceUnknown');
 }
 function researcherIdentifierLabel(key){
-  return ({orcid:'ORCID',openalex:'OpenAlex',researchmap:'researchmap',googleScholar:'Google Scholar',researchGate:'ResearchGate',linkedin:'LinkedIn',wikipedia:'Wikipedia',scopus:'Scopus Author ID',researcherId:'ResearcherID',dblp:'DBLP',cinii:'CiNii Research'})[key]||key;
+  return ({orcid:'ORCID',openalex:'OpenAlex',researchmap:'researchmap',googleScholar:'Google Scholar',researchGate:'ResearchGate',linkedin:'LinkedIn',wikipedia:'Wikipedia',scopus:'Scopus Author ID',researcherId:'ResearcherID',dblp:'DBLP',cinii:'CiNii Research',chemstation:'Chem-Station'})[key]||key;
 }
 function researcherSourceKeyForInput(id){
-  return ({'r-displayName':'displayName','r-aliases':'aliases','r-currentInstitutions':'currentInstitutions','r-pastInstitutions':'pastInstitutions','r-birthDate':'birthDate','r-phdYear':'phdYear','r-totalCitations':'totalCitations','r-hIndex':'hIndex','r-i10Index':'i10Index','r-worksCount':'worksCount','r-imageUrl':'imageUrl','r-researchFields':'researchFields','r-relatedResearchers':'relatedResearchers','r-website':'website','r-orcid':'identifiers.orcid','r-googleScholar':'identifiers.googleScholar','r-researchGate':'identifiers.researchGate','r-linkedin':'identifiers.linkedin','r-wikipedia':'identifiers.wikipedia','r-researchmap':'identifiers.researchmap','r-openalex':'identifiers.openalex','r-scopus':'identifiers.scopus','r-researcherId':'identifiers.researcherId','r-dblp':'identifiers.dblp','r-cinii':'identifiers.cinii'})[id]||'';
+  return ({'r-displayName':'displayName','r-aliases':'aliases','r-currentInstitutions':'currentInstitutions','r-pastInstitutions':'pastInstitutions','r-birthDate':'birthDate','r-phdYear':'phdYear','r-totalCitations':'totalCitations','r-hIndex':'hIndex','r-i10Index':'i10Index','r-worksCount':'worksCount','r-imageUrl':'imageUrl','r-researchFields':'researchFields','r-relatedResearchers':'relatedResearchers','r-website':'website','r-orcid':'identifiers.orcid','r-googleScholar':'identifiers.googleScholar','r-researchGate':'identifiers.researchGate','r-linkedin':'identifiers.linkedin','r-wikipedia':'identifiers.wikipedia','r-researchmap':'identifiers.researchmap','r-openalex':'identifiers.openalex','r-scopus':'identifiers.scopus','r-researcherId':'identifiers.researcherId','r-dblp':'identifiers.dblp','r-cinii':'identifiers.cinii','r-chemstation':'identifiers.chemstation'})[id]||'';
 }
 function researcherFieldSource(profile,key){
   if(!profile) return '';
@@ -5483,7 +5535,21 @@ function externalProfileInfo(raw){
   if(host.endsWith('researchgate.net')) return {source:'researchGate',id:url.href,url:url.href};
   if(host.endsWith('linkedin.com') && /^(in|pub)\//i.test(path)) return {source:'linkedin',id:url.href,url:url.href};
   if(host.endsWith('wikipedia.org') && /^wiki\//i.test(path)) return {source:'wikipedia',id:url.href,url:url.href};
+  // Chem-Station chemist database (ケムステの人物データベース). The chemist-db slug
+  // encodes the romanised name, so no page fetch is needed to seed given/family.
+  if(host==='chem-station.com' && /^chemist-db\//i.test(path)) return {source:'chemstation',id:url.href,url:url.href};
   return null;
+}
+// Given a Chem-Station chemist-db URL, derive {given, family} from the trailing
+// slug (e.g. ".../hironori-kaji.html" → Hironori / Kaji). Slugs are romanised in
+// given-family (Western) order with words separated by hyphens.
+function chemStationNameFromUrl(raw){
+  let url; try{ url=new URL(String(raw||'').trim()); }catch(_e){ return null; }
+  const slug=(url.pathname.replace(/^\/+|\/+$/g,'').split('/').pop()||'').replace(/\.html?$/i,'');
+  const parts=slug.split('-').map(s=>s.trim()).filter(Boolean);
+  if(parts.length<2) return null;
+  const cap=s=>s.charAt(0).toUpperCase()+s.slice(1).toLowerCase();
+  return {family:cap(parts.pop()), given:parts.map(cap).join(' ')};
 }
 function orcidValue(value){ return value&&typeof value==='object' ? String(value.value||value.content||'').trim() : String(value||'').trim(); }
 function orcidSummaryGroups(record,key){
@@ -5657,6 +5723,7 @@ function researcherDetailFormHtml(entry, p){
     ${researcherFieldRow(p,'identifiers.linkedin',t('researcherLinkedIn'),'r-linkedin',ids.linkedin||'')}
     ${researcherFieldRow(p,'identifiers.researchmap','researchmap','r-researchmap',ids.researchmap||'')}
     ${researcherFieldRow(p,'identifiers.openalex','OpenAlex','r-openalex',ids.openalex||'')}
+    ${researcherFieldRow(p,'identifiers.chemstation','Chem-Station','r-chemstation',ids.chemstation||'')}
     ${researcherFieldRow(p,'website',t('researcherHomepage'),'r-website',pv.website||'')}
     ${p?`<div class="researcherLinks">${researcherLinksHtml(p)}</div>`:''}`;
 }
@@ -5670,7 +5737,7 @@ function researcherProfileDefaults(entry){
   const name=researcherLegacyNameParts(entry.name);
   return {
     id:'', displayName:researcherCanonicalDisplayName({familyName:name.family,givenName:name.given}), familyName:name.family, givenName:name.given, middleName:'', aliases:uniqueResearcherStrings(Array.from(entry.aliases||[])), affiliation:'',
-    identifiers:{orcid:'',googleScholar:'',researchGate:'',linkedin:'',researchmap:'',openalex:'',scopus:'',researcherId:'',dblp:'',cinii:''}, website:'',
+    identifiers:{orcid:'',googleScholar:'',researchGate:'',linkedin:'',researchmap:'',openalex:'',scopus:'',researcherId:'',dblp:'',cinii:'',chemstation:''}, website:'',
     affiliations:[], positions:[], education:[], awards:[], currentInstitutions:[], pastInstitutions:[], birthDate:'', phdYear:'', phdInstitution:'',phdDegree:'', phdAdvisor:'', totalCitations:'', hIndex:'', i10Index:'', worksCount:'', imageUrl:'', imagePositionX:50, imagePositionY:50, imageScale:1, researchFields:[], relatedResearchers:[], fieldSources:{}, enrichment:{}
   };
 }
@@ -5818,7 +5885,7 @@ function researcherAiNamedValues(value){
 function researcherAiCandidate(value){
   if(!value||typeof value!=='object') return null;
   const displayName=String(value.displayName||value.name||'').trim(); if(!displayName) return null;
-  const identifiers={}; ['orcid','openalex','researchmap','googleScholar','researchGate','linkedin','wikipedia','scopus','researcherId','dblp','cinii'].forEach(k=>{ if(String(value.identifiers&&value.identifiers[k]||'').trim()) identifiers[k]=String(value.identifiers[k]).trim(); });
+  const identifiers={}; ['orcid','openalex','researchmap','googleScholar','researchGate','linkedin','wikipedia','scopus','researcherId','dblp','cinii','chemstation'].forEach(k=>{ if(String(value.identifiers&&value.identifiers[k]||'').trim()) identifiers[k]=String(value.identifiers[k]).trim(); });
   const sourceUrls=researcherAiUrlArray(value.sourceUrls||value.sourceUrl);
   if(identifiers.orcid&&!/^https?:/i.test(identifiers.orcid)) sourceUrls.push(`https://orcid.org/${identifiers.orcid}`);
   if(identifiers.openalex&&!/^https?:/i.test(identifiers.openalex)) sourceUrls.push(`https://openalex.org/${identifiers.openalex}`);
@@ -5850,7 +5917,7 @@ function researcherAiResponseFromText(text){
     }
   });
   if(raw.identifiers&&typeof raw.identifiers==='object'){
-    const ids={}; ['orcid','openalex','researchmap','googleScholar','researchGate','linkedin','wikipedia','scopus','researcherId','dblp','cinii'].forEach(k=>{ if(String(raw.identifiers[k]||'').trim()&&setSource(`identifiers.${k}`,sourceUrls)) ids[k]=String(raw.identifiers[k]).trim(); }); if(Object.keys(ids).length) p.identifiers=ids;
+    const ids={}; ['orcid','openalex','researchmap','googleScholar','researchGate','linkedin','wikipedia','scopus','researcherId','dblp','cinii','chemstation'].forEach(k=>{ if(String(raw.identifiers[k]||'').trim()&&setSource(`identifiers.${k}`,sourceUrls)) ids[k]=String(raw.identifiers[k]).trim(); }); if(Object.keys(ids).length) p.identifiers=ids;
   }
   if(Array.isArray(raw.affiliations)){
     const affiliations=raw.affiliations.filter(a=>a&&String(a.name||'').trim()).map(a=>{ const start=researcherAiYear(a.start), end=researcherAiYear(a.end); if(start&&end&&Number(end)<Number(start)) throw new Error(t('researcherEditorInvalidPeriod')); const urls=researcherAiUrlArray(a.sourceUrls||a.sourceUrl); return {name:String(a.name).trim(),start,end,current:!end,sourceUrls:urls.length?urls:sourceUrls,sourceUrl:(urls[0]||sourceUrls[0]||'')}; });
@@ -6023,7 +6090,7 @@ function researcherEditorSectionHtml(section,draft,entry){
   if(section==='education') return `<section class="researcherEditorSection${selected}" data-editor-section="education"><h3>${esc(t('researcherEditorEducation'))}</h3><div class="researcherEditorPhd"><h4>${esc(t('researcherCareerPhd'))}</h4><div class="researcherEditorGrid">${field(t('researcherPhdYear'),`<select data-re-editor="phdYear">${yearOptionsHtml(draft.phdYear,1940)}</select>`,'','phdYear')}${field(t('researcherPhdInstitution'),input('phdInstitution',draft.phdInstitution),'','phdInstitution')}${field(t('researcherPhdDegree'),input('phdDegree',draft.phdDegree),'','phdDegree')}${field(t('researcherPhdAdvisor'),input('phdAdvisor',draft.phdAdvisor),'','phdAdvisor')}</div></div>${researcherEditorEducationHtml(draft)}</section>`;
   if(section==='image'){
     const preview=draft.imageUrl?`<span class="researcherImageFrame"><img class="researcherImage" src="${esc(draft.imageUrl)}" alt="" referrerpolicy="no-referrer"${researcherImagePositionStyle(draft)}></span>`:`<span class="researcherImagePlaceholder">${ic('image')}</span>`, position=researcherImagePosition(draft), scale=researcherImageScale(draft);
-    return `<section class="researcherEditorSection${selected}" data-editor-section="image"><h3>${esc(t('researcherEditorImage'))}</h3><div class="researcherEditorImage">${preview}<div class="researcherEditorImageActions"><button type="button" class="tbtn" data-editor-image-file>${ic('image')}${esc(t('researcherImageSelect'))}</button><button type="button" class="tbtn" data-editor-image-paste>${ic('clipboard')}${esc(t('researcherImagePaste'))}</button></div></div>${draft.imageUrl?`<div class="researcherImagePosition"><strong>${esc(t('researcherImagePosition'))}</strong><label>${esc(t('researcherImagePositionX'))}<input type="range" min="-100" max="200" value="${position.x}" data-editor-image-position="x"></label><label>${esc(t('researcherImagePositionY'))}<input type="range" min="-100" max="200" value="${position.y}" data-editor-image-position="y"></label><label>${esc(t('researcherImageScale'))}<input type="range" min="1" max="3" step="0.05" value="${scale}" data-editor-image-position="scale"></label><button type="button" class="tbtn" data-editor-image-position-reset>${esc(t('researcherImagePositionReset'))}</button></div>`:''}</section>`;
+    return `<section class="researcherEditorSection${selected}" data-editor-section="image"><h3>${esc(t('researcherEditorImage'))}</h3><div class="researcherEditorImage">${preview}<div class="researcherEditorImageActions"><button type="button" class="tbtn" data-editor-image-file>${ic('image')}${esc(t('researcherImageSelect'))}</button><button type="button" class="tbtn" data-editor-image-paste>${ic('clipboard')}${esc(t('researcherImagePaste'))}</button></div></div>${draft.imageUrl?`<div class="researcherImagePosition"><strong>${esc(t('researcherImagePosition'))}</strong><label>${esc(t('researcherImagePositionX'))}<input type="range" min="0" max="100" value="${position.x}" data-editor-image-position="x"></label><label>${esc(t('researcherImagePositionY'))}<input type="range" min="0" max="100" value="${position.y}" data-editor-image-position="y"></label><label>${esc(t('researcherImageScale'))}<input type="range" min="1" max="3" step="0.05" value="${scale}" data-editor-image-position="scale"></label><button type="button" class="tbtn" data-editor-image-position-reset>${esc(t('researcherImagePositionReset'))}</button></div>`:''}</section>`;
   }
   if(section==='basic') return `<section class="researcherEditorSection${selected}" data-editor-section="basic"><h3>${esc(t('researcherEditorBasic'))}</h3><p class="researcherEditorIntro">${esc(t('researcherNameHelp'))}</p><div class="researcherEditorGrid">${field(t('researcherFamilyName'),input('familyName',draft.familyName),'','familyName')}${field(t('researcherGivenName'),input('givenName',draft.givenName),'','givenName')}${field(t('researcherMiddleName'),input('middleName',draft.middleName),'','middleName')}${field(t('researcherAliases'),textarea('aliases',(draft.aliases||[]).join('\n')),'','aliases')}${field(t('researcherBirthDate'),`<div class="researcherEditorDate"><label><select data-re-editor-birth="y">${yearOptionsHtml(birth.y,1910)}</select>${esc(t('yearLabel'))}</label><label><select data-re-editor-birth="m">${monthOptionsHtml(birth.m)}</select>${esc(t('monthLabel'))}</label><label><select data-re-editor-birth="d">${dayOptionsHtml(birth.d)}</select>${esc(t('dayLabel'))}</label></div>`,'','birthDate')}${field(t('researcherPhdYear'),`<select data-re-editor="phdYear">${yearOptionsHtml(draft.phdYear,1940)}</select>`,'','phdYear')}${field(t('researcherPhdInstitution'),input('phdInstitution',draft.phdInstitution),'','phdInstitution')}${field(t('researcherPhdDegree'),input('phdDegree',draft.phdDegree),'','phdDegree')}${field(t('researcherPhdAdvisor'),input('phdAdvisor',draft.phdAdvisor),'','phdAdvisor')}</div></section>`;
   if(section==='aiimport'){
@@ -6035,7 +6102,7 @@ function researcherEditorSectionHtml(section,draft,entry){
   if(section==='education') return `<section class="researcherEditorSection${selected}" data-editor-section="education"><h3>${esc(t('researcherEditorEducation'))}</h3>${researcherEditorEducationHtml(draft)}</section>`;
   if(section==='research') return `<section class="researcherEditorSection${selected}" data-editor-section="research"><h3>${esc(t('researcherEditorResearch'))}</h3><div class="researcherEditorGrid">${field(t('researcherFields'),researcherEditorResearchFieldsHtml(draft),'full','researchFields')}${field(t('researcherTotalCitations'),input('totalCitations',draft.totalCitations),'','totalCitations')}${field(t('researcherHIndex'),input('hIndex',draft.hIndex),'','hIndex')}${field(t('researcherI10Index'),input('i10Index',draft.i10Index),'','i10Index')}${field(t('researcherWorksCount'),input('worksCount',draft.worksCount),'','worksCount')}${field(t('researcherHomepage'),input('website',draft.website),'','website')}</div></section>`;
   if(section==='awards') return `<section class="researcherEditorSection${selected}" data-editor-section="awards"><h3>${esc(t('researcherEditorAwards'))}</h3>${researcherEditorAwardsHtml(draft)}</section>`;
-  if(section==='profiles') return `<section class="researcherEditorSection${selected}" data-editor-section="profiles"><h3>${esc(t('researcherEditorProfiles'))}</h3><div class="researcherEditorGrid">${field('ORCID',input('identifiers.orcid',ids.orcid),'','identifiers.orcid')}${field('OpenAlex',input('identifiers.openalex',ids.openalex),'','identifiers.openalex')}${field('Google Scholar',input('identifiers.googleScholar',ids.googleScholar),'','identifiers.googleScholar')}${field('ResearchGate',input('identifiers.researchGate',ids.researchGate),'','identifiers.researchGate')}${field(t('researcherLinkedIn'),input('identifiers.linkedin',ids.linkedin),'','identifiers.linkedin')}${field(t('researcherWikipedia'),input('identifiers.wikipedia',ids.wikipedia),'','identifiers.wikipedia')}${field('researchmap',input('identifiers.researchmap',ids.researchmap),'','identifiers.researchmap')}${field('Scopus Author ID',input('identifiers.scopus',ids.scopus),'','identifiers.scopus')}${field('ResearcherID',input('identifiers.researcherId',ids.researcherId),'','identifiers.researcherId')}${field('DBLP',input('identifiers.dblp',ids.dblp),'','identifiers.dblp')}${field('CiNii Research ID / URL',input('identifiers.cinii',ids.cinii),'','identifiers.cinii')}</div></section>`;
+  if(section==='profiles') return `<section class="researcherEditorSection${selected}" data-editor-section="profiles"><h3>${esc(t('researcherEditorProfiles'))}</h3><div class="researcherEditorGrid">${field('ORCID',input('identifiers.orcid',ids.orcid),'','identifiers.orcid')}${field('OpenAlex',input('identifiers.openalex',ids.openalex),'','identifiers.openalex')}${field('Google Scholar',input('identifiers.googleScholar',ids.googleScholar),'','identifiers.googleScholar')}${field('ResearchGate',input('identifiers.researchGate',ids.researchGate),'','identifiers.researchGate')}${field(t('researcherLinkedIn'),input('identifiers.linkedin',ids.linkedin),'','identifiers.linkedin')}${field(t('researcherWikipedia'),input('identifiers.wikipedia',ids.wikipedia),'','identifiers.wikipedia')}${field('researchmap',input('identifiers.researchmap',ids.researchmap),'','identifiers.researchmap')}${field('Chem-Station',input('identifiers.chemstation',ids.chemstation),'','identifiers.chemstation')}${field('Scopus Author ID',input('identifiers.scopus',ids.scopus),'','identifiers.scopus')}${field('ResearcherID',input('identifiers.researcherId',ids.researcherId),'','identifiers.researcherId')}${field('DBLP',input('identifiers.dblp',ids.dblp),'','identifiers.dblp')}${field('CiNii Research ID / URL',input('identifiers.cinii',ids.cinii),'','identifiers.cinii')}</div></section>`;
   const preview=draft.imageUrl?`<span class="researcherImageFrame"><img class="researcherImage" src="${esc(draft.imageUrl)}" alt="" referrerpolicy="no-referrer"${researcherImagePositionStyle(draft)}></span>`:`<span class="researcherImagePlaceholder">${ic('image')}</span>`, imageUrl=String(draft.imageUrl||''), storedImage=/^data:image\//i.test(imageUrl), position=researcherImagePosition(draft), scale=researcherImageScale(draft);
   if(section==='image') return `<section class="researcherEditorSection${selected}" data-editor-section="image"><h3>${esc(t('researcherEditorImage'))}</h3><div class="researcherEditorImage">${preview}<div class="researcherEditorImageActions"><button type="button" class="tbtn" data-editor-image-file>${ic('image')}${esc(t('researcherImageSelect'))}</button><button type="button" class="tbtn" data-editor-image-paste>${ic('clipboard')}${esc(t('researcherImagePaste'))}</button></div></div>${draft.imageUrl?`<div class="researcherImagePosition"><strong>${esc(t('researcherImagePosition'))}</strong><label>${esc(t('researcherImagePositionX'))}<input type="range" min="0" max="100" value="${position.x}" data-editor-image-position="x"></label><label>${esc(t('researcherImagePositionY'))}<input type="range" min="0" max="100" value="${position.y}" data-editor-image-position="y"></label><label>${esc(t('researcherImageScale'))}<input type="range" min="1" max="3" step="0.05" value="${scale}" data-editor-image-position="scale"></label><button type="button" class="tbtn" data-editor-image-position-reset>${esc(t('researcherImagePositionReset'))}</button></div>`:''}<div class="researcherEditorGrid">${field(t('researcherImageUrlOptional'),`<input type="url" data-re-editor="imageUrl" value="${esc(storedImage?'':imageUrl)}" placeholder="https://example.org/photo.jpg">${storedImage?`<small class="researcherImageStored">${esc(t('researcherImageStored'))}</small>`:''}${`<small class="researcherImageUrlHelp">${esc(t('researcherImageUrlHelp'))}</small>`}`,'full','imageUrl')}</div></section>`;
   return `<section class="researcherEditorSection${selected}" data-editor-section="related"><h3>${esc(t('researcherEditorRelated'))}</h3><div class="researcherEditorGrid">${field(t('researcherRelated'),researcherEditorRelatedHtml(draft),'full','relatedResearchers')}</div></section>`;
@@ -6091,7 +6158,7 @@ function researcherEditorSetValue(key,value){
 function researcherEditorSetImagePosition(axis,value){
   const d=researcherEditorDraft; if(!d) return;
   if(axis==='scale'){ d.imageScale=Math.max(1,Math.min(3,Number(value)||1)); researcherEditorMarkDirty(); return; }
-  const n=Math.max(-100,Math.min(200,Number.isFinite(Number(value))?Number(value):50));
+  const n=Math.max(0,Math.min(100,Number.isFinite(Number(value))?Number(value):50));
   if(axis==='x') d.imagePositionX=n;
   else d.imagePositionY=n;
   researcherEditorMarkDirty();
@@ -6202,7 +6269,7 @@ function createResearcherProfileFromEntry(entry){
   const name=researcherLegacyNameParts(entry.name);
   const profile={
     id:uid(), displayName:researcherCanonicalDisplayName({familyName:name.family,givenName:name.given}), familyName:name.family, givenName:name.given, middleName:'', aliases:uniqueResearcherStrings(Array.from(entry.aliases||[])), affiliation:'',
-    identifiers:{orcid:'',googleScholar:'',researchGate:'',linkedin:'',researchmap:'',openalex:'',scopus:'',researcherId:'',dblp:'',cinii:''}, website:'',
+    identifiers:{orcid:'',googleScholar:'',researchGate:'',linkedin:'',researchmap:'',openalex:'',scopus:'',researcherId:'',dblp:'',cinii:'',chemstation:''}, website:'',
     affiliations:[], positions:[], education:[], awards:[], currentInstitutions:[], pastInstitutions:[], birthDate:'', phdYear:'', phdInstitution:'', phdDegree:'', phdAdvisor:'', totalCitations:'', hIndex:'', i10Index:'', worksCount:'', imageUrl:'', imagePositionX:50, imagePositionY:50, imageScale:1, researchFields:[], relatedResearchers:[],
     dateModified:new Date().toISOString()
   };
@@ -6814,9 +6881,9 @@ function readingStatusOptions(){ return READING_STATUSES.map(v=>({v,label:readin
 function compactPaperCardHTML(it, kind){
   return cardRowHTML(it).replace('class="cardRow ',`class="${kind}Paper cardRow `);
 }
-/* ---------- image-centric gallery views (gallery / compact / magazine) ---------- */
+/* ---------- image-centric gallery views (gallery / magazine) ---------- */
 // Views that render paper cards into #itemCards (reusing its click/drag/selection).
-const GALLERY_VIEWS = ['gallery','compact','magazine'];
+const GALLERY_VIEWS = ['gallery','magazine'];
 // Thumbnail inner: the reference figure/TOC image when present, else a journal
 // initials fallback. The <img> src is filled in asynchronously after render.
 function cardThumbInner(it){
@@ -7222,33 +7289,167 @@ function detailCollectionsDisplay(it){
   }).filter(Boolean).join('');
   return rows || `<span style="color:var(--text3);font-size:12px">—</span>`;
 }
+// The reference detail pane is read-only by default (better readability); the
+// 編集 button flips it to the classic edit form. Both modes share the action bar
+// (so the various action buttons stay available while editing) and the 表示設定
+// button, which controls which read-view blocks appear and in what order — a
+// global preference stored in referenceDetailPrefs.
 function renderDetail(){
   const pane = $('#detail');
   const it = lib.items.find(x=>x.id===selectedId);
   if(!it){ pane.innerHTML = `<div class="noselect">${esc(t('noSelect'))}</div>`; return; }
-  const journalFix = fixSuggestionForItem(it);
-  const atts = (it.attachments||[]).map((a,idx)=>
-    `<div class="attRow">${ic('file')}<span class="aname" data-open-att="${idx}" title="${esc(a.name)}">${esc(a.name)}</span>
-     <button class="attOpen" data-open-att="${idx}" title="${esc(t('openAttachment'))}">${ic('link')}${esc(t('openAttachment'))}</button>
-     <button class="attDel" data-del-att="${idx}" title="✕">${ic('x')}</button></div>`).join('');
-  pane.innerHTML = `
-    <div class="dActions">
+  pane.innerHTML = detailActionsHtml(it) + referenceDetailSettingsPanelHtml(it) +
+    (detailEditMode ? detailEditBodyHtml(it) : detailReadBodyHtml(it));
+  if(detailEditMode){
+    // long text fields: show full content (auto-grow instead of inner scrolling)
+    pane.querySelectorAll('textarea[data-f="title"], textarea[data-f="authors"], textarea[data-f="abstract"], textarea[data-f="notes"]').forEach(el=>{
+      el.classList.add('autogrow');
+      autoGrow(el);
+    });
+    wireTagEditor(pane);
+    wireCollectionEditor(pane);
+  }
+  if(it.image && it.image.name){ const im = pane.querySelector('[data-fig-img]'); if(im) loadItemImagePreview(im, it.image.name); }
+  updateCitePreview();
+}
+// Shared action bar (both read and edit modes).
+function detailActionsHtml(it){
+  return `<div class="dActions">
+      <button class="tbtn detailEditBtn${detailEditMode?' active':''}" data-act="toggleEdit" title="${esc(t('detailEditHint'))}" aria-pressed="${detailEditMode}">${ic('note')}${esc(t('detailEdit'))}</button>
       ${it.url||it.doi ? `<button class="tbtn" data-act="openlink">${ic('link')}${esc(t('openLink'))}</button>` : ''}
       <button class="tbtn" data-act="citations">${ic('citations')}${esc(t('citations'))}</button>
       <button class="tbtn" data-act="graph">${ic('graph')}${esc(t('graphView'))}</button>
       <button class="tbtn" data-act="researcherMap">${ic('users')}${esc(t('researcherMap'))}</button>
       <button class="tbtn" data-act="updateThis" title="${esc(t('updateThisItemHint'))}">${ic('retry')}${esc(t('updateThisItem'))}</button>
-    </div>
-    <div class="citePreview" id="citePreview" title="${esc(t('citePreviewHint'))}">
+      <button class="tbtn detailSettingsBtn${referenceDetailSettingsOpen?' active':''}" data-act="detailSettings" title="${esc(t('detailDisplaySettingsHint'))}" aria-expanded="${referenceDetailSettingsOpen}">${ic('sliders')}${esc(t('detailDisplaySettings'))}</button>
+    </div>`;
+}
+// Citation preview card, shared by the read-view 'cite' block and the edit form.
+function detailCitePreviewHtml(extraClass, dataBlock){
+  return `<div class="citePreview${extraClass?' '+extraClass:''}" id="citePreview"${dataBlock?` data-block="${dataBlock}"`:''} title="${esc(t('citePreviewHint'))}">
       <div class="cpHead">
-        <span data-i18n="citePreview">引用プレビュー</span>
+        <span>${esc(t('citePreview'))}</span>
         <span class="cpActions">
-          <span class="cpCopy" data-act="copycite">${ic('quote')}${esc(t('copy'))}</span>
+          <span class="cpCopy" data-act="copycite">${ic('copy')}${esc(t('copy'))}</span>
           <button class="cpIconBtn" data-act="citeprefs" title="${esc(t('citationSettings'))}" aria-label="${esc(t('citationSettings'))}">${ic('gear')}</button>
         </span>
       </div>
       <div class="cpText" id="citePreviewText"></div>
-    </div>
+    </div>`;
+}
+// Whether a read-view block has any content (empty blocks are auto-hidden).
+function referenceBlockHasData(it, key){
+  switch(key){
+    case 'image': return !!(it.image && it.image.name);
+    case 'authors': return (it.authors||[]).length>0;
+    case 'cite': return true;
+    case 'abstract': return !!String(it.abstract||'').trim();
+    case 'attachments': return (it.attachments||[]).length>0;
+    case 'organize': return (it.tags||[]).length>0 || (it.collections||[]).length>0;
+    case 'notes': return !!String(it.notes||'').trim();
+  }
+  return false;
+}
+function referenceBlockLabel(key){
+  return ({image:t('imageSection'), authors:t('refAuthors'), cite:t('citePreview'), abstract:t('abstract'), attachments:t('attachments'), organize:t('organize'), notes:t('notes')})[key] || key;
+}
+// The researcher directory entry an author name resolves to, if any (a
+// corresponding author elsewhere, or a registered profile). Used to decide
+// whether a detail-pane author is a clickable link to the researcher view.
+function authorResearcherEntry(name){
+  if(!String(name||'').trim()) return null;
+  const profile = findResearcherProfileByNames([name]);
+  return researcherEntryByIdentity(name, profile ? profile.id : null);
+}
+// One author in the read-view authors block: a link when a researcher entry
+// exists, plain text otherwise; a star marks corresponding authors.
+function detailAuthorHtml(a, corrAuthors){
+  const display = a.given ? `${a.given} ${a.family}`.trim() : (a.family || a.given || '');
+  if(!display) return '';
+  const isCorr = referenceDetailPrefs.authorCorrMark && authorMatchesCorresponding(a, corrAuthors);
+  const star = isCorr ? `<span class="refAuthorCorr" title="${esc(t('authorCorresponding'))}" aria-label="${esc(t('authorCorresponding'))}">*</span>` : '';
+  const matchName = researcherDisplayName(a);
+  const entry = authorResearcherEntry(matchName);
+  if(entry){
+    return `<button type="button" class="refAuthor linked" data-author-researcher-key="${esc(entry.key)}"${entry.profile&&entry.profile.id?` data-author-researcher-id="${esc(entry.profile.id)}"`:''} title="${esc(t('authorOpenResearcher')(display))}">`+
+      `<span class="refAuthorName">${esc(display)}</span>${star}<span class="refAuthorGo">${ic('arrowUpRight')}</span></button>`;
+  }
+  return `<span class="refAuthor"><span class="refAuthorName">${esc(display)}</span>${star}</span>`;
+}
+function detailReadBlockHtml(it, key){
+  switch(key){
+    case 'image':
+      return `<div class="refBlock refHero" data-block="image"><img class="refFig${referenceDetailPrefs.imageBorder?' bordered':''}" data-fig-img alt="${esc(t('imageSection'))}"></div>`;
+    case 'authors': {
+      const corrAuthors = referenceDetailPrefs.authorCorrMark ? parseAuthorListText(it.correspondingAuthors) : [];
+      const chips = (it.authors||[]).map(a=>detailAuthorHtml(a, corrAuthors)).filter(Boolean).join('');
+      return `<section class="refBlock refSection" data-block="authors"><div class="refLabel">${esc(t('refAuthors'))}<span class="refCount">${(it.authors||[]).length}</span></div><div class="refAuthors">${chips}</div></section>`;
+    }
+    case 'cite':
+      return detailCitePreviewHtml('refBlock','cite');
+    case 'abstract':
+      return `<section class="refBlock refSection" data-block="abstract"><div class="refLabel">${esc(t('abstract'))}</div><div class="refProse">${esc(it.abstract)}</div></section>`;
+    case 'attachments': {
+      const atts = (it.attachments||[]).map((a,idx)=>
+        `<button class="refAtt" data-open-att="${idx}" title="${esc(a.name)}">${ic('file')}<span class="aname">${esc(a.name)}</span><span class="go">${ic('arrowUpRight')}</span></button>`).join('');
+      return `<section class="refBlock refSection" data-block="attachments"><div class="refLabel">${esc(t('attachments'))}<span class="refCount">${(it.attachments||[]).length}</span></div>${atts}</section>`;
+    }
+    case 'organize': {
+      const tags = (it.tags||[]).length
+        ? `<div class="refChips">${(it.tags||[]).map(tg=>`<span class="refChip" ${tagChipStyle(tg)}>${ic('tag')}<span class="refChipName">${esc(tg)}</span></span>`).join('')}</div>` : '';
+      // When both a parent and its descendant are assigned, show only the most
+      // specific one (e.g. hide "A / B" when "A / B / C" is also present).
+      const assigned = it.collections || [];
+      const leafColls = assigned.filter(id => !assigned.some(other => other!==id && isCollectionDescendant(id, other)));
+      const colls = leafColls.length
+        ? `<div class="refChips">${leafColls.map(collReadChipHtml).join('')}</div>` : '';
+      return `<section class="refBlock refSection" data-block="organize"><div class="refLabel">${esc(t('organize'))}</div>${tags}${colls}</section>`;
+    }
+    case 'notes':
+      return `<section class="refBlock refSection" data-block="notes"><div class="refLabel">${esc(t('notes'))}</div><div class="refNote">${esc(it.notes)}</div></section>`;
+  }
+  return '';
+}
+function collReadChipHtml(id){
+  const c = lib.collections.find(x=>x.id===id);
+  if(!c) return '';
+  const label = collectionPathLabel(id) || c.name;
+  return `<span class="refChip" ${collectionChipStyle(c)}>${ic('folder')}<span class="refChipName">${esc(label)}</span></span>`;
+}
+function detailReadBodyHtml(it){
+  const blocks = referenceDetailPrefs.order
+    .filter(key => referenceDetailPrefs.visible[key] && referenceBlockHasData(it, key))
+    .map(key => detailReadBlockHtml(it, key))
+    .join('');
+  return `<div class="refDetailTitle">${esc(it.title || t('newItem'))}</div><div id="refBody">${blocks}</div>`;
+}
+function referenceDetailSettingsPanelHtml(it){
+  if(!referenceDetailSettingsOpen) return '';
+  const last = referenceDetailPrefs.order.length - 1;
+  const rows = referenceDetailPrefs.order.map((key, i)=>{
+    const missing = !referenceBlockHasData(it, key);
+    return `<li class="refSettingsRow${missing?' disabled':''}" data-block="${key}" draggable="true">`+
+      `<span class="refSettingsHandle">${ic('grip')}</span>`+
+      `<label><input type="checkbox" data-detail-vis="${key}"${referenceDetailPrefs.visible[key]?' checked':''}><span class="refSettingsName">${esc(referenceBlockLabel(key))}</span>${missing?`<span class="refSettingsNoData">${esc(t('detailNoData'))}</span>`:''}</label>`+
+      `<span class="refSettingsMove">`+
+        `<button class="refSettingsMoveBtn" data-detail-move="up" data-block="${key}"${i===0?' disabled':''} title="${esc(t('detailMoveUp'))}" aria-label="${esc(t('detailMoveUp'))}">${ic('chevronUp')}</button>`+
+        `<button class="refSettingsMoveBtn" data-detail-move="down" data-block="${key}"${i===last?' disabled':''} title="${esc(t('detailMoveDown'))}" aria-label="${esc(t('detailMoveDown'))}">${ic('chevronDown')}</button>`+
+      `</span>`+
+    `</li>`;
+  }).join('');
+  return `<div class="refSettingsPanel" role="group" aria-label="${esc(t('detailDisplaySettings'))}"><p class="refSettingsHint">${esc(t('detailSettingsHint'))}</p><ul class="refSettingsList" id="refSettingsList">${rows}</ul>`+
+    `<label class="refSettingsOpt"><input type="checkbox" data-detail-pref="imageBorder"${referenceDetailPrefs.imageBorder?' checked':''}><span>${esc(t('imageBorderToggle'))}</span></label>`+
+    `<label class="refSettingsOpt"><input type="checkbox" data-detail-pref="authorCorrMark"${referenceDetailPrefs.authorCorrMark?' checked':''}><span>${esc(t('authorMarkCorresponding'))}</span></label></div>`;
+}
+// The classic editable form (unchanged fields), minus the shared action bar.
+function detailEditBodyHtml(it){
+  const journalFix = fixSuggestionForItem(it);
+  const atts = (it.attachments||[]).map((a,idx)=>
+    `<div class="attRow">${ic('file')}<span class="aname" data-open-att="${idx}" title="${esc(a.name)}">${esc(a.name)}</span>
+     <button class="attOpen" data-open-att="${idx}" title="${esc(t('openAttachment'))}">${ic('link')}${esc(t('openAttachment'))}</button>
+     <button class="attDel" data-del-att="${idx}" title="✕">${ic('x')}</button></div>`).join('');
+  return `
+    ${detailCitePreviewHtml()}
     <div class="dSection">${esc(t('info'))}</div>
     ${fieldRow(t('title'),'title',it.title,'textarea')}
     ${fieldRow(t('authorsField'),'authors',authorsToText(it.authors),'textarea')}
@@ -7291,15 +7492,6 @@ function renderDetail(){
     ${fieldRow(t('notes'),'notes',it.notes,'textarea')}
     <div style="margin-top:16px">${isItemTrashed(it) ? `<button class="tbtn" data-act="restoreItem">${ic('arrowUpRight')}${esc(t('restoreItem'))}</button> <button class="tbtn danger" data-act="deleteForever">${ic('trash')}${esc(t('deleteForever'))}</button>` : `<button class="tbtn danger" data-act="delitem">${ic('trash')}${esc(t('deleteItem'))}</button>`}</div>
   `;
-  // long text fields: show full content (auto-grow instead of inner scrolling)
-  pane.querySelectorAll('textarea[data-f="title"], textarea[data-f="authors"], textarea[data-f="abstract"], textarea[data-f="notes"]').forEach(el=>{
-    el.classList.add('autogrow');
-    autoGrow(el);
-  });
-  wireTagEditor(pane);
-  wireCollectionEditor(pane);
-  if(it.image && it.image.name){ const im = pane.querySelector('[data-fig-img]'); if(im) loadItemImagePreview(im, it.image.name); }
-  updateCitePreview();
 }
 function autoGrow(el){
   el.style.height = 'auto';
@@ -9256,20 +9448,22 @@ async function fetchAndAddQuick(raw, opts){
 Object.assign(I18N.ja, {
   referenceAdd:'文献を追加', referenceImport:'文献をインポート', researcherAdd:'研究者を追加', researcherImport:'研究者をインポート',
   researcherManualAdd:'手動追加', researcherUrlAdd:'URL / ORCID / OpenAlex から取得', researcherAuthorsAdd:'論文著者から',
-  researcherIntakeTitle:'研究者を追加', researcherIntakeReview:'登録内容を確認', researcherIntakeName:'表示名', researcherIntakeFamily:'姓（英字）', researcherIntakeGiven:'名（英字）', researcherIntakeAffiliation:'所属', researcherIntakeAliases:'別表記（1行に1件）',
+  researcherIntakeTitle:'研究者を追加', researcherIntakeReview:'登録内容を確認', researcherIntakeFamily:'姓（英字）', researcherIntakeGiven:'名（英字）', researcherIntakeMiddle:'ミドルネーム（英字・任意）', researcherIntakeAffiliation:'所属', researcherIntakeAliases:'別表記（1行に1件）', researcherIntakeNameHelp:'表示名は姓・名・ミドルネームから自動的に決まります。',
   researcherIntakeProfileUrl:'外部プロフィール URL / ID', researcherIntakeCredential:'OpenAlex APIキー / ORCIDアクセストークン（任意）', researcherIntakeRetrieve:'取得して確認', researcherIntakeSave:'保存', researcherIntakeSource:'登録元', researcherIntakeLink:'一致する論文著者にも紐付ける',
   researcherIntakeNew:'新しいプロフィールとして登録', researcherIntakeExisting:'既存プロフィールに紐付け', researcherIntakeDuplicate:'一致する既存プロフィール', researcherIntakeNone:'ライブラリ内に登録候補の著者がいません。', researcherIntakeSelect:'登録する著者を選択',
   researcherIntakeInvalid:'表示名、または有効な外部プロフィールURLを入力してください。', researcherIntakeNoSelection:'登録する候補を1件以上選んでください。', researcherIntakeImported:n=>`${n} 名の研究者候補を読み込みました。`, researcherIntakeSaved:n=>`${n} 名の研究者を登録しました。`,
-  researcherIntakeUrlOnly:'このサービスはプロフィールURLのみを登録します。', researcherIntakeFetchFailed:'情報を取得できなかったため、URLのみを候補として登録します。', researcherAddBoxPh:'研究者名 / ORCID / OpenAlex URL を入力して Enter', researcherAiImportMenu:'AI調査JSON (.json)'
+  researcherIntakeUrlOnly:'このサービスはプロフィールURLのみを登録します。', researcherIntakeFetchFailed:'情報を取得できなかったため、URLのみを候補として登録します。', researcherAddBoxPh:'研究者名 / URL を入力', researcherAiImportMenu:'AI調査JSON (.json)',
+  researcherIntakeSearch:'論文名・著者名・コレクション・タグで検索', researcherIntakeSortCount:'論文数が多い順', researcherIntakeSortNameAsc:'名前（A→Z）', researcherIntakeSortNameDesc:'名前（Z→A）', researcherIntakeAllCollections:'すべてのコレクション', researcherIntakeAllTags:'すべてのタグ', researcherIntakeSelectAllVisible:'表示中をすべて選択', researcherIntakeClearSelection:'選択を解除', researcherIntakePaperCount:(n)=>`論文 ${n} 件`, researcherIntakeSelectedCount:(n,m)=>`選択 ${n} / 表示 ${m}`, researcherIntakeNoMatch:'条件に一致する著者がいません。'
 });
 Object.assign(I18N.en, {
   referenceAdd:'Add references', referenceImport:'Import references', researcherAdd:'Add researchers', researcherImport:'Import researchers',
   researcherManualAdd:'Manual entry', researcherUrlAdd:'From URL / ORCID / OpenAlex', researcherAuthorsAdd:'From paper authors',
-  researcherIntakeTitle:'Add researchers', researcherIntakeReview:'Review registrations', researcherIntakeName:'Display name', researcherIntakeFamily:'Family name', researcherIntakeGiven:'Given name', researcherIntakeAffiliation:'Affiliation', researcherIntakeAliases:'Name variants (one per line)',
+  researcherIntakeTitle:'Add researchers', researcherIntakeReview:'Review registrations', researcherIntakeFamily:'Family name', researcherIntakeGiven:'Given name', researcherIntakeMiddle:'Middle name (Latin script, optional)', researcherIntakeAffiliation:'Affiliation', researcherIntakeAliases:'Name variants (one per line)', researcherIntakeNameHelp:'The display name is derived automatically from the family, given, and middle names.',
   researcherIntakeProfileUrl:'External profile URL / ID', researcherIntakeCredential:'OpenAlex API key / ORCID access token (optional)', researcherIntakeRetrieve:'Retrieve and review', researcherIntakeSave:'Save', researcherIntakeSource:'Source', researcherIntakeLink:'Also link matching paper authors',
   researcherIntakeNew:'Create a new profile', researcherIntakeExisting:'Link to existing profile', researcherIntakeDuplicate:'Matching existing profile', researcherIntakeNone:'There are no paper authors to register.', researcherIntakeSelect:'Select authors to register',
   researcherIntakeInvalid:'Enter a display name or a valid external profile URL.', researcherIntakeNoSelection:'Select at least one candidate to register.', researcherIntakeImported:n=>`Loaded ${n} researcher candidate${n===1?'':'s'}.`, researcherIntakeSaved:n=>`Registered ${n} researcher${n===1?'':'s'}.`,
-  researcherIntakeUrlOnly:'This service saves only the profile URL.', researcherIntakeFetchFailed:'Could not retrieve profile data; the URL can still be registered.', researcherAddBoxPh:'Enter a researcher name / ORCID / OpenAlex URL', researcherAiImportMenu:'AI research JSON (.json)'
+  researcherIntakeUrlOnly:'This service saves only the profile URL.', researcherIntakeFetchFailed:'Could not retrieve profile data; the URL can still be registered.', researcherAddBoxPh:'Researcher name / URL', researcherAiImportMenu:'AI research JSON (.json)',
+  researcherIntakeSearch:'Search by paper, author, collection, or tag', researcherIntakeSortCount:'Most papers', researcherIntakeSortNameAsc:'Name (A→Z)', researcherIntakeSortNameDesc:'Name (Z→A)', researcherIntakeAllCollections:'All collections', researcherIntakeAllTags:'All tags', researcherIntakeSelectAllVisible:'Select all shown', researcherIntakeClearSelection:'Clear selection', researcherIntakePaperCount:(n)=>`${n} paper${n===1?'':'s'}`, researcherIntakeSelectedCount:(n,m)=>`${n} selected / ${m} shown`, researcherIntakeNoMatch:'No authors match the filters.'
 });
 let researcherIntakeQueue=[];
 function researcherIntakeDialog(){
@@ -9286,11 +9480,18 @@ function researcherCandidateName(c){
 }
 function researcherCandidateProfile(c){
   const name=researcherCandidateName(c), profile=researcherProfileDefaults({name,aliases:new Set(c.aliases||[])}), now=new Date().toISOString(), source=c.source||'manual', sourceUrl=c.sourceUrl||'';
-  profile.id=uid(); profile.displayName=name||profile.displayName; profile.familyName=String(c.familyName||profile.familyName||'').trim(); profile.givenName=String(c.givenName||profile.givenName||'').trim();
-  profile.aliases=uniqueResearcherStrings(c.aliases||profile.aliases||[]); profile.currentInstitutions=uniqueResearcherStrings(c.currentInstitutions||(c.affiliation?[c.affiliation]:[])); profile.affiliation=profile.currentInstitutions[0]||'';
+  profile.id=uid(); profile.familyName=String(c.familyName||profile.familyName||'').trim(); profile.givenName=String(c.givenName||profile.givenName||'').trim(); profile.middleName=String(c.middleName||profile.middleName||'').trim();
+  profile.aliases=uniqueResearcherStrings(c.aliases||profile.aliases||[]);
+  // The display name is never free-typed: it's always derived from
+  // family/given/middle (researcherCanonicalDisplayName is the single source
+  // of truth for name-order formatting, shared with the full researcher
+  // editor). `name` (candidate's own display heuristic) is only the fallback
+  // for candidates that arrive with no split family/given at all.
+  profile.displayName=researcherCanonicalDisplayName(profile, name||profile.displayName);
+  profile.currentInstitutions=uniqueResearcherStrings(c.currentInstitutions||(c.affiliation?[c.affiliation]:[])); profile.affiliation=profile.currentInstitutions[0]||'';
   profile.affiliations=profile.currentInstitutions.map(name=>({name,start:'',end:'',current:true,sourceUrls:sourceUrl?[sourceUrl]:[]})); profile.identifiers=Object.assign(profile.identifiers||{},c.identifiers||{}); profile.website=String(c.website||'').trim(); profile.researchFields=uniqueResearcherStrings(c.researchFields||[]);
   ['totalCitations','hIndex','worksCount'].forEach(key=>{profile[key]=c[key]==null?'':String(c[key]);}); profile.fieldSources={};
-  ['displayName','familyName','givenName','aliases','currentInstitutions','researchFields','website','totalCitations','hIndex','worksCount'].forEach(key=>{const value=profile[key];if(value&&(!Array.isArray(value)||value.length))profile.fieldSources[key]={source,url:sourceUrl,retrievedAt:now};});
+  ['displayName','familyName','givenName','middleName','aliases','currentInstitutions','researchFields','website','totalCitations','hIndex','worksCount'].forEach(key=>{const value=profile[key];if(value&&(!Array.isArray(value)||value.length))profile.fieldSources[key]={source,url:sourceUrl,retrievedAt:now};});
   Object.entries(profile.identifiers).forEach(([key,value])=>{if(value)profile.fieldSources[`identifiers.${key}`]={source,url:sourceUrl,retrievedAt:now};});
   // AI imports already passed the schema/source validation. Preserve their
   // complete structured profile instead of reducing it to compact fields.
@@ -9314,22 +9515,113 @@ function researcherRegisterCandidate(c,targetId,link){
   let profile=targetId?(lib.researchers||[]).find(p=>p.id===targetId):null;
   if(!profile){profile=researcherCandidateProfile(c);lib.researchers=lib.researchers||[];lib.researchers.push(profile);} if(link)researcherLinkMatchingAuthors(profile,c); touch(); return profile;
 }
+// One candidate card. In searchable mode it starts unchecked and carries
+// data-* attributes so the toolbar can filter/sort without re-rendering.
+function intakeCandidateCardHtml(c,index,opts){
+  const matches=researcherCandidateMatches(c),exact=matches.find(x=>x.exactId);
+  const options=[`<option value="">${esc(t('researcherIntakeNew'))}</option>`,...matches.map(x=>`<option value="${esc(x.profile.id)}"${exact&&exact.profile.id===x.profile.id?' selected':''}>${esc(t('researcherIntakeExisting'))}: ${esc(x.profile.displayName||'')}${x.exactId?' (ID)':''}</option>`)].join('');
+  const notes=[c.paperCount?t('researcherIntakePaperCount')(c.paperCount):(c.source&&`${t('researcherIntakeSource')}: ${c.source}`),c.sourceUrl,(c.currentInstitutions||[]).join(' · '),Object.entries(c.identifiers||{}).filter(([,v])=>v).map(([k,v])=>`${k}: ${v}`).join(' · ')].filter(Boolean);
+  // Label uses the same canonical family/given/middle formatting the saved
+  // profile will get (researcherCandidateName alone drops the middle name);
+  // duplicate-matching below deliberately keeps using researcherCandidateName
+  // as-is, since that's the form its name-key matching was built around.
+  const label=researcherCanonicalDisplayName(c, researcherCandidateName(c));
+  const data=opts.searchable?` data-intake-card="${index}" data-search="${esc(c._search||'')}" data-colls="${esc((c._collections||[]).join('|'))}" data-tags="${esc((c._tags||[]).join('|'))}" data-count="${c.paperCount||0}" data-name="${esc(label.toLowerCase())}"`:'';
+  return `<div class="researcherIntakeCandidate"${data}><input type="checkbox" data-intake-check="${index}"${opts.searchable?'':' checked'}><div><strong>${esc(label||'—')}</strong><small>${esc(notes.join(' · '))}</small>${matches.length?`<small class="researcherIntakeWarning">${esc(t('researcherIntakeDuplicate'))}: ${esc(matches.map(x=>x.profile.displayName).join(' / '))}</small><select data-intake-target="${index}">${options}</select>`:''}<label style="display:flex;gap:6px;align-items:center;margin-top:7px;font-size:12px;font-weight:500"><input type="checkbox" data-intake-link="${index}" checked> ${esc(t('researcherIntakeLink'))}</label></div></div>`;
+}
+function intakeToolbarHtml(queue){
+  const colls=[...new Set(queue.flatMap(c=>c._collections||[]))].sort((a,b)=>a.localeCompare(b,lang));
+  const tags=[...new Set(queue.flatMap(c=>c._tags||[]))].sort((a,b)=>a.localeCompare(b,lang));
+  const opt=(v,l,sel)=>`<option value="${esc(v)}"${sel?' selected':''}>${esc(l)}</option>`;
+  return `<div class="researcherIntakeToolbar">
+    <input type="search" id="intakeSearch" placeholder="${esc(t('researcherIntakeSearch'))}" autocomplete="off">
+    <div class="researcherIntakeToolbarRow">
+      <select id="intakeSort">${opt('count',t('researcherIntakeSortCount'),true)}${opt('nameAsc',t('researcherIntakeSortNameAsc'))}${opt('nameDesc',t('researcherIntakeSortNameDesc'))}</select>
+      ${colls.length?`<select id="intakeCollFilter">${opt('',t('researcherIntakeAllCollections'),true)}${colls.map(c=>opt(c,c)).join('')}</select>`:''}
+      ${tags.length?`<select id="intakeTagFilter">${opt('',t('researcherIntakeAllTags'),true)}${tags.map(tg=>opt(tg,tg)).join('')}</select>`:''}
+    </div>
+    <div class="researcherIntakeToolbarRow">
+      <button type="button" class="tbtn" id="intakeSelectAll">${esc(t('researcherIntakeSelectAllVisible'))}</button>
+      <button type="button" class="tbtn" id="intakeClearSel">${esc(t('researcherIntakeClearSelection'))}</button>
+      <span style="flex:1"></span>
+      <span class="researcherIntakeCount" id="intakeCount"></span>
+    </div>
+  </div>`;
+}
+function wireIntakeFilters(body){
+  const list=body.querySelector('#researcherIntakeList'), cards=[...list.querySelectorAll('[data-intake-card]')];
+  const search=body.querySelector('#intakeSearch'), collSel=body.querySelector('#intakeCollFilter'), tagSel=body.querySelector('#intakeTagFilter'), sortSel=body.querySelector('#intakeSort'), countEl=body.querySelector('#intakeCount'), noMatch=body.querySelector('#intakeNoMatch');
+  function updateCount(){
+    const visible=cards.filter(c=>c.style.display!=='none');
+    const sel=visible.filter(c=>c.querySelector('[data-intake-check]')?.checked).length;
+    if(countEl) countEl.textContent=t('researcherIntakeSelectedCount')(sel,visible.length);
+  }
+  function apply(){
+    const q=(search.value||'').trim().toLowerCase(), coll=collSel?collSel.value:'', tag=tagSel?tagSel.value:'';
+    let visible=0;
+    cards.forEach(card=>{
+      const colls=(card.dataset.colls||'').split('|'), tags=(card.dataset.tags||'').split('|');
+      const ok=(!q||(card.dataset.search||'').includes(q))&&(!coll||colls.includes(coll))&&(!tag||tags.includes(tag));
+      card.style.display=ok?'':'none'; if(ok) visible++;
+    });
+    const mode=sortSel.value;
+    cards.slice().sort((a,b)=>{
+      if(mode==='count') return (+b.dataset.count)-(+a.dataset.count)||a.dataset.name.localeCompare(b.dataset.name,lang);
+      if(mode==='nameDesc') return b.dataset.name.localeCompare(a.dataset.name,lang);
+      return a.dataset.name.localeCompare(b.dataset.name,lang);
+    }).forEach((card,i)=>{card.style.order=i;});
+    if(noMatch) noMatch.style.display=visible?'none':'';
+    updateCount();
+  }
+  search.addEventListener('input',apply);
+  [collSel,tagSel,sortSel].forEach(el=>el&&el.addEventListener('change',apply));
+  body.querySelector('#intakeSelectAll').addEventListener('click',()=>{cards.forEach(c=>{if(c.style.display!=='none'){const cb=c.querySelector('[data-intake-check]');if(cb)cb.checked=true;}});updateCount();});
+  body.querySelector('#intakeClearSel').addEventListener('click',()=>{cards.forEach(c=>{const cb=c.querySelector('[data-intake-check]');if(cb)cb.checked=false;});updateCount();});
+  list.addEventListener('change',e=>{if(e.target.matches('[data-intake-check]'))updateCount();});
+  apply();
+}
 function showResearcherReview(queue,opts={}){
   researcherIntakeQueue=queue||[]; const dlg=researcherIntakeDialog(), body=$('#researcherIntakeBody'), primary=$('#btnResearcherIntakePrimary'); $('#researcherIntakeTitle').textContent=opts.title||t('researcherIntakeReview'); $('#researcherIntakeHint').textContent=opts.hint||'';
   if(!researcherIntakeQueue.length){body.innerHTML=`<div class="researcherIntakeEmpty">${esc(t('researcherIntakeNone'))}</div>`;primary.hidden=true;}else{
-    body.innerHTML=`<div class="researcherIntakeCandidates">${researcherIntakeQueue.map((c,index)=>{const matches=researcherCandidateMatches(c),exact=matches.find(x=>x.exactId), options=[`<option value="">${esc(t('researcherIntakeNew'))}</option>`,...matches.map(x=>`<option value="${esc(x.profile.id)}"${exact&&exact.profile.id===x.profile.id?' selected':''}>${esc(t('researcherIntakeExisting'))}: ${esc(x.profile.displayName||'')}${x.exactId?' (ID)':''}</option>`)].join(''),notes=[c.source&&`${t('researcherIntakeSource')}: ${c.source}`,c.sourceUrl,(c.currentInstitutions||[]).join(' · '),Object.entries(c.identifiers||{}).filter(([,v])=>v).map(([k,v])=>`${k}: ${v}`).join(' · ')].filter(Boolean);return `<div class="researcherIntakeCandidate"><input type="checkbox" data-intake-check="${index}" checked><div><strong>${esc(researcherCandidateName(c)||'—')}</strong><small>${esc(notes.join(' · '))}</small>${matches.length?`<small class="researcherIntakeWarning">${esc(t('researcherIntakeDuplicate'))}: ${esc(matches.map(x=>x.profile.displayName).join(' / '))}</small><select data-intake-target="${index}">${options}</select>`:''}<label style="display:flex;gap:6px;align-items:center;margin-top:7px;font-size:12px;font-weight:500"><input type="checkbox" data-intake-link="${index}" checked> ${esc(t('researcherIntakeLink'))}</label></div></div>`;}).join('')}</div>`;
+    const toolbar=opts.searchable?intakeToolbarHtml(researcherIntakeQueue):'';
+    body.innerHTML=toolbar+`<div class="researcherIntakeCandidates" id="researcherIntakeList">${researcherIntakeQueue.map((c,index)=>intakeCandidateCardHtml(c,index,opts)).join('')}</div>`+(opts.searchable?`<div class="researcherIntakeEmpty" id="intakeNoMatch" style="display:none">${esc(t('researcherIntakeNoMatch'))}</div>`:'');
     primary.hidden=false;primary.textContent=t('researcherIntakeSave');primary.onclick=()=>{const selected=researcherIntakeQueue.map((c,index)=>({c,index})).filter(({index})=>body.querySelector(`[data-intake-check="${index}"]`)?.checked);if(!selected.length){showToast(t('researcherIntakeNoSelection'),true);return;}const profiles=selected.map(({c,index})=>researcherRegisterCandidate(c,body.querySelector(`[data-intake-target="${index}"]`)?.value||'',!!body.querySelector(`[data-intake-link="${index}"]`)?.checked));dlg.close();currentView='researchers';selectedResearcherId=profiles.at(-1).id;selectedResearcherKey=researcherDirectoryEntries().find(x=>x.profile&&x.profile.id===selectedResearcherId)?.key||'';renderAll();showToast(t('researcherIntakeSaved')(profiles.length));if(opts.extension)connectorResearcherResult(selected.map(({c})=>({id:c.extensionId,ok:true})).filter(x=>x.id));};
+    if(opts.searchable) wireIntakeFilters(body);
   } if(!dlg.open)dlg.showModal();
 }
 function showResearcherManual(seed={}){
-  const dlg=researcherIntakeDialog(),body=$('#researcherIntakeBody'),primary=$('#btnResearcherIntakePrimary'); $('#researcherIntakeTitle').textContent=t('researcherManualAdd');$('#researcherIntakeHint').textContent='';
-  body.innerHTML=`<div class="researcherIntakeGrid"><label>${esc(t('researcherIntakeName'))}<input id="intakeName" value="${esc(seed.displayName||'')}" autocomplete="name"></label><label>${esc(t('researcherIntakeAffiliation'))}<input id="intakeAffiliation" value="${esc(seed.affiliation||'')}"></label><label>${esc(t('researcherIntakeFamily'))}<input id="intakeFamily" value="${esc(seed.familyName||'')}"></label><label>${esc(t('researcherIntakeGiven'))}<input id="intakeGiven" value="${esc(seed.givenName||'')}"></label></div><label>${esc(t('researcherIntakeAliases'))}<textarea id="intakeAliases">${esc((seed.aliases||[]).join('\n'))}</textarea></label><div class="researcherIntakeGrid"><label>ORCID<input id="intakeOrcid" value="${esc(seed.identifiers?.orcid||'')}"></label><label>OpenAlex<input id="intakeOpenAlex" value="${esc(seed.identifiers?.openalex||'')}"></label><label>researchmap<input id="intakeResearchmap" value="${esc(seed.identifiers?.researchmap||'')}"></label><label>Website<input id="intakeWebsite" type="url" value="${esc(seed.website||'')}"></label></div>`;
-  primary.hidden=false;primary.textContent=t('researcherIntakeSave');primary.onclick=()=>{const c={displayName:$('#intakeName').value.trim(),familyName:$('#intakeFamily').value.trim(),givenName:$('#intakeGiven').value.trim(),aliases:$('#intakeAliases').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean),currentInstitutions:[$('#intakeAffiliation').value.trim()].filter(Boolean),identifiers:{orcid:$('#intakeOrcid').value.trim(),openalex:$('#intakeOpenAlex').value.trim(),researchmap:$('#intakeResearchmap').value.trim()},website:$('#intakeWebsite').value.trim(),source:'manual'};if(!researcherCandidateName(c)&&!Object.values(c.identifiers).some(Boolean)&&!c.website){showToast(t('researcherIntakeInvalid'),true);return;}dlg.close();showResearcherReview([c]);};if(!dlg.open)dlg.showModal();
+  const dlg=researcherIntakeDialog(),body=$('#researcherIntakeBody'),primary=$('#btnResearcherIntakePrimary'); $('#researcherIntakeTitle').textContent=t('researcherManualAdd');$('#researcherIntakeHint').textContent=t('researcherIntakeNameHelp');
+  // No free-typed "display name" field: it's always derived from family / given /
+  // middle (via researcherCanonicalDisplayName), so the name-order it produces
+  // can't be overridden per researcher here — see researcherCandidateProfile().
+  // Affiliation uses a datalist of already-known institution names (like the
+  // full researcher editor) so spelling doesn't drift between researchers,
+  // while still allowing a brand-new institution to be typed.
+  const instList=`<datalist id="intakeInstList">${knownInstitutionNames().map(n=>`<option value="${esc(n)}"></option>`).join('')}</datalist>`;
+  body.innerHTML=`<div class="researcherIntakeGrid"><label>${esc(t('researcherIntakeFamily'))}<input id="intakeFamily" value="${esc(seed.familyName||'')}" autocomplete="family-name"></label><label>${esc(t('researcherIntakeGiven'))}<input id="intakeGiven" value="${esc(seed.givenName||'')}" autocomplete="given-name"></label><label>${esc(t('researcherIntakeMiddle'))}<input id="intakeMiddle" value="${esc(seed.middleName||'')}"></label><label>${esc(t('researcherIntakeAffiliation'))}<input id="intakeAffiliation" list="intakeInstList" value="${esc(seed.affiliation||'')}">${instList}</label></div><label>${esc(t('researcherIntakeAliases'))}<textarea id="intakeAliases">${esc((seed.aliases||[]).join('\n'))}</textarea></label><div class="researcherIntakeGrid"><label>ORCID<input id="intakeOrcid" value="${esc(seed.identifiers?.orcid||'')}"></label><label>OpenAlex<input id="intakeOpenAlex" value="${esc(seed.identifiers?.openalex||'')}"></label><label>researchmap<input id="intakeResearchmap" value="${esc(seed.identifiers?.researchmap||'')}"></label><label>Chem-Station<input id="intakeChemStation" type="url" value="${esc(seed.identifiers?.chemstation||'')}"></label><label>Website<input id="intakeWebsite" type="url" value="${esc(seed.website||'')}"></label></div>`;
+  primary.hidden=false;primary.textContent=t('researcherIntakeSave');primary.onclick=()=>{const c={familyName:$('#intakeFamily').value.trim(),givenName:$('#intakeGiven').value.trim(),middleName:$('#intakeMiddle').value.trim(),aliases:$('#intakeAliases').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean),currentInstitutions:[$('#intakeAffiliation').value.trim()].filter(Boolean),identifiers:{orcid:$('#intakeOrcid').value.trim(),openalex:$('#intakeOpenAlex').value.trim(),researchmap:$('#intakeResearchmap').value.trim(),chemstation:$('#intakeChemStation').value.trim()},website:$('#intakeWebsite').value.trim(),source:'manual'};if(!researcherCandidateName(c)&&!Object.values(c.identifiers).some(Boolean)&&!c.website){showToast(t('researcherIntakeInvalid'),true);return;}dlg.close();showResearcherReview([c]);};if(!dlg.open)dlg.showModal();
 }
 function researcherSourceCandidate(raw){
   let value=String(raw||'').trim();if(/^\d{4}-\d{4}-\d{4}-[\dX]{4}$/i.test(value))value=`https://orcid.org/${value.toUpperCase()}`;if(/^A\d+$/i.test(value))value=`https://openalex.org/${value.toUpperCase()}`;
   const info=externalProfileInfo(value);if(!info){try{const url=new URL(value);return /^https?:$/i.test(url.protocol)?{displayName:'',identifiers:{},website:url.href,source:'website',sourceUrl:url.href,currentInstitutions:[]}:null;}catch(_e){return null;}}
   const identifiers={};if(info.source==='orcid'||info.source==='openalex')identifiers[info.source]=info.id;else identifiers[info.source]=info.url;return {displayName:'',identifiers,source:info.source,sourceUrl:info.url,currentInstitutions:[]};
+}
+// Turn a parsed URL/ID candidate into a seed for the manual-add form: ORCID /
+// OpenAlex / researchmap / Chem-Station fill their own fields; anything else
+// lands in Website so the entered URL is never lost. Chem-Station links also
+// seed the given/family names parsed from their slug.
+function researcherManualSeedFromSource(source, raw){
+  const ids=source.identifiers||{}, seed={identifiers:{}, website:source.website||''};
+  ['orcid','openalex','researchmap','chemstation'].forEach(k=>{ if(ids[k]) seed.identifiers[k]=ids[k]; });
+  if(source.source==='chemstation'){
+    const nm=chemStationNameFromUrl(source.sourceUrl||ids.chemstation||raw);
+    if(nm){ seed.familyName=nm.family; seed.givenName=nm.given; }
+  }
+  if(!seed.website){
+    const other=Object.keys(ids).find(k=>!['orcid','openalex','researchmap','chemstation'].includes(k));
+    if(other||source.source==='website') seed.website=source.sourceUrl||ids[other]||raw||'';
+  }
+  return seed;
 }
 async function retrieveResearcherSource(raw,credential){
   const base=researcherSourceCandidate(raw);if(!base)throw new Error('unsupported');if(base.source==='openalex'){const key=credential||localStorage.getItem(OPENALEX_KEY_STORAGE)||'';if(!key)throw new Error('credential');const author=await openAlexResearcherFetch('authors/'+encodeURIComponent(base.identifiers.openalex),key);return Object.assign(base,openAlexProposal({name:'',aliases:new Set()},author,author,[]));}if(base.source==='orcid'){const token=credential||localStorage.getItem(ORCID_TOKEN_STORAGE)||'';if(!token)throw new Error('credential');const record=await fetchOrcidPublicRecord(base.identifiers.orcid,token);return Object.assign(base,orcidProposal({name:'',aliases:new Set()},record,{id:base.identifiers.orcid,url:base.sourceUrl}));}return base;
@@ -9337,14 +9629,35 @@ async function retrieveResearcherSource(raw,credential){
 function showResearcherUrl(seed=''){
   const dlg=researcherIntakeDialog(),body=$('#researcherIntakeBody'),primary=$('#btnResearcherIntakePrimary');$('#researcherIntakeTitle').textContent=t('researcherUrlAdd');$('#researcherIntakeHint').textContent=t('researcherIntakeUrlOnly');body.innerHTML=`<label>${esc(t('researcherIntakeProfileUrl'))}<input id="intakeProfileUrl" type="text" value="${esc(seed)}" placeholder="https://orcid.org/0000-0000-0000-0000"></label><label>${esc(t('researcherIntakeCredential'))}<input id="intakeCredential" type="password" autocomplete="off"></label><div class="researcherIntakeHelp">ORCID と OpenAlex は、既存設定またはここで入力した認証情報を使って取得します。その他のプロフィールURLはURLを記録します。</div>`;primary.hidden=false;primary.textContent=t('researcherIntakeRetrieve');primary.onclick=async()=>{const raw=$('#intakeProfileUrl').value.trim(),credential=$('#intakeCredential').value.trim(),fallback=researcherSourceCandidate(raw);if(!fallback){showToast(t('researcherIntakeInvalid'),true);return;}primary.disabled=true;try{const c=await retrieveResearcherSource(raw,credential);if(c.source==='openalex'&&credential)localStorage.setItem(OPENALEX_KEY_STORAGE,credential);if(c.source==='orcid'&&credential)localStorage.setItem(ORCID_TOKEN_STORAGE,credential);dlg.close();showResearcherReview([c]);}catch(err){dlg.close();const msg=err?.message==='credential'?t('researcherIntakeUrlOnly'):t('researcherIntakeFetchFailed');showToast(msg,true);showResearcherReview([fallback],{hint:msg});}finally{primary.disabled=false;}};if(!dlg.open)dlg.showModal();
 }
-function researcherPaperAuthorCandidates(){const found=new Map();lib.items.filter(item=>!isItemTrashed(item)).forEach(item=>(item.authors||[]).forEach(author=>{const name=researcherDisplayName(author).trim();if(!name)return;const key=researcherKey(name),c=found.get(key)||{displayName:name,familyName:author.family||'',givenName:author.given||'',aliases:[],identifiers:{},source:'paper-author',currentInstitutions:[],paperCount:0};c.paperCount++;found.set(key,c);}));return [...found.values()].sort((a,b)=>b.paperCount-a.paperCount||researcherCandidateName(a).localeCompare(researcherCandidateName(b),lang));}
-function showResearcherPaperAuthors(){const candidates=researcherPaperAuthorCandidates();if(!candidates.length){showToast(t('researcherIntakeNone'),true);return;}showResearcherReview(candidates,{title:t('researcherIntakeSelect')});}
+function researcherPaperAuthorCandidates(){
+  const found=new Map();
+  lib.items.filter(item=>!isItemTrashed(item)).forEach(item=>{
+    const collLabels=(item.collections||[]).map(id=>collectionPathLabel(id)||'').filter(Boolean);
+    const tags=(item.tags||[]);
+    (item.authors||[]).forEach(author=>{
+      const name=researcherDisplayName(author).trim(); if(!name)return;
+      const key=researcherKey(name);
+      const c=found.get(key)||{displayName:name,familyName:author.family||'',givenName:author.given||'',aliases:[],identifiers:{},source:'paper-author',currentInstitutions:[],paperCount:0,_titles:new Set(),_collections:new Set(),_tags:new Set()};
+      c.paperCount++;
+      if(item.title) c._titles.add(item.title);
+      collLabels.forEach(l=>c._collections.add(l));
+      tags.forEach(tg=>c._tags.add(tg));
+      found.set(key,c);
+    });
+  });
+  return [...found.values()].map(c=>{
+    const titles=[...c._titles]; c._collections=[...c._collections]; c._tags=[...c._tags]; delete c._titles;
+    // combined lowercase haystack for the free-text search (name + papers + collections + tags)
+    c._search=[researcherCandidateName(c),...titles,...c._collections,...c._tags].join('  ').toLowerCase();
+    return c;
+  }).sort((a,b)=>b.paperCount-a.paperCount||researcherCandidateName(a).localeCompare(researcherCandidateName(b),lang));
+}
+function showResearcherPaperAuthors(){const candidates=researcherPaperAuthorCandidates();if(!candidates.length){showToast(t('researcherIntakeNone'),true);return;}showResearcherReview(candidates,{title:t('researcherIntakeSelect'),searchable:true});}
 function researcherCsvRows(text){const rows=[];let row=[],cell='',quoted=false;for(let i=0;i<text.length;i++){const ch=text[i];if(ch==='"'){if(quoted&&text[i+1]==='"'){cell+='"';i++;}else quoted=!quoted;}else if(ch===','&&!quoted){row.push(cell);cell='';}else if((ch==='\n'||ch==='\r')&&!quoted){if(ch==='\r'&&text[i+1]==='\n')i++;row.push(cell);if(row.some(x=>x.trim()))rows.push(row);row=[];cell='';}else cell+=ch;}row.push(cell);if(row.some(x=>x.trim()))rows.push(row);return rows;}
 function researcherImportCandidates(text,name){if(/\.json$/i.test(name)){const parsed=JSON.parse(text),rows=Array.isArray(parsed)?parsed:(Array.isArray(parsed?.researchers)?parsed.researchers:[]);if(!rows.length)throw new Error('empty');return rows.map(row=>({displayName:row.displayName||row.name||'',familyName:row.familyName||row.family||'',givenName:row.givenName||row.given||'',aliases:row.aliases||[],identifiers:row.identifiers||{orcid:row.orcid||'',openalex:row.openalex||'',researchmap:row.researchmap||''},currentInstitutions:row.currentInstitutions||(row.affiliation?[row.affiliation]:[]),website:row.website||row.homepage||'',researchFields:row.researchFields||[],source:'import'})).filter(c=>researcherCandidateName(c)||Object.values(c.identifiers).some(Boolean));}const rows=researcherCsvRows(text);if(rows.length<2)throw new Error('empty');const headers=rows.shift().map(x=>x.trim().toLowerCase()),read=(row,names)=>{const i=headers.findIndex(x=>names.includes(x));return i<0?'':String(row[i]||'').trim();};return rows.map(row=>({displayName:read(row,['name','display name','displayname','researcher']),familyName:read(row,['family name','familyname','family']),givenName:read(row,['given name','givenname','given']),aliases:read(row,['aliases','alias']).split(/\s*;\s*|\r?\n/).filter(Boolean),identifiers:{orcid:read(row,['orcid']),openalex:read(row,['openalex']),researchmap:read(row,['researchmap'])},currentInstitutions:read(row,['affiliation','institution','current institutions']).split(/\s*;\s*|\r?\n/).filter(Boolean),website:read(row,['website','homepage']),researchFields:read(row,['research fields','fields']).split(/\s*;\s*|\r?\n/).filter(Boolean),source:'import'})).filter(c=>researcherCandidateName(c)||Object.values(c.identifiers).some(Boolean));}
 function openResearcherImport(kind){const input=$('#fileResearcherImport');input.accept=kind==='json'?'.json,application/json,text/plain':'.csv,text/csv,text/plain';input.click();closeMenus();}
 $('#fileResearcherImport').addEventListener('change',async e=>{const file=e.target.files?.[0];e.target.value='';if(!file)return;try{const candidates=researcherImportCandidates(await file.text(),file.name);showToast(t('researcherIntakeImported')(candidates.length));showResearcherReview(candidates);}catch(err){showToast(String(err?.message||err),true);}});
 $('#miResearcherManual').addEventListener('click',()=>{closeMenus();showResearcherManual();});
-$('#miResearcherUrl').addEventListener('click',()=>{closeMenus();showResearcherUrl();});
 $('#miResearcherAuthors').addEventListener('click',()=>{closeMenus();showResearcherPaperAuthors();});
 $('#miResearcherImportJson').addEventListener('click',()=>openResearcherImport('json'));
 $('#miResearcherImportCsv').addEventListener('click',()=>openResearcherImport('csv'));
@@ -9368,14 +9681,21 @@ $('#fileResearcherAiImport').addEventListener('change',async e=>{
   }catch(err){ if(previous) researcherEditorAiState=previous; showToast(err.message==='__schema__'?t('researcherAiSchemaError'):t('researcherAiJsonError')(err.message),true); }
 });
 $('#miResearcherAiImport').addEventListener('click',openResearcherAiImport);
-function updateResearcherAddBar(){const research=currentView==='researchers',box=$('#addBox'),go=$('#btnAddGo');if(!box)return;box.placeholder=research?t('researcherAddBoxPh'):(I18N[lang].addBoxPh||'URL を入力して Enter');$('#addWrap').dataset.placeholder=box.placeholder;if(go)go.textContent=research?t('researcherManualAdd'):t('add');}
+function updateResearcherAddBar(){const research=currentView==='researchers',box=$('#addBox'),go=$('#btnAddGo');if(!box)return;box.placeholder=research?t('researcherAddBoxPh'):(I18N[lang].addBoxPh||'URL を入力して Enter');$('#addWrap').dataset.placeholder=box.placeholder;if(go)go.textContent=research?t('researcherManualAdd'):t('add');
+  // The "+" add menu shows only the options relevant to the current view:
+  // researcher add/import in the researcher view, reference add/import elsewhere.
+  const refBlock=$('#menuAddReference'), resBlock=$('#menuAddResearcher');
+  if(refBlock) refBlock.style.display=research?'none':'';
+  if(resBlock) resBlock.style.display=research?'':'none';}
 // ---- toolbar add bar ----
 async function addFromAddBar(){
   const raw = $('#addBox').value.trim();
   if(!raw) return;
   if(currentView==='researchers'){
     const source=researcherSourceCandidate(raw); $('#addBox').value=''; updateAddBarUI();
-    if(source) showResearcherUrl(raw); else showResearcherManual({displayName:raw});
+    // A URL/ID opens the manual form with the URL pre-filled (no API fetch);
+    // plain text is treated as a display name.
+    if(source) showResearcherManual(researcherManualSeedFromSource(source, raw)); else { const parts=researcherLegacyNameParts(raw); showResearcherManual({familyName:parts.family,givenName:parts.given}); }
     return;
   }
   await fetchAndAddQuick(raw, { btn: $('#btnAddGo'), onDone: ()=>{ $('#addBox').value = ''; updateAddBarUI(); } });
@@ -9967,7 +10287,10 @@ let listView = localStorage.getItem('refshelf.listView') || 'table';
 let cardCols = localStorage.getItem('refshelf.cardCols') || '1';
 let galleryCols = localStorage.getItem('refshelf.galleryCols') || '4';
 if(!['2','3','4'].includes(galleryCols)) galleryCols = '4';
-if(!['table','cards','shelves','kanban','gallery','compact','magazine'].includes(listView)) listView = 'table';
+let galleryFit = localStorage.getItem('refshelf.galleryFit') || 'crop';
+if(!['crop','contain'].includes(galleryFit)) galleryFit = 'crop';
+if(listView==='compact') listView = 'gallery'; // "画像リスト" view removed → fall back to gallery
+if(!['table','cards','shelves','kanban','gallery','magazine'].includes(listView)) listView = 'table';
 if(cardCols!=='2') cardCols = '1';
 function applyWrapMode(){
   $('#itemTable').classList.toggle('nowrap', !listWrap);
@@ -10003,11 +10326,12 @@ function updateListViewButton(){
     colsBtn.innerHTML = `${ic(next===2 ? 'table' : 'rows')}<span id="cardColsLabel">${esc(I18N[lang].cardCols(next))}</span>`;
     colsBtn.style.color = cardCols === '2' ? 'var(--accent)' : '';
   }
+  // "表示スタイル" — switches the list view style only
   const viewMenu = $('#btnCardViewMenu');
   if(viewMenu){
     viewMenu.closest('.menuwrap').style.display = '';
-    const viewIcon=isShelves?'book':isKanban?'kanban':listView==='gallery'?'image':listView==='compact'?'rows':listView==='magazine'?'image':isCards?'rows':'table';
-    viewMenu.innerHTML=`${ic(viewIcon)}<span data-i18n="viewMenu">${esc(t('viewMenu'))}</span>${ic('chevron')}`;
+    const viewIcon=isShelves?'book':isKanban?'kanban':GALLERY_VIEWS.includes(listView)?'image':isCards?'rows':'table';
+    viewMenu.innerHTML=`${ic(viewIcon)}<span data-i18n="viewStyle">${esc(t('viewStyle'))}</span>${ic('chevron')}`;
     viewMenu.style.color=(isShelves||isKanban||GALLERY_VIEWS.includes(listView))?'var(--accent)':'';
   }
   const colsMenu = $('#btnColMenu');
@@ -10016,28 +10340,29 @@ function updateListViewButton(){
     el.classList.toggle('viewActive',el.dataset.listView===listView);
     el.setAttribute('aria-current',el.dataset.listView===listView?'true':'false');
   });
-  const colsItem = $('#cardViewColsMenuItem');
-  if(colsItem) colsItem.style.display = isCards ? '' : 'none';
-  const filtersItem = $('#cardViewFiltersMenuItem');
-  if(filtersItem) filtersItem.style.display = listView==='table' ? 'none' : '';
-  const wrapItem=$('#cardViewMenu [data-card-view-act="wrap"]');
-  if(wrapItem) wrapItem.style.display=(isShelves||isKanban||GALLERY_VIEWS.includes(listView))?'none':'';
-  // "表示設定" (column count) — only meaningful for the gallery / magazine grids
+  // "表示設定" — always available; its items appear only for the views they apply to
   const galColsWrap=$('#galleryColsWrap');
-  if(galColsWrap){
-    galColsWrap.style.display=(listView==='gallery'||listView==='magazine')?'':'none';
-    document.querySelectorAll('#galleryColsMenu [data-gallery-cols]').forEach(el=>el.classList.toggle('viewActive', el.dataset.galleryCols===galleryCols));
-  }
+  if(galColsWrap) galColsWrap.style.display='';
+  const isGallery=GALLERY_VIEWS.includes(listView);
+  const wrapItem=$('#cardViewWrapItem');
+  if(wrapItem) wrapItem.style.display=(isShelves||isKanban||isGallery)?'none':''; // wrap: table / cards
+  const colsItem = $('#cardViewColsMenuItem');
+  if(colsItem) colsItem.style.display = isCards ? '' : 'none';               // card columns: cards
+  const filtersItem = $('#cardViewFiltersMenuItem');
+  if(filtersItem) filtersItem.style.display = listView==='table' ? 'none' : ''; // filters: non-table
+  const gallerySettings=$('#gallerySettingsSection');
+  if(gallerySettings) gallerySettings.style.display=isGallery?'':'none';     // grid columns + image fit: gallery / magazine
+  document.querySelectorAll('#galleryColsMenu [data-gallery-cols]').forEach(el=>el.classList.toggle('viewActive', el.dataset.galleryCols===galleryCols));
+  document.querySelectorAll('#galleryColsMenu [data-gallery-fit]').forEach(el=>el.classList.toggle('viewActive', el.dataset.galleryFit===galleryFit));
+  const corrSection=$('#galleryCorrSection');
+  if(corrSection) corrSection.style.display=isCards?'':'none';               // corresponding-author mark: cards
   const lbl = $('#cardViewColsMenuLabel');
   if(lbl){
     const next = cardCols === '2' ? 1 : 2;
     lbl.textContent = I18N[lang].cardCols(next);
   }
   const corrStar = $('#cardViewCorrStar');
-  if(corrStar){
-    corrStar.checked = !!authorDisplayPrefs.markCorresponding;
-    corrStar.closest('.menuCheck').style.display=isCards?'':'none';
-  }
+  if(corrStar) corrStar.checked = !!authorDisplayPrefs.markCorresponding;
 }
 function applyListView(){
   $('#listScroller').classList.toggle('cardView', listView === 'cards');
@@ -10054,6 +10379,8 @@ function applyListView(){
   ic.classList.toggle('gcols2', galleryCols === '2');
   ic.classList.toggle('gcols3', galleryCols === '3');
   ic.classList.toggle('gcols4', galleryCols === '4');
+  // gallery image fit: 'contain' (whole image, letterboxed) vs 'crop' (fill)
+  ic.classList.toggle('galFit', galleryFit === 'contain');
   updateListViewButton();
 }
 $('#btnWrap').addEventListener('click', ()=>{
@@ -10097,42 +10424,41 @@ $('#btnGalleryCols').addEventListener('click', (e)=>{
 $('#galleryColsMenu').addEventListener('click', (e)=>{
   e.stopPropagation();
   const b = e.target.closest('[data-gallery-cols]');
-  if(!b) return;
-  galleryCols = b.dataset.galleryCols;
-  localStorage.setItem('refshelf.galleryCols', galleryCols);
-  applyListView(); // pure CSS column change — no re-render of cards needed
-  closeMenus();
-});
-$('#cardViewMenu').addEventListener('click', (e)=>{
-  e.stopPropagation();
-  const viewBtn=e.target.closest('[data-list-view]');
-  if(viewBtn){
-    listView=viewBtn.dataset.listView;
-    localStorage.setItem('refshelf.listView',listView);
-    applyListView(); closeMenus(); renderList({skipBadges:true}); return;
-  }
-  const btn = e.target.closest('[data-card-view-act]');
-  if(!btn) return;
-  const act = btn.dataset.cardViewAct;
-  if(act==='wrap') $('#btnWrap').click();
-  else if(act==='cols') $('#btnCardCols').click();
-  else if(act==='filters'){
-    closeMenus();
-    setTimeout(()=>{
-      openCardFilterMenu($('#btnCardViewMenu'));
-    }, 0);
+  if(b){
+    galleryCols = b.dataset.galleryCols;
+    localStorage.setItem('refshelf.galleryCols', galleryCols);
+    applyListView(); // pure CSS column change — no re-render of cards needed; keep menu open
     return;
   }
-  closeMenus();
-  updateListViewButton();
+  const f = e.target.closest('[data-gallery-fit]');
+  if(f){
+    galleryFit = f.dataset.galleryFit;
+    localStorage.setItem('refshelf.galleryFit', galleryFit);
+    applyListView(); // pure CSS fit change — no re-render of cards needed; keep menu open
+    return;
+  }
+  // 折り返し / 列数 / フィルタ moved here from the old 表示 menu
+  const act = e.target.closest('[data-card-view-act]');
+  if(!act) return;
+  if(act.dataset.cardViewAct==='wrap'){ $('#btnWrap').click(); updateListViewButton(); return; }
+  if(act.dataset.cardViewAct==='cols'){ $('#btnCardCols').click(); return; } // btnCardCols → applyListView → updateListViewButton
+  if(act.dataset.cardViewAct==='filters'){ closeMenus(); setTimeout(()=>openCardFilterMenu($('#btnGalleryCols')), 0); }
 });
-$('#cardViewMenu').addEventListener('change', (e)=>{
+$('#galleryColsMenu').addEventListener('change', (e)=>{
   if(e.target && e.target.id === 'cardViewCorrStar'){
     authorDisplayPrefs.markCorresponding = !!e.target.checked;
     localStorage.setItem('refshelf.authorDisplay', JSON.stringify(authorDisplayPrefs));
     renderList();
     updateListViewButton();
   }
+});
+$('#cardViewMenu').addEventListener('click', (e)=>{
+  e.stopPropagation();
+  const viewBtn=e.target.closest('[data-list-view]');
+  if(!viewBtn) return;
+  listView=viewBtn.dataset.listView;
+  localStorage.setItem('refshelf.listView',listView);
+  applyListView(); closeMenus(); renderList({skipBadges:true});
 });
 applyWrapMode();
 applyListView();
@@ -10907,6 +11233,7 @@ $('#detail').addEventListener('input', (e)=>{
     else if(f==='r-researcherId') p.identifiers.researcherId=e.target.value.trim();
     else if(f==='r-dblp') p.identifiers.dblp=e.target.value.trim();
     else if(f==='r-cinii') p.identifiers.cinii=e.target.value.trim();
+    else if(f==='r-chemstation') p.identifiers.chemstation=e.target.value.trim();
     markResearcherFieldSource(p,researcherSourceKeyForInput(f),'manual');
     p.dateModified=new Date().toISOString();
     touch();
@@ -10946,15 +11273,58 @@ function renderListDebounce(){}
 // Researcher profiles are edited in a staged dialog. The detail pane deliberately
 // remains read-only, so Cancel/Esc can discard the draft without touching library data.
 $('#detail').addEventListener('click',e=>{
+  const authorLink=e.target.closest('[data-author-researcher-key]');
+  if(authorLink){
+    const entry=researcherEntryByIdentity(authorLink.dataset.authorResearcherKey, authorLink.dataset.authorResearcherId||null);
+    currentView='researchers'; selectedId=null;
+    selectedResearcherKey=entry?entry.key:authorLink.dataset.authorResearcherKey;
+    selectedResearcherId=entry&&entry.profile?entry.profile.id:(authorLink.dataset.authorResearcherId||null);
+    researcherCandidates=[]; researcherEnrichmentPreview=null;
+    updateSidebarSelection(); renderWorkspace(); updateExportMenuContext();
+    return;
+  }
   if(e.target.closest('[data-researcher-edit]')){ openResearcherEditor(); return; }
   const related=e.target.closest('[data-researcher-related-key]');
   if(related){ const entry=researcherEntryByIdentity(related.dataset.researcherRelatedKey,null); selectedResearcherKey=entry?entry.key:related.dataset.researcherRelatedKey; selectedResearcherId=entry&&entry.profile?entry.profile.id:null; researcherCandidates=[]; researcherEnrichmentPreview=null; renderResearcherList(); renderResearcherDetail(); return; }
   if(e.target.closest('[data-researcher-display-settings]')){ researcherDetailSettingsOpen=!researcherDetailSettingsOpen; renderResearcherDetail(); }
 });
 $('#detail').addEventListener('change',e=>{
+  const visKey=e.target&&e.target.dataset&&e.target.dataset.detailVis;
+  if(visKey){ referenceDetailPrefs.visible[visKey]=!!e.target.checked; saveReferenceDetailPrefs(); renderDetail(); return; }
+  const prefKey=e.target&&e.target.dataset&&e.target.dataset.detailPref;
+  if(prefKey){ referenceDetailPrefs[prefKey]=!!e.target.checked; saveReferenceDetailPrefs(); renderDetail(); return; }
   const key=e.target&&e.target.dataset&&e.target.dataset.researcherDetailPref;
   if(!key) return;
   researcherDetailPrefs[key]=!!e.target.checked; saveResearcherDetailPrefs(); renderResearcherDetail();
+});
+// Drag-and-drop reordering of reference detail blocks in the 表示設定 list.
+let detailDragKey=null;
+$('#detail').addEventListener('dragstart',e=>{
+  const row=e.target.closest('.refSettingsRow'); if(!row) return;
+  detailDragKey=row.dataset.block; row.classList.add('dragging');
+  try{ e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',detailDragKey); }catch(_e){}
+});
+$('#detail').addEventListener('dragover',e=>{
+  const list=e.target.closest('#refSettingsList'); if(!list||!detailDragKey) return;
+  e.preventDefault();
+  const row=e.target.closest('.refSettingsRow');
+  list.querySelectorAll('.dragover').forEach(r=>r.classList.remove('dragover'));
+  if(row && row.dataset.block!==detailDragKey) row.classList.add('dragover');
+});
+$('#detail').addEventListener('drop',e=>{
+  const list=e.target.closest('#refSettingsList'); if(!list||!detailDragKey) return;
+  e.preventDefault();
+  const row=e.target.closest('.refSettingsRow');
+  if(row && row.dataset.block!==detailDragKey){
+    const ord=referenceDetailPrefs.order.filter(k=>k!==detailDragKey);
+    ord.splice(ord.indexOf(row.dataset.block),0,detailDragKey);
+    referenceDetailPrefs.order=ord; saveReferenceDetailPrefs();
+  }
+  detailDragKey=null; renderDetail();
+});
+$('#detail').addEventListener('dragend',()=>{
+  detailDragKey=null;
+  document.querySelectorAll('.refSettingsRow.dragging,.refSettingsRow.dragover').forEach(r=>r.classList.remove('dragging','dragover'));
 });
 $('#researcherEditorNav').addEventListener('click',e=>{
   const b=e.target.closest('[data-editor-nav]'); if(!b) return;
@@ -10985,11 +11355,10 @@ $('#researcherEditorContent').addEventListener('input',e=>{
     researcherEditorSetImagePosition(e.target.dataset.editorImagePosition,e.target.value);
     const preview=e.target.closest('[data-editor-section="image"]')?.querySelector('.researcherImage');
     if(preview){
-      const position=researcherImagePosition(researcherEditorDraft), scale=researcherImageScale(researcherEditorDraft), offset=value=>((50-value)/50)*(scale-1)*50;
-      preview.style.objectPosition='50% 50%';
+      const position=researcherImagePosition(researcherEditorDraft), scale=researcherImageScale(researcherEditorDraft);
+      preview.style.objectPosition=`${position.x}% ${position.y}%`;
+      preview.style.transformOrigin=`${position.x}% ${position.y}%`;
       preview.style.setProperty('--researcher-image-scale',scale);
-      preview.style.setProperty('--researcher-image-offset-x',`${offset(position.x)}%`);
-      preview.style.setProperty('--researcher-image-offset-y',`${offset(position.y)}%`);
     }
   }
   if(e.target.hasAttribute('data-re-editor-birth')) researcherEditorSetBirth();
@@ -11127,6 +11496,13 @@ $('#detail').addEventListener('click', async (e)=>{
     if(paper){ currentView='items'; selectedId=paper.dataset.researcherPaper; renderAll(); return; }
     return;
   }
+  // 表示設定: reorder blocks with the ↑/↓ buttons (global preference)
+  const moveBtn = e.target.closest('[data-detail-move]');
+  if(moveBtn){
+    const key=moveBtn.dataset.block, ord=referenceDetailPrefs.order, i=ord.indexOf(key), j=moveBtn.dataset.detailMove==='up'?i-1:i+1;
+    if(i>=0 && j>=0 && j<ord.length){ [ord[i],ord[j]]=[ord[j],ord[i]]; saveReferenceDetailPrefs(); renderDetail(); }
+    return;
+  }
   const btn = e.target.closest('[data-act],[data-open-att],[data-del-att]');
   if(!btn) return;
   const it = lib.items.find(x=>x.id===selectedId);
@@ -11142,8 +11518,16 @@ $('#detail').addEventListener('click', async (e)=>{
     return;
   }
   switch(btn.dataset.act){
+    case 'toggleEdit': detailEditMode=!detailEditMode; renderDetail(); break;
+    case 'detailSettings': referenceDetailSettingsOpen=!referenceDetailSettingsOpen; renderDetail(); break;
     case 'openlink': openExternalLink(it.url || ('https://doi.org/' + it.doi)); break;
-    case 'copycite': await copyCitation(it, citationPrefs); showToast(t('copied')); break;
+    case 'copycite': {
+      await copyCitation(it, citationPrefs); showToast(t('copied'));
+      const cp=btn.closest('.cpCopy');
+      if(cp){ cp.classList.add('copied'); cp.innerHTML=`${ic('check')}${esc(t('copy'))}`;
+        setTimeout(()=>{ if(cp.isConnected){ cp.classList.remove('copied'); cp.innerHTML=`${ic('copy')}${esc(t('copy'))}`; } }, 1400); }
+      break;
+    }
     case 'copybib': await navigator.clipboard.writeText(itemToBibTeX(it)); showToast(t('copied')); break;
     case 'citeprefs': openCitationPrefsDialog(); break;
     case 'toggleStar': toggleStar(it.id); break;
