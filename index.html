@@ -6,7 +6,7 @@
 <meta name="refshelf-app" content="1">
 <title>Paper Library — 文献管理 / Reference Manager</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 8.6C13.1 6.1 8.6 5.8 4.7 7v16.4c3.9-1.2 8.4-.9 11.3 1.6z' fill='%231e40af'/%3E%3Cpath d='M16 8.6C18.9 6.1 23.4 5.8 27.3 7v16.4c-3.9-1.2-8.4-.9-11.3 1.6z' fill='%233b82f6'/%3E%3Cpath d='M16 8.6v16.6' stroke='%23fff' stroke-width='1.3' stroke-linecap='round'/%3E%3Crect x='3' y='24.5' width='26' height='3' rx='1.5' fill='%2393b4f0'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="app/main.css?v=20260815r2">
+<link rel="stylesheet" href="app/main.css?v=20260816r1">
 </head>
 <body class="brandStyle-81 advSearchStyle-07">
 
@@ -19,27 +19,31 @@
     <button class="addGoBtn" id="btnAddGo" data-i18n="add" aria-hidden="true" tabindex="-1">追加</button>
     <button class="addMenuCaret" id="btnAddMenu" data-i18n-title="addMoreTitle" title="手動追加・インポート"><span class="ic" data-ic="chevron"></span></button>
     <div class="menu" id="menuAdd">
-      <div class="menuLabel" data-i18n="referenceAdd">文献を追加</div>
-      <button id="miAddId"><span class="ic" data-ic="search"></span><span data-i18n="addByIdMenu">DOI / arXiv / URL から（検索も可）</span></button>
-      <button id="miAddManual"><span class="ic" data-ic="plus"></span><span data-i18n="addManual">手動追加</span></button>
-      <hr>
-      <div class="menuLabel" data-i18n="referenceImport">文献をインポート</div>
-      <label class="menuCheck"><input type="checkbox" id="importKeywordsAsTags"> <span data-i18n="importKeywordsAsTags">keywords をタグとして読み込む</span></label>
-      <button id="miImportBib"><span class="ic" data-ic="download"></span>BibTeX (.bib)</button>
-      <button id="miImportRis"><span class="ic" data-ic="download"></span>RIS (.ris)</button>
-      <button id="miImportCsv"><span class="ic" data-ic="download"></span>CSV (.csv)</button>
-      <button id="miImportJson"><span class="ic" data-ic="download"></span>JSON (.json)</button>
-      <button id="miImportRdf"><span class="ic" data-ic="download"></span>Zotero RDF (.rdf)</button>
-      <hr>
-      <div class="menuLabel" data-i18n="researcherAdd">研究者を追加</div>
-      <button id="miResearcherManual"><span class="ic" data-ic="plus"></span><span data-i18n="researcherManualAdd">手動追加</span></button>
-      <button id="miResearcherUrl"><span class="ic" data-ic="link"></span><span data-i18n="researcherUrlAdd">URL / ORCID / OpenAlex から取得</span></button>
-      <button id="miResearcherAuthors"><span class="ic" data-ic="users"></span><span data-i18n="researcherAuthorsAdd">論文著者から</span></button>
-      <hr>
-      <div class="menuLabel" data-i18n="researcherImport">研究者をインポート</div>
-      <button id="miResearcherImportJson"><span class="ic" data-ic="download"></span>JSON (.json)</button>
-      <button id="miResearcherImportCsv"><span class="ic" data-ic="download"></span>CSV (.csv)</button>
-      <button id="miResearcherAiImport"><span class="ic" data-ic="search"></span><span data-i18n="researcherAiImportMenu">AI調査JSON (.json)</span></button>
+      <!-- reference add / import (shown outside the researcher view) -->
+      <div id="menuAddReference">
+        <div class="menuLabel" data-i18n="referenceAdd">文献を追加</div>
+        <button id="miAddId"><span class="ic" data-ic="search"></span><span data-i18n="addByIdMenu">DOI / arXiv / URL から（検索も可）</span></button>
+        <button id="miAddManual"><span class="ic" data-ic="plus"></span><span data-i18n="addManual">手動追加</span></button>
+        <hr>
+        <div class="menuLabel" data-i18n="referenceImport">文献をインポート</div>
+        <label class="menuCheck"><input type="checkbox" id="importKeywordsAsTags"> <span data-i18n="importKeywordsAsTags">keywords をタグとして読み込む</span></label>
+        <button id="miImportBib"><span class="ic" data-ic="download"></span>BibTeX (.bib)</button>
+        <button id="miImportRis"><span class="ic" data-ic="download"></span>RIS (.ris)</button>
+        <button id="miImportCsv"><span class="ic" data-ic="download"></span>CSV (.csv)</button>
+        <button id="miImportJson"><span class="ic" data-ic="download"></span>JSON (.json)</button>
+        <button id="miImportRdf"><span class="ic" data-ic="download"></span>Zotero RDF (.rdf)</button>
+      </div>
+      <!-- researcher add / import (shown in the researcher view) -->
+      <div id="menuAddResearcher">
+        <div class="menuLabel" data-i18n="researcherAdd">研究者を追加</div>
+        <button id="miResearcherManual"><span class="ic" data-ic="plus"></span><span data-i18n="researcherManualAdd">手動追加</span></button>
+        <button id="miResearcherAuthors"><span class="ic" data-ic="users"></span><span data-i18n="researcherAuthorsAdd">論文著者から</span></button>
+        <hr>
+        <div class="menuLabel" data-i18n="researcherImport">研究者をインポート</div>
+        <button id="miResearcherImportJson"><span class="ic" data-ic="download"></span>JSON (.json)</button>
+        <button id="miResearcherImportCsv"><span class="ic" data-ic="download"></span>CSV (.csv)</button>
+        <button id="miResearcherAiImport"><span class="ic" data-ic="search"></span><span data-i18n="researcherAiImportMenu">AI調査JSON (.json)</span></button>
+      </div>
     </div>
   </div>
   <div class="searchWrap" id="searchWrap" data-placeholder="検索ワードを入力して Enter">
@@ -154,35 +158,44 @@
         <button class="lsbtn statusCompact" id="btnAlerts" data-i18n-title="alerts"><span class="ic" data-ic="alert"></span><span data-i18n="alerts">通知</span><span id="alertsBadge" class="logBadge">0</span><span class="ic" data-ic="chevron"></span></button>
         <div class="menu" id="menuAlerts" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto"></div>
       </div>
-      <div class="menuwrap" id="galleryColsWrap" style="display:none">
-        <button class="lsbtn" id="btnGalleryCols"><span class="ic" data-ic="table"></span><span data-i18n="displaySettings">表示設定</span><span class="ic" data-ic="chevron"></span></button>
-        <div class="menu" id="galleryColsMenu" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto">
-          <div class="menuLabel" data-i18n="columnsLabel">列数</div>
-          <button data-gallery-cols="2"><span data-i18n="cols2">2列</span></button>
-          <button data-gallery-cols="3"><span data-i18n="cols3">3列</span></button>
-          <button data-gallery-cols="4"><span data-i18n="cols4">4列</span></button>
-        </div>
-      </div>
-      <button class="lsbtn" id="btnWrap"><span class="ic" data-ic="wrap"></span><span data-i18n="wrapToggle">折り返し</span></button>
-      <button class="lsbtn" id="btnViewStyle"><span class="ic" data-ic="rows"></span><span id="viewStyleLabel" data-i18n="viewCards">カード表示</span></button>
-      <button class="lsbtn" id="btnCardCols"><span class="ic" data-ic="table"></span><span id="cardColsLabel">2列</span></button>
+      <!-- hidden helper buttons: their click handlers are reused by the 表示設定 menu items -->
+      <button class="lsbtn" id="btnWrap" style="display:none"><span class="ic" data-ic="wrap"></span><span data-i18n="wrapToggle">折り返し</span></button>
+      <button class="lsbtn" id="btnViewStyle" style="display:none"><span class="ic" data-ic="rows"></span><span id="viewStyleLabel" data-i18n="viewCards">カード表示</span></button>
+      <button class="lsbtn" id="btnCardCols" style="display:none"><span class="ic" data-ic="table"></span><span id="cardColsLabel">2列</span></button>
+      <!-- 表示スタイル: switches the list view style only -->
       <div class="menuwrap">
-        <button class="lsbtn" id="btnCardViewMenu"><span class="ic" data-ic="rows"></span><span data-i18n="viewMenu">表示</span><span class="ic" data-ic="chevron"></span></button>
+        <button class="lsbtn" id="btnCardViewMenu"><span class="ic" data-ic="rows"></span><span data-i18n="viewStyle">表示スタイル</span><span class="ic" data-ic="chevron"></span></button>
         <div class="menu" id="cardViewMenu" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto">
-          <div class="menuLabel" data-i18n="viewStyle">表示スタイル</div>
           <button data-list-view="table"><span class="ic" data-ic="table"></span><span data-i18n="viewTable">表表示</span></button>
           <button data-list-view="cards"><span class="ic" data-ic="rows"></span><span data-i18n="viewCards">カード表示</span></button>
           <button data-list-view="shelves"><span class="ic" data-ic="book"></span><span data-i18n="viewShelves">文献棚</span></button>
           <button data-list-view="kanban"><span class="ic" data-ic="kanban"></span><span data-i18n="viewKanban">カンバン</span></button>
           <button data-list-view="gallery"><span class="ic" data-ic="image"></span><span data-i18n="viewGallery">ギャラリー</span></button>
-          <button data-list-view="compact"><span class="ic" data-ic="rows"></span><span data-i18n="viewCompact">画像リスト</span></button>
           <button data-list-view="magazine"><span class="ic" data-ic="image"></span><span data-i18n="viewMagazine">マガジン</span></button>
-          <hr>
-          <button data-card-view-act="wrap"><span class="ic" data-ic="wrap"></span><span data-i18n="wrapToggle">折り返し</span></button>
+        </div>
+      </div>
+      <!-- 表示設定: folding / filters / column count / image fit / corresponding-author mark -->
+      <div class="menuwrap" id="galleryColsWrap">
+        <button class="lsbtn" id="btnGalleryCols"><span class="ic" data-ic="sliders"></span><span data-i18n="displaySettings">表示設定</span><span class="ic" data-ic="chevron"></span></button>
+        <div class="menu" id="galleryColsMenu" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto">
+          <button id="cardViewWrapItem" data-card-view-act="wrap"><span class="ic" data-ic="wrap"></span><span data-i18n="wrapToggle">折り返し</span></button>
           <button id="cardViewColsMenuItem" data-card-view-act="cols"><span class="ic" data-ic="rows"></span><span id="cardViewColsMenuLabel">1列</span></button>
           <button id="cardViewFiltersMenuItem" data-card-view-act="filters"><span class="ic" data-ic="funnel"></span><span data-i18n="filters">フィルタ</span></button>
-          <hr>
-          <label class="menuCheck"><input type="checkbox" id="cardViewCorrStar"><span data-i18n="authorMarkCorresponding">責任著者に * を表示</span></label>
+          <div id="gallerySettingsSection">
+            <hr>
+            <div class="menuLabel" data-i18n="columnsLabel">列数</div>
+            <button data-gallery-cols="2"><span data-i18n="cols2">2列</span></button>
+            <button data-gallery-cols="3"><span data-i18n="cols3">3列</span></button>
+            <button data-gallery-cols="4"><span data-i18n="cols4">4列</span></button>
+            <hr>
+            <div class="menuLabel" data-i18n="imageFitLabel">画像の表示</div>
+            <button data-gallery-fit="crop"><span data-i18n="imageFitCrop">余白なし（トリミング）</span></button>
+            <button data-gallery-fit="contain"><span data-i18n="imageFitContain">全体表示（余白あり）</span></button>
+          </div>
+          <div id="galleryCorrSection">
+            <hr>
+            <label class="menuCheck"><input type="checkbox" id="cardViewCorrStar"><span data-i18n="authorMarkCorresponding">責任著者に * を表示</span></label>
+          </div>
         </div>
       </div>
       <div class="menuwrap">
@@ -692,6 +705,6 @@
 <input type="file" id="fileResearcherImage" accept="image/*" style="display:none">
 
 <script src="app/worldmap.js?v=20260814r2"></script>
-  <script src="app/main.js?v=20260815r2"></script>
+  <script src="app/main.js?v=20260816r3"></script>
 </body>
 </html>
