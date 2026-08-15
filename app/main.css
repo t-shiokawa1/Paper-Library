@@ -813,11 +813,13 @@
   }
   .sideHead{
     display:flex; align-items:center; justify-content:space-between; gap:6px;
-    position:relative; padding:5px 3px 5px 6px; border-radius:6px; min-height:30px;
-    font-size:14px; font-weight:600; color:var(--text2); letter-spacing:0;
+    position:relative; padding:5px 3px 5px 8px; border-radius:6px; min-height:30px;
+    font-size:14px; font-weight:400; color:var(--text); letter-spacing:0;
   }
   .sideHead:hover{background:var(--bg)}
-  .sideHead .headLabel{display:inline-flex; align-items:center; gap:4px; min-width:0}
+  /* match the icon→text gap of .sideItem (6px) so the section-header label lines
+     up in the same column as the filter/tag rows below it */
+  .sideHead .headLabel{display:inline-flex; align-items:center; gap:6px; min-width:0}
   .sideHead .headLabel > span:last-child{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
   .sideHead .headToggle{
     width:1.1em; height:20px; display:inline-flex; align-items:center; justify-content:center; padding:0;
@@ -832,18 +834,18 @@
   .sideHead button:hover{background:var(--border2); color:var(--text)}
   .sideHead #btnSearchColl.on{background:var(--sel); color:var(--accent)}
   /* collection filter box (toggled by the magnifier in the section header) */
-  #collSearchBar{display:flex; align-items:center; gap:5px; margin:2px 6px 4px; padding:4px 8px;
+  #collSearchBar, #tagSearchBar{display:flex; align-items:center; gap:5px; margin:2px 6px 4px; padding:4px 8px;
     background:var(--bg); border:1px solid var(--border); border-radius:6px}
-  #collSearchBar[hidden]{display:none}
-  #collSearchBar .collSearchIcon{color:var(--text3); flex:0 0 auto}
-  #collSearchBar .collSearchIcon svg{width:14px; height:14px}
-  #collSearchBar input{flex:1; min-width:0; border:none; background:none; color:var(--text);
+  #collSearchBar[hidden], #tagSearchBar[hidden]{display:none}
+  #collSearchBar .collSearchIcon, #tagSearchBar .collSearchIcon{color:var(--text3); flex:0 0 auto}
+  #collSearchBar .collSearchIcon svg, #tagSearchBar .collSearchIcon svg{width:14px; height:14px}
+  #collSearchBar input, #tagSearchBar input{flex:1; min-width:0; border:none; background:none; color:var(--text);
     font-size:13px; padding:0; outline:none}
-  #collSearchBar input::placeholder{color:var(--text3)}
-  #collSearchBar #collSearchClear{border:none; background:none; color:var(--text3); padding:0 2px;
+  #collSearchBar input::placeholder, #tagSearchBar input::placeholder{color:var(--text3)}
+  #collSearchBar #collSearchClear, #tagSearchBar #tagSearchClear{border:none; background:none; color:var(--text3); padding:0 2px;
     border-radius:4px; display:inline-flex; align-items:center}
-  #collSearchBar #collSearchClear:hover{background:var(--border2); color:var(--text)}
-  #collSearchBar #collSearchClear svg{width:13px; height:13px}
+  #collSearchBar #collSearchClear:hover, #tagSearchBar #tagSearchClear:hover{background:var(--border2); color:var(--text)}
+  #collSearchBar #collSearchClear svg, #tagSearchBar #tagSearchClear svg{width:13px; height:13px}
   .collSearchEmpty{color:var(--text3); font-size:12px; padding:4px 10px}
   .sideItem{
     display:flex; align-items:center; gap:6px; padding:5px 8px; border-radius:6px;
@@ -870,21 +872,331 @@
   .sideItem:hover .rowbtns{display:inline-flex}
   .sideItem .rowbtns button{border:none;background:none;padding:0 3px;font-size:11px;color:var(--text2);border-radius:3px}
   .sideItem .rowbtns button:hover{background:var(--border2);color:var(--text)}
-  .tagchip{
-    display:inline-flex; align-items:center; gap:4px; margin:2px; padding:2px 9px;
-    background:var(--chip); border:1px solid transparent; border-radius:12px;
-    font-size:12px; cursor:pointer; user-select:none;
-  }
-  .tagchip:hover{border-color:var(--border)}
-  .tagchip.on{background:var(--accent-soft); border-color:var(--accent-border); color:var(--accent); font-weight:600}
-  .tagchip .cnt{color:var(--text3); font-size:11px}
-  .tagchip .tagColorBtn{border:none;background:none;color:var(--text3);padding:0 2px;border-radius:3px;display:none}
-  .tagchip:hover .tagColorBtn{display:inline-flex}
-  .tagchip .tagColorBtn:hover{background:var(--border2);color:var(--text)}
-  #tagList{padding:0 6px 10px}
+  /* Tags are rendered as collection-style rows (.sideItem.tagRow), so they share
+     the collection row layout, hover buttons and active state. The tag icon
+     carries the per-tag colour (inline style, wins over the generic .ic rule);
+     everything else matches the Collections section. */
+  /* Match #collList's horizontal inset (0) so tag rows line up exactly with the
+     collection rows and the fixed filters above; keep a little space at the end. */
+  #tagList{padding:0 0 10px}
 
   /* ---------- list pane ---------- */
   #listPane{flex:1 1 auto; min-width:0; display:flex; flex-direction:column; background:var(--panel); container-type:inline-size}
+  #listPane[hidden],#researcherPane[hidden]{display:none}
+  #researcherPane{flex:1 1 auto; min-width:0; display:flex; flex-direction:column; background:var(--panel)}
+  .researcherToolbar{display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid var(--border); background:var(--panel)}
+  .researcherToolbar .primary{margin-left:auto}
+  .researcherTitle{font-size:16px; font-weight:700}
+  .researcherSub{font-size:12px; color:var(--text3); margin-top:2px}
+  #researcherList{flex:1; overflow:auto}
+  #researcherStatus{display:flex; align-items:center; gap:6px; flex:0 0 auto; border-top:1px solid var(--border); padding:4px 10px; font-size:11.5px; color:var(--text2); background:var(--bg)}
+  #researcherStatus .lsbtn{height:26px; padding:0 9px; border:1px solid var(--border); border-radius:5px; background:var(--panel); color:var(--text2); font-size:12px; display:inline-flex; align-items:center; gap:4px}
+  #researcherStatus .lsbtn:hover{background:var(--bg); color:var(--text)}
+  .researcherLeaderboardControl .lsbtn span:nth-child(2){display:none}
+  #researcherList.researcherCards{display:grid; grid-template-columns:repeat(2,minmax(280px,1fr)); align-content:start; gap:8px; padding:10px}
+  #researcherList.researcherCards .researcherCard{position:relative; border:1px solid var(--border2); border-radius:7px; padding:10px 12px; cursor:pointer; background:var(--panel)}
+  #researcherList.researcherCards .researcherCard:hover{border-color:var(--border); background:var(--bg)}
+  #researcherList.researcherCards .researcherCard.sel{border-color:var(--accent-border); background:var(--sel)}
+  .researcherCardTitle{font-weight:600; font-size:13.5px; margin-bottom:4px}
+  .researcherCardMeta{display:flex; flex-wrap:wrap; gap:6px; color:var(--text3); font-size:12px}
+  table#researcherTable{width:100%; min-width:100%; border-collapse:collapse; table-layout:fixed}
+  .researcherName{font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  /* match the researcher table row rhythm to the items table: single-line cells,
+     compact avatar so the image column doesn't inflate row height */
+  #researcherTable td.col-image{text-align:center}
+  #researcherTable td.col-image .researcherImage{width:24px; height:24px}
+  #researcherTable td.col-image .researcherImageFrame{width:24px; height:24px; margin:0 auto}
+  .researcherMeta{font-size:12px; color:var(--text2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .researcherCount{font-size:12px; color:var(--text2); font-variant-numeric:tabular-nums}
+  .researcherBadges{display:flex; gap:4px; flex-wrap:wrap}
+  .researcherBadge{font-size:11px; color:var(--accent); background:var(--accent-soft); border:1px solid var(--accent-border); border-radius:999px; padding:2px 6px}
+  .researcherImage{display:block; width:34px; height:34px; object-fit:cover; border-radius:50%; border:1px solid var(--border2); background:var(--chip)}
+  .researcherImageFrame{display:block; flex:0 0 auto; overflow:hidden; border-radius:50%; line-height:0}
+  .researcherImageFrame .researcherImage{transform:translate(var(--researcher-image-offset-x,0%),var(--researcher-image-offset-y,0%)) scale(var(--researcher-image-scale,1)); transform-origin:center; transition:transform .12s ease}
+  .researcherImageEditor{display:flex; align-items:center; gap:8px; margin:4px 0 10px}
+  .researcherImageTap{padding:0; border:0; border-radius:50%; background:none; cursor:pointer}
+  .researcherImageTap:hover .researcherImage,.researcherImageTap:hover .researcherImagePlaceholder{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+  .researcherImageEditor .researcherImage{width:56px; height:56px}
+  .researcherImagePlaceholder{display:flex; align-items:center; justify-content:center; width:56px; height:56px; border-radius:50%; border:1px dashed var(--border); color:var(--text3); background:var(--bg)}
+  .researcherImageActions{display:flex; flex-wrap:wrap; gap:5px}
+  .researcherInstitutionList,.researcherTagList{display:flex; flex-wrap:wrap; gap:4px}
+  .researcherInstitution,.researcherTag{display:inline-flex; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:2px 6px; border-radius:9px; background:var(--chip); color:var(--text2); font-size:11px}
+  .researcherInstitution.past{opacity:.5}
+  .researcherTableLink{display:inline-flex; align-items:center; gap:3px; max-width:100%; padding:3px 6px; border:1px solid var(--border); border-radius:6px; background:var(--panel); color:var(--accent); font-size:11px; font-weight:650; line-height:1.2; text-decoration:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .researcherTableLink:hover{border-color:var(--accent-border); background:var(--accent-soft)}.researcherTableLink .ic{width:11px; height:11px; flex:0 0 auto}
+  .researcherRelated{font-size:12px; color:var(--text2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .researcherEmpty{color:var(--text3); text-align:center; margin-top:56px; line-height:1.6}
+  .researcherCandidate{border:1px solid var(--border2); border-radius:7px; padding:9px; margin:7px 0; background:var(--bg)}
+  .researcherCandidateTitle{font-weight:650; display:flex; align-items:center; justify-content:space-between; gap:8px}
+  .researcherCandidateMeta{font-size:12px; color:var(--text2); margin-top:4px; line-height:1.45}
+  .researcherEnrichment{margin-top:10px; border:1px solid var(--accent-border); border-radius:8px; padding:10px; background:var(--accent-soft)}
+  .researcherEnrichmentTitle{font-weight:700; font-size:13px; color:var(--text)}
+  .researcherEnrichmentHelp{font-size:11.5px; color:var(--text2); line-height:1.45; margin:4px 0 8px}
+  .researcherEnrichmentGrid{display:grid; gap:8px; font-size:11.5px}
+  .researcherEnrichmentRow{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:3px 8px; align-items:stretch}
+  .researcherEnrichmentLabel{grid-column:1 / 3; font-weight:650; padding-top:3px; color:var(--text)}
+  .researcherEnrichmentOld,.researcherEnrichmentNew{min-width:0; padding:5px 6px; border-radius:5px; overflow-wrap:anywhere; line-height:1.35; cursor:pointer}
+  .researcherEnrichmentOld{background:color-mix(in srgb,var(--panel) 72%,transparent); color:var(--text2)}
+  .researcherEnrichmentNew{background:color-mix(in srgb,var(--accent) 10%,var(--panel)); color:var(--text)}
+  .researcherEnrichmentOld input,.researcherEnrichmentNew input{margin:0 4px 0 0; vertical-align:-1px}
+  .researcherEnrichmentOld span,.researcherEnrichmentNew span{font-size:10.5px; color:var(--text3)}
+  .researcherEnrichmentOld b,.researcherEnrichmentNew b{display:block; margin-top:3px; font-weight:500}
+  .researcherSourceBadge{display:inline-flex; margin-left:5px; padding:1px 5px; border:1px solid var(--border2); border-radius:999px; background:var(--chip); color:var(--text3); font-size:10px; font-weight:500; vertical-align:1px; white-space:nowrap}
+  .researcherField label{display:flex; align-items:center; flex-wrap:wrap; gap:2px}
+  .researcherOrcidToken{margin-top:6px}
+  /* affiliation picker (select-style with periods) */
+  .rAffEditor{margin:2px 0 4px}
+  .rAffRows{display:flex; flex-direction:column; gap:6px}
+  .rAffRow{display:flex; align-items:center; gap:6px; flex-wrap:wrap; padding:6px 7px; border:1px solid var(--border2); border-radius:8px; background:var(--bg)}
+  .rAffRow.cur{border-left:3px solid var(--accent)}
+  .rAffRow.past{border-left:3px solid var(--border)}
+  .rAffFlag{flex:0 0 auto; font-size:16px; line-height:1; width:20px; text-align:center}
+  .instFlag{font-size:15px; line-height:1; margin-right:4px; vertical-align:-1px}
+  .instFlagEmpty{opacity:.45}
+  .rAffName{flex:1 1 150px; min-width:120px; padding:5px 8px; border:1px solid var(--border); border-radius:6px; font-size:12.5px; background:var(--panel); color:var(--text)}
+  .rAffName:focus{border-color:var(--accent); outline:none}
+  .rAffRole,.rAffYear{padding:4px 6px; border:1px solid var(--border); border-radius:6px; font-size:12px; background:var(--panel); color:var(--text)}
+  .rAffRole:focus,.rAffYear:focus{border-color:var(--accent); outline:none}
+  .rAffDates{display:flex; align-items:center; gap:4px; flex:0 0 auto}
+  .rAffDash{color:var(--text3)}
+  .rAffPresent{color:var(--accent); font-size:12px; font-weight:600}
+  .rAffDel{width:26px; height:26px; flex:0 0 auto; border:1px solid var(--border2); border-radius:6px; background:var(--panel); color:var(--text3); cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0}
+  .rAffDel:hover{color:var(--red,#dc2626); border-color:var(--red,#dc2626)}
+  .rAffDel .ic{font-size:13px}
+  .rAffEmpty{font-size:12px; color:var(--text3); padding:4px 2px}
+  .rAffAdd{display:flex; gap:6px; margin-top:7px; flex-wrap:wrap}
+  .rAffAdd .tbtn{height:26px; padding:0 9px; font-size:12px; display:inline-flex; align-items:center; gap:4px}
+  .rAffAdd .tbtn .ic{font-size:12px}
+  .rAffHint{font-size:11px; color:var(--text3); margin-top:6px; line-height:1.5}
+  /* compact year/month/day controls */
+  .rDateRow{display:flex; gap:6px; flex-wrap:wrap}
+  .rBirthDateRow{display:grid; grid-template-columns:1.25fr 1fr 1fr; gap:7px; max-width:390px}
+  .rDateUnit{display:flex !important; align-items:center; gap:4px; min-width:0; margin:0 !important; color:var(--text2) !important; font-size:12px !important; white-space:nowrap}
+  .rDateSel{padding:5px 7px; border:1px solid var(--border); border-radius:6px; font-size:12.5px; background:var(--panel); color:var(--text)}
+  .rDateRow .rDateSel{width:100%; min-width:0}
+  .rDateSel:focus{border-color:var(--accent); outline:none}
+  #rBirthDate .rDateSel[data-birth="y"]{min-width:0}
+  .researcherEnrichmentActions{display:flex; gap:6px; margin-top:10px}
+  .researcherLinks{display:flex; flex-wrap:wrap; gap:6px; margin:5px 0 9px}
+  .researcherLinks a{font-size:12px}
+  .researcherPaper{position:relative; padding:7px 28px 7px 8px; border:1px solid var(--border2); border-radius:6px; margin:4px 0; font-size:12px; background:var(--bg)}
+  .researcherPaper button{position:absolute; top:5px; right:5px; border:0; background:none; color:var(--accent); padding:2px}
+  @media(max-width:980px){#researcherList.researcherCards{grid-template-columns:minmax(0,1fr)}}
+  @media(max-width:900px){.researcherToolbar{flex-wrap:wrap}}
+  /* ===== researcher display views (grid / profile / list / map / leaderboard) ===== */
+  .rAvatar{display:inline-flex; align-items:center; justify-content:center; border-radius:50%; overflow:hidden; flex:0 0 auto; color:#fff; font-weight:700; letter-spacing:.3px; background:var(--chip); line-height:1}
+  .rAvatar img{width:100%; height:100%; object-fit:cover; display:block; transform:translate(var(--researcher-image-offset-x,0%),var(--researcher-image-offset-y,0%)) scale(var(--researcher-image-scale,1)); transform-origin:center}
+  .rAvS{width:34px; height:34px; font-size:13px}
+  .rAvM{width:44px; height:44px; font-size:15px}
+  .rAvL{width:52px; height:52px; font-size:19px}
+  .rAvXL{width:64px; height:64px; font-size:22px}
+  .rTag{display:inline-flex; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:2px 8px; border-radius:999px; background:var(--chip); color:var(--text2); font-size:11px}
+  .rTag.sm{font-size:10.5px; padding:1px 7px}
+  /* ① grid */
+  .rGrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; padding:12px}
+  .rGridCard{background:var(--panel); border:1px solid var(--border2); border-radius:12px; padding:16px 12px; text-align:center; cursor:pointer; transition:border-color .15s, box-shadow .15s}
+  .rGridCard:hover{border-color:var(--accent-border); box-shadow:0 3px 12px rgba(20,28,45,.09)}
+  .rGridCard.sel{border-color:var(--accent-border); background:var(--sel)}
+  .rGridCard .rAvatar{margin:0 auto 10px}
+  .rGridName{font-weight:600; font-size:13.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .rGridInst{font-size:11.5px; color:var(--text2); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .rGridMeta{margin-top:8px; font-size:11px; color:var(--text3); display:flex; gap:8px; justify-content:center; flex-wrap:wrap}
+  .rGridMeta b{color:var(--accent); font-weight:700}
+  /* ② profile cards */
+  .rProfiles{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; padding:12px}
+  .rProfCard{background:var(--panel); border:1px solid var(--border2); border-radius:14px; overflow:hidden; cursor:pointer; transition:border-color .15s, box-shadow .15s}
+  .rProfCard:hover{border-color:var(--accent-border); box-shadow:0 4px 16px rgba(20,28,45,.10)}
+  .rProfCard.sel{border-color:var(--accent-border); background:var(--sel)}
+  .rProfTop{display:flex; gap:12px; padding:14px 14px 10px; align-items:center}
+  .rProfId{min-width:0}
+  .rProfName{font-weight:650; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .rProfInst{font-size:12px; color:var(--text2); margin-top:1px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .rProfBadges{display:flex; flex-wrap:wrap; gap:4px; margin-top:5px}
+  .rProfTags{display:flex; flex-wrap:wrap; gap:5px; padding:0 14px 12px}
+  .rProfFoot{display:flex; border-top:1px solid var(--border2); background:var(--panel2,var(--bg))}
+  .rStat{flex:1; text-align:center; padding:9px 4px; min-width:0}
+  .rStat + .rStat{border-left:1px solid var(--border2)}
+  .rStat b{display:block; font-size:15px; color:var(--text); font-variant-numeric:tabular-nums; overflow:hidden; text-overflow:ellipsis}
+  .rStat small{font-size:10px; color:var(--text3)}
+  /* ③ large list */
+  .rList{display:flex; flex-direction:column; border-top:1px solid var(--border2)}
+  .rLRow{display:flex; align-items:center; gap:14px; padding:11px 16px; cursor:pointer; border-bottom:1px solid var(--border2)}
+  .rLRow:hover{background:var(--bg)}
+  .rLRow.sel{background:var(--sel)}
+  .rLMain{min-width:0; flex:1}
+  .rLTop{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+  .rLName{font-weight:600; font-size:14px}
+  .rLKv{font-size:11px; color:var(--text3); background:var(--chip); border-radius:5px; padding:1px 6px}
+  .rLBadges{display:inline-flex; gap:4px; flex-wrap:wrap}
+  .rLInstLine{font-size:12.5px; color:var(--text2); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .rLPastInline{color:var(--text3)}
+  .rLLink{font-size:12px}
+  .rLTags{display:flex; flex-wrap:wrap; gap:5px; margin-top:6px}
+  .rLMetrics{display:flex; gap:16px; flex:0 0 auto}
+  .rLMetric{text-align:right; min-width:52px}
+  .rLMetric b{font-size:14px; font-variant-numeric:tabular-nums}
+  .rLMetric small{display:block; font-size:10px; color:var(--text3)}
+  /* ⑤ leaderboard */
+  .rLb{display:flex; flex-direction:column; gap:6px; padding:12px}
+  .researcherMenuActive{color:var(--accent); font-size:10px}
+  .rLbRow{display:flex; align-items:center; gap:12px; padding:8px 12px; border-radius:9px; cursor:pointer}
+  .rLbRow:hover{background:var(--bg)}
+  .rLbRow.sel{background:var(--sel)}
+  .rLbRank{width:22px; text-align:center; font-weight:700; color:var(--text3); font-variant-numeric:tabular-nums; flex:0 0 auto}
+  .rLbMid{flex:1; min-width:0}
+  .rLbName{font-weight:600; font-size:13px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .rLbInst{color:var(--text3); font-weight:400; font-size:11.5px}
+  .rLbBarWrap{margin-top:4px; height:7px; background:var(--chip); border-radius:6px; overflow:hidden}
+  .rLbBar{height:100%; background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 55%,#7dd3fc)); border-radius:6px}
+  .rLbVal{flex:0 0 auto; text-align:right; font-variant-numeric:tabular-nums; font-size:13px; font-weight:600}
+  .rLbVal small{display:block; font-weight:400; font-size:10px; color:var(--text3)}
+  /* ④ world map */
+  /* the map fills the whole pane; the viewBox is grown to the container's aspect
+     ratio (see updateMapViewBox) so the empty area is extra ocean, not letterbox */
+  .rMap{display:flex; flex-direction:column; height:100%; min-height:0; padding:12px 14px 10px; box-sizing:border-box}
+  .rMapView{flex:1 1 auto; min-height:0; display:flex}
+  .rMapView .rMapWrap{width:100%; height:100%}
+  .rMapWrap{position:relative; --rmap-land:#dfe4ec; --rmap-land2:#cdd3dd; --rmap-sea:#fff; width:100%; border-radius:11px; overflow:hidden; background:var(--rmap-sea); touch-action:none}
+  body.dark .rMapWrap{--rmap-land:#273444; --rmap-land2:#334256; --rmap-sea:var(--panel)}
+  .rMapWrap svg{display:block; width:100%; height:100%; cursor:grab}
+  .rMapWrap.panning svg{cursor:grabbing}
+  .rMapWrap.placing{cursor:crosshair}
+  .rMapWrap.placing svg{cursor:crosshair}
+  .rMapWrap.placing #rMapSvg *{pointer-events:none}
+  .mapLand{fill:var(--rmap-land); stroke:var(--rmap-land2); stroke-width:.6}
+  .realMap .mapLand{stroke-width:.5; stroke-linejoin:round}
+  .realMap .mapLand:hover{fill:color-mix(in srgb,var(--rmap-land) 82%,var(--accent))}
+  .mapGrat{display:none}
+  .rMapWrap.showGrat .mapGrat{display:block}
+  .mapGrat path{stroke:var(--border); stroke-width:.5; fill:none; opacity:.35}
+  .mapPin{cursor:pointer}
+  .mapPin.cluster{cursor:pointer}
+  .mapPinDot{transition:filter .1s}
+  .mapPin:hover .mapPinDot{filter:brightness(1.06) drop-shadow(0 1px 2px rgba(15,23,42,.28))}
+  .mapPinCount{font-size:8px; font-weight:700; text-anchor:middle; dominant-baseline:central; pointer-events:none}
+  .mapPinHit{fill:transparent; pointer-events:all; cursor:pointer}
+  .mapPinLabel{font-size:7px; font-weight:600; fill:var(--text); text-anchor:middle; pointer-events:none;
+    paint-order:stroke; stroke:var(--panel); stroke-width:2.4px; stroke-linejoin:round}
+  /* researcher photos (案A: revealed past the photo-zoom threshold) */
+  .mapAvatar{cursor:pointer}
+  .mapAvRing{fill:none; stroke:#fff; stroke-width:1.6}
+  body.dark .mapAvRing{stroke:#151b23}
+  .mapAvatar:hover .mapAvRing, .mapAvatar.sel .mapAvRing{stroke:var(--accent); stroke-width:2.2}
+  .mapAvInit{stroke:#fff; stroke-width:1.4}
+  body.dark .mapAvInit{stroke:#151b23}
+  .mapAvatar.sel .mapAvInit{stroke:var(--accent); stroke-width:2.2}
+  .mapAvatar image{transition:filter .1s}
+  .mapAvatar:hover image{filter:brightness(1.06)}
+  .mapAvTx{fill:#fff; font-size:6px; font-weight:700; text-anchor:middle; dominant-baseline:central; pointer-events:none}
+  /* institution markers: dot / teardrop pin / density heat */
+  .mapInstDot, .mapInstPin{cursor:pointer}
+  .mapInstShape{transition:filter .1s}
+  .mapInstDot:hover .mapInstShape, .mapInstPin:hover .mapInstShape{
+    filter:brightness(1.12) drop-shadow(0 1px 3px rgba(15,23,42,.32))}
+  .mapLegend .lgDot.lgInst{width:9px; height:9px; border-radius:50%; background:var(--accent)}
+  .mapLegend .lgDot.lgInstPeople{width:9px; height:9px; border-radius:50%; background:var(--amber,#d97706)}
+  /* zoom controls */
+  .mapZoom{position:absolute; right:10px; top:10px; display:flex; flex-direction:column; gap:4px; z-index:8}
+  .mapZoom button{width:30px; height:30px; border:1px solid var(--border); border-radius:8px; background:var(--panel); color:var(--text); font-size:17px; line-height:1; cursor:pointer; box-shadow:var(--shadow); display:flex; align-items:center; justify-content:center; padding:0}
+  .mapZoom button:hover{background:var(--chip); border-color:var(--accent)}
+  .maptip{position:absolute; pointer-events:none; background:var(--panel); border:1px solid var(--border); border-radius:9px; box-shadow:var(--shadow); padding:8px 10px; font-size:12px; min-width:150px; max-width:230px; opacity:0; transform:translateY(4px); transition:opacity .12s, transform .12s; z-index:6}
+  .maptip.on{opacity:1; transform:translateY(0)}
+  .maptip b{font-size:12.5px}
+  .maptip .mi{color:var(--text2); font-size:11.5px; margin-top:1px}
+  .maptip .mm{margin-top:4px; color:var(--accent); font-size:11px; font-weight:600}
+  .mapClusterPanel{position:absolute; z-index:7; width:min(278px,calc(100% - 16px)); max-height:min(360px,calc(100% - 16px)); overflow:auto; box-sizing:border-box; padding:9px; border:1px solid var(--border); border-radius:11px; background:color-mix(in srgb,var(--panel) 96%,transparent); box-shadow:var(--shadow); backdrop-filter:blur(10px)}
+  .mapClusterPanel[hidden]{display:none}
+  .mapClusterPanelHead{display:flex; align-items:flex-start; justify-content:space-between; gap:8px; padding:1px 2px 8px}
+  .mapClusterPanelHead strong{display:block; font-size:13px; line-height:1.3}
+  .mapClusterPanelHead small{display:block; margin-top:2px; color:var(--text3); font-size:11px}
+  .mapClusterPanelClose{width:25px; height:25px; border:0; border-radius:7px; background:transparent; color:var(--text2); font-size:20px; line-height:1; cursor:pointer}
+  .mapClusterPanelClose:hover{background:var(--chip); color:var(--text)}
+  .mapClusterPanelList{display:grid; gap:3px}
+  .mapClusterPanelRow{display:flex; align-items:center; gap:8px; width:100%; padding:6px; border:0; border-radius:8px; background:transparent; color:var(--text); text-align:left; cursor:pointer}
+  .mapClusterPanelRow:hover{background:var(--chip)}
+  .mapClusterPanelRow span:last-child{min-width:0; display:grid; gap:2px}
+  .mapClusterPanelRow b,.mapClusterPanelRow small{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .mapClusterPanelRow b{font-size:12px; line-height:1.2}
+  .mapClusterPanelRow small{color:var(--text3); font-size:10.5px}
+  .mapClusterPanelAvatar{width:30px; height:30px; font-size:11px}
+  .mapHint{position:absolute; left:50%; top:10px; transform:translateX(-50%); background:var(--accent); color:#fff; font-size:12px; padding:6px 12px; border-radius:999px; box-shadow:var(--shadow); z-index:6}
+  .mapLegend{display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:11.5px; color:var(--text2); align-items:flex-end}
+  .mapLegend .lg{display:flex; align-items:center; gap:7px}
+  .mapLegend .lgTitle{font-weight:600; color:var(--text)}
+  .mapLegend svg{color:var(--text2)}
+  .mapLegend .lgDot{border-radius:50%; background:var(--accent); opacity:.82; flex:0 0 auto}
+  .mapLegend .mapNote{color:var(--text3); align-self:center}
+  .mapPanel{margin-top:14px; border:1px solid var(--border2); border-radius:11px; padding:12px 14px; background:var(--panel)}
+  .mapPanelHead{display:flex; align-items:center; gap:6px; font-weight:600; font-size:13px}
+  .mapPanelHead .ic{color:var(--amber,#d97706)}
+  .mapPanelCount{font-size:11px; color:var(--text3); background:var(--chip); border-radius:999px; padding:1px 8px}
+  .mapPanelHint{font-size:12px; color:var(--text2); margin:6px 0 10px; line-height:1.5}
+  .mapUnpList{display:flex; flex-direction:column; gap:6px}
+  .mapUnpRow{display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:7px 9px; border:1px solid var(--border2); border-radius:8px; background:var(--bg)}
+  .mapUnpName{flex:1; min-width:120px; font-size:12.5px}
+  .mapUnpN{color:var(--text3); font-size:11px; margin-left:4px}
+  .mapUnpBtns{display:flex; gap:6px; flex:0 0 auto}
+  .mapUnpBtns .tbtn{height:26px; padding:0 9px; font-size:12px; display:inline-flex; align-items:center; gap:4px}
+  .mapUnpBtns .tbtn .ic{font-size:13px}
+  .rMapToolbar{display:flex; align-items:center; gap:7px; margin-bottom:8px}
+  .rMapToolbar .tbtn{height:28px; padding:0 10px; font-size:12px; display:inline-flex; align-items:center; gap:5px; position:relative}
+  .rMapToolbar .tbtn .ic{font-size:14px}
+  .mapAlertBtn .mapAlertBadge{display:inline-flex; align-items:center; justify-content:center; min-width:16px; height:16px; padding:0 4px;
+    margin-left:1px; border-radius:999px; background:var(--amber,#d97706); color:#fff; font-size:10px; font-weight:700; line-height:1}
+  @media(max-width:640px){ .rMapToolbar .tbtn span:not(.mapAlertBadge){display:none} }
+  /* map settings / alerts popovers */
+  #mapSettingsPop, #mapAlertsPop{min-width:230px; max-width:320px}
+  .researcherMapControls{display:inline-flex; align-items:center; gap:6px}
+  .researcherMapControls .lsbtn{white-space:nowrap; flex:0 0 auto}
+  .researcherMapControls .mapAlertBtn{position:relative}
+  .researcherMapControls .mapPlotBtn.on{background:var(--accent-soft); color:var(--accent); border-color:var(--accent-border); font-weight:600}
+  .researcherMapControls .mapPlotBtn.on .ic{color:var(--accent)}
+  #researcherStatus{flex-wrap:wrap}
+  .miniPop .popTitle{font-weight:700; font-size:12.5px; margin:0 0 8px; padding-right:18px}
+  .miniPop .mapSegLabel{display:block; font-size:11.5px; color:var(--text2); margin-bottom:4px}
+  .mapCenterSeg{display:flex; border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-bottom:2px}
+  .mapCenterSeg button{flex:1; border:0; background:var(--panel); color:var(--text2); font:inherit; font-size:12px; padding:5px 8px; cursor:pointer; white-space:nowrap}
+  .mapCenterSeg button+button{border-left:1px solid var(--border)}
+  .mapCenterSeg button.on{background:var(--accent); color:#fff; font-weight:600}
+  .mapCenterSeg button:hover:not(.on){background:var(--bg)}
+  .miniPop .mapSensRow label{display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-bottom:4px}
+  .miniPop .mapSensRow output{color:var(--accent); font-variant-numeric:tabular-nums; font-weight:600}
+  .miniPop #mapSensRange{width:100%; accent-color:var(--accent)}
+  .miniPop .mapToggleRow{display:flex; align-items:center; gap:7px; font-size:12.5px; margin-top:9px; cursor:pointer}
+  .miniPop .mapToggleRow input{margin:0}
+  .mapAlertSec{display:flex; align-items:center; gap:6px; font-weight:600; font-size:12px; margin:10px 0 5px}
+  .mapAlertSec:first-of-type{margin-top:2px}
+  .mapAlertSec .ic{color:var(--amber,#d97706); font-size:13px}
+  .mapAlertHint{font-size:11.5px; color:var(--text2); margin-bottom:7px; line-height:1.5}
+  .mapAlertNone{font-size:12px; color:var(--text2); padding:6px 2px 2px; line-height:1.5}
+  #mapAlertsPop .mapUnpList{max-height:44vh; overflow:auto}
+  /* institution dictionary editor dialog */
+  .instDictAddRow{display:flex; gap:6px; align-items:center; margin-bottom:10px; flex-wrap:wrap}
+  .instDictAddRow #instDictNewName{flex:1; min-width:150px}
+  .instDictAddRow input{padding:5px 8px; border:1px solid var(--border); border-radius:6px; font-size:13px; background:var(--panel); color:var(--text)}
+  .instDictAddRow input[type=number]{width:92px}
+  .instDictSearch{width:100%; padding:6px 10px; border:1px solid var(--border); border-radius:7px; font-size:13px; margin-bottom:8px; background:var(--panel); color:var(--text)}
+  .instDictSortBar{display:flex; align-items:center; gap:6px; margin-bottom:8px; flex-wrap:wrap}
+  .instDictSortLabel{font-size:11.5px; color:var(--text3); margin-right:1px}
+  .instDictSortBtn{height:26px; padding:0 9px; font-size:12px; border:1px solid var(--border); border-radius:7px; background:var(--panel); color:var(--text2); cursor:pointer; display:inline-flex; align-items:center; gap:3px}
+  .instDictSortBtn:hover{border-color:var(--accent); color:var(--accent)}
+  .instDictSortBtn.active{background:var(--accent-soft); color:var(--accent); border-color:var(--accent-border); font-weight:600}
+  .instDictSortBtn .sortArrow{font-size:9px; line-height:1}
+  .instDictList{max-height:52vh; overflow:auto; border:1px solid var(--border2); border-radius:9px}
+  .instDictRow{display:flex; align-items:center; gap:10px; padding:8px 10px; border-bottom:1px solid var(--border2)}
+  .instDictRow:last-child{border-bottom:none}
+  .instDictNameCell{flex:1; min-width:0; display:flex; align-items:center; gap:7px}
+  .instDictFlag{flex:0 0 auto; font-size:15px; line-height:1; width:18px; text-align:center}
+  .instDictName{overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px}
+  .instDictBadge{flex:0 0 auto; font-size:10.5px; padding:1px 7px; border-radius:999px; border:1px solid var(--border2); color:var(--text3)}
+  .instDictBadge.io{color:var(--accent); background:var(--accent-soft); border-color:var(--accent-border)}
+  .instDictBadge.iu{color:var(--green,#16a34a); background:color-mix(in srgb,var(--green,#16a34a) 12%,transparent); border-color:transparent}
+  .instDictCoordCell{display:flex; align-items:center; gap:6px; flex:0 0 auto}
+  .instDictCoordCell input{width:88px; padding:4px 7px; border:1px solid var(--border); border-radius:6px; font-size:12.5px; font-variant-numeric:tabular-nums; background:var(--panel); color:var(--text)}
+  .instDictCoordCell input.instDictCc{width:46px; text-transform:uppercase; font-variant-numeric:normal}
+  .instDictCoordCell input:focus{border-color:var(--accent); outline:none}
+  .instDictCoordCell .tbtn{height:26px; padding:0 8px; font-size:11.5px}
+  .instDictSpacer{display:inline-block; width:26px}
   #listScroller{flex:1; overflow:auto}
   #itemCards{display:none}
   #itemShelves,#itemKanban{display:none}
@@ -934,8 +1246,8 @@
   .kanbanPaper.dragging{opacity:.38}
   .shelfPaper.picking,.kanbanPaper.picking{cursor:pointer}
   .shelfPaper.picked,.kanbanPaper.picked{background:var(--pick-bg);border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
-  table#itemTable{width:100%; min-width:100%; border-collapse:collapse; table-layout:fixed}
-  #itemTable th{
+  table#itemTable,table#researcherTable{width:100%; min-width:100%; border-collapse:collapse; table-layout:fixed}
+  #itemTable th,#researcherTable th{
     position:sticky; top:0; z-index:5; background:var(--bg);
     border-bottom:1px solid var(--border); padding:6px 8px; text-align:left;
     font-size:12px; color:var(--text2); cursor:default; user-select:none; white-space:nowrap;
@@ -958,7 +1270,7 @@
      14px row icons (e.g. the star). match them to the row icons */
   #itemTable th.iconCol .thlabel .ic{font-size:14px}
   #itemTable th .thlabel{pointer-events:none}
-  #itemTable th:hover{color:var(--text)}
+  #itemTable th:hover,#researcherTable th:hover{color:var(--text)}
   #itemTable th.col-drag{opacity:.4}
   #itemTable th.col-drop-before{box-shadow:inset 2px 0 0 var(--accent)}
   #itemTable th.col-drop-after{box-shadow:inset -2px 0 0 var(--accent)}
@@ -966,8 +1278,8 @@
     position:absolute; top:0; right:0; width:9px; height:100%; cursor:col-resize; z-index:6;
   }
   .colresize::after{content:""; position:absolute; top:4px; bottom:4px; right:4px; width:1px; background:var(--border)}
-  #itemTable th:hover .colresize::after{background:var(--text3)}
-  #itemTable td{
+  #itemTable th:hover .colresize::after,#researcherTable th:hover .colresize::after{background:var(--text3)}
+  #itemTable td,#researcherTable td{
     padding:6px 8px; border-bottom:1px solid var(--border2);
     overflow:hidden; white-space:normal; word-break:break-word;
     vertical-align:top; cursor:default;
@@ -1041,8 +1353,8 @@
   .thdisplay{right:50px}
   .thfilter svg,.thdisplay svg{width:12px; height:12px}
   #itemTable th{position:sticky}
-  #itemTable th:hover .thsort,#itemTable th:hover .thfilter,#itemTable th:hover .thdisplay,
-  #itemTable th:focus-within .thsort,#itemTable th:focus-within .thfilter,#itemTable th:focus-within .thdisplay{display:inline-flex}
+  #itemTable th:hover .thsort,#itemTable th:hover .thfilter,#itemTable th:hover .thdisplay,#researcherTable th:hover .thsort,#researcherTable th:hover .thfilter,#researcherTable th:hover .thdisplay,
+  #itemTable th:focus-within .thsort,#itemTable th:focus-within .thfilter,#itemTable th:focus-within .thdisplay,#researcherTable th:focus-within .thsort,#researcherTable th:focus-within .thfilter,#researcherTable th:focus-within .thdisplay{display:inline-flex}
   .thsort.active{display:inline-flex; color:var(--accent)}
   .thsort:hover,.thsort:focus-visible,.thfilter:hover,.thdisplay:hover{background:var(--border2); color:var(--text); outline:none}
   .thsort:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
@@ -1081,11 +1393,10 @@
   .swatch.cur{border-color:var(--text)}
   .customColorRow{display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text2)}
   .customColorRow input[type=color]{width:34px; height:24px; padding:0; border:1px solid var(--border); border-radius:5px; background:none; cursor:pointer}
-  #itemTable tr.row{cursor:pointer}
-  #itemTable tr.row:hover td{background:var(--bg)}
-  #itemTable tr.row.sel td{background:var(--sel)}
+  #itemTable tr.row,#researcherTable tr.row{cursor:pointer}
+  #itemTable tr.row:hover td,#researcherTable tr.row:hover td{background:var(--bg)}
+  #itemTable tr.row.sel td,#researcherTable tr.row.sel td{background:var(--sel)}
   #itemTable tr.row.multiSel td{background:var(--accent-soft)}
-  #itemTable tr.row.multiSel td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
   #itemTable tr.row.updating td{background:#ecfdf3}
   #itemTable tr.row.updated td{background:#ecfdf3}
   #itemTable tr.row.updateFail td{background:#fff1f2}
@@ -1160,6 +1471,67 @@
   }
   .cardRestoreBtn:hover{background:var(--bg); color:var(--accent); border-color:var(--accent)}
   .rowTrashDeleteBtn{min-width:32px; width:32px; padding:0}
+
+  /* ================= image-centric gallery views ================= */
+  /* All three reuse #itemCards (so card click / drag / selection just work). */
+  #listScroller.galleryView table#itemTable,
+  #listScroller.compactView table#itemTable,
+  #listScroller.magazineView table#itemTable{display:none}
+  /* gallery + magazine are uniform grids; the column count is user-selectable
+     (2/3/4) via the "表示設定" control, applied as a gcols class on #itemCards. */
+  #listScroller.galleryView #itemCards, #listScroller.magazineView #itemCards{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; padding:12px 12px 22px; align-content:start}
+  #listScroller.galleryView #itemCards.gcols2, #listScroller.magazineView #itemCards.gcols2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #listScroller.galleryView #itemCards.gcols3, #listScroller.magazineView #itemCards.gcols3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  #listScroller.galleryView #itemCards.gcols4, #listScroller.magazineView #itemCards.gcols4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  #listScroller.compactView #itemCards{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; padding:12px 12px 22px; align-content:start}
+  @media(max-width:720px){ #listScroller.compactView #itemCards{grid-template-columns:1fr} }
+  /* shared image / journal-initials fallback */
+  .cardImg{width:100%; height:100%; object-fit:cover; display:block; background:#fff}
+  .cardNoimg{width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,var(--chip),var(--border2)); color:var(--text3)}
+  .cardNoimg span{font-size:22px; font-weight:800; letter-spacing:.03em; opacity:.55}
+
+  /* B2 — gallery: image on top, star badge, title / authors / journal · year */
+  .cardRow.galCard{display:flex; flex-direction:column; grid-template-columns:none; gap:0; padding:0; overflow:hidden}
+  .galCard .galThumb{position:relative; aspect-ratio:3/2; border-bottom:1px solid var(--border2); background:#fff}
+  .galCard .galStar{position:absolute; top:6px; right:6px; width:26px; height:26px; border-radius:50%; background:rgba(15,18,22,.5); border:none; display:inline-flex; align-items:center; justify-content:center; color:#fff; opacity:0; transition:opacity .12s}
+  .galCard:hover .galStar, .galCard .galStar.on{opacity:1}
+  .galCard .galStar.on{color:var(--star)}
+  .galCard .galStar svg{width:15px; height:15px}
+  .galCard .galBody{padding:8px 9px 9px; display:flex; flex-direction:column; gap:3px; min-width:0}
+  .galCard .galTitle{font-size:12.5px; font-weight:650; line-height:1.3; color:var(--text); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+  .galCard .galAuth{font-size:11px; color:var(--text2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .galCard .galMeta{display:flex; align-items:center; gap:6px; font-size:11px; margin-top:1px; min-width:0}
+  .galCard .galJournal{color:var(--accent); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0}
+  .galCard .galYear{color:var(--text3); margin-left:auto; flex:0 0 auto}
+
+  /* C3 (mod) — compact horizontal, thumb left, 3 lines, 2 columns */
+  .cardRow.cmpCard{display:flex; grid-template-columns:none; gap:10px; padding:8px; align-items:center}
+  .cmpCard .cmpThumb{flex:0 0 auto; width:78px; height:56px; border-radius:6px; overflow:hidden; border:1px solid var(--border2); background:#fff}
+  .cmpCard .cmpBody{min-width:0; display:flex; flex-direction:column; gap:2px; flex:1}
+  .cmpCard .cmpTitle{font-size:13px; font-weight:650; line-height:1.25; color:var(--text); display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden}
+  .cmpCard .cmpAuth{font-size:11.5px; color:var(--text2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .cmpCard .cmpMeta{font-size:11.5px; color:var(--text3); display:flex; align-items:center; gap:5px; overflow:hidden; white-space:nowrap}
+  .cmpCard .cmpJournal{color:var(--accent); overflow:hidden; text-overflow:ellipsis; min-width:0}
+  .cmpCard .cmpDot{opacity:.6; flex:0 0 auto}
+  .cmpCard .cmpYear{flex:0 0 auto}
+
+  /* D3 (mod) — magazine: uniform grid (fixed-aspect image, so cards never stagger),
+     title overlaid with a light scrim; hover reveals journal · authors · year */
+  .cardRow.magCard{display:block; grid-template-columns:none; gap:0; padding:0; border:1px solid var(--border2); border-radius:11px; overflow:hidden; position:relative; background:var(--panel)}
+  .magCard .magThumb{position:relative; width:100%; aspect-ratio:4/3; background:#fff; display:block}
+  .magCard .magThumb .cardImg{width:100%; height:100%; object-fit:cover}
+  .magCard .magThumb .cardNoimg{width:100%; height:100%}
+  /* lighter scrim so white TOC images are not overwhelmed by black */
+  .magCard .magOv{position:absolute; left:0; right:0; bottom:0; padding:16px 11px 10px; color:#fff; background:linear-gradient(to top, rgba(17,20,26,.74) 0%, rgba(17,20,26,.34) 44%, rgba(17,20,26,0) 74%)}
+  .magCard .magTitle{font-size:13px; font-weight:700; line-height:1.3; text-shadow:0 1px 3px rgba(0,0,0,.55); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+  .magCard .magExtra{max-height:0; overflow:hidden; opacity:0; transition:max-height .2s ease, opacity .2s ease}
+  .magCard:hover .magExtra{max-height:64px; opacity:1}
+  .magCard:hover .magOv{background:linear-gradient(to top, rgba(17,20,26,.86) 0%, rgba(17,20,26,.5) 48%, rgba(17,20,26,.08) 82%)}
+  .magCard .magSrc{font-size:11px; color:#eef1f4; margin-top:5px; line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+  .magCard .magStarBadge{position:absolute; top:8px; left:8px; width:22px; height:22px; border-radius:50%; background:rgba(15,18,22,.5); display:flex; align-items:center; justify-content:center; color:var(--star)}
+  .magCard .magStarBadge svg{width:14px; height:14px}
+  .cardRow.magCard.sel, .cardRow.magCard.multiSel{box-shadow:0 0 0 2px var(--accent); border-color:var(--accent)}
+
   .col-trashRestore, .col-trashDelete{text-align:center}
   #itemTable th.trashDelCol{
     position:sticky;
@@ -1171,7 +1543,25 @@
   #itemTable th.trashDelCol:hover::after{background:var(--text3)}
   .cited-none,.no-data{color:var(--text3)}
   .no-data.fail{color:var(--text3); font-weight:400; opacity:.85}
-  .itTitle{font-weight:600}
+  /* per-column text style (bold/italic), toggled via the header sliders icon */
+  #itemTable td.col-title{font-weight:400; font-style:normal}
+  #itemTable td.col-title .itTitle{font-weight:inherit; font-style:inherit}
+  #itemTable td.col-year, #itemTable td.col-journal{font-weight:400; font-style:normal}
+  #itemTable.ts-title-b td.col-title{font-weight:600}
+  #itemTable.ts-title-i td.col-title{font-style:italic}
+  #itemTable.ts-year-b td.col-year{font-weight:600}
+  #itemTable.ts-year-i td.col-year{font-style:italic}
+  #itemTable.ts-journal-b td.col-journal{font-weight:600}
+  #itemTable.ts-journal-i td.col-journal{font-style:italic}
+  .miniPop:has(.miniPopClose){padding-top:26px}
+  .miniPop .miniPopClose{
+    position:absolute; top:5px; right:5px; width:22px; height:22px; padding:0;
+    display:inline-flex; align-items:center; justify-content:center;
+    border:0; background:none; color:var(--text3); border-radius:5px; cursor:pointer;
+  }
+  .miniPop .miniPopClose:hover{background:var(--border2); color:var(--text)}
+  .miniPop .miniPopClose svg{width:13px; height:13px}
+  .miniPop .checkline{display:flex; align-items:center; gap:6px; font-size:12.5px; padding:3px 0; cursor:pointer}
   body.col-resizing{cursor:col-resize; user-select:none}
   /* trash view action bar */
   #trashInfoBar{
@@ -1342,10 +1732,10 @@
   .logRow.running .logReason{color:#b45309}
   .logRow.ok .logReason{color:#15803d}
   .logRow.none .logReason{color:var(--text2)}
-  #colMenu{min-width:180px}
-  #colMenu .cmItem{display:flex; align-items:center; gap:7px; padding:5px 9px; border-radius:5px; cursor:pointer; font-size:13px}
-  #colMenu .cmItem:hover{background:var(--sel)}
-  #colMenu .cmItem input{margin:0}
+  #colMenu,#researcherColMenu{min-width:180px}
+  #colMenu .cmItem,#researcherColMenu .cmItem{display:flex; align-items:center; gap:7px; padding:5px 9px; border-radius:5px; cursor:pointer; font-size:13px}
+  #colMenu .cmItem:hover,#researcherColMenu .cmItem:hover{background:var(--sel)}
+  #colMenu .cmItem input,#researcherColMenu .cmItem input{margin:0}
   #listStatus{
     flex:0 0 auto; border-top:1px solid var(--border); padding:4px 10px;
     font-size:11.5px; color:var(--text2); background:var(--bg);
@@ -1372,10 +1762,56 @@
   .fRow input:focus,.fRow select:focus,.fRow textarea:focus{border-color:var(--accent)}
   .fRow textarea{resize:vertical; min-height:44px}
   .fRow textarea.autogrow{resize:none; overflow:hidden; min-height:28px}
+  /* ---- detail-pane tag / collection editor (design B) ----
+     Assigned items shown as a removable pill row, with a separate bordered
+     search/add field and a suggestion dropdown below. Shared by tags and
+     collections so both read the same. */
+  .tagEditor2{display:flex; flex-direction:column; gap:8px}
+  .tagEditChips{display:flex; flex-wrap:wrap; gap:6px}
+  .tagEditChips:empty{display:none}
+  .tagEditChip{
+    display:inline-flex; align-items:center; gap:3px; max-width:100%;
+    padding:2px 4px 2px 8px; border-radius:999px; font-size:12px;
+    background:var(--chip); border:1px solid transparent; color:var(--text);
+  }
+  .tagEditChip .ic svg{width:12px; height:12px}
+  .tagEditChipName{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .tagEditChipX{
+    border:none; background:none; color:currentColor; opacity:.55; cursor:pointer;
+    padding:0; width:16px; height:16px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;
+  }
+  .tagEditChipX:hover{opacity:1; background:var(--border2)}
+  .tagEditChipX svg{width:12px; height:12px}
+  .tagEditFieldWrap{position:relative}
+  .tagEditFieldWrap .tagFieldMag{
+    position:absolute; left:9px; top:50%; transform:translateY(-50%); color:var(--text3);
+    pointer-events:none; display:inline-flex;
+  }
+  .tagEditFieldWrap .tagFieldMag svg{width:15px; height:15px}
+  /* the field keeps the standard input frame (padded left for the magnifier) */
+  .fRow .tagEditFieldWrap input.tagEditInput{
+    width:100%; padding:6px 10px 6px 30px; min-height:32px; font-size:13px;
+  }
+  .tagEditInput::placeholder{color:var(--text3)}
+  .tagSuggest{
+    position:absolute; left:0; right:0; top:calc(100% + 4px); z-index:40;
+    max-height:230px; overflow-y:auto; background:var(--panel); border:1px solid var(--border);
+    border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,.16); padding:4px;
+  }
+  .tagSuggest[hidden]{display:none}
+  .tagSuggestItem{
+    display:flex; align-items:center; gap:7px; padding:6px 9px; border-radius:6px;
+    font-size:13px; cursor:pointer; color:var(--text);
+  }
+  .tagSuggestItem:hover{background:var(--bg)}
+  .tagSuggestItem .ic svg{width:14px; height:14px}
+  .tagSuggestItem span{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .tagSuggestNew{color:var(--accent)}
+  .tagSuggestEmpty{padding:6px 8px; font-size:12px; color:var(--text3)}
   .fGrid{display:grid; grid-template-columns:1fr 1fr; gap:0 8px}
   .dSection{
     font-size:11px; font-weight:700; color:var(--text3); letter-spacing:.05em;
-    margin:14px 0 6px; padding-top:10px; border-top:1px solid var(--border2);
+    margin:18px 0 6px;
   }
   .dActions{display:flex; flex-wrap:wrap; gap:6px; margin:10px 0 4px}
   .dActions .tbtn{font-size:12.5px; min-height:28px; padding:0 9px}
@@ -1397,6 +1833,30 @@
   .detailFoldToggle:hover{background:var(--bg); color:var(--text)}
   .detailFoldToggle .ic svg{width:12px; height:12px}
   .detailFoldToggle.closed .ic{transform:rotate(-90deg)}
+  /* ---- figure / image field ---- */
+  .figBox{display:flex; flex-direction:column; gap:8px}
+  .figPreviewWrap{position:relative; display:inline-block; align-self:flex-start; max-width:100%}
+  .figPreview{
+    display:block; max-width:100%; max-height:280px; border:1px solid var(--border);
+    border-radius:8px; background:var(--panel); object-fit:contain;
+  }
+  body.dark .figPreview{background:#0d1014}
+  .figRemove{
+    position:absolute; top:6px; right:6px; width:24px; height:24px; border:none; border-radius:6px;
+    background:rgba(20,22,26,.72); color:#fff; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;
+  }
+  .figRemove:hover{background:var(--danger,#dc2626)}
+  .figRemove svg{width:15px; height:15px}
+  .figMissing .figPreview{min-height:60px}
+  .figEmpty{
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+    padding:18px; border:1.5px dashed var(--border); border-radius:8px; color:var(--text3);
+    font-size:12.5px; cursor:pointer; text-align:center;
+  }
+  .figEmpty:hover{border-color:var(--accent); color:var(--accent)}
+  .figEmpty svg{width:26px; height:26px; opacity:.85}
+  .figBtns{display:flex; flex-wrap:wrap; gap:6px}
+  .figBtns .tbtn{font-size:12.5px; min-height:28px; padding:0 9px}
   .detailCollections{display:flex; flex-wrap:wrap; align-items:center; gap:6px 12px}
   .detailCollBtn{
     min-width:0; max-width:100%; display:inline-flex; align-items:center; gap:6px; min-height:24px;
@@ -1603,6 +2063,8 @@
     stroke:var(--accent); stroke-width:1.7; stroke-linecap:round; stroke-dasharray:6 8;
     fill:none; opacity:.82; pointer-events:none; animation:graphCitationFlow .8s linear infinite;
   }
+  #graphSvg .gCiteFlow.gCiteGray{stroke:#64748b; opacity:.9}
+  body.dark #graphSvg .gCiteFlow.gCiteGray{stroke:#94a3b8}
   #graphSvg .gCiteArrow path{fill:#64748b}
   body.dark #graphSvg .gCiteArrow path{fill:#94a3b8}
   #graphSvg .gCiteParticle{
@@ -1616,6 +2078,10 @@
   #graphSvg .gNode.dim{opacity:.18}
   #graphSvg .gNode.seed.dim, #graphSvg .gLabel.seed.dim{opacity:.45}
   #graphSvg .gEdge.dim, #graphSvg .gCiteTrack.dim, #graphSvg .gCiteArrowLine.dim, #graphSvg .gCiteFlow.dim, #graphSvg .gCiteParticle.dim{opacity:.06}
+  /* node filtering — orthogonal to the selection .dim highlight */
+  #graphSvg .gfHide{display:none}
+  #graphSvg .gNode.gfDim, #graphSvg .gLabel.gfDim{opacity:.08; pointer-events:none}
+  #graphSvg .gEdge.gfDim, #graphSvg .gCiteTrack.gfDim, #graphSvg .gCiteArrowLine.gfDim, #graphSvg .gCiteFlow.gfDim, #graphSvg .gCiteParticle.gfDim{opacity:.03}
   #graphSvg .gNode.seed circle{stroke:#1f2328; stroke-width:2.5; stroke-dasharray:none}
   body.dark #graphSvg .gNode.seed circle{stroke:#e7eaf0}
   #graphSvg .gSeedHalo{fill:none; stroke:#1f2328; stroke-width:2}
@@ -1635,14 +2101,22 @@
   #graphToolbar .tbtn{min-height:26px; padding:0 8px; font-size:11.5px; background:rgba(255,255,255,.9); backdrop-filter:blur(8px)}
   body.dark #graphToolbar .tbtn{background:rgba(24,28,34,.88)}
   #graphToolbar .tbtn.active{color:var(--accent); border-color:var(--accent)}
-  #graphCitationStyle{
-    height:26px; max-width:120px; padding:0 21px 0 7px; border:1px solid var(--border); border-radius:6px;
-    background:rgba(255,255,255,.9); color:var(--text2); font:inherit; font-size:11.5px; backdrop-filter:blur(8px);
+  #graphCitationStyle, #graphAuthorMode{
+    height:26px; max-width:200px; padding:0 21px 0 7px; border:1px solid var(--border); border-radius:6px;
+    background:rgba(255,255,255,.9); color:var(--text2); font:inherit; font-size:11.5px; backdrop-filter:blur(8px); pointer-events:auto;
   }
-  body.dark #graphCitationStyle{background:rgba(24,28,34,.88)}
-  #graphZoomControl, #graphWheelControl, #graphSpacingControl{height:26px; display:inline-flex; align-items:center; gap:5px; padding:0 6px; border:1px solid var(--border); border-radius:6px; background:rgba(255,255,255,.9); color:var(--text2); font-size:11.5px; pointer-events:auto; backdrop-filter:blur(8px)}
+  body.dark #graphCitationStyle, body.dark #graphAuthorMode{background:rgba(24,28,34,.88)}
+  #graphZoomControl, #graphWheelControl, #graphSpacingControl{height:26px; width:186px; display:inline-flex; align-items:center; justify-content:space-between; gap:6px; padding:0 8px; border:1px solid var(--border); border-radius:6px; background:rgba(255,255,255,.9); color:var(--text2); font-size:11.5px; pointer-events:auto; backdrop-filter:blur(8px)}
+  #graphZoomControl > span, #graphWheelControl > span, #graphSpacingControl > span{flex:0 0 auto}
   body.dark #graphZoomControl, body.dark #graphWheelControl, body.dark #graphSpacingControl{background:rgba(24,28,34,.88)}
-  #graphZoom, #graphWheelSensitivity, #graphNodeSpacing{width:58px; accent-color:var(--accent)}
+  /* range sliders — styled to match the researcher-map look */
+  #graphZoom, #graphWheelSensitivity, #graphNodeSpacing{appearance:none; -webkit-appearance:none; width:66px; height:18px; margin:0; background:transparent; cursor:pointer; --gf-fill:50%; --gf-track:#e3e7ee}
+  body.dark #graphZoom, body.dark #graphWheelSensitivity, body.dark #graphNodeSpacing{--gf-track:#3a4048}
+  #graphZoom::-webkit-slider-runnable-track, #graphWheelSensitivity::-webkit-slider-runnable-track, #graphNodeSpacing::-webkit-slider-runnable-track{height:5px; border-radius:10px; background:linear-gradient(90deg,var(--accent) 0 var(--gf-fill),var(--gf-track) var(--gf-fill) 100%)}
+  #graphZoom::-webkit-slider-thumb, #graphWheelSensitivity::-webkit-slider-thumb, #graphNodeSpacing::-webkit-slider-thumb{appearance:none; -webkit-appearance:none; width:15px; height:15px; margin-top:-5px; border:2px solid #fff; border-radius:50%; background:var(--accent); box-shadow:0 1px 4px rgba(30,30,60,.34)}
+  #graphZoom::-moz-range-track, #graphWheelSensitivity::-moz-range-track, #graphNodeSpacing::-moz-range-track{height:5px; border-radius:10px; background:var(--gf-track)}
+  #graphZoom::-moz-range-progress, #graphWheelSensitivity::-moz-range-progress, #graphNodeSpacing::-moz-range-progress{height:5px; border-radius:10px; background:var(--accent)}
+  #graphZoom::-moz-range-thumb, #graphWheelSensitivity::-moz-range-thumb, #graphNodeSpacing::-moz-range-thumb{width:13px; height:13px; border:2px solid #fff; border-radius:50%; background:var(--accent); box-shadow:0 1px 4px rgba(30,30,60,.34)}
   #graphZoomValue, #graphWheelSensitivityValue, #graphNodeSpacingValue{min-width:31px; font-variant-numeric:tabular-nums; color:var(--text3); font-size:10.5px}
   #graphStats{
     display:inline-flex; align-items:center; gap:7px; min-height:26px; padding:0 8px;
@@ -1650,6 +2124,70 @@
     color:var(--text2); font-size:11.5px; backdrop-filter:blur(8px);
   }
   body.dark #graphStats{background:rgba(24,28,34,.88)}
+  #graphFilterCount{
+    display:inline-flex; align-items:center; min-height:26px; padding:0 8px; pointer-events:auto;
+    border:1px solid var(--accent); border-radius:6px; background:rgba(255,255,255,.9);
+    color:var(--accent); font-size:11.5px; font-variant-numeric:tabular-nums; backdrop-filter:blur(8px);
+  }
+  body.dark #graphFilterCount{background:rgba(24,28,34,.88)}
+  #graphFilterCount:empty{display:none}
+  /* popover panels (filter / graph settings / citation settings) share .gPanel */
+  #graphFilterPanel, #graphSettingsPanel{
+    position:absolute; left:10px; top:44px; z-index:3; width:250px; max-width:calc(100% - 20px);
+    max-height:calc(100% - 60px); overflow-y:auto;
+  }
+  #citSettingsPanel{
+    position:absolute; right:14px; bottom:52px; z-index:5; width:250px; max-width:calc(100% - 28px);
+    max-height:calc(100% - 96px); overflow-y:auto;
+  }
+  .gPanel{
+    pointer-events:auto; display:flex; flex-direction:column; gap:8px; padding:12px;
+    border:1px solid var(--border); border-radius:10px; background:var(--panel);
+    box-shadow:0 10px 30px rgba(0,0,0,.18); font-size:12px; color:var(--text2);
+  }
+  .gPanel[hidden]{display:none}
+  .gPanel .gfpHead{display:flex; align-items:center; justify-content:space-between; font-weight:700; font-size:12.5px; color:var(--text); margin-bottom:1px}
+  .gPanel .gfpHead > button{display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; padding:0; border:0; border-radius:6px; background:transparent; color:var(--text3); cursor:pointer}
+  .gPanel .gfpHead > button:hover{background:var(--bg2); color:var(--text)}
+  .gPanel .gfpHead > button .ic{width:15px; height:15px}
+  .gPanel .gfpRow{display:flex; align-items:center; justify-content:space-between; gap:8px}
+  .gPanel .gfpLabel{flex:0 0 auto; color:var(--text2)}
+  .gPanel select, .gPanel input[type=text], .gPanel input[type=number]{
+    flex:1 1 auto; min-width:0; height:26px; padding:0 7px; border:1px solid var(--border);
+    border-radius:6px; background:var(--bg); color:var(--text); font:inherit; font-size:12px;
+  }
+  .gPanel .gfpBtn{width:100%; justify-content:center}
+  .gPanel .gfpBtn.active{color:var(--accent); border-color:var(--accent)}
+  .gPanel .gfpBlock{display:flex; flex-direction:column; gap:5px}
+  .gPanel .gfpChecks{display:flex; flex-direction:column; gap:2px; max-height:118px; overflow-y:auto; padding:4px; border:1px solid var(--border); border-radius:6px; background:var(--bg)}
+  .gPanel .gfpChecks:empty::after{content:'—'; color:var(--text3); padding:2px 4px}
+  .gPanel .gfpCheck{display:flex; align-items:center; gap:6px; padding:2px 4px; border-radius:4px; cursor:pointer; color:var(--text); font-size:11.5px}
+  .gPanel .gfpCheck:hover{background:var(--bg2)}
+  .gPanel .gfpCheck input{flex:0 0 auto; width:14px; height:14px; margin:0; accent-color:var(--accent)}
+  .gPanel .gfpRange{flex:1 1 auto; display:inline-flex; align-items:center; gap:5px; min-width:0}
+  .gPanel .gfpRange input{width:1px}
+  .gPanel .gfpDash{color:var(--text3)}
+  .gPanel .gfpSeg{display:inline-flex; border:1px solid var(--border); border-radius:6px; overflow:hidden}
+  .gPanel .gfpSeg button{
+    padding:4px 10px; border:0; background:var(--bg); color:var(--text2); font:inherit; font-size:11.5px; cursor:pointer;
+  }
+  .gPanel .gfpSeg button + button{border-left:1px solid var(--border)}
+  .gPanel .gfpSeg button.active{background:var(--accent); color:#fff}
+  .gPanel .gfpFoot{display:flex; justify-content:flex-end; margin-top:2px}
+  .gPanel .gfpFoot .tbtn{font-size:11.5px}
+  .gPanel .inlineOpts{display:flex; flex-direction:column; gap:8px}
+  .gPanel .inlineOpts .fRow{display:flex; align-items:center; justify-content:space-between; gap:10px}
+  .gPanel .inlineOpts .fRow label{flex:0 0 auto; color:var(--text2)}
+  .gPanel .inlineOpts .checkline{display:flex; align-items:center; gap:7px; cursor:pointer; color:var(--text)}
+  .gPanel .inlineOpts .checkline input{width:15px; height:15px; accent-color:var(--accent)}
+  /* zoom / wheel / spacing sliders — stacked at the top-left, under the toolbar */
+  #graphSliders{position:absolute; left:10px; top:44px; z-index:1; display:flex; flex-direction:column; gap:6px; pointer-events:none}
+  #graphSliders > *{pointer-events:auto}
+  /* labels on/off switch (settings panel) */
+  .gSwitch{position:relative; flex:0 0 auto; width:38px; height:21px; padding:0; border:1px solid var(--border); border-radius:999px; background:var(--bg2); cursor:pointer; transition:background .15s}
+  .gSwitch .gSwitchKnob{position:absolute; top:1px; left:1px; width:17px; height:17px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.3); transition:left .15s}
+  .gSwitch[aria-checked="true"]{background:var(--accent); border-color:var(--accent)}
+  .gSwitch[aria-checked="true"] .gSwitchKnob{left:19px}
   #graphLoading{
     position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
     color:var(--text2); font-size:13px; background:rgba(250,251,252,.85); pointer-events:none;
@@ -1691,6 +2229,13 @@
   #graphLegend .glparticle .glCitationSample::after{display:none}
   #graphLegend .gldash .glCitationSample{background:repeating-linear-gradient(90deg,var(--accent) 0 6px,transparent 6px 14px) center/100% 2px no-repeat; animation:graphLegendDash .8s linear infinite}
   #graphLegend .gldash .glCitationSample::before, #graphLegend .gldash .glCitationSample::after{display:none}
+  /* gray flowing dash */
+  #graphLegend .gldashgray .glCitationSample{background:repeating-linear-gradient(90deg,#64748b 0 6px,transparent 6px 14px) center/100% 2px no-repeat; animation:graphLegendDash .8s linear infinite}
+  #graphLegend .gldashgray .glCitationSample::before, #graphLegend .gldashgray .glCitationSample::after{display:none}
+  body.dark #graphLegend .gldashgray .glCitationSample{background:repeating-linear-gradient(90deg,#94a3b8 0 6px,transparent 6px 14px) center/100% 2px no-repeat}
+  /* blue flowing dash over a gray base line */
+  #graphLegend .gldashtrack .glCitationSample{background:repeating-linear-gradient(90deg,var(--accent) 0 6px,transparent 6px 14px) center/100% 2px no-repeat, linear-gradient(#94a3b8,#94a3b8) center/100% 1px no-repeat; animation:graphLegendDash .8s linear infinite}
+  #graphLegend .gldashtrack .glCitationSample::before, #graphLegend .gldashtrack .glCitationSample::after{display:none}
   @keyframes graphLegendDash{to{background-position:14px center}}
   #graphLegend .glRing{width:10px; height:10px; border-radius:50%; display:inline-block}
   #graphLegend .glRingSeed{border:2px solid #1f2328; outline:1.5px solid #1f2328; outline-offset:2px; margin:0 3px}
@@ -1868,7 +2413,7 @@
   @keyframes rmRadiance{0%,100%{opacity:.14;transform:scale(.995)}50%{opacity:.28;transform:scale(1.025)}}
   @keyframes rmComet{to{stroke-dashoffset:-32}}
   @media(prefers-reduced-motion:reduce){
-    #graphSvg .gCiteFlow, #graphLegend .glCitationSample::before, #graphLegend .gldash .glCitationSample{animation:none}
+    #graphSvg .gCiteFlow, #graphLegend .glCitationSample::before, #graphLegend .gldash .glCitationSample, #graphLegend .gldashgray .glCitationSample, #graphLegend .gldashtrack .glCitationSample{animation:none}
     #graphSvg .gCiteFlow{stroke-dasharray:3 5}
     #graphSvg .gCiteParticle{display:none}
     #researcherMapSvg .rmRouteTrack,#researcherMapSvg .rmEdge,#researcherMapSvg .rmCore,#researcherMapSvg .rmSeedHalo,#researcherMapSvg .rmSeedOrbit,#researcherMapLegend .rmRouteSample{animation:none !important}
@@ -1950,6 +2495,192 @@
   .manual-fig svg{display:block; width:100%; height:auto; max-width:560px; margin:0 auto}
   #manualContent a{color:var(--accent)}
   #manualContent .manual-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px; background:var(--bg); border:1px solid var(--border2); border-radius:5px; padding:1px 6px; color:var(--text); white-space:nowrap}
+
+  /* ---------- researcher profile: read-only detail + section editor ---------- */
+  #dlgResearcherEditor{width:min(940px,94vw); max-width:940px}
+  #dlgResearcherEditor .researcherEditorHead{gap:8px}
+  #researcherEditorName{font-size:12px; color:var(--text3); font-weight:400; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  #researcherEditorBody{display:flex; height:min(620px,70vh); min-height:0}
+  #researcherEditorNav{flex:0 0 176px; padding:10px 8px; border-right:1px solid var(--border2); background:var(--bg); overflow-y:auto; display:flex; flex-direction:column; gap:2px}
+  #researcherEditorNav button{display:flex; align-items:center; gap:7px; width:100%; min-height:33px; padding:0 9px; border:0; border-radius:7px; background:transparent; color:var(--text2); text-align:left; font:inherit; font-size:12.5px}
+  #researcherEditorNav button:hover{background:var(--panel)}
+  #researcherEditorNav button.active{background:var(--accent-soft); color:var(--accent); font-weight:650}
+  #researcherEditorNav .editorNavDot{width:6px; height:6px; border-radius:50%; background:var(--border); flex:0 0 auto}
+  #researcherEditorNav button.hasValue .editorNavDot{background:var(--green)}
+  #researcherEditorNav button.active .editorNavDot{background:var(--accent)}
+  #researcherEditorContent{flex:1; min-width:0; overflow-y:auto; padding:18px 22px 24px}
+  .researcherEditorSection{display:none; max-width:660px}
+  .researcherEditorSection.active{display:block}
+  .researcherEditorSection h3{margin:0 0 3px; font-size:15px}
+  .researcherEditorIntro{margin:0 0 15px; color:var(--text3); font-size:11.5px; line-height:1.45}
+  .researcherEditorGrid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px 14px}
+  .researcherEditorField{min-width:0}
+  .researcherEditorField.full{grid-column:1 / -1}
+  .researcherEditorField>label{display:block; margin-bottom:4px; color:var(--text2); font-size:11px}
+  .researcherEditorField input,.researcherEditorField select,.researcherEditorField textarea{width:100%; min-height:32px; padding:5px 8px; border:1px solid var(--border); border-radius:6px; background:var(--panel); color:var(--text); font:inherit; font-size:13px; outline:0}
+  .researcherEditorField textarea{min-height:54px; resize:vertical}
+  .researcherEditorField input:focus,.researcherEditorField select:focus,.researcherEditorField textarea:focus{border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-soft)}
+  .researcherEditorDate{display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:6px}
+  .researcherEditorDate label{display:flex; align-items:center; gap:4px; min-width:0; color:var(--text3); font-size:11px}
+  .researcherEditorDate select{flex:1; min-width:0}
+  .researcherEditorAffRows{display:flex; flex-direction:column; gap:7px}
+  .researcherEditorAffRow{display:grid; grid-template-columns:82px 10px 82px minmax(0,1fr) 27px; gap:5px; align-items:center}
+  .researcherEditorAffRow>.researcherSourceLinks{grid-column:1 / -1; margin:-1px 0 2px}
+  .researcherEditorAffRow input,.researcherEditorAffRow select{width:100%; min-width:0; min-height:32px; padding:5px 7px; border:1px solid var(--border); border-radius:6px; background:var(--panel); color:var(--text); font:inherit; font-size:13px; outline:0}
+  .researcherEditorAffRow input:focus,.researcherEditorAffRow select:focus{border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-soft)}
+  .researcherEditorAffDash{text-align:center; color:var(--text3)}
+  .researcherEditorPresent{display:flex; align-items:center; min-height:32px; padding:0 8px; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--text2); font-size:12px}
+  .researcherEditorAffDel{width:27px; height:27px; padding:0; border:0; border-radius:5px; background:transparent; color:var(--text3); font-size:18px; line-height:1}
+  .researcherEditorAffDel:hover{background:var(--red-soft,#fff0f0); color:var(--red)}
+  .researcherEditorAddAff{align-self:flex-start; margin-top:8px; padding:5px 8px; border:1px dashed var(--border); border-radius:6px; background:transparent; color:var(--accent); font:inherit; font-size:11.5px}
+  .researcherEditorRecordList{display:flex; flex-direction:column; gap:8px}
+  .researcherEditorRecord{position:relative; display:grid; grid-template-columns:174px minmax(0,1fr) 27px; gap:7px; align-items:start; padding:8px; border:1px solid var(--border2); border-radius:8px; background:var(--bg)}
+  .researcherEditorRecordPeriod{display:grid; grid-template-columns:minmax(0,1fr) 10px minmax(0,1fr); gap:4px; align-items:center}
+  .researcherEditorRecordPeriod>span{text-align:center; color:var(--text3)}
+  .researcherEditorRecordFields{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px}
+  .researcherEditorRecord input,.researcherEditorRecord select{width:100%; min-width:0; min-height:32px; padding:5px 7px; border:1px solid var(--border); border-radius:6px; background:var(--panel); color:var(--text); font:inherit; font-size:12px; outline:0}
+  .researcherEditorRecord input:focus,.researcherEditorRecord select:focus{border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-soft)}
+  .researcherEditorRecord>.researcherSourceLinks{grid-column:1 / -1; margin:-2px 0 0}
+  .researcherEditorHint{margin:7px 0 0; color:var(--text3); font-size:11px; line-height:1.5}
+  .researcherAiStep{margin-bottom:13px; padding:12px; border:1px solid var(--border2); border-radius:9px; background:var(--bg)}
+  .researcherAiStepHead{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:8px}
+  .researcherAiStepTitle{margin-bottom:8px; color:var(--text); font-size:12.5px; font-weight:700}
+  .researcherAiStepHead .researcherAiStepTitle{margin-bottom:0}
+  .researcherAiCopyPrompt{white-space:nowrap}
+  .researcherAiLabel{display:block; margin-bottom:4px; color:var(--text2); font-size:11px}
+  .researcherAiStep input,.researcherAiStep textarea{width:100%; min-height:34px; padding:8px; border:1px solid var(--border); border-radius:6px; background:var(--panel); color:var(--text); font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; resize:vertical; outline:0}
+  .researcherAiStep textarea{min-height:68px}
+  .researcherAiUrlLabel{display:flex; align-items:baseline; justify-content:space-between; gap:8px; margin-top:9px}
+  .researcherAiUrlLabel .researcherAiLabel{margin-bottom:4px}
+  .researcherAiUrlLabel>span{color:var(--text3); font-size:10px}
+  .researcherAiUrlRows{display:flex; flex-direction:column; gap:6px}
+  .researcherAiUrlRow{display:flex; align-items:center; gap:6px}
+  .researcherAiUrlRow input{flex:1; min-width:0}
+  .researcherAiUrlAdd,.researcherAiUrlRemove{display:inline-flex; align-items:center; justify-content:center; flex:none; width:30px; height:30px; padding:0; border:1px solid var(--border); border-radius:6px; background:var(--panel); color:var(--accent); font:18px/1 inherit; cursor:pointer}
+  .researcherAiUrlAdd:hover{border-color:var(--accent); background:var(--accent-soft)}
+  .researcherAiUrlRemove{color:var(--text3); font-size:17px}
+  .researcherAiUrlRemove:hover{border-color:var(--red); background:var(--red-soft,#fff0f0); color:var(--red)}
+  .researcherAiStep input:focus,.researcherAiStep textarea:focus{border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-soft)}
+  .researcherAiPrompt{margin:8px 0}
+  .researcherAiPrompt summary{cursor:pointer; color:var(--accent); font-size:11.5px; user-select:none}
+  .researcherAiPrompt textarea{min-height:220px; margin-top:7px; background:var(--panel); color:var(--text2)}
+  .researcherAiJson{height:56px; min-height:56px!important; resize:vertical; white-space:pre; overflow-x:auto}
+  .researcherAiActions{display:flex; justify-content:flex-end; flex-wrap:wrap; gap:6px; margin-top:8px}
+  .researcherAiPreview{margin-top:13px; padding:12px; border:1px solid var(--accent-border); border-radius:9px; background:var(--accent-soft)}
+  .researcherAiPreview>p{margin:0 0 9px; color:var(--text2); font-size:11px; line-height:1.45}
+  .researcherAiDiff{display:flex; flex-direction:column; gap:7px; margin-bottom:10px}
+  .researcherAiDiffRow{display:grid; grid-template-columns:18px 110px minmax(0,1fr); align-items:start; gap:7px; padding:8px; border:1px solid var(--border2); border-radius:7px; background:var(--panel); cursor:pointer}
+  .researcherAiDiffRow>input{margin-top:3px}
+  .researcherAiDiffLabel{font-size:11.5px; font-weight:650}
+  .researcherAiDiffValues{display:grid; grid-template-columns:1fr 1fr; gap:8px; min-width:0; font-size:11px; line-height:1.4; white-space:pre-line; overflow-wrap:anywhere}
+  .researcherAiDiffValues>span{min-width:0; color:var(--text3)}
+  .researcherAiDiffValues small{display:block; margin-bottom:2px; color:var(--text3); font-size:9.5px; font-weight:700; text-transform:uppercase}
+  .researcherAiDiffValues .researcherAiDiffNew{color:var(--text)}
+  .researcherAiError{margin:10px 0; padding:9px 10px; border:1px solid var(--red); border-radius:7px; background:var(--red-soft,#fff0f0); color:var(--red); font-size:11.5px; line-height:1.5}
+  .researcherAiCandidateList{display:flex; flex-direction:column; gap:7px; margin:0 0 10px}
+  .researcherAiCandidate{display:flex; align-items:flex-start; gap:8px; padding:9px; border:1px solid var(--border2); border-radius:7px; background:var(--panel); cursor:pointer}
+  .researcherAiCandidate input{margin-top:3px}
+  .researcherAiCandidate span{display:flex; min-width:0; flex-direction:column; gap:3px}
+  .researcherAiCandidate strong{font-size:12px; color:var(--text)}
+  .researcherAiCandidate small{color:var(--text2); font-size:10.5px; line-height:1.4; overflow-wrap:anywhere}
+  .researcherAiCandidate .researcherAiCandidateSources{color:var(--accent)}
+  .researcherSourceLinks{display:flex; flex-wrap:wrap; align-items:center; gap:4px; margin-top:5px; color:var(--text3); font-size:10px; line-height:1.35}
+  .researcherSourceLinks a{padding:1px 5px; border:1px solid var(--border); border-radius:999px; color:var(--accent); text-decoration:none; background:var(--panel)}
+  .researcherSourceLinks a:hover{text-decoration:underline}
+  .researcherEditorImage{display:flex; align-items:center; gap:10px; margin-bottom:10px}
+  .researcherEditorImage .researcherImage,.researcherEditorImage .researcherImagePlaceholder{width:168px; height:168px; flex:0 0 auto}
+  .researcherEditorImageActions{display:flex; flex-wrap:wrap; gap:5px}
+  .researcherImagePosition{display:grid; grid-template-columns:auto minmax(0,1fr) minmax(0,1fr) auto; align-items:center; gap:7px; margin:0 0 10px; padding:8px 9px; border:1px solid var(--border2); border-radius:8px; background:var(--bg); color:var(--text2); font-size:11px}
+  .researcherImagePosition strong{color:var(--text); font-size:11.5px}
+  .researcherImagePosition label{display:grid; grid-template-columns:auto minmax(0,1fr); align-items:center; gap:5px; min-width:0}
+  .researcherImagePosition input{min-width:0; accent-color:var(--accent)}
+  .researcherImagePosition .tbtn{min-height:27px; padding:0 7px; font-size:11px}
+  .researcherImageStored,.researcherImageUrlHelp{display:block; margin-top:5px; color:var(--text3); font-size:10.5px; line-height:1.45}
+  .researcherImageStored{color:var(--green)}
+  .researcherEditorPhd{margin:0 0 13px; padding:10px; border:1px solid var(--border2); border-radius:8px; background:var(--bg)}
+  .researcherEditorPhd h4{margin:0 0 8px; color:var(--text); font-size:12px}
+  .researcherFieldPicker{display:flex; flex-direction:column; gap:7px}
+  .researcherFieldTags{display:flex; flex-wrap:wrap; gap:5px}
+  .researcherFieldTags .researcherTag{display:inline-flex; align-items:center; gap:4px}
+  .researcherFieldTags .researcherTag button{width:14px; height:14px; padding:0; border:0; border-radius:50%; background:transparent; color:var(--text3); font:inherit; line-height:1; cursor:pointer}
+  .researcherFieldTags .researcherTag button:hover{background:var(--border2); color:var(--text)}
+  .researcherFieldAdd{display:flex; gap:5px}.researcherFieldAdd input{min-width:0; flex:1}
+  #detail{container-type:inline-size}
+  .researcherDetailHead{display:grid; grid-template-columns:48px minmax(0,1fr) auto; align-items:center; gap:9px; margin:1px 0 13px}
+  .researcherDetailHead .researcherImage,.researcherDetailAvatar{width:48px; height:48px; flex:0 0 auto}
+  .researcherDetailAvatar{display:flex; align-items:center; justify-content:center; border:1px solid var(--border2); border-radius:50%; background:var(--chip); color:var(--text2); font-weight:700}
+  .researcherDetailIdentity{flex:1; min-width:0}
+  .researcherDetailIdentity .dTitle{margin:0 0 3px; overflow-wrap:anywhere}
+  .researcherDetailActions{display:flex; flex:0 0 auto; flex-wrap:wrap; justify-content:flex-end; gap:5px}
+  .researcherDetailActions .tbtn{min-height:30px; padding:0 8px; font-size:11.5px}
+  @container (max-width:760px){.researcherDetailHead{grid-template-columns:48px minmax(0,1fr)} .researcherDetailActions{grid-column:1 / -1; justify-content:flex-start}}
+  .researcherDetailSettingsBtn.active{border-color:var(--accent-border); background:var(--accent-soft); color:var(--accent)}
+  .researcherDetailSettings{display:flex; flex-wrap:wrap; gap:8px 13px; margin:-4px 0 9px; padding:8px 9px; border:1px solid var(--border2); border-radius:8px; background:var(--bg); color:var(--text2); font-size:11px}
+  .researcherDetailSettings label{display:flex; align-items:center; gap:5px; cursor:pointer}
+  .researcherDetailSettings input{margin:0; accent-color:var(--accent)}
+  .researcherDetailSection{padding:10px 0; border-top:1px solid var(--border2)}
+  .researcherDetailSection:first-of-type{border-top:0}
+  .researcherDetailLabel{display:flex; align-items:center; gap:5px; margin:0 0 7px; color:var(--text3); font-size:10.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase}
+  .researcherDetailCount{display:inline-flex; align-items:center; justify-content:center; min-width:18px; height:17px; padding:0 5px; border-radius:999px; background:var(--chip); color:var(--text3); font-size:9px; letter-spacing:0}
+  .researcherCareerTimeline{position:relative}
+  .researcherCareerEntry{display:grid; grid-template-columns:72px 20px minmax(0,1fr); column-gap:8px; position:relative; padding:0 0 10px; font-size:12.5px}
+  .researcherCareerEntry:last-child{padding-bottom:0}
+  .researcherCareerEntry:not(:last-child)::before{content:""; position:absolute; top:17px; bottom:-1px; left:89px; width:1px; background:var(--border2)}
+  .researcherCareerEntry::after{content:""; position:absolute; top:3px; left:84px; width:7px; height:7px; border:2px solid var(--accent); border-radius:50%; background:var(--panel)}
+  .researcherCareerEntry.education::after{border-color:#8063bc}.researcherCareerEntry.phd::after{border-color:#ae711d}
+  .researcherCareerEntry>time{position:relative; color:var(--text3); font-size:11px; font-weight:650; font-variant-numeric:tabular-nums; white-space:nowrap}
+  .researcherCareerEntry>div{grid-column:3; min-width:0}.researcherCareerEntry strong{display:block; font-weight:650; line-height:1.3}
+  .researcherCareerType{display:inline-flex; margin-top:4px; padding:1px 5px; border-radius:4px; background:var(--chip); color:var(--text3); font-size:9px; font-weight:700}.researcherCareerType.education{background:#f1edfb;color:#6e55aa}.researcherCareerType.phd{background:#fff3df;color:#a66a18}
+  .researcherDetailHistory{display:grid; grid-template-columns:78px minmax(0,1fr); gap:5px 8px; font-size:12.5px}
+  .researcherDetailHistory time{color:var(--text3); font-variant-numeric:tabular-nums}
+  .researcherDetailHistory strong{display:block; font-weight:650}
+  .researcherDetailSubline{display:block; margin-top:2px; color:var(--text2); font-size:11px; line-height:1.35}
+  .researcherDetailMeta{display:grid; grid-template-columns:80px minmax(0,1fr); gap:6px 8px; font-size:12px}
+  .researcherDetailMeta dt{color:var(--text3)} .researcherDetailMeta dd{margin:0; overflow-wrap:anywhere}
+  .researcherRelatedLink{max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:2px 6px; border:1px solid var(--accent-border); border-radius:9px; background:var(--accent-soft); color:var(--accent); font:inherit; font-size:11px; cursor:pointer}
+  .researcherRelatedLink:hover{text-decoration:underline}
+  .researcherAwardList{display:flex; flex-direction:column; gap:7px}
+  .researcherAward{display:grid; grid-template-columns:48px minmax(0,1fr); gap:8px; padding:7px 8px; border:1px solid var(--border2); border-radius:7px; background:var(--bg); font-size:12px}
+  .researcherAward time{color:var(--text3); font-size:11px; font-weight:650; font-variant-numeric:tabular-nums}.researcherAward strong{display:block; font-weight:650}
+  .researcherDetailLinks{display:flex; flex-wrap:wrap; gap:6px; margin:0}
+  .researcherExternalButton{display:inline-flex; align-items:center; gap:5px; min-height:29px; padding:0 8px; border:1px solid var(--border); border-radius:7px; background:var(--panel); color:var(--text); font-size:11.5px; font-weight:600; line-height:1; text-decoration:none}
+  .researcherExternalButton:hover{border-color:var(--accent-border); background:var(--accent-soft); color:var(--accent)}
+  .researcherExternalButton b{color:var(--accent); font-size:12px; font-weight:750; letter-spacing:-.02em}
+  .researcherExternalButton.homepage b{font-size:14px; line-height:1}
+  .researcherPaperGroup+.researcherPaperGroup{margin-top:12px; padding-top:11px; border-top:1px solid var(--border2)}
+  .researcherPaperGroupHead{margin:0 0 6px; color:var(--text2); font-size:12px; font-weight:650}
+  .researcherPaperCards{display:flex; flex-direction:column; gap:6px}
+  .researcherPaperCard{display:grid; grid-template-columns:4px minmax(0,1fr) auto; gap:8px; width:100%; padding:0; overflow:hidden; border:1px solid var(--border2); border-radius:7px; background:var(--panel); color:var(--text); text-align:left; font:inherit; cursor:pointer}
+  .researcherPaperCard:hover{border-color:var(--border); background:var(--bg)}
+  .researcherPaperAccent{background:var(--accent); opacity:.7}
+  .researcherPaperBody{min-width:0; padding:7px 0}.researcherPaperBody strong{display:-webkit-box; overflow:hidden; -webkit-box-orient:vertical; -webkit-line-clamp:2; font-size:12px; line-height:1.3}
+  .researcherPaperAuthors{display:block; overflow:hidden; margin-top:3px; color:var(--text2); font-size:10.5px; line-height:1.25; text-overflow:ellipsis; white-space:nowrap}.researcherPaperMeta{display:block; margin-top:3px; color:var(--accent); font-size:10px; font-weight:650}
+  .researcherPaperOpen{display:flex; align-items:center; justify-content:center; width:27px; color:var(--accent)}.researcherPaperOpen .ic{width:14px; height:14px}
+  .researcherOrcidWorks details{font-size:12px}
+  .researcherOrcidWorks summary{color:var(--accent); cursor:pointer; user-select:none}
+  .researcherOrcidWorkList{display:flex; flex-direction:column; gap:5px; margin-top:8px}
+  .researcherOrcidWork{padding:6px 7px; border:1px solid var(--border2); border-radius:6px; background:var(--bg); line-height:1.4}
+  .researcherOrcidWork a{color:var(--text); font-weight:600; text-decoration:none}
+  .researcherOrcidWork a:hover{color:var(--accent); text-decoration:underline}
+  @media(max-width:680px){#dlgResearcherEditor{width:96vw} #researcherEditorBody{height:min(650px,76vh)} #researcherEditorNav{flex-basis:138px} #researcherEditorContent{padding:15px} .researcherEditorGrid{grid-template-columns:1fr} .researcherEditorField.full{grid-column:auto} .researcherEditorAffRow{grid-template-columns:68px 8px 68px minmax(0,1fr) 24px; gap:4px} .researcherEditorAffRow input,.researcherEditorAffRow select{padding:5px 4px; font-size:12px} .researcherEditorRecord{grid-template-columns:1fr 24px} .researcherEditorRecordPeriod{grid-column:1} .researcherEditorRecordFields{grid-column:1; grid-template-columns:1fr} .researcherEditorRecord>.researcherSourceLinks{grid-column:1 / -1} .researcherAiDiffRow{grid-template-columns:18px minmax(0,1fr)} .researcherAiDiffLabel{grid-column:2} .researcherAiDiffValues{grid-column:2; grid-template-columns:1fr} .researcherEditorImage .researcherImage,.researcherEditorImage .researcherImagePlaceholder{width:128px; height:128px}.researcherImagePosition{grid-template-columns:1fr; align-items:stretch}.researcherImagePosition label{grid-template-columns:72px minmax(0,1fr)} .researcherCareerEntry{grid-template-columns:65px 16px minmax(0,1fr); column-gap:7px}.researcherCareerEntry:not(:last-child)::before{left:79px}.researcherCareerEntry::after{left:74px}}
+
+  /* Researcher intake: shared dialog used by the unified add menu. */
+  #dlgResearcherIntake{width:min(680px,94vw); max-width:680px}
+  #dlgResearcherIntake .dlgBody{display:grid;gap:11px;min-width:min(600px,78vw)}
+  #dlgResearcherIntake label{display:grid;gap:5px;font-size:12px;font-weight:650;color:var(--text2)}
+  #dlgResearcherIntake input,#dlgResearcherIntake textarea,#dlgResearcherIntake select{font:inherit;padding:7px 8px;color:var(--text);background:var(--panel);border:1px solid var(--border);border-radius:7px}
+  #dlgResearcherIntake textarea{resize:vertical;min-height:52px}
+  .researcherIntakeGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .researcherIntakeHelp{font-size:12px;color:var(--text2);line-height:1.55}
+  .researcherIntakeCandidates{display:grid;gap:8px;max-height:55vh;overflow:auto}
+  .researcherIntakeCandidate{border:1px solid var(--border);border-radius:9px;padding:10px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:start}
+  .researcherIntakeCandidate input[type=checkbox]{margin-top:4px}
+  .researcherIntakeCandidate strong,.researcherIntakeCandidate small{display:block}
+  .researcherIntakeCandidate small{color:var(--text2);margin-top:3px;line-height:1.45}
+  .researcherIntakeCandidate select{margin-top:7px;max-width:100%}
+  .researcherIntakeWarning{color:var(--amber)}
+  .researcherIntakeEmpty{padding:14px;color:var(--text2);text-align:center}
+  @media(max-width:720px){#dlgResearcherIntake .dlgBody{min-width:0}.researcherIntakeGrid{grid-template-columns:1fr}}
 
   .changelog-item{margin-bottom:12px}
   .changelog-item .cd{font-weight:700}
