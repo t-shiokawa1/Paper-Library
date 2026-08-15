@@ -6,7 +6,7 @@
 <meta name="refshelf-app" content="1">
 <title>Paper Library — 文献管理 / Reference Manager</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 8.6C13.1 6.1 8.6 5.8 4.7 7v16.4c3.9-1.2 8.4-.9 11.3 1.6z' fill='%231e40af'/%3E%3Cpath d='M16 8.6C18.9 6.1 23.4 5.8 27.3 7v16.4c-3.9-1.2-8.4-.9-11.3 1.6z' fill='%233b82f6'/%3E%3Cpath d='M16 8.6v16.6' stroke='%23fff' stroke-width='1.3' stroke-linecap='round'/%3E%3Crect x='3' y='24.5' width='26' height='3' rx='1.5' fill='%2393b4f0'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="app/main.css">
+<link rel="stylesheet" href="app/main.css?v=20260815r2">
 </head>
 <body class="brandStyle-81 advSearchStyle-07">
 
@@ -19,16 +19,27 @@
     <button class="addGoBtn" id="btnAddGo" data-i18n="add" aria-hidden="true" tabindex="-1">追加</button>
     <button class="addMenuCaret" id="btnAddMenu" data-i18n-title="addMoreTitle" title="手動追加・インポート"><span class="ic" data-ic="chevron"></span></button>
     <div class="menu" id="menuAdd">
+      <div class="menuLabel" data-i18n="referenceAdd">文献を追加</div>
       <button id="miAddId"><span class="ic" data-ic="search"></span><span data-i18n="addByIdMenu">DOI / arXiv / URL から（検索も可）</span></button>
       <button id="miAddManual"><span class="ic" data-ic="plus"></span><span data-i18n="addManual">手動追加</span></button>
       <hr>
-      <div class="menuLabel" data-i18n="import">インポート</div>
+      <div class="menuLabel" data-i18n="referenceImport">文献をインポート</div>
       <label class="menuCheck"><input type="checkbox" id="importKeywordsAsTags"> <span data-i18n="importKeywordsAsTags">keywords をタグとして読み込む</span></label>
       <button id="miImportBib"><span class="ic" data-ic="download"></span>BibTeX (.bib)</button>
       <button id="miImportRis"><span class="ic" data-ic="download"></span>RIS (.ris)</button>
       <button id="miImportCsv"><span class="ic" data-ic="download"></span>CSV (.csv)</button>
       <button id="miImportJson"><span class="ic" data-ic="download"></span>JSON (.json)</button>
       <button id="miImportRdf"><span class="ic" data-ic="download"></span>Zotero RDF (.rdf)</button>
+      <hr>
+      <div class="menuLabel" data-i18n="researcherAdd">研究者を追加</div>
+      <button id="miResearcherManual"><span class="ic" data-ic="plus"></span><span data-i18n="researcherManualAdd">手動追加</span></button>
+      <button id="miResearcherUrl"><span class="ic" data-ic="link"></span><span data-i18n="researcherUrlAdd">URL / ORCID / OpenAlex から取得</span></button>
+      <button id="miResearcherAuthors"><span class="ic" data-ic="users"></span><span data-i18n="researcherAuthorsAdd">論文著者から</span></button>
+      <hr>
+      <div class="menuLabel" data-i18n="researcherImport">研究者をインポート</div>
+      <button id="miResearcherImportJson"><span class="ic" data-ic="download"></span>JSON (.json)</button>
+      <button id="miResearcherImportCsv"><span class="ic" data-ic="download"></span>CSV (.csv)</button>
+      <button id="miResearcherAiImport"><span class="ic" data-ic="search"></span><span data-i18n="researcherAiImportMenu">AI調査JSON (.json)</span></button>
     </div>
   </div>
   <div class="searchWrap" id="searchWrap" data-placeholder="検索ワードを入力して Enter">
@@ -50,12 +61,21 @@
   <div class="menuwrap">
     <button class="tbtn" id="btnExport"><span class="ic" data-ic="upload"></span><span data-i18n="export">エクスポート</span><span class="ic" data-ic="chevron"></span></button>
     <div class="menu" id="menuExport">
+      <div class="menuLabel" data-i18n="referenceExport">文献情報をエクスポート</div>
       <button id="miExportBib" data-i18n="expBibShown">表示中の文献 → BibTeX</button>
       <button id="miExportRis" data-i18n="expRisShown">表示中の文献 → RIS</button>
       <button id="miExportCsv" data-i18n="expCsvShown">表示中の文献 → CSV</button>
       <button id="miExportShownJson" data-i18n="expJsonShown">表示中の文献 → JSON</button>
       <hr>
       <button id="miExportJson" data-i18n="expJson">ライブラリ全体 → JSON</button>
+      <div id="researcherExportOptions" hidden>
+        <hr>
+        <div class="menuLabel" data-i18n="researcherExport">研究者をエクスポート</div>
+        <button id="miExportResearchersShownJson" data-i18n="researcherExpJsonShown">表示中の研究者 → JSON</button>
+        <button id="miExportResearchersShownCsv" data-i18n="researcherExpCsvShown">表示中の研究者 → CSV</button>
+        <button id="miExportResearchersJson" data-i18n="researcherExpJson">全研究者 → JSON</button>
+        <button id="miExportResearchersCsv" data-i18n="researcherExpCsv">全研究者 → CSV</button>
+      </div>
     </div>
   </div>
   <button class="tbtn" id="btnManual"><span class="ic" data-ic="book"></span><span data-i18n="manual">マニュアル</span></button>
@@ -84,6 +104,15 @@
     <div id="collList"></div>
     <div class="sideHead" id="tagsHead" data-section-toggle="tags" role="button" tabindex="0">
       <span class="headLabel"><button id="btnToggleTags" class="headToggle" data-i18n-title="collapse" title="折りたたみ"><span class="ic" data-ic="tag"></span></button><span data-i18n="tags">タグ</span></span>
+      <span class="headBtns">
+        <button id="btnSearchTag" data-i18n-title="searchTagTip" title="タグを検索"><span class="ic" data-ic="search"></span></button>
+        <button id="btnAddTag" data-i18n-title="newTag" title="新規タグ"><span class="ic" data-ic="plus"></span></button>
+      </span>
+    </div>
+    <div id="tagSearchBar" hidden>
+      <span class="ic collSearchIcon" data-ic="search"></span>
+      <input id="tagSearchInput" type="text" data-i18n-ph="searchTagPh" placeholder="タグ名で絞り込み" autocomplete="off" spellcheck="false">
+      <button id="tagSearchClear" data-i18n-title="clear" title="クリア"><span class="ic" data-ic="x"></span></button>
     </div>
     <div id="tagList"></div>
     <div id="uncatFilter"></div>
@@ -125,6 +154,15 @@
         <button class="lsbtn statusCompact" id="btnAlerts" data-i18n-title="alerts"><span class="ic" data-ic="alert"></span><span data-i18n="alerts">通知</span><span id="alertsBadge" class="logBadge">0</span><span class="ic" data-ic="chevron"></span></button>
         <div class="menu" id="menuAlerts" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto"></div>
       </div>
+      <div class="menuwrap" id="galleryColsWrap" style="display:none">
+        <button class="lsbtn" id="btnGalleryCols"><span class="ic" data-ic="table"></span><span data-i18n="displaySettings">表示設定</span><span class="ic" data-ic="chevron"></span></button>
+        <div class="menu" id="galleryColsMenu" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto">
+          <div class="menuLabel" data-i18n="columnsLabel">列数</div>
+          <button data-gallery-cols="2"><span data-i18n="cols2">2列</span></button>
+          <button data-gallery-cols="3"><span data-i18n="cols3">3列</span></button>
+          <button data-gallery-cols="4"><span data-i18n="cols4">4列</span></button>
+        </div>
+      </div>
       <button class="lsbtn" id="btnWrap"><span class="ic" data-ic="wrap"></span><span data-i18n="wrapToggle">折り返し</span></button>
       <button class="lsbtn" id="btnViewStyle"><span class="ic" data-ic="rows"></span><span id="viewStyleLabel" data-i18n="viewCards">カード表示</span></button>
       <button class="lsbtn" id="btnCardCols"><span class="ic" data-ic="table"></span><span id="cardColsLabel">2列</span></button>
@@ -136,6 +174,9 @@
           <button data-list-view="cards"><span class="ic" data-ic="rows"></span><span data-i18n="viewCards">カード表示</span></button>
           <button data-list-view="shelves"><span class="ic" data-ic="book"></span><span data-i18n="viewShelves">文献棚</span></button>
           <button data-list-view="kanban"><span class="ic" data-ic="kanban"></span><span data-i18n="viewKanban">カンバン</span></button>
+          <button data-list-view="gallery"><span class="ic" data-ic="image"></span><span data-i18n="viewGallery">ギャラリー</span></button>
+          <button data-list-view="compact"><span class="ic" data-ic="rows"></span><span data-i18n="viewCompact">画像リスト</span></button>
+          <button data-list-view="magazine"><span class="ic" data-ic="image"></span><span data-i18n="viewMagazine">マガジン</span></button>
           <hr>
           <button data-card-view-act="wrap"><span class="ic" data-ic="wrap"></span><span data-i18n="wrapToggle">折り返し</span></button>
           <button id="cardViewColsMenuItem" data-card-view-act="cols"><span class="ic" data-ic="rows"></span><span id="cardViewColsMenuLabel">1列</span></button>
@@ -164,6 +205,39 @@
       <div class="menuwrap">
         <button class="lsbtn" id="btnColMenu"><span class="ic" data-ic="table"></span><span class="colMenuLabel" data-i18n="columns">列</span><span class="ic" data-ic="chevron"></span></button>
         <div class="menu" id="colMenu" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto"></div>
+      </div>
+    </div>
+  </main>
+
+  <main id="researcherPane" hidden>
+    <div id="researcherList"></div>
+    <div id="researcherStatus">
+      <span id="researcherListCount"></span><span style="flex:1"></span>
+      <span id="researcherMapControlsSlot"></span>
+      <div class="menuwrap researcherCollectionControl">
+        <button class="lsbtn" id="btnResearcherFilterMenu"><span class="ic" data-ic="funnel"></span><span data-i18n="researcherFilterLabel">絞り込み</span><span class="ic" data-ic="chevron"></span></button>
+        <div class="menu" id="researcherFilterMenu" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto"></div>
+      </div>
+      <div class="menuwrap researcherCollectionControl">
+        <button class="lsbtn" id="btnResearcherSortMenu"><span class="ic" data-ic="sliders"></span><span data-i18n="researcherSortLabel">並び替え</span><span class="ic" data-ic="chevron"></span></button>
+        <div class="menu" id="researcherSortMenu" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto"></div>
+      </div>
+      <span id="researcherLeaderboardControlsSlot"></span>
+      <div class="menuwrap">
+        <button class="lsbtn" id="btnResearcherViewMenu"><span class="ic" data-ic="globe"></span><span id="researcherViewMenuLabel" data-i18n="viewTable">表表示</span><span class="ic" data-ic="chevron"></span></button>
+        <div class="menu" id="researcherViewMenu" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto">
+          <div class="menuLabel" data-i18n="viewStyle">表示スタイル</div>
+          <button data-researcher-view="table"><span class="ic" data-ic="table"></span><span data-i18n="viewTable">表表示</span></button>
+          <button data-researcher-view="grid"><span class="ic" data-ic="grid"></span><span data-i18n="viewGrid">グリッド</span></button>
+          <button data-researcher-view="profile"><span class="ic" data-ic="note"></span><span data-i18n="viewProfileCards">プロフィール</span></button>
+          <button data-researcher-view="list"><span class="ic" data-ic="rows"></span><span data-i18n="viewLargeList">リスト</span></button>
+          <button data-researcher-view="map"><span class="ic" data-ic="globe"></span><span data-i18n="viewMap">地図</span></button>
+          <button data-researcher-view="leaderboard"><span class="ic" data-ic="graph"></span><span data-i18n="viewLeaderboard">ランキング</span></button>
+        </div>
+      </div>
+      <div class="menuwrap">
+        <button class="lsbtn" id="btnResearcherColMenu"><span class="ic" data-ic="table"></span><span data-i18n="columns">列</span><span class="ic" data-ic="chevron"></span></button>
+        <div class="menu" id="researcherColMenu" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto"></div>
       </div>
     </div>
   </main>
@@ -204,6 +278,26 @@
   </div>
   <div class="dlgFoot"><button class="tbtn primary" data-close data-i18n="close">閉じる</button></div>
 </dialog>
+
+<!-- ============ researcher profile editor ============ -->
+<dialog id="dlgResearcherEditor">
+  <div class="dlgHead researcherEditorHead">
+    <span id="researcherEditorTitle" data-i18n="researcherProfile">研究者プロフィール</span>
+    <span id="researcherEditorName"></span>
+    <button id="btnResearcherEditorClose" aria-label="閉じる"><span class="ic" data-ic="x"></span></button>
+  </div>
+  <div id="researcherEditorBody">
+    <nav id="researcherEditorNav" aria-label="研究者プロフィールの編集項目"></nav>
+    <div id="researcherEditorContent"></div>
+  </div>
+  <div class="dlgFoot researcherEditorFoot">
+    <button class="tbtn danger" id="btnResearcherEditorDelete" hidden><span class="ic" data-ic="trash"></span><span data-i18n="researcherDelete">研究者を削除</span></button>
+    <span style="flex:1"></span>
+    <button class="tbtn" id="btnResearcherEditorCancel" data-i18n="cancel">キャンセル</button>
+    <button class="tbtn primary" id="btnResearcherEditorSave" data-i18n="save">保存</button>
+  </div>
+</dialog>
+<input type="file" id="fileResearcherAiJson" accept=".json,application/json" hidden>
 
 <!-- ============ fetch log dialog ============ -->
 <dialog id="dlgFetchLog">
@@ -285,7 +379,7 @@
 
 <!-- ============ citations dialog ============ -->
 <dialog id="dlgCitations">
-  <div class="dlgHead"><span id="citHeadTitle" data-i18n="citationsTitle">引用関係</span><button data-close><span class="ic" data-ic="x"></span></button></div>
+  <div class="dlgHead"><span id="citHeadTitle" data-i18n="citationsTitle">引用関係</span></div>
   <div class="dlgBody" id="citBody">
     <div class="citCols">
       <section class="citCol">
@@ -298,35 +392,102 @@
       </section>
     </div>
   </div>
-  <div class="dlgFoot"><span class="citSource" data-i18n="citeSource">データ提供: OpenAlex</span><span style="flex:1"></span><button class="tbtn" data-close data-i18n="close">閉じる</button></div>
+  <div class="dlgFoot"><span class="citSource" data-i18n="citeSource">データ提供: OpenAlex</span><span style="flex:1"></span>
+    <button class="tbtn" id="btnCitSettings" type="button" aria-pressed="false" data-i18n-title="citSettingsLabel" title="この画面の引用の書式（引用プレビューとは独立）"><span class="ic" data-ic="gear"></span><span data-i18n="citSettings">引用設定</span></button>
+    <button class="tbtn" data-close data-i18n="close">閉じる</button>
+  </div>
+  <div id="citSettingsPanel" class="gPanel" hidden>
+    <div class="gfpHead"><span data-i18n="citSettings">引用設定</span><button type="button" id="btnCitSettingsClose" data-i18n-title="close" title="閉じる"><span class="ic" data-ic="x"></span></button></div>
+    <div id="citSettingsBody"></div>
+  </div>
 </dialog>
 
 <!-- ============ graph (connected-papers style) dialog ============ -->
 <dialog id="dlgGraph">
-  <div class="dlgHead"><span id="graphHeadTitle" data-i18n="graphView">相関図</span>
+  <div class="dlgHead"><span id="graphHeadTitle" data-i18n="graphView">論文相関図</span>
     <span id="graphCacheNote"></span>
-    <span style="flex:1"></span>
-    <button class="tbtn" id="btnGraphRefetch" style="font-size:12px; margin-right:6px"><span class="ic" data-ic="retry"></span><span data-i18n="graphRefetch">再取得</span></button>
-    <button class="tbtn" id="btnGraphRelayout" style="font-size:12px; margin-right:6px"><span class="ic" data-ic="graph"></span><span data-i18n="graphRelayout">再レイアウト</span></button>
-    <button data-close><span class="ic" data-ic="x"></span></button>
   </div>
   <div id="graphBody">
     <div id="graphCanvasWrap">
       <svg id="graphSvg"></svg>
       <div id="graphToolbar">
+        <button class="tbtn" id="btnGraphRefetch" data-i18n-title="graphRefetch" title="再取得"><span class="ic" data-ic="retry"></span><span data-i18n="graphRefetch">再取得</span></button>
+        <button class="tbtn" id="btnGraphRelayout" data-i18n-title="graphRelayout" title="再レイアウト"><span class="ic" data-ic="graph"></span><span data-i18n="graphRelayout">再レイアウト</span></button>
         <button class="tbtn" id="btnGraphFit"><span class="ic" data-ic="zoom"></span><span data-i18n="graphFit">全体表示</span></button>
-        <button class="tbtn" id="btnGraphLabels"><span class="ic" data-ic="text"></span><span data-i18n="graphLabels">ラベル</span></button>
-        <select id="graphCitationStyle" data-i18n-title="graphCitationStyleLabel" title="直接引用の表示スタイル">
-          <option value="solid" data-i18n="graphStyleSolid">灰色の実線</option>
-          <option value="arrow" data-i18n="graphStyleArrow">矢印</option>
-          <option value="particle" data-i18n="graphStyleParticle">発光粒子</option>
-          <option value="dash" data-i18n="graphStyleDash">流れる破線</option>
-        </select>
+        <button class="tbtn" id="btnGraphSettings" type="button" aria-pressed="false" data-i18n-title="graphSettingsLabel" title="相関図の表示設定"><span class="ic" data-ic="sliders"></span><span data-i18n="graphSettings">表示設定</span></button>
+        <button class="tbtn" id="btnGraphFilter" type="button" aria-pressed="false" data-i18n-title="graphFilterLabel" title="論文ノードの絞り込み"><span class="ic" data-ic="funnel"></span><span data-i18n="graphFilter">フィルター</span></button>
+        <span id="graphStats"></span>
+        <span id="graphFilterCount"></span>
+      </div>
+      <div id="graphSettingsPanel" class="gPanel" hidden>
+        <div class="gfpHead"><span data-i18n="graphSettings">表示設定</span><button type="button" id="btnGraphSettingsClose" data-i18n-title="close" title="閉じる"><span class="ic" data-ic="x"></span></button></div>
+        <label class="gfpRow"><span class="gfpLabel" data-i18n="graphCitationStyle">線のスタイル</span>
+          <select id="graphCitationStyle" data-i18n-title="graphCitationStyleLabel" title="直接引用の表示スタイル">
+            <option value="solid" data-i18n="graphStyleSolid">灰色の実線</option>
+            <option value="arrow" data-i18n="graphStyleArrow">矢印</option>
+            <option value="particle" data-i18n="graphStyleParticle">発光粒子</option>
+            <option value="dashgray" data-i18n="graphStyleDashGray">流れる破線（灰色）</option>
+            <option value="dash" data-i18n="graphStyleDash">流れる破線（青）</option>
+            <option value="dashtrack" data-i18n="graphStyleDashTrack">流れる破線（青＋灰色の線）</option>
+          </select>
+        </label>
+        <label class="gfpRow"><span class="gfpLabel" data-i18n="graphAuthorMode">著者</span>
+          <select id="graphAuthorMode" data-i18n-title="graphAuthorModeLabel" title="ノードに表示する著者">
+            <option value="last" data-i18n="graphAuthorLast">ラストオーサー</option>
+            <option value="first" data-i18n="graphAuthorFirst">ファーストオーサー</option>
+          </select>
+        </label>
+        <div class="gfpRow"><span class="gfpLabel" data-i18n="graphLabels">ラベル</span>
+          <button class="gSwitch" id="btnGraphLabels" type="button" role="switch" aria-checked="true" data-i18n-title="graphLabels" title="ラベル"><span class="gSwitchKnob"></span></button>
+        </div>
+        <button class="tbtn gfpBtn" id="btnGraphReverse" type="button" aria-pressed="false" data-i18n-title="graphReverse" title="方向を反転"><span class="ic" data-ic="arrowDownLeft"></span><span id="graphReverseLabel" data-i18n="graphReverse">方向を反転</span></button>
+      </div>
+      <div id="graphSliders">
         <label id="graphZoomControl" data-i18n-title="graphZoomLabel" title="相関図の表示倍率"><span data-i18n="graphZoom">拡大・縮小</span><input id="graphZoom" type="range" min="70" max="180" step="5" value="100"><output id="graphZoomValue">100%</output></label>
         <label id="graphWheelControl" data-i18n-title="graphWheelLabel" title="ホイールによる拡大縮小の感度"><span data-i18n="graphWheel">ホイール</span><input id="graphWheelSensitivity" type="range" min="20" max="100" step="5" value="50"><output id="graphWheelSensitivityValue">50%</output></label>
         <label id="graphSpacingControl" data-i18n-title="graphSpacingLabel" title="円とラベルの間隔"><span data-i18n="graphSpacing">間隔</span><input id="graphNodeSpacing" type="range" min="80" max="180" step="5" value="100"><output id="graphNodeSpacingValue">100%</output></label>
-        <button class="tbtn" id="btnGraphReverse" type="button" aria-pressed="false" data-i18n-title="graphReverse" title="方向を反転"><span class="ic" data-ic="arrowDownLeft"></span><span id="graphReverseLabel" data-i18n="graphReverse">方向を反転</span></button>
-        <span id="graphStats"></span>
+      </div>
+      <div id="graphFilterPanel" class="gPanel" hidden>
+        <div class="gfpHead"><span data-i18n="graphFilterTitle">論文の絞り込み</span><button type="button" id="btnGraphFilterClose" data-i18n-title="close" title="閉じる"><span class="ic" data-ic="x"></span></button></div>
+        <div class="gfpRow gfpModeRow">
+          <span class="gfpLabel" data-i18n="graphFilterMode">表示方法</span>
+          <div class="gfpSeg">
+            <button type="button" data-gfmode="hide" data-i18n="graphFilterHide">非表示</button>
+            <button type="button" data-gfmode="dim" data-i18n="graphFilterDim">薄く表示</button>
+          </div>
+        </div>
+        <label class="gfpRow"><span class="gfpLabel" data-i18n="graphFilterReg">登録状態</span>
+          <select id="gfReg">
+            <option value="all" data-i18n="graphFilterRegAll">すべて</option>
+            <option value="in" data-i18n="graphFilterRegIn">登録済み</option>
+            <option value="out" data-i18n="graphFilterRegOut">未登録</option>
+          </select>
+        </label>
+        <div class="gfpRow"><span class="gfpLabel" data-i18n="graphFilterYear">出版年</span>
+          <span class="gfpRange">
+            <input id="gfYearMin" type="number" inputmode="numeric" data-i18n-ph="graphFilterYearMin" placeholder="最小">
+            <span class="gfpDash">–</span>
+            <input id="gfYearMax" type="number" inputmode="numeric" data-i18n-ph="graphFilterYearMax" placeholder="最大">
+          </span>
+        </div>
+        <label class="gfpRow"><span class="gfpLabel" data-i18n="graphFilterCited">被引用数（最小）</span>
+          <input id="gfCitedMin" type="number" inputmode="numeric" min="0">
+        </label>
+        <label class="gfpRow"><span class="gfpLabel" data-i18n="graphFilterAuthor">著者名</span>
+          <input id="gfAuthor" type="text">
+        </label>
+        <label class="gfpRow"><span class="gfpLabel" data-i18n="graphFilterTag">タグ</span>
+          <select id="gfTag"></select>
+        </label>
+        <label class="gfpRow"><span class="gfpLabel" data-i18n="graphFilterColl">コレクション</span>
+          <select id="gfColl"></select>
+        </label>
+        <div class="gfpBlock"><span class="gfpLabel" data-i18n="graphFilterJournal">雑誌</span>
+          <div id="gfJournal" class="gfpChecks"></div>
+        </div>
+        <div class="gfpFoot">
+          <button type="button" class="tbtn" id="btnGraphFilterReset" data-i18n="graphFilterReset">条件をリセット</button>
+        </div>
       </div>
       <div id="graphLoading"></div>
       <div id="graphLegend">
@@ -489,14 +650,48 @@
   </div>
 </div>
 
+<dialog id="dlgInstDict">
+  <div class="dlgHead"><span data-i18n="instDictTitle">所属（機関）辞書</span><button data-close><span class="ic" data-ic="x"></span></button></div>
+  <div class="dlgBody">
+    <div class="researcherMeta" id="instDictHint" data-i18n="instDictHint" style="margin-bottom:10px"></div>
+    <div class="instDictAddRow">
+      <input type="text" id="instDictNewName" data-i18n-ph="instDictAddName" placeholder="新しい機関名">
+      <input type="number" id="instDictNewLat" step="0.001" data-i18n-ph="mapLatitude" placeholder="緯度">
+      <input type="number" id="instDictNewLon" step="0.001" data-i18n-ph="mapLongitude" placeholder="経度">
+      <input type="text" id="instDictNewCc" maxlength="2" data-i18n-ph="instDictCountry" placeholder="国" style="width:56px">
+      <button class="tbtn primary" id="instDictAddBtn" data-i18n="instDictAdd">追加</button>
+    </div>
+    <input type="text" id="instDictSearch" class="instDictSearch" data-i18n-ph="instDictSearch" placeholder="機関名で検索">
+    <div class="instDictSortBar" id="instDictSortBar">
+      <span class="instDictSortLabel" data-i18n="instDictSortBy">並び替え</span>
+      <button class="instDictSortBtn" data-inst-sort="name"><span data-i18n="instDictSortName">名前</span><span class="sortArrow"></span></button>
+      <button class="instDictSortBtn" data-inst-sort="cc"><span data-i18n="instDictCountry">国コード</span><span class="sortArrow"></span></button>
+      <button class="instDictSortBtn" data-inst-sort="lat"><span data-i18n="mapLatitude">緯度</span><span class="sortArrow"></span></button>
+      <button class="instDictSortBtn" data-inst-sort="lon"><span data-i18n="mapLongitude">経度</span><span class="sortArrow"></span></button>
+    </div>
+    <div id="instDictList" class="instDictList"></div>
+  </div>
+</dialog>
+
 <div id="toast"></div>
 <div class="miniPop" id="colFilterPop"></div>
 <div class="miniPop" id="authorDisplayPop"></div>
+<div class="miniPop" id="colTextStylePop"></div>
+<div class="miniPop" id="mapCoordPop"></div>
+<div class="miniPop" id="mapSettingsPop"></div>
+<div class="miniPop" id="mapAlertsPop"></div>
+<div class="miniPop" id="researcherColFilterPop"></div>
+<div class="miniPop" id="researcherNameDisplayPop"></div>
 <div class="miniPop" id="collColorPop"></div>
 <div class="miniPop" id="tagColorPop"></div>
 <input type="file" id="fileImport" style="display:none">
+<input type="file" id="fileResearcherImport" accept=".json,.csv,application/json,text/csv,text/plain" style="display:none">
+<input type="file" id="fileResearcherAiImport" accept=".json,application/json,text/plain" style="display:none">
 <input type="file" id="filePdf" accept=".pdf,application/pdf" style="display:none" multiple>
+<input type="file" id="fileImage" accept="image/*" style="display:none">
+<input type="file" id="fileResearcherImage" accept="image/*" style="display:none">
 
-<script src="app/main.js"></script>
+<script src="app/worldmap.js?v=20260814r2"></script>
+  <script src="app/main.js?v=20260815r2"></script>
 </body>
 </html>
