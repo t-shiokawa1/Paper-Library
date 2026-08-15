@@ -302,6 +302,10 @@ function citationAuthors(item, opts){
   return joinCitationAuthors(list.map(a=>authorName(a, style)), style);
 }
 function sentenceEnd(s){ return s ? s.replace(/\.+$/,'') + '. ' : ''; }
+function sentenceEndHtml(s){
+  if(!s) return '';
+  return /[.!?](?:<\/[^>]+>)*$/.test(s) ? s + ' ' : s + '. ';
+}
 function citationAuthorsHtml(item, opts){ return esc(citationAuthors(item, opts)).replace(/\bet al\./g, '<i>et al.</i>'); }
 function itemToCitationHtml(item, opts){
   opts = Object.assign({style:'acs', includeTitle:true, authorScope:'all', includeUrl:true}, opts || {});
@@ -316,7 +320,7 @@ function itemToCitationHtml(item, opts){
   const p = pages ? esc(pages) : '';
   let html = '';
   if(style==='nature'){
-    html = [auth ? sentenceEnd(auth).trim() : '', title, j, vol ? vol + ',' : '', p, item.year ? `(${esc(item.year)}).` : '']
+    html = [auth ? sentenceEndHtml(auth).trim() : '', title, j, vol ? vol + ',' : '', p, item.year ? `(${esc(item.year)}).` : '']
       .filter(Boolean).join(' ').replace(/\s+,/g, ',').trim();
   }else if(style==='science'){
     html = [auth ? auth + ',' : '', title, j, vol ? vol + ',' : '', p, item.year ? `(${esc(item.year)}).` : '']
@@ -335,7 +339,7 @@ function itemToCitationHtml(item, opts){
     if(vol) html += (html ? ', ' : '') + vol; if(p) html += (html ? ', ' : '') + p;
     html = html.trim().replace(/,$/, '') + '.';
   }else{
-    html = [auth ? sentenceEnd(auth).trim() : '', title, j, y].filter(Boolean).join(' ');
+    html = [auth ? sentenceEndHtml(auth).trim() : '', title, j, y].filter(Boolean).join(' ');
     if(vol) html += (html ? ', ' : '') + vol; if(p) html += (html ? ', ' : '') + p;
     html = html.trim().replace(/,$/, '') + '.';
   }
@@ -362,7 +366,7 @@ var I18N = {
     count:function(n,m){return n+' / '+m+' 件';},
     emptyLoad:'まず「ライブラリ」ボタンから library.json を読み込んでください。（Paper Library の保存フォルダ内、または「エクスポート → ライブラリ全体 → JSON」）',
     moreItems:function(n){return '上位 '+n+' 件を表示（絞り込んでください）';}, noTitle:'(無題)',
-    loaded:'ライブラリを読み込みました', reloaded:'ライブラリを再読み込みしました', loadFail:function(e){return '読み込み失敗: '+e;}, folderNoJson:'選択したフォルダに library.json が見つかりません', reloadNeedsSelect:'この環境では自動再読み込みできません。もう一度ライブラリフォルダを選択してください',
+    loaded:'ライブラリを読み込みました', reloaded:'ライブラリを再読み込みしました', loadedNoCache:'ライブラリを読み込みましたが、大きすぎるため次回は再読み込みが必要です', loadFail:function(e){return '読み込み失敗: '+e;}, folderNoJson:'選択したフォルダに library.json が見つかりません', reloadNeedsSelect:'この環境では自動再読み込みできません。もう一度ライブラリフォルダを選択してください',
     inserted:'引用を挿入しました', insertFail:function(e){return '挿入に失敗: '+e;},
     updated:'文献リストを更新しました', updateFail:function(e){return '更新に失敗: '+e;},
     copied:'引用をコピーしました', copyFail:'コピーできませんでした',
@@ -381,7 +385,7 @@ var I18N = {
     count:function(n,m){return n+' / '+m;},
     emptyLoad:'Load library.json with the “Library” button. (It is in your Paper Library folder, or export via Export → Whole library → JSON.)',
     moreItems:function(n){return 'Showing top '+n+' (refine your search)';}, noTitle:'(untitled)',
-    loaded:'Library loaded', reloaded:'Library reloaded', loadFail:function(e){return 'Load failed: '+e;}, folderNoJson:'library.json was not found in the selected folder', reloadNeedsSelect:'Automatic reload is not available in this environment. Select the library folder again',
+    loaded:'Library loaded', reloaded:'Library reloaded', loadedNoCache:'Library loaded, but it is too large to cache. Reload it next time.', loadFail:function(e){return 'Load failed: '+e;}, folderNoJson:'library.json was not found in the selected folder', reloadNeedsSelect:'Automatic reload is not available in this environment. Select the library folder again',
     inserted:'Citation inserted', insertFail:function(e){return 'Insert failed: '+e;},
     updated:'Bibliography updated', updateFail:function(e){return 'Update failed: '+e;},
     copied:'Citation copied', copyFail:'Could not copy',
@@ -507,8 +511,17 @@ function loadLibraryData(data, file){
   if(lbl) STATE.libraryLabel = lbl;    // keep the previously known name if this source can't provide one
   buildFilterOptions();
   updateLibInfo();
-  try{ localStorage.setItem(LS_LIB, JSON.stringify({items:STATE.items, collections:STATE.collections, libraryLabel:STATE.libraryLabel})); }catch(e){ /* too big for LS? keep in memory */ }
+  var cacheOk = true;
+  try{
+    localStorage.setItem(LS_LIB, JSON.stringify({items:STATE.items, collections:STATE.collections, libraryLabel:STATE.libraryLabel}));
+  }catch(e){
+    // Do not leave an older library in storage: on the next launch it could be
+    // mistaken for the library the user just selected.
+    try{ localStorage.removeItem(LS_LIB); }catch(_e){}
+    cacheOk = false;
+  }
   render();
+  return cacheOk;
 }
 function currentOpts(){ return { style: $('#style').value, includeTitle: $('#incTitle').checked, includeUrl: $('#incUrl').checked, authorScope:'all' }; }
 function segButtons(){ return Array.prototype.slice.call(document.querySelectorAll('#markerStyle .segBtn')); }
@@ -750,8 +763,8 @@ async function refreshCitations(o){
 async function readLibraryFileObject(f, label, silent){
   var text = await f.text();
   if(label) f.libraryFolderName = label;
-  loadLibraryData(JSON.parse(text), f);
-  toast(silent ? tr('reloaded') : tr('loaded'));
+  var cached = loadLibraryData(JSON.parse(text), f);
+  toast(cached ? (silent ? tr('reloaded') : tr('loaded')) : tr('loadedNoCache'), !cached);
 }
 async function loadLibraryFromHandle(silent){
   if(!STATE.libraryFileHandle && STATE.dirHandle){
@@ -783,7 +796,7 @@ async function loadLibraryFromSelectedFolder(files){
   // Keep the latest selection for display, but ask the user to reselect the folder for future updates.
   STATE.lastFolderFiles = files;
   var text = await f.text();
-  try{ loadLibraryData(JSON.parse(text), f); toast(tr('loaded')); }
+  try{ var cached = loadLibraryData(JSON.parse(text), f); toast(cached ? tr('loaded') : tr('loadedNoCache'), !cached); }
   catch(err){ toast(tr('loadFail', err.message), true); }
 }
 async function chooseLibrary(){
