@@ -46,6 +46,7 @@ const ICONS = {
   text:'<path d="M5 6h14M12 6v12M8.5 18h7"/>',
   citations:'<circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="9" r="2.4"/><circle cx="8.5" cy="18" r="2.4"/><path d="M8.3 7 15.6 8.6M7.7 15.7 6.6 8.3M10.2 16.6 16.1 10.9"/>',
   users:'<circle cx="9" cy="8" r="3"/><path d="M3.8 19a5.2 5.2 0 0 1 10.4 0"/><circle cx="17" cy="9.5" r="2.3"/><path d="M14.8 15.5a4.2 4.2 0 0 1 5.4 3.5"/>',
+  user:'<circle cx="12" cy="8" r="3.6"/><path d="M5.5 19.5a6.5 6.5 0 0 1 13 0"/>',
   graph:'<circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="17" r="2.2"/><circle cx="19" cy="16" r="2.2"/><circle cx="12" cy="12.5" r="1.6"/><path d="M12 7.2v3.7M10.6 13.6 6.4 15.6M13.5 13.3 17.4 15M6.8 15.5 10.6 6.6M17.2 14.9 13 6.7"/>',
   gear:'<circle cx="12" cy="12" r="3.2"/><circle cx="12" cy="12" r="7.2"/><path d="M12 2.8v2M12 19.2v2M2.8 12h2M19.2 12h2M5.5 5.5 6.9 6.9M17.1 17.1l1.4 1.4M18.5 5.5l-1.4 1.4M6.9 17.1l-1.4 1.4"/>',
   check:'<path d="M5 12.5 10 17.5 19.5 6.5"/>',
@@ -66,6 +67,7 @@ const ICONS = {
   clipboard:'<rect x="5.5" y="5" width="13" height="15" rx="1.5"/><path d="M9 5V3.8h6V5M8.5 8.5h7M8.5 12h7M8.5 15.5h4"/>',
   copy:'<rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15.5 8.5V6A1.5 1.5 0 0 0 14 4.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/>',
   eyeOff:'<path d="M4 4l16 16"/><path d="M9.9 5.2A9.6 9.6 0 0 1 12 5c5 0 8.5 4 9.5 7a12 12 0 0 1-2.2 3.3M6.5 6.8C4.2 8.2 2.8 10.4 2.5 12c1 3 4.5 7 9.5 7a9.3 9.3 0 0 0 3.6-.7"/><path d="M9.8 9.9a3 3 0 0 0 4.2 4.2"/>',
+  eye:'<path d="M2.5 12c1-3 4.5-7 9.5-7s8.5 4 9.5 7c-1 3-4.5 7-9.5 7s-8.5-4-9.5-7z"/><circle cx="12" cy="12" r="3"/>',
 };
 function ic(name, attrs){
   const p = ICONS[name] || '';
@@ -234,22 +236,23 @@ const I18N = {
     mapPlaceOnMap:'地図で指定', mapEnterCoords:'座標を入力', mapCoordSave:'保存',
     mapPlacementHint:(inst)=>`「${inst}」の位置を地図上でクリックしてください（Escで中止）`,
     mapLatitude:'緯度', mapLongitude:'経度', mapManualTitle:'手動で配置した所属', mapReset:'リセット',
+    mapIgnore:'無視', mapIgnoreHint:'今後この所属を通知に表示しません。辞書から元に戻せます。', mapIgnoredTitle:'無視した所属', mapUnignore:'無視を解除', mapAffScope:'プロットする所属', mapAffScopeCurrent:'現在の所属', mapAffScopeAll:'すべての所属歴',
     mapPinLegend:'ピンの大きさ ＝ 研究者数', mapPinCountLegend:'ピン内の数字 ＝ その拠点の研究者数（拡大すると顔写真を表示）',
     mapNoLocationNote:'所属が未登録の研究者は地図に表示されません。', mapEmpty:'地図に配置できる所属がありません。',
     mapPeopleCount:(n)=>`${n}名`, mapAutoPlaced:'内蔵辞書から自動配置',
     mapInstCount:(n)=>`${n} 機関`, mapCenterToggle:'地図の中心', mapCenterAsia:'アジア中心', mapCenterEurope:'ヨーロッパ中心',
     mapAlerts:'通知', mapAlertsTitle:'未配置の所属', mapAlertsNone:'未配置の所属はありません。すべて地図に配置済みです。',
-    mapSettings:'設定', mapSettingsTitle:'地図の表示設定', mapWheelSensitivity:'ホイール感度', mapGridToggle:'グリッド線（経緯線）',
-    mapPinAreaLegend:'面積 ＝ 研究者数', mapPinColorLegend:'色 ＝ 研究者数', mapClusterHint:'重なる拠点は自動でまとまります。円をクリックすると研究者一覧を表示します。',
+    mapSettings:'表示設定', mapSettingsTitle:'地図の表示設定', mapWheelSensitivity:'ホイール感度', mapGridToggle:'グリッド線（経緯線）', mapGridStep:'グリッド線の間隔',
+    mapPinAreaLegend:'面積 ＝ 研究者数', mapPinColorLegend:'色 ＝ 研究者数', mapCountLegend:'研究者数', mapClusterHint:'重なる拠点は自動でまとまります。円をクリックすると研究者一覧を表示します。',
     mapPlacedCount:(p,tot)=>`地図に配置 ${p} / ${tot} 名`,
     mapInstRegisteredCount:(tot,withP)=>`登録 ${tot} 機関（うち研究者あり ${withP}）`,
     mapPlotInstitutions:'研究機関をプロット', mapPlotInstitutionsHint:'研究者の分布に代えて、研究機関の分布をロゴで表示します',
-    mapPhotoZoom:'顔写真を出すズーム', mapPhotoHint:'拡大すると顔写真になります。重なった円をクリックすると研究者一覧を表示します。',
+    mapPhotoZoom:'顔写真を出すズーム', mapPhotoSize:'顔写真の大きさ', mapPinSize:'ピンの大きさ', mapPhotoHint:'拡大すると顔写真になります。重なった円をクリックすると研究者一覧を表示します。',
     mapClusterPanelTitle:(n)=>`近くの研究者（${n}名）`, mapClusterPanelInstCount:(n)=>`${n}機関`, mapClusterPanelClose:'閉じる',
     mapInstMarkerLegend:'登録されている研究機関', mapInstWithResearchers:(n)=>`ライブラリに研究者がいる機関（${n}）`,
     mapInstHeatLegend:'濃さ ＝ 機関の密集度',
     mapInstMarker:'研究機関のマーカー', mapInstMarker_dot:'ドット', mapInstMarker_pin:'ピン', mapInstMarker_heat:'密度',
-    mapInstHint:'アプリに登録されている研究機関をすべて表示しています。重なった円をクリックすると研究者一覧を表示します。',
+    mapInstHint:'アプリに登録されている研究機関をすべて表示しています。',
     researcherAutoFetch:'自動取得（任意）', researcherAutoFetchHelp:'ORCID・OpenAlex から情報を取得して上のフォームに反映できます。手動入力だけでも登録されます。',
     instDictTitle:'所属（機関）辞書', instDictEdit:'辞書を編集', instDictAdd:'追加', instDictAddName:'新しい機関名', instDictSearch:'機関名で検索',
     instDictHint:'地図のピン配置に使う機関の緯度・経度です。内蔵の値は編集すると上書きされ、リセットで元に戻せます。追加した機関は同名の全研究者に反映されます。',
@@ -311,12 +314,13 @@ const I18N = {
     collColorCustom:'カスタム：', collColorDefault:'既定',
     filterContains:'…を含む', filterFrom:'から', filterTo:'まで', filterClear:'クリア',
     filters:'フィルタ', viewMenu:'表示', viewStyle:'表示スタイル', cardCols:(n)=>`${n}列`, filterOptions:'候補', filterNoOptions:'候補がありません', themeDark:'Dark', themeLight:'Light',
-    authorDisplay:'著者表示', authorNameStyle:'名前形式', authorLimit:'表示人数', authorSeparator:'区切り', columnTextStyle:'文字の表示', textBold:'太字', textItalic:'斜体', researcherNameDisplay:'研究者名の表示', researcherNameInitialFamily:'T. Yamada', researcherNameGivenFamily:'Takashi Yamada', researcherNameFamilyGiven:'Yamada Takashi', researcherNameGiven:'Takashi', researcherNameFamily:'Yamada', researcherNameFamilyCommaGiven:'Yamada, Takashi', researcherNameFamilyCommaInitial:'Yamada, T.', researcherImageSelect:'ファイルから選択', researcherImagePaste:'クリップボードから貼り付け', researcherImageTooLarge:'画像は 2 MB 以下にしてください。', researcherImageUnavailable:'クリップボードに画像がありません。',
+    authorDisplay:'著者表示', authorNameStyle:'名前形式', authorLimit:'表示人数', authorSeparator:'区切り', columnTextStyle:'文字の表示', textBold:'太字', textItalic:'斜体', researcherNameDisplay:'研究者名の表示', researcherNameInitialFamily:'T. Yamada', researcherNameGivenFamily:'Takashi Yamada', researcherNameFamilyGiven:'Yamada Takashi', researcherNameGiven:'Takashi', researcherNameFamily:'Yamada', researcherNameFamilyCommaGiven:'Yamada, Takashi', researcherNameFamilyCommaInitial:'Yamada, T.', researcherImageSelect:'ファイルから選択', researcherImagePaste:'クリップボードから貼り付け', researcherImagePasteHint:'画像をコピーして ⌘/Ctrl+V でも貼り付けできます（許可ダイアログなし）。', researcherImageTooLarge:'画像は 2 MB 以下にしてください。', researcherImageUnavailable:'クリップボードに画像がありません。',
     authorMarkCorresponding:'責任著者に * を表示',
     authorFamily:'姓のみ', authorInitial:'姓 + イニシャル', authorFull:'フルネーム',
     authorAll:'全員', authorFirst3:'3名まで + et al.', authorFirst1:'1名のみ + et al.',
     viewCards:'カード表示', viewTable:'表表示', viewShelves:'文献棚', viewKanban:'カンバン', viewGallery:'ギャラリー', viewCompact:'画像リスト', viewMagazine:'マガジン',
     displaySettings:'表示設定', columnsLabel:'列数', cols2:'2列', cols3:'3列', cols4:'4列',
+    gallerySortLabel:'並び替え', sortDirAsc:'昇順', sortDirDesc:'降順', sortByAdded:'追加日',
     imageFitLabel:'画像の表示', imageFitCrop:'余白なし（トリミング）', imageFitContain:'全体表示（余白あり）',
     shelfRecent:'最近追加した文献', shelfStarred:'スター付き', shelfReading:'読書中', shelfPdf:'PDFあり', shelfCollections:'コレクション',
     shelfItems:(n)=>`${n} 件`, shelfMore:(n)=>`ほか ${n} 件`, shelfEmpty:'この棚に文献はありません', shelfRecentDays:'日以内',
@@ -358,8 +362,8 @@ const I18N = {
     itemsCount:(n)=>`${n} 件`, itemsShown:(a,b)=>`${a} / ${b} 件を表示`, showMoreItems:(a,b)=>`さらに表示（${a} / ${b} 件）`,
     type:'種別', title:'タイトル', authorsField:'著者（1行に1人: 姓, 名）', journal:'雑誌 / 出版物', journalAbbr:'出版物略称',
     year:'年', volume:'巻', issue:'号', pages:'ページ', publisher:'出版社',
-    doi:'DOI', arxiv:'arXiv ID', url:'URL', citekey:'引用キー', correspondingAuthors:'責任著者', tagsField:'タグ（カンマ区切り）',
-    imageSection:'画像', imageEmpty:'クリップボードから貼り付けるか、ファイルを選択して画像を追加', imagePaste:'クリップボードから貼り付け', imageFromFile:'ファイルを選択', imageReplace:'画像を置き換え', imageRemove:'画像を削除', imageRemoveConfirm:'この画像を削除しますか？', imageSaved:'画像を保存しました', imageNeedsLibrary:'画像を保存するには、先にライブラリフォルダを開いてください', imageNotImage:'画像ファイルを選んでください', imageClipboardUnsupported:'このブラウザではクリップボード画像の読み取りに対応していません。ファイルを選択してください', imageClipboardEmpty:'クリップボードに画像が見つかりませんでした', imageClipboardFailed:'クリップボードから貼り付けできませんでした',
+    doi:'DOI', arxiv:'arXiv ID', url:'URL', citekey:'引用キー', correspondingAuthors:'責任著者', correspondingPickHint:'著者から選ぶか、直接入力して追加できます（複数可）。', correspondingAddPh:'著者を選択、または入力', correspondingEmpty:'未設定', tagsField:'タグ（カンマ区切り）',
+    imageSection:'画像', imageEmpty:'クリップボードから貼り付けるか、ファイルを選択して画像を追加', imagePaste:'クリップボードから貼り付け', imagePasteHint:'画像をコピーして ⌘/Ctrl+V でも貼り付けできます（許可ダイアログなし）。', imageFromFile:'ファイルを選択', imageReplace:'画像を置き換え', imageRemove:'画像を削除', imageRemoveConfirm:'この画像を削除しますか？', imageSaved:'画像を保存しました', imageNeedsLibrary:'画像を保存するには、先にライブラリフォルダを開いてください', imageNotImage:'画像ファイルを選んでください', imageClipboardUnsupported:'このブラウザではクリップボード画像の読み取りに対応していません。ファイルを選択してください', imageClipboardEmpty:'クリップボードに画像が見つかりませんでした', imageClipboardFailed:'クリップボードから貼り付けできませんでした',
     abstract:'アブストラクト', notes:'メモ', attachments:'添付ファイル', info:'論文情報', organize:'整理',
     addPdf:'PDF を添付', openLink:'リンクを開く', openAttachment:'開く', copyCite:'引用をコピー', copyBib:'BibTeX をコピー',
     citationStyle:'引用スタイル', citationSettings:'引用設定', authorScope:'著者', authorScopeAll:'全著者', authorScopeFirst:'ファーストオーサーのみ', authorScopeCorresponding:'責任著者のみ', includeTitle:'タイトルを含める', includeUrl:'URL を含める',
@@ -378,6 +382,7 @@ const I18N = {
     graphAuthorMode:'著者', graphAuthorModeLabel:'ノードに表示する著者',
     graphAuthorLast:'ラストオーサー', graphAuthorFirst:'ファーストオーサー',
     citSettings:'表示スタイル設定', citSettingsLabel:'この画面の引用の書式（引用プレビューとは独立）',
+    citFilterPh:'タイトル・著者・雑誌で絞り込み', citSortLabel:'並び替え', citSortDir:'昇順／降順', citSortDefault:'元の順', citSortYear:'出版年', citSortCited:'被引用数', citSortTitle:'タイトル', citSortAuthors:'筆頭著者', citFilterNoMatch:'一致する文献はありません',
     graphFilter:'フィルター', graphFilterLabel:'論文ノードの絞り込み', graphFilterTitle:'論文の絞り込み',
     graphFilterMode:'表示方法', graphFilterHide:'非表示', graphFilterDim:'薄く表示',
     graphFilterReg:'登録状態', graphFilterRegAll:'すべて', graphFilterRegIn:'登録済み', graphFilterRegOut:'未登録',
@@ -402,7 +407,7 @@ const I18N = {
     graphTooFew:'関連論文が十分に見つかりませんでした（参照・被引用が少ない可能性）',
     graphHint:'ドラッグで移動 / ホイールで拡大縮小（感度調整可） / ホバーで情報表示 / クリックで選択 / ダブルクリックでその論文の相関図へ',
     graphOpenPage:'ページを開く', graphRelayout:'再レイアウト', graphRefetch:'再取得',
-    graphFit:'全体表示', graphLabels:'ラベル', graphRelToSeed:'種論文との関係',
+    graphFit:'全体表示', graphLabels:'ラベル', graphRegBadge:'登録済みマーク', graphRelToSeed:'種論文との関係',
     graphSharedRefs:(n)=>`共通参照 ${n} 件`, graphDirectCites:'この論文が種論文を引用', graphDirectCitedBy:'種論文がこの論文を引用',
     graphNearest:'近い論文', graphStats:(n,e)=>`${n} 論文 / ${e} 関係`,
     graphCached:(d)=>`キャッシュ表示（${d} 取得・API 呼び出しなし）`,
@@ -492,22 +497,23 @@ const I18N = {
     mapPlaceOnMap:'Place on map', mapEnterCoords:'Enter coordinates', mapCoordSave:'Save',
     mapPlacementHint:(inst)=>`Click the map to place “${inst}” (Esc to cancel)`,
     mapLatitude:'Latitude', mapLongitude:'Longitude', mapManualTitle:'Manually placed', mapReset:'Reset',
+    mapIgnore:'Ignore', mapIgnoreHint:'Hide this affiliation from alerts. You can restore it from the dictionary.', mapIgnoredTitle:'Ignored affiliations', mapUnignore:'Restore', mapAffScope:'Affiliations to plot', mapAffScopeCurrent:'Current only', mapAffScopeAll:'All affiliations',
     mapPinLegend:'Pin size = researchers', mapPinCountLegend:'Number in pin = researchers there (zoom in for photos)',
     mapNoLocationNote:'Researchers without an affiliation are not shown on the map.', mapEmpty:'No affiliations to place on the map.',
     mapPeopleCount:(n)=>`${n}`, mapAutoPlaced:'Auto-placed from the built-in list',
     mapInstCount:(n)=>`${n} institutions`, mapCenterToggle:'Map centre', mapCenterAsia:'Asia-centred', mapCenterEurope:'Europe-centred',
     mapAlerts:'Alerts', mapAlertsTitle:'Unplaced affiliations', mapAlertsNone:'No unplaced affiliations — everything is on the map.',
-    mapSettings:'Settings', mapSettingsTitle:'Map display settings', mapWheelSensitivity:'Wheel sensitivity', mapGridToggle:'Graticule',
-    mapPinAreaLegend:'Area = researchers', mapPinColorLegend:'Colour = researchers', mapClusterHint:'Overlapping sites merge automatically. Click a circle to see its researchers.',
+    mapSettings:'Display', mapSettingsTitle:'Map display settings', mapWheelSensitivity:'Wheel sensitivity', mapGridToggle:'Graticule', mapGridStep:'Graticule spacing',
+    mapPinAreaLegend:'Area = researchers', mapPinColorLegend:'Colour = researchers', mapCountLegend:'Researchers', mapClusterHint:'Overlapping sites merge automatically. Click a circle to see its researchers.',
     mapPlacedCount:(p,tot)=>`${p} / ${tot} on map`,
     mapInstRegisteredCount:(tot,withP)=>`${tot} institutions (${withP} with researchers)`,
     mapPlotInstitutions:'Plot institutions', mapPlotInstitutionsHint:'Show the distribution of institutions (logos) instead of researchers',
-    mapPhotoZoom:'Photo zoom threshold', mapPhotoHint:'Zoom in to reveal photos. Click an overlapping circle to see its researchers.',
+    mapPhotoZoom:'Photo zoom threshold', mapPhotoSize:'Photo size', mapPinSize:'Pin size', mapPhotoHint:'Zoom in to reveal photos. Click an overlapping circle to see its researchers.',
     mapClusterPanelTitle:(n)=>`Researchers nearby (${n})`, mapClusterPanelInstCount:(n)=>`${n} institution${n===1?'':'s'}`, mapClusterPanelClose:'Close',
     mapInstMarkerLegend:'Registered institution', mapInstWithResearchers:(n)=>`Has researchers in this library (${n})`,
     mapInstHeatLegend:'Darker = denser',
     mapInstMarker:'Institution marker', mapInstMarker_dot:'Dot', mapInstMarker_pin:'Pin', mapInstMarker_heat:'Density',
-    mapInstHint:'Every institution registered in the app. Click an overlapping circle to see its researchers.',
+    mapInstHint:'Every institution registered in the app.',
     researcherAutoFetch:'Auto-fetch (optional)', researcherAutoFetchHelp:'Optionally pull data from ORCID / OpenAlex into the form above. Manual entry alone registers the researcher.',
     instDictTitle:'Institution dictionary', instDictEdit:'Edit dictionary', instDictAdd:'Add', instDictAddName:'New institution', instDictSearch:'Search institutions',
     instDictHint:'Coordinates used to place pins on the map. Editing a built-in value creates an override you can reset; added institutions apply to every researcher with that affiliation.',
@@ -569,12 +575,13 @@ const I18N = {
     collColorCustom:'Custom:', collColorDefault:'Default',
     filterContains:'Contains…', filterFrom:'From', filterTo:'To', filterClear:'Clear',
     filters:'Filters', viewMenu:'View', viewStyle:'View style', cardCols:(n)=>`${n} column${n===1?'':'s'}`, filterOptions:'Options', filterNoOptions:'No options', themeDark:'Dark', themeLight:'Light',
-    authorDisplay:'Author display', authorNameStyle:'Name style', authorLimit:'Authors shown', authorSeparator:'Separator', columnTextStyle:'Text style', textBold:'Bold', textItalic:'Italic', researcherNameDisplay:'Researcher name display', researcherNameInitialFamily:'T. Yamada', researcherNameGivenFamily:'Takashi Yamada', researcherNameFamilyGiven:'Yamada Takashi', researcherNameGiven:'Takashi', researcherNameFamily:'Yamada', researcherNameFamilyCommaGiven:'Yamada, Takashi', researcherNameFamilyCommaInitial:'Yamada, T.', researcherImageSelect:'Choose file', researcherImagePaste:'Paste from clipboard', researcherImageTooLarge:'Please use an image smaller than 2 MB.', researcherImageUnavailable:'No image was found on the clipboard.',
+    authorDisplay:'Author display', authorNameStyle:'Name style', authorLimit:'Authors shown', authorSeparator:'Separator', columnTextStyle:'Text style', textBold:'Bold', textItalic:'Italic', researcherNameDisplay:'Researcher name display', researcherNameInitialFamily:'T. Yamada', researcherNameGivenFamily:'Takashi Yamada', researcherNameFamilyGiven:'Yamada Takashi', researcherNameGiven:'Takashi', researcherNameFamily:'Yamada', researcherNameFamilyCommaGiven:'Yamada, Takashi', researcherNameFamilyCommaInitial:'Yamada, T.', researcherImageSelect:'Choose file', researcherImagePaste:'Paste from clipboard', researcherImagePasteHint:'You can also copy an image and press ⌘/Ctrl+V — no permission dialog.', researcherImageTooLarge:'Please use an image smaller than 2 MB.', researcherImageUnavailable:'No image was found on the clipboard.',
     authorMarkCorresponding:'Show * for corresponding authors',
     authorFamily:'Family only', authorInitial:'Family + initials', authorFull:'Full name',
     authorAll:'All authors', authorFirst3:'First 3 + et al.', authorFirst1:'First author + et al.',
     viewCards:'Card view', viewTable:'Table view', viewShelves:'Literature shelves', viewKanban:'Kanban', viewGallery:'Gallery', viewCompact:'Image list', viewMagazine:'Magazine',
     displaySettings:'Display', columnsLabel:'Columns', cols2:'2 columns', cols3:'3 columns', cols4:'4 columns',
+    gallerySortLabel:'Sort', sortDirAsc:'Ascending', sortDirDesc:'Descending', sortByAdded:'Date added',
     imageFitLabel:'Image', imageFitCrop:'Fill (no margin)', imageFitContain:'Fit whole image (margin)',
     shelfRecent:'Recently added', shelfStarred:'Starred', shelfReading:'Reading', shelfPdf:'PDF attached', shelfCollections:'Collections',
     shelfItems:(n)=>`${n} item${n===1?'':'s'}`, shelfMore:(n)=>`${n} more`, shelfEmpty:'No papers on this shelf', shelfRecentDays:'days',
@@ -616,8 +623,8 @@ const I18N = {
     itemsCount:(n)=>`${n} item${n===1?'':'s'}`, itemsShown:(a,b)=>`Showing ${a} of ${b}`, showMoreItems:(a,b)=>`Show more (${a} of ${b})`,
     type:'Type', title:'Title', authorsField:'Authors (one per line: Family, Given)', journal:'Journal / Publication', journalAbbr:'Publication abbreviation',
     year:'Year', volume:'Volume', issue:'Issue', pages:'Pages', publisher:'Publisher',
-    doi:'DOI', arxiv:'arXiv ID', url:'URL', citekey:'Citation key', correspondingAuthors:'Corresponding authors', tagsField:'Tags (comma-separated)',
-    imageSection:'Figure', imageEmpty:'Paste from the clipboard or choose a file to add an image', imagePaste:'Paste from clipboard', imageFromFile:'Choose file', imageReplace:'Replace image', imageRemove:'Remove image', imageRemoveConfirm:'Remove this image?', imageSaved:'Image saved', imageNeedsLibrary:'Open a library folder first to store images', imageNotImage:'Please choose an image file', imageClipboardUnsupported:'This browser cannot read images from the clipboard. Choose a file instead', imageClipboardEmpty:'No image found on the clipboard', imageClipboardFailed:'Could not paste from the clipboard',
+    doi:'DOI', arxiv:'arXiv ID', url:'URL', citekey:'Citation key', correspondingAuthors:'Corresponding authors', correspondingPickHint:'Pick from the authors or type one in — multiple allowed.', correspondingAddPh:'Select or type an author', correspondingEmpty:'None set', tagsField:'Tags (comma-separated)',
+    imageSection:'Figure', imageEmpty:'Paste from the clipboard or choose a file to add an image', imagePaste:'Paste from clipboard', imagePasteHint:'You can also copy an image and press ⌘/Ctrl+V — no permission dialog.', imageFromFile:'Choose file', imageReplace:'Replace image', imageRemove:'Remove image', imageRemoveConfirm:'Remove this image?', imageSaved:'Image saved', imageNeedsLibrary:'Open a library folder first to store images', imageNotImage:'Please choose an image file', imageClipboardUnsupported:'This browser cannot read images from the clipboard. Choose a file instead', imageClipboardEmpty:'No image found on the clipboard', imageClipboardFailed:'Could not paste from the clipboard',
     abstract:'Abstract', notes:'Notes', attachments:'Attachments', info:'Paper info', organize:'Organize',
     addPdf:'Attach PDF', openLink:'Open link', openAttachment:'Open', copyCite:'Copy citation', copyBib:'Copy BibTeX',
     citationStyle:'Citation style', citationSettings:'Citation settings', authorScope:'Authors', authorScopeAll:'All authors', authorScopeFirst:'First author only', authorScopeCorresponding:'Corresponding only', includeTitle:'Include title', includeUrl:'Include URL',
@@ -636,6 +643,7 @@ const I18N = {
     graphAuthorMode:'Author', graphAuthorModeLabel:'Author shown on nodes',
     graphAuthorLast:'Last author', graphAuthorFirst:'First author',
     citSettings:'Display style', citSettingsLabel:'Citation format for this view (independent of the citation preview)',
+    citFilterPh:'Filter by title, author or journal', citSortLabel:'Sort', citSortDir:'Ascending / descending', citSortDefault:'Original order', citSortYear:'Year', citSortCited:'Cited by', citSortTitle:'Title', citSortAuthors:'First author', citFilterNoMatch:'No matching references',
     graphFilter:'Filter', graphFilterLabel:'Filter paper nodes', graphFilterTitle:'Filter papers',
     graphFilterMode:'Display', graphFilterHide:'Hide', graphFilterDim:'Dim',
     graphFilterReg:'Registration', graphFilterRegAll:'All', graphFilterRegIn:'Registered', graphFilterRegOut:'Unregistered',
@@ -660,7 +668,7 @@ const I18N = {
     graphTooFew:'Not enough related papers found (few references / citations)',
     graphHint:'Drag to pan / wheel to zoom (adjustable sensitivity) / hover for details / click to select / double-click to map that paper',
     graphOpenPage:'Open page', graphRelayout:'Re-layout', graphRefetch:'Refetch',
-    graphFit:'Fit', graphLabels:'Labels', graphRelToSeed:'Relation to seed',
+    graphFit:'Fit', graphLabels:'Labels', graphRegBadge:'Registered mark', graphRelToSeed:'Relation to seed',
     graphSharedRefs:(n)=>`${n} shared references`, graphDirectCites:'This paper cites the seed', graphDirectCitedBy:'The seed cites this paper',
     graphNearest:'Closest papers', graphStats:(n,e)=>`${n} papers / ${e} links`,
     graphCached:(d)=>`Cached (fetched ${d}, no API calls)`,
@@ -733,10 +741,10 @@ This cannot be undone.`,
   },
 };
 Object.assign(I18N.ja, {
-  researcherRelated:'関連研究者', researcherFamilyName:'姓', researcherGivenName:'名', researcherWikipedia:'Wikipedia', researcherSortLabel:'並び替え', researcherFilterLabel:'絞り込み', researcherFilterClearAll:'すべて解除', researcherLeaderboardMetric:'ランキング基準', researcherLeaderboardLibraryPapers:'ライブラリ内の文献数', researcherLeaderboardLibraryCitations:'ライブラリ内の被引用数', researcherLeaderboardExternalCitations:'外部プロフィールの総引用数', researcherLeaderboardHIndex:'外部プロフィールの h-index', researcherLeaderboardI10Index:'外部プロフィールの i10-index', researcherLeaderboardWorksCount:'外部プロフィールの文献数',
+  researcherRelated:'関連研究者', researcherRecordRelated:'この期間の関連研究者', researcherCareerHide:'この経歴を非表示にする', researcherCareerShow:'この経歴を表示する', researcherCareerHiddenBadge:'非表示', researcherDisplayHiddenCareer:'非表示の経歴も表示', researcherFamilyName:'姓', researcherGivenName:'名', researcherWikipedia:'Wikipedia', researcherSortLabel:'並び替え', researcherFilterLabel:'絞り込み', researcherFilterClearAll:'すべて解除', researcherLeaderboardMetric:'ランキング基準', researcherLeaderboardLibraryPapers:'ライブラリ内の文献数', researcherLeaderboardLibraryCitations:'ライブラリ内の被引用数', researcherLeaderboardExternalCitations:'外部プロフィールの総引用数', researcherLeaderboardHIndex:'外部プロフィールの h-index', researcherLeaderboardI10Index:'外部プロフィールの i10-index', researcherLeaderboardWorksCount:'外部プロフィールの文献数',
   save:'保存',
   researcherEdit:'編集', researcherCreateProfile:'プロフィールを作成', researcherEditorBasic:'基本情報', researcherEditorAffiliations:'職歴', researcherEditorEducation:'学歴', researcherEditorResearch:'研究情報', researcherEditorProfiles:'外部プロフィール', researcherEditorImage:'画像', researcherEditorRelated:'関連研究者', researcherEditorDiscard:'未保存の変更があります。保存せず閉じますか？', researcherEditorAiPendingSave:'AIの回答が編集内容へ反映されていません。反映せずに保存しますか？', researcherEditorInvalidPeriod:'期間の終了年は開始年以降にしてください。', researcherPositionsLabel:'職歴', researcherEducationLabel:'学歴', researcherPositionTitle:'職位', researcherPositionOrganization:'部局・組織', researcherEducationProgram:'課程・専攻', researcherEducationDegree:'学位・修了内容', researcherAiMissingSource:'出典URLがない項目は読み込みませんでした。',
-  researcherLinkedIn:'LinkedIn', researcherImageUrlOptional:'画像URL（任意）', researcherImageUrlHelp:'画像URLは、Web上にある画像のアドレスです。ファイル選択・貼り付けで設定した画像は、この端末に保存するため表示しません。', researcherImageStored:'ファイルまたはクリップボードから設定した画像', researcherImagePosition:'画像の調整', researcherImagePositionX:'横方向', researcherImagePositionY:'縦方向', researcherImageScale:'拡大', researcherImagePositionReset:'位置・拡大を戻す',
+  researcherLinkedIn:'LinkedIn', researcherImageUrlOptional:'画像URL（任意）', researcherImageUrlHelp:'画像URLは、Web上にある画像のアドレスです。ファイル選択・貼り付けで設定した画像は、この端末に保存するため表示しません。', researcherImageStored:'ファイルまたはクリップボードから設定した画像', researcherImagePosition:'画像の調整', researcherImagePositionX:'横方向', researcherImagePositionY:'縦方向', researcherImageScale:'拡大', researcherImagePositionReset:'リセット', researcherImageFitWhole:'全体を表示', researcherImageFitFill:'枠を埋める', researcherImageCropHint:'ドラッグで位置を調整、スライダー／ホイールで拡大縮小できます。',
   researcherOpenAlexUpdate:'OpenAlex から研究者情報を更新',
   researcherOpenAlexUpdateHelp:'OpenAlex ID または ORCID を使って取得します。反映する項目は次に選べます。',
   researcherEnrichmentPreview:'取得内容を確認',
@@ -756,10 +764,10 @@ Object.assign(I18N.ja, {
   researcherEnrichmentKeep:'現在値を保持', researcherEnrichmentUse:'取得値を採用', researcherEnrichmentUpdatedFrom:(s)=>`${s} の研究者情報を反映しました。`
 });
 Object.assign(I18N.en, {
-  researcherRelated:'Related researchers', researcherFamilyName:'Family name', researcherGivenName:'Given name', researcherWikipedia:'Wikipedia', researcherSortLabel:'Sort', researcherFilterLabel:'Filter', researcherFilterClearAll:'Clear all', researcherLeaderboardMetric:'Rank by', researcherLeaderboardLibraryPapers:'Library references', researcherLeaderboardLibraryCitations:'Citations of library references', researcherLeaderboardExternalCitations:'External-profile citations', researcherLeaderboardHIndex:'External-profile h-index', researcherLeaderboardI10Index:'External-profile i10-index', researcherLeaderboardWorksCount:'External-profile publications',
+  researcherRelated:'Related researchers', researcherRecordRelated:'Related researchers (this period)', researcherCareerHide:'Hide this entry', researcherCareerShow:'Show this entry', researcherCareerHiddenBadge:'Hidden', researcherDisplayHiddenCareer:'Show hidden entries', researcherFamilyName:'Family name', researcherGivenName:'Given name', researcherWikipedia:'Wikipedia', researcherSortLabel:'Sort', researcherFilterLabel:'Filter', researcherFilterClearAll:'Clear all', researcherLeaderboardMetric:'Rank by', researcherLeaderboardLibraryPapers:'Library references', researcherLeaderboardLibraryCitations:'Citations of library references', researcherLeaderboardExternalCitations:'External-profile citations', researcherLeaderboardHIndex:'External-profile h-index', researcherLeaderboardI10Index:'External-profile i10-index', researcherLeaderboardWorksCount:'External-profile publications',
   save:'Save',
   researcherEdit:'Edit', researcherCreateProfile:'Create profile', researcherEditorBasic:'Basic information', researcherEditorAffiliations:'Career', researcherEditorEducation:'Education', researcherEditorResearch:'Research information', researcherEditorProfiles:'External profiles', researcherEditorImage:'Image', researcherEditorRelated:'Related researchers', researcherEditorDiscard:'You have unsaved changes. Close without saving?', researcherEditorAiPendingSave:'The AI response has not been applied to the draft. Save without applying it?', researcherEditorInvalidPeriod:'An end year must not be earlier than its start year.', researcherPositionsLabel:'Career', researcherEducationLabel:'Education', researcherPositionTitle:'Title', researcherPositionOrganization:'Department / organization', researcherEducationProgram:'Program / major', researcherEducationDegree:'Degree / completion', researcherAiMissingSource:'Items without source URLs were not imported.',
-  researcherLinkedIn:'LinkedIn', researcherImageUrlOptional:'Image URL (optional)', researcherImageUrlHelp:'An image URL is the address of an image on the web. Images selected from a file or clipboard are stored on this device, so their internal data is not shown here.', researcherImageStored:'Image set from a file or clipboard', researcherImagePosition:'Image adjustment', researcherImagePositionX:'Horizontal', researcherImagePositionY:'Vertical', researcherImageScale:'Zoom', researcherImagePositionReset:'Reset position and zoom',
+  researcherLinkedIn:'LinkedIn', researcherImageUrlOptional:'Image URL (optional)', researcherImageUrlHelp:'An image URL is the address of an image on the web. Images selected from a file or clipboard are stored on this device, so their internal data is not shown here.', researcherImageStored:'Image set from a file or clipboard', researcherImagePosition:'Image adjustment', researcherImagePositionX:'Horizontal', researcherImagePositionY:'Vertical', researcherImageScale:'Zoom', researcherImagePositionReset:'Reset', researcherImageFitWhole:'Fit whole', researcherImageFitFill:'Fill frame', researcherImageCropHint:'Drag to reposition; use the slider or wheel to zoom.',
   researcherOpenAlexUpdate:'Update researcher information from OpenAlex',
   researcherOpenAlexUpdateHelp:'Uses the OpenAlex ID or ORCID. You can choose the fields to apply next.',
   researcherEnrichmentPreview:'Review retrieved information',
@@ -779,10 +787,14 @@ Object.assign(I18N.en, {
   researcherEnrichmentKeep:'Keep current', researcherEnrichmentUse:'Use retrieved', researcherEnrichmentUpdatedFrom:(s)=>`Applied researcher information from ${s}.`
 });
 Object.assign(I18N.ja, {
-  researcherPublications:'論文', researcherLibraryPapers:'ライブラリ内の文献', researcherOrcidWorksExpand:(n)=>`${n} 件のORCID登録文献を表示`, researcherCareer:'経歴', researcherCareerPosition:'職歴', researcherCareerEducation:'学歴', researcherCareerPhd:'PhD取得', researcherPhdInstitution:'PhD取得機関', researcherPhdDegree:'PhDの学位・分野', researcherDisplaySettings:'表示設定', researcherDisplaySources:'出典を表示', researcherDisplayCareerTypes:'経歴の種別を表示', researcherEditorAwards:'受賞歴', researcherFieldAdd:'追加', researcherFieldPlaceholder:'既存の研究分野を選択、または入力', researcherRelatedPlaceholder:'登録済み研究者を選択、または入力', researcherModified:'最終変更日', researcherDisplayPastInstitutions:'過去所属も表示', researcherHIndex:'h-index', researcherI10Index:'i10-index', researcherWorksCount:'外部プロフィールの論文数'
+  researcherPublications:'論文', researcherLibraryPapers:'ライブラリ内の文献', researcherOrcidWorksExpand:(n)=>`${n} 件のORCID登録文献を表示`, researcherCareer:'経歴', researcherCareerPosition:'職歴', researcherCareerEducation:'学歴', researcherCareerPhd:'PhD取得', researcherPhdInstitution:'PhD取得機関', researcherPhdDegree:'PhDの学位・分野', researcherDisplaySettings:'表示設定', researcherDisplaySources:'出典を表示', researcherDisplayCareerTypes:'経歴の種別を表示', researcherEditorAwards:'受賞歴', researcherFieldAdd:'追加', researcherFieldPlaceholder:'既存の研究分野を選択、または入力', researcherRelatedPlaceholder:'登録済み研究者を選択、または入力', researcherModified:'最終変更日', researcherDisplayPastInstitutions:'過去所属も表示', researcherHIndex:'h-index', researcherI10Index:'i10-index', researcherWorksCount:'外部プロフィールの論文数', researcherAge:(n)=>`${n}歳`, researcherAgeApprox:(n)=>`約${n}歳`, researcherAgeCol:'年齢', researcherDisplayReciprocalRelated:'逆方向の関係も表示', researcherRelatedReciprocalHint:'この研究者を「関係のある研究者」に登録している研究者',
+  researcherDisplayAbbrev:'所属を略記して表示', affAbbrevEdit:'略記辞書を編集', affAbbrevTitle:'所属の略記辞書', affAbbrevIntro:'長い所属名を表示するときの略記ルールです。表示だけに使われ、検索・照合や保存データには影響しません。よく使う略記は登録済みで、自由に追加・編集・削除できます。', affAbbrevFrom:'元の語（完全形）', affAbbrevTo:'略記', affAbbrevAdd:'ルールを追加', affAbbrevReset:'既定に戻す', affAbbrevResetConfirm:'略記辞書を初期状態に戻しますか？ 追加・編集した内容は失われます。', affAbbrevEmpty:'ルールがありません。', affAbbrevDone:'完了',
+  researcherEditorSourceEdit:'出典', researcherEditorSourceHide:'閉じる', researcherEditorSourcePh:'出典URL（1行に1つ）', researcherEditorSourceAdd:'出典を追加'
 });
 Object.assign(I18N.en, {
-  researcherPublications:'Publications', researcherLibraryPapers:'Library references', researcherOrcidWorksExpand:(n)=>`Show ${n} ORCID works`, researcherCareer:'Career', researcherCareerPosition:'Position', researcherCareerEducation:'Education', researcherCareerPhd:'PhD obtained', researcherPhdInstitution:'PhD institution', researcherPhdDegree:'PhD degree / field', researcherDisplaySettings:'Display settings', researcherDisplaySources:'Show sources', researcherDisplayCareerTypes:'Show career types', researcherEditorAwards:'Awards', researcherFieldAdd:'Add', researcherFieldPlaceholder:'Select an existing research field or enter a new one', researcherRelatedPlaceholder:'Select a registered researcher or enter a name', researcherModified:'Last modified', researcherDisplayPastInstitutions:'Show past institutions', researcherHIndex:'h-index', researcherI10Index:'i10-index', researcherWorksCount:'Profile publications'
+  researcherPublications:'Publications', researcherLibraryPapers:'Library references', researcherOrcidWorksExpand:(n)=>`Show ${n} ORCID works`, researcherCareer:'Career', researcherCareerPosition:'Position', researcherCareerEducation:'Education', researcherCareerPhd:'PhD obtained', researcherPhdInstitution:'PhD institution', researcherPhdDegree:'PhD degree / field', researcherDisplaySettings:'Display settings', researcherDisplaySources:'Show sources', researcherDisplayCareerTypes:'Show career types', researcherEditorAwards:'Awards', researcherFieldAdd:'Add', researcherFieldPlaceholder:'Select an existing research field or enter a new one', researcherRelatedPlaceholder:'Select a registered researcher or enter a name', researcherModified:'Last modified', researcherDisplayPastInstitutions:'Show past institutions', researcherHIndex:'h-index', researcherI10Index:'i10-index', researcherWorksCount:'Profile publications', researcherAge:(n)=>`${n} years old`, researcherAgeApprox:(n)=>`~${n} years old`, researcherAgeCol:'Age', researcherDisplayReciprocalRelated:'Show reverse relationships', researcherRelatedReciprocalHint:'This researcher is listed as related by that researcher',
+  researcherDisplayAbbrev:'Abbreviate affiliations', affAbbrevEdit:'Edit abbreviations', affAbbrevTitle:'Affiliation abbreviations', affAbbrevIntro:'Rules for shortening long affiliation names on display. They affect display only — never search, matching, or stored data. Common abbreviations are preloaded; add, edit, or remove any of them.', affAbbrevFrom:'Full form', affAbbrevTo:'Abbreviation', affAbbrevAdd:'Add rule', affAbbrevReset:'Reset to defaults', affAbbrevResetConfirm:'Reset the abbreviation dictionary to its defaults? Your added and edited rules will be lost.', affAbbrevEmpty:'No rules yet.', affAbbrevDone:'Done',
+  researcherEditorSourceEdit:'Sources', researcherEditorSourceHide:'Close', researcherEditorSourcePh:'Source URLs (one per line)', researcherEditorSourceAdd:'Add source'
 });
 Object.assign(I18N.ja, {
   researcherEditorAiImport:'AIから取り込む', researcherAiImportIntro:'任意のAIに調査用プロンプトを送り、返されたJSONを読み込みます。APIキーや有料サーバーは不要です。',
@@ -934,7 +946,11 @@ researcherNameDisplayPrefs=Object.assign({style:'familyCommaGiven'},researcherNa
 /* world-map display prefs (wheel sensitivity, graticule, projection centre) */
 let mapPrefs;
 try{ mapPrefs=JSON.parse(localStorage.getItem('refshelf.mapPrefs')||'{}'); }catch(_e){ mapPrefs={}; }
-mapPrefs=Object.assign({sens:1, grid:false, center:'asia', photoZoom:4, plot:'researchers', instMarker:'dot'}, mapPrefs);
+mapPrefs=Object.assign({sens:1, grid:false, gridStep:30, center:'asia', photoZoom:4, photoSize:1.8, pinSize:0.7, plot:'researchers', instMarker:'dot', affScope:'current'}, mapPrefs);
+// bump anyone still on the first-cut photo default (1.4) to the larger default
+if(Number(mapPrefs.photoSize)===1.4) mapPrefs.photoSize=1.8;
+// the pin-size default changed 1 → 0.7; move anyone still on the old default across
+if(Number(mapPrefs.pinSize)===1) mapPrefs.pinSize=0.7;
 function saveMapPrefs(){ try{ localStorage.setItem('refshelf.mapPrefs', JSON.stringify(mapPrefs)); }catch(_e){} }
 /* per-column text style (bold/italic) for the "all items" table */
 const TEXT_STYLE_COLS=['title','year','journal'];
@@ -1783,8 +1799,54 @@ let researcherEditorAiState = {queryName:'',sourceUrls:'',jsonText:'',proposal:n
 let researcherDetailSettingsOpen = false;
 let researcherDetailPrefs;
 try{ researcherDetailPrefs=JSON.parse(localStorage.getItem('refshelf.researcherDetailPrefs')||'{}'); }catch(_e){ researcherDetailPrefs={}; }
-researcherDetailPrefs=Object.assign({sources:false,careerTypes:false},researcherDetailPrefs||{});
+researcherDetailPrefs=Object.assign({sources:false,careerTypes:false,showHidden:false,reciprocalRelated:false},researcherDetailPrefs||{});
 function saveResearcherDetailPrefs(){ try{ localStorage.setItem('refshelf.researcherDetailPrefs',JSON.stringify(researcherDetailPrefs)); }catch(_e){} }
+// Affiliation abbreviation dictionary — shortens long institution names on display
+// only (never affects search, matching, or stored data). Ships with common academic
+// abbreviations; the user can add/edit/remove rules and toggle the whole thing on/off
+// from the researcher display-settings panel. Stored per-browser in localStorage.
+const DEFAULT_AFF_ABBREV=[
+  ['Graduate School','Grad. Sch.'],['Graduate','Grad.'],['University','Univ.'],['Department','Dept.'],
+  ['Institute of Technology','Inst. of Tech.'],['Institute','Inst.'],['Laboratory','Lab.'],['Laboratories','Labs.'],
+  ['National','Natl.'],['International','Int’l'],['Research','Res.'],['Science','Sci.'],['Sciences','Sci.'],
+  ['Engineering','Eng.'],['Technology','Tech.'],['Faculty','Fac.'],['School','Sch.'],['College','Coll.'],
+  ['Center','Ctr.'],['Centre','Ctr.'],['Division','Div.'],['Chemistry','Chem.'],['Physics','Phys.'],
+  ['Biology','Biol.'],['Molecular','Mol.'],['Advanced','Adv.'],['Organic','Org.'],['Professor','Prof.']
+].map(([from,to])=>({from,to}));
+let affAbbrevPrefs;
+try{ affAbbrevPrefs=JSON.parse(localStorage.getItem('refshelf.affAbbrev')||'null'); }catch(_e){ affAbbrevPrefs=null; }
+if(!affAbbrevPrefs||typeof affAbbrevPrefs!=='object'||!Array.isArray(affAbbrevPrefs.rules)) affAbbrevPrefs={enabled:false,rules:DEFAULT_AFF_ABBREV.map(r=>Object.assign({},r))};
+affAbbrevPrefs.enabled=!!affAbbrevPrefs.enabled;
+function saveAffAbbrevPrefs(){ try{ localStorage.setItem('refshelf.affAbbrev',JSON.stringify(affAbbrevPrefs)); }catch(_e){} }
+function escapeRegExpLiteral(s){ return String(s||'').replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+function abbreviateAffiliation(str){
+  const s=String(str||''); if(!affAbbrevPrefs.enabled||!s) return s;
+  let out=s;
+  for(const r of affAbbrevPrefs.rules){ const from=String(r&&r.from||'').trim(); if(!from) continue; const to=String(r&&r.to||''); const b=/^[\w]/.test(from)?'\\b':'', e=/[\w]$/.test(from)?'\\b':''; const re=new RegExp(b+escapeRegExpLiteral(from)+e,'gi'); out=out.replace(re,()=>to); }
+  return out.replace(/\s{2,}/g,' ').trim();
+}
+function instDisp(x){ return esc(abbreviateAffiliation(x)); }
+let _affAbbrevWired=false;
+function renderAffAbbrevList(){
+  const host=$('#affAbbrevList'); if(!host) return;
+  const rules=affAbbrevPrefs.rules||[];
+  host.innerHTML=rules.length?rules.map((r,i)=>`<div class="affAbbrevRow" data-abbrev-idx="${i}"><input class="affAbbrevRowFrom" data-abbrev-from value="${esc(r.from||'')}" placeholder="${esc(t('affAbbrevFrom'))}" autocomplete="off" spellcheck="false"><span class="affAbbrevArrow">→</span><input class="affAbbrevRowTo" data-abbrev-to value="${esc(r.to||'')}" placeholder="${esc(t('affAbbrevTo'))}" autocomplete="off" spellcheck="false"><button type="button" class="affAbbrevDel" data-abbrev-del="${i}" aria-label="${esc(t('instDictDelete'))}">×</button></div>`).join(''):`<div class="dictEmpty">${esc(t('affAbbrevEmpty'))}</div>`;
+}
+function openAffAbbrevEditor(){
+  const dlg=$('#dlgAffAbbrev'); if(!dlg) return;
+  if(!_affAbbrevWired){
+    _affAbbrevWired=true;
+    const refresh=()=>{ renderResearcherList(); renderResearcherDetail(); };
+    $('#affAbbrevClose').addEventListener('click',()=>dlg.close());
+    $('#affAbbrevDone').addEventListener('click',()=>dlg.close());
+    $('#affAbbrevAdd').addEventListener('click',()=>{ affAbbrevPrefs.rules.push({from:'',to:''}); saveAffAbbrevPrefs(); renderAffAbbrevList(); const rows=$('#affAbbrevList').querySelectorAll('[data-abbrev-from]'); const last=rows[rows.length-1]; if(last) last.focus(); });
+    $('#affAbbrevReset').addEventListener('click',()=>{ if(!confirm(t('affAbbrevResetConfirm'))) return; affAbbrevPrefs.rules=DEFAULT_AFF_ABBREV.map(r=>Object.assign({},r)); saveAffAbbrevPrefs(); renderAffAbbrevList(); refresh(); });
+    $('#affAbbrevList').addEventListener('input',e=>{ const row=e.target.closest('[data-abbrev-idx]'); if(!row) return; const rule=affAbbrevPrefs.rules[+row.dataset.abbrevIdx]; if(!rule) return; if(e.target.hasAttribute('data-abbrev-from')) rule.from=e.target.value; if(e.target.hasAttribute('data-abbrev-to')) rule.to=e.target.value; saveAffAbbrevPrefs(); });
+    $('#affAbbrevList').addEventListener('click',e=>{ const del=e.target.closest('[data-abbrev-del]'); if(!del) return; affAbbrevPrefs.rules.splice(+del.dataset.abbrevDel,1); saveAffAbbrevPrefs(); renderAffAbbrevList(); });
+    dlg.addEventListener('close',refresh);
+  }
+  renderAffAbbrevList(); if(!dlg.open) dlg.showModal();
+}
 // Reference (文献) detail pane: read-only by default, switch to the classic edit
 // form with the 編集 button. Which content blocks appear and their order are a
 // GLOBAL preference (shared by all references), stored in localStorage.
@@ -1827,10 +1889,11 @@ let researcherColumnFilters = {};
 const RESEARCHER_LEADERBOARD_METRICS=['papers','libraryCitations','citations','worksCount','hIndex','i10Index'];
 let researcherLeaderboardMetric=localStorage.getItem('refshelf.researcherLeaderboardMetric')||'citations';
 if(!RESEARCHER_LEADERBOARD_METRICS.includes(researcherLeaderboardMetric)) researcherLeaderboardMetric='citations';
-const RESEARCHER_COLUMN_KEYS=['name','image','institutions','birthDate','phdYear','homepage','googleScholar','researchGate','researchMap','papers','citations','hIndex','i10Index','worksCount','fields','related','modified','status'];
-// The metrics are available from the Columns menu, but stay off by default so
-// the already information-dense researcher table remains easy to scan.
-const DEFAULT_RESEARCHER_COLUMN_CONFIG={version:4,visible:Object.fromEntries(RESEARCHER_COLUMN_KEYS.map(k=>[k,!['hIndex','i10Index','worksCount'].includes(k)])),order:[...RESEARCHER_COLUMN_KEYS],widths:{}};
+const RESEARCHER_COLUMN_KEYS=['name','image','institutions','birthDate','age','phdYear','homepage','googleScholar','researchGate','researchMap','papers','citations','hIndex','i10Index','worksCount','fields','related','added','modified','status'];
+// The metrics and the added-date column are available from the Columns menu, but
+// stay off by default so the already information-dense researcher table stays easy
+// to scan.
+const DEFAULT_RESEARCHER_COLUMN_CONFIG={version:4,visible:Object.fromEntries(RESEARCHER_COLUMN_KEYS.map(k=>[k,!['hIndex','i10Index','worksCount','added'].includes(k)])),order:[...RESEARCHER_COLUMN_KEYS],widths:{}};
 let researcherColumnConfig;
 try{ researcherColumnConfig=JSON.parse(localStorage.getItem('refshelf.researcherColumns')||'null'); }catch(_e){ researcherColumnConfig=null; }
 if(!researcherColumnConfig || researcherColumnConfig.version!==4){
@@ -2021,6 +2084,19 @@ function allKnownTags(){
   (lib.items||[]).forEach(it=>(it.tags||[]).forEach(tg=>{ if(tg) set.add(tg); }));
   if(Array.isArray(lib.tags)) lib.tags.forEach(tg=>{ if(tg) set.add(tg); });
   return Array.from(set).sort((a,b)=>a.localeCompare(b));
+}
+// Distinct journal names already used in the library, for the connector's
+// citation-search journal field (dedup case/whitespace-insensitively, keep the
+// first-seen casing).
+function allKnownJournals(){
+  const seen = new Map();
+  (lib.items||[]).forEach(it=>{
+    const j = String(it.journal||'').trim();
+    if(!j) return;
+    const key = j.toLowerCase();
+    if(!seen.has(key)) seen.set(key, j);
+  });
+  return Array.from(seen.values()).sort((a,b)=>a.localeCompare(b));
 }
 // Register a tag so it persists even before any reference uses it. Returns true
 // if it was newly added.
@@ -2618,6 +2694,7 @@ function openAlexToItem(w){
     url: w.doi || (w.id || ''),
     abstract: reconstructAbstract(w.abstract_inverted_index),
     correspondingAuthors: oaCorrespondingAuthors(w.authorships),
+    citedByCount: (typeof w.cited_by_count==='number' ? w.cited_by_count : null),
   }));
 }
 // Auto-enrich a freshly added item with corresponding authors AND cited-by count
@@ -2763,10 +2840,17 @@ function refreshRowCells(it){
   });
   const card = document.querySelector('#itemCards .cardRow' + dataIdSelector(it.id));
   if(card){
+    // Rebuild the card with the builder that matches the ACTIVE view. Using the
+    // plain cardRowHTML here would swap a gallery/magazine card for a compact one
+    // (which has no thumbnail), so during a metadata refresh the figure image
+    // would visibly vanish until the final full renderList. Match the view and,
+    // for image-centric views, reload the thumbnail so it never blanks out.
+    const galleryActive = GALLERY_VIEWS.includes(listView);
+    const build = galleryActive ? galleryBuilderFor(listView) : cardRowHTML;
     const tmp = document.createElement('div');
-    tmp.innerHTML = cardRowHTML(it);
+    tmp.innerHTML = build(it);
     const fresh = tmp.firstElementChild;
-    if(fresh){ card.replaceWith(fresh); renderIcons(fresh); }
+    if(fresh){ card.replaceWith(fresh); renderIcons(fresh); if(galleryActive) loadCardImages(fresh); }
   }
 }
 function logStatusText(status){
@@ -3835,22 +3919,46 @@ function researcherDisplayName(author){
 }
 function researcherLegacyNameParts(value){
   const parsed=parseAuthorListText(value)[0]||{};
-  return {family:String(parsed.family||'').trim(),given:String(parsed.given||'').trim(),middle:''};
+  const family=String(parsed.family||'').trim();
+  // Split the given part into a first name plus middle name(s): "Elias J." →
+  // given "Elias", middle "J.". Matching keys recombine them via
+  // researcherFullGiven, so this never changes how papers are matched.
+  const tokens=String(parsed.given||'').trim().split(/\s+/).filter(Boolean);
+  const given=tokens.shift()||'';
+  return {family,given,middle:tokens.join(' ')};
 }
 function researcherProfileNameParts(profile, fallback=''){
   if(profile&&(profile.familyName||profile.givenName||profile.middleName)) return {family:String(profile.familyName||'').trim(),given:String(profile.givenName||'').trim(),middle:String(profile.middleName||'').trim()};
   return researcherLegacyNameParts(profile&&profile.displayName||fallback);
 }
 function researcherFullGiven(parts){ return [parts&&parts.given,parts&&parts.middle].filter(Boolean).join(' ').trim(); }
+// Display-only given name: keep the first name in full but abbreviate the middle
+// name(s) to initials — "Hanako Saito" → "Hanako S.". Matching keys still use the
+// full given name (researcherFullGiven), so this never affects paper matching.
+function researcherGivenWithMiddleInitial(parts){
+  const given=String(parts&&parts.given||'').trim(), middle=String(parts&&parts.middle||'').trim();
+  if(!given) return researcherFullGiven(parts);
+  return middle ? `${given} ${authorInitials(middle)}` : given;
+}
+// A lone-letter name token is an initial and takes a period: "Fraser J" → "Fraser J.".
+// Tokens that are already a full word or already carry a period are left untouched.
+function researcherAddInitialPeriods(given){
+  return String(given||'').trim().split(/\s+/).map(tok=>/^[\p{L}]$/u.test(tok)?tok+'.':tok).join(' ');
+}
 function researcherPreferredGiven(parts,names=[]){
-  const full=researcherFullGiven(parts), family=researcherKey(parts&&parts.family), given=researcherKey(parts&&parts.given), middle=researcherKey(parts&&parts.middle);
-  if(!family||!given||!middle) return full;
+  const family=researcherKey(parts&&parts.family), given=researcherKey(parts&&parts.given), middle=researcherKey(parts&&parts.middle);
+  // Default display abbreviates the middle name; the full form is only used as a
+  // last resort when there is no distinct middle name to shorten.
+  const fallback=researcherGivenWithMiddleInitial(parts);
+  if(!family||!given||!middle) return fallback;
   const abbreviated=(names||[]).flatMap(name=>parseAuthorListText(name)).map(name=>{
     const tokens=String(name.given||'').split(/[\s.\-]+/).map(researcherKey).filter(Boolean);
     if(researcherKey(name.family)!==family||tokens[0]!==given) return '';
     return tokens.slice(1).some(token=>token.length===1&&token===middle.slice(0,1)) ? String(name.given||'').trim() : '';
   }).filter(Boolean);
-  return abbreviated.sort((a,b)=>a.length-b.length)[0]||full;
+  // Author metadata often drops the period after a middle initial ("Fraser J");
+  // restore it so the display name reads "Fraser J.".
+  return researcherAddInitialPeriods(abbreviated.sort((a,b)=>a.length-b.length)[0]||fallback);
 }
 function researcherCanonicalDisplayName(profile, fallback=''){
   const parts=researcherProfileNameParts(profile,fallback), given=researcherPreferredGiven(parts,[...(profile&&profile.aliases||[]),fallback]);
@@ -3922,8 +4030,18 @@ function researcherDirectoryEntries(){
     if(entry.profile) entry.name=researcherCanonicalDisplayName(entry.profile,entry.name);
     return entry;
   });
-  researcherDirectoryCache={version:changeVersion,entries};
-  return entries;
+  // Collapse entries that resolve to the same registered profile — a person can be
+  // reached both from paper metadata and from their manual profile under different
+  // keys, which would otherwise list them twice.
+  const byProfile=new Map(), deduped=[];
+  for(const entry of entries){
+    const pid=entry.profile&&entry.profile.id;
+    if(pid&&byProfile.has(pid)){ const first=byProfile.get(pid); entry.aliases.forEach(a=>first.aliases.add(a)); entry.paperIds.forEach(id=>first.paperIds.add(id)); continue; }
+    if(pid) byProfile.set(pid,entry);
+    deduped.push(entry);
+  }
+  researcherDirectoryCache={version:changeVersion,entries:deduped};
+  return deduped;
 }
 function findResearcherProfileByNames(names){
   return (lib.researchers||[]).find(p=>(names||[]).some(name=>researcherMatchesName(p,name)));
@@ -3948,6 +4066,9 @@ function researcherExternalUrl(profile, type){
   if(type==='cinii') return /^https?:\/\//i.test(raw) ? raw : '';
   // Chem-Station links are stored as full URLs; keep them clickable as-is.
   if(type==='chemstation') return /^https?:\/\//i.test(raw) ? raw : '';
+  // Social media: accept a full URL or a bare handle (with or without a leading @).
+  if(type==='x') return /^https?:\/\//i.test(raw) ? raw : `https://x.com/${encodeURIComponent(raw.replace(/^@/,''))}`;
+  if(type==='bluesky') return /^https?:\/\//i.test(raw) ? raw : `https://bsky.app/profile/${encodeURIComponent(raw.replace(/^@/,''))}`;
   return '';
 }
 function renderWorkspace(){
@@ -3960,10 +4081,10 @@ function renderWorkspace(){
 }
 const RESEARCHER_COLUMNS={
   name:{label:'researcherColName',width:210}, image:{label:'researcherImage',width:66}, institutions:{label:'researcherInstitutions',width:230},
-  birthDate:{label:'researcherBirthDate',width:110}, phdYear:{label:'researcherPhdYear',width:88}, homepage:{label:'researcherHomepage',width:130},
+  birthDate:{label:'researcherBirthDate',width:110}, age:{label:'researcherAgeCol',width:66}, phdYear:{label:'researcherPhdYear',width:88}, homepage:{label:'researcherHomepage',width:130},
   googleScholar:{label:'researcherGoogleScholar',width:145}, researchGate:{label:'researcherResearchGate',width:130}, researchMap:{label:'researcherResearchMap',width:125},
   papers:{label:'researcherColPapers',width:100}, citations:{label:'researcherTotalCitations',width:105}, hIndex:{label:'researcherHIndex',width:82}, i10Index:{label:'researcherI10Index',width:90}, worksCount:{label:'researcherWorksCount',width:108}, fields:{label:'researcherFields',width:180},
-  related:{label:'researcherRelated',width:180}, modified:{label:'researcherModified',width:108}, status:{label:'researcherColStatus',width:120}
+  related:{label:'researcherRelated',width:180}, added:{label:'colAdded',width:108}, modified:{label:'researcherModified',width:108}, status:{label:'researcherColStatus',width:120}
 };
 function researcherVisibleColumns(){
   return researcherColumnConfig.order.filter(k=>researcherColumnConfig.visible[k]);
@@ -3994,6 +4115,14 @@ function researcherEntriesForDisplay(){
   });
 }
 function researcherLines(value){ return Array.isArray(value) ? value.map(x=>String(x||'').trim()).filter(Boolean) : []; }
+// PhD advisor(s) as an array. New profiles store an array; legacy profiles store a
+// single string that may pack two people as "A and B" / "A & B" / "A, B" — split
+// those so each advisor can match a registered researcher on its own.
+function researcherAdvisors(p){
+  const v=p&&p.phdAdvisor;
+  if(Array.isArray(v)) return uniqueResearcherStrings(v.map(x=>String(x||'').trim()));
+  return uniqueResearcherStrings(String(v||'').split(/\s*(?:、|・|／|＆|\s&\s|\band\b|および)\s*/i).map(x=>x.trim()));
+}
 function researcherModifiedDate(value){
   const d=new Date(String(value||''));
   if(Number.isNaN(d.getTime())) return '—';
@@ -4019,9 +4148,9 @@ function ensureResearcherAffiliations(p){
 function researcherPositions(p){
   if(p&&Array.isArray(p.positions)) return p.positions.filter(x=>x&&String(x.institution||x.name||'').trim()).map(x=>{
     const sourceUrls=researcherSourceUrlList(x.sourceUrls||x.sourceUrl);
-    return {institution:String(x.institution||x.name||'').trim(),organization:String(x.organization||'').trim(),title:String(x.title||'').trim(),start:String(x.start||'').trim(),end:String(x.end||'').trim(),sourceUrls,sourceUrl:sourceUrls[0]||''};
+    return {institution:String(x.institution||x.name||'').trim(),organization:String(x.organization||'').trim(),title:String(x.title||'').trim(),start:String(x.start||'').trim(),end:String(x.end||'').trim(),related:researcherLines(x.related),hidden:!!x.hidden,sourceUrls,sourceUrl:sourceUrls[0]||''};
   });
-  return researcherAffiliations(p).map(x=>({institution:x.name,organization:'',title:'',start:x.start,end:x.end,sourceUrls:x.sourceUrls||[],sourceUrl:x.sourceUrl||''}));
+  return researcherAffiliations(p).map(x=>({institution:x.name,organization:'',title:'',start:x.start,end:x.end,related:[],hidden:false,sourceUrls:x.sourceUrls||[],sourceUrl:x.sourceUrl||''}));
 }
 function ensureResearcherPositions(p){
   if(!p) return [];
@@ -4032,7 +4161,7 @@ function researcherEducation(p){
   if(!p||!Array.isArray(p.education)) return [];
   return p.education.filter(x=>x&&String(x.institution||'').trim()).map(x=>{
     const sourceUrls=researcherSourceUrlList(x.sourceUrls||x.sourceUrl);
-    return {institution:String(x.institution||'').trim(),program:String(x.program||'').trim(),degree:String(x.degree||'').trim(),start:String(x.start||'').trim(),end:String(x.end||'').trim(),sourceUrls,sourceUrl:sourceUrls[0]||''};
+    return {institution:String(x.institution||'').trim(),program:String(x.program||'').trim(),degree:String(x.degree||'').trim(),start:String(x.start||'').trim(),end:String(x.end||'').trim(),related:researcherLines(x.related),hidden:!!x.hidden,sourceUrls,sourceUrl:sourceUrls[0]||''};
   });
 }
 function ensureResearcherEducation(p){ if(!p) return []; if(!Array.isArray(p.education)) p.education=[]; return p.education; }
@@ -4087,6 +4216,7 @@ function researcherColumnValue(e,key){
   if(key==='image') return p.imageUrl||'';
   if(key==='institutions') return [...researcherCurrentInstitutions(p),...researcherPastInstitutions(p)].join(' ');
   if(key==='birthDate') return p.birthDate||'';
+  if(key==='age'){ const info=researcherAgeInfo(p.birthDate); return info?info.age:''; }
   if(key==='phdYear') return p.phdYear||'';
   if(key==='homepage') return p.website||'';
   if(key==='googleScholar') return ids.googleScholar||'';
@@ -4099,13 +4229,14 @@ function researcherColumnValue(e,key){
   if(key==='worksCount') return Number(p.worksCount)||0;
   if(key==='fields') return researcherLines(p.researchFields).join(' ');
   if(key==='related') return researcherLines(p.relatedResearchers).join(' ');
+  if(key==='added') return p.dateAdded||p.dateModified||'';
   if(key==='modified') return p.dateModified||'';
   return researcherStatusText(e.profile);
 }
 function researcherSortValue(e,key){
   if(key==='status') return e.profile&&e.profile.identityStatus==='openalex'?2:e.profile?1:0;
   const value=researcherColumnValue(e,key);
-  return ['papers','citations','hIndex','i10Index','worksCount','phdYear'].includes(key) ? Number(value)||0 : String(value||'');
+  return ['papers','citations','hIndex','i10Index','worksCount','phdYear','age'].includes(key) ? Number(value)||0 : String(value||'');
 }
 function researcherMatchesColumnFilters(e){
   return Object.entries(researcherColumnFilters).every(([key,filterValue])=>{
@@ -4120,8 +4251,8 @@ function researcherMatchesColumnFilters(e){
 }
 function researcherInstitutionsHtml(p){
   if(!p) return '<span class="researcherMeta">—</span>';
-  const current=researcherCurrentInstitutions(p).map(x=>`<span class="researcherInstitution">${institutionFlagHtml(x)}${esc(x)}</span>`).join('');
-  const past=researcherInstitutionDisplayPrefs.past?researcherPastInstitutions(p).map(x=>`<span class="researcherInstitution past">${institutionFlagHtml(x)}${esc(x)}</span>`).join(''):'';
+  const current=researcherCurrentInstitutions(p).map(x=>`<span class="researcherInstitution">${institutionFlagHtml(x)}${instDisp(x)}</span>`).join('');
+  const past=researcherInstitutionDisplayPrefs.past?researcherPastInstitutions(p).map(x=>`<span class="researcherInstitution past">${institutionFlagHtml(x)}${instDisp(x)}</span>`).join(''):'';
   return `<div class="researcherInstitutionList">${current||''}${past||''}${!current&&!past?'<span class="researcherMeta">—</span>':''}</div>`;
 }
 function researcherLinkHtml(p,type,label){
@@ -4141,6 +4272,7 @@ function researcherCellHtml(e,key){
   if(key==='image') return p&&p.imageUrl?`<span class="researcherImageFrame"><img class="researcherImage" src="${esc(p.imageUrl)}" alt="" referrerpolicy="no-referrer"${researcherImagePositionStyle(p)}></span>`:'<span class="researcherMeta">—</span>';
   if(key==='institutions') return researcherInstitutionsHtml(p);
   if(key==='birthDate') return `<span class="researcherMeta">${esc(p&&p.birthDate||'—')}</span>`;
+  if(key==='age'){ const info=p&&researcherAgeInfo(p.birthDate); return `<span class="researcherCount">${info?esc((info.approx?'~':'')+info.age):'—'}</span>`; }
   if(key==='phdYear') return `<span class="researcherCount">${esc(p&&p.phdYear||'—')}</span>`;
   if(key==='homepage') return researcherLinkHtml(p,'homepage',t('researcherHomepage'));
   if(key==='googleScholar') return researcherLinkHtml(p,'googleScholar','Google Scholar');
@@ -4153,6 +4285,7 @@ function researcherCellHtml(e,key){
   if(key==='worksCount') return `<span class="researcherCount">${p&&Number.isFinite(Number(p.worksCount))?esc(Number(p.worksCount).toLocaleString()):'—'}</span>`;
   if(key==='fields') return `<div class="researcherTagList">${researcherLines(p&&p.researchFields).map(x=>`<span class="researcherTag">${esc(x)}</span>`).join('')||'<span class="researcherMeta">—</span>'}</div>`;
   if(key==='related') return `<div class="researcherRelated">${esc(researcherLines(p&&p.relatedResearchers).join(' · ')||'—')}</div>`;
+  if(key==='added') return `<span class="researcherMeta">${esc(p?researcherModifiedDate(p.dateAdded||p.dateModified):'—')}</span>`;
   if(key==='modified') return `<span class="researcherMeta">${esc(researcherModifiedDate(p&&p.dateModified))}</span>`;
   return `<span class="researcherMeta">${esc(researcherStatusText(p))}</span>`;
 }
@@ -4256,7 +4389,7 @@ const INSTITUTION_COORDS=[
   {n:['ETH Zurich','ETH Zürich','Swiss Federal Institute of Technology'],lat:47.376,lon:8.548,cc:'CH'},
   {n:['EPFL','École Polytechnique Fédérale de Lausanne'],lat:46.519,lon:6.566,cc:'CH'},
   {n:['University of Zurich','Universität Zürich'],lat:47.375,lon:8.550,cc:'CH'},
-  {n:['Technical University of Munich','TU Munich','TUM'],lat:48.150,lon:11.568,cc:'DE'},
+  {n:['Technical University of Munich','TU Munich','TUM','Technische Universität München'],lat:48.150,lon:11.568,cc:'DE'},
   {n:['Ludwig Maximilian University of Munich','LMU Munich','LMU'],lat:48.150,lon:11.580,cc:'DE'},
   {n:['Max Planck Institute','Max Planck Society','MPI'],lat:48.263,lon:11.671,cc:'DE'},
   {n:['Heidelberg University','Universität Heidelberg'],lat:49.410,lon:8.707,cc:'DE'},
@@ -4268,7 +4401,7 @@ const INSTITUTION_COORDS=[
   {n:['KU Leuven','Katholieke Universiteit Leuven'],lat:50.878,lon:4.704,cc:'BE'},
   {n:['Karolinska Institute','Karolinska Institutet'],lat:59.351,lon:18.026,cc:'SE'},
   {n:['Uppsala University'],lat:59.858,lon:17.633,cc:'SE'},
-  {n:['Lund University'],lat:55.712,lon:13.206,cc:'SE'},
+  {n:['Lund University','University of Lund'],lat:55.712,lon:13.206,cc:'SE'},
   {n:['University of Copenhagen'],lat:55.680,lon:12.572,cc:'DK'},
   {n:['Politecnico di Milano'],lat:45.478,lon:9.227,cc:'IT'},
   {n:['University of Barcelona','Universitat de Barcelona'],lat:41.387,lon:2.164,cc:'ES'},
@@ -4341,7 +4474,7 @@ const INSTITUTION_COORDS=[
   {n:['University of Leeds','Leeds'],lat:53.807,lon:-1.554,cc:'GB'},
   {n:['University of Nottingham','Nottingham'],lat:52.939,lon:-1.196,cc:'GB'},
   // Europe (added)
-  {n:['Karlsruhe Institute of Technology','KIT'],lat:49.010,lon:8.417,cc:'DE'},
+  {n:['Karlsruhe Institute of Technology','KIT','Universität Karlsruhe','Technical University of Karlsruhe'],lat:49.010,lon:8.417,cc:'DE'},
   {n:['University of Göttingen','Universität Göttingen','Gottingen'],lat:51.541,lon:9.936,cc:'DE'},
   {n:['University of Bonn','Universität Bonn'],lat:50.734,lon:7.104,cc:'DE'},
   {n:['Humboldt University of Berlin','Humboldt-Universität zu Berlin'],lat:52.518,lon:13.393,cc:'DE'},
@@ -4363,7 +4496,7 @@ const INSTITUTION_COORDS=[
   {n:['University of Groningen'],lat:53.219,lon:6.564,cc:'NL'},
   {n:['Wageningen University','Wageningen University & Research','WUR'],lat:51.985,lon:5.663,cc:'NL'},
   {n:['Erasmus University Rotterdam'],lat:51.918,lon:4.524,cc:'NL'},
-  {n:['Aarhus University'],lat:56.168,lon:10.203,cc:'DK'},
+  {n:['Aarhus University','University of Aarhus'],lat:56.168,lon:10.203,cc:'DK'},
   {n:['Technical University of Denmark','DTU'],lat:55.786,lon:12.523,cc:'DK'},
   {n:['University of Helsinki'],lat:60.204,lon:24.962,cc:'FI'},
   {n:['University of Oslo'],lat:59.940,lon:10.721,cc:'NO'},
@@ -4414,6 +4547,79 @@ const INSTITUTION_COORDS=[
   {n:['University of the Witwatersrand','Wits University'],lat:-26.191,lon:28.030,cc:'ZA'},
   {n:['Stellenbosch University'],lat:-33.933,lon:18.865,cc:'ZA'},
   {n:['Cairo University'],lat:30.027,lon:31.211,cc:'EG'},
+  // User-requested additions
+  {n:['Ehime University','愛媛大学'],lat:33.809,lon:132.702,cc:'JP'},
+  {n:['Osaka City University','大阪市立大学'],lat:34.616,lon:135.502,cc:'JP'},
+  {n:['Meijo University','名城大学'],lat:35.153,lon:136.966,cc:'JP'},
+  {n:['Fukuoka University','福岡大学'],lat:33.545,lon:130.359,cc:'JP'},
+  {n:['University of Rochester'],lat:43.131,lon:-77.627,cc:'US'},
+  {n:['Stony Brook University','SUNY Stony Brook'],lat:40.912,lon:-73.123,cc:'US'},
+  {n:['North Carolina State University','NC State'],lat:35.785,lon:-78.670,cc:'US'},
+  {n:['University of Massachusetts','UMass Amherst','University of Massachusetts Amherst'],lat:42.391,lon:-72.526,cc:'US'},
+  {n:['Arizona State University','ASU'],lat:33.419,lon:-111.933,cc:'US'},
+  {n:['University of Virginia','UVA'],lat:38.035,lon:-78.503,cc:'US'},
+  {n:['University of Arizona'],lat:32.232,lon:-110.949,cc:'US'},
+  {n:['University of Durham','Durham University'],lat:54.768,lon:-1.571,cc:'GB'},
+  {n:['Ulm University','Universität Ulm','University of Ulm'],lat:48.423,lon:9.958,cc:'DE'},
+  {n:['University of Cologne','Universität zu Köln'],lat:50.928,lon:6.926,cc:'DE'},
+  {n:['University of Marburg','Philipps-Universität Marburg'],lat:50.809,lon:8.771,cc:'DE'},
+  {n:['University of Münster','Westfälische Wilhelms-Universität Münster'],lat:51.965,lon:7.613,cc:'DE'},
+  {n:['Goethe University Frankfurt','Goethe-Universität Frankfurt'],lat:50.126,lon:8.665,cc:'DE'},
+  {n:['University of Stuttgart','Universität Stuttgart'],lat:48.745,lon:9.106,cc:'DE'},
+  {n:['University of Würzburg','Universität Würzburg'],lat:49.793,lon:9.930,cc:'DE'},
+  {n:['University of Bordeaux','Université de Bordeaux'],lat:44.807,lon:-0.605,cc:'FR'},
+  {n:['University of Rennes','Université de Rennes'],lat:48.117,lon:-1.638,cc:'FR'},
+  {n:['University of Marseille','Aix-Marseille University','Aix-Marseille Université'],lat:43.296,lon:5.370,cc:'FR'},
+  {n:['University of Valencia','Universitat de València'],lat:39.479,lon:-0.340,cc:'ES'},
+  {n:['Comenius University in Bratislava','Comenius University'],lat:48.150,lon:17.107,cc:'SK'},
+  {n:['University of Calgary'],lat:51.078,lon:-114.133,cc:'CA'},
+  {n:['University of Windsor'],lat:42.303,lon:-83.064,cc:'CA'},
+  {n:['Hong Kong Baptist University','HKBU'],lat:22.341,lon:114.180,cc:'HK'},
+  {n:['National Chung Hsing University','國立中興大學','NCHU'],lat:24.121,lon:120.674,cc:'TW'},
+  {n:['National Taipei University of Technology','國立臺北科技大學','Taipei Tech'],lat:25.043,lon:121.535,cc:'TW'},
+  {n:['Tianjin University','天津大学'],lat:39.106,lon:117.169,cc:'CN'},
+  {n:['Ben-Gurion University of the Negev','BGU'],lat:31.262,lon:34.801,cc:'IL'},
+  // User-requested additions (2)
+  {n:['Texas A&M University','Texas A&M'],lat:30.612,lon:-96.341,cc:'US'},
+  {n:['University of California, Riverside','UC Riverside','UCR'],lat:33.973,lon:-117.328,cc:'US'},
+  {n:['Wayne State University','Wayne University'],lat:42.356,lon:-83.067,cc:'US'},
+  {n:['University of Hawaii','University of Hawaiʻi at Mānoa','UH Manoa'],lat:21.298,lon:-157.816,cc:'US'},
+  {n:['The University of Southern Mississippi','University of Southern Mississippi','USM'],lat:31.328,lon:-89.336,cc:'US'},
+  {n:['University of Akron'],lat:41.075,lon:-81.510,cc:'US'},
+  {n:['Indiana University','Indiana University Bloomington','IU'],lat:39.168,lon:-86.523,cc:'US'},
+  {n:['University of Georgia','UGA'],lat:33.948,lon:-83.377,cc:'US'},
+  {n:['Michigan State University','MSU'],lat:42.701,lon:-84.482,cc:'US'},
+  {n:['University of Sheffield','Sheffield'],lat:53.381,lon:-1.487,cc:'GB'},
+  {n:['Université Paul Sabatier','Paul Sabatier University','Toulouse III'],lat:43.561,lon:1.464,cc:'FR'},
+  {n:['Université d’Angers','University of Angers'],lat:47.474,lon:-0.554,cc:'FR'},
+  {n:['University of Strasbourg','Université de Strasbourg'],lat:48.579,lon:7.767,cc:'FR'},
+  {n:['Johannes Gutenberg University Mainz','JGU Mainz','University of Mainz'],lat:49.993,lon:8.238,cc:'DE'},
+  {n:['Justus Liebig University Giessen','University of Giessen'],lat:50.586,lon:8.677,cc:'DE'},
+  {n:['University of Wuppertal','Bergische Universität Wuppertal'],lat:51.248,lon:7.150,cc:'DE'},
+  {n:['Eindhoven University of Technology','TU Eindhoven'],lat:51.448,lon:5.487,cc:'NL'},
+  {n:['Macquarie University'],lat:-33.774,lon:151.112,cc:'AU'},
+  {n:['Hunan Normal University','湖南师范大学'],lat:28.187,lon:112.936,cc:'CN'},
+  {n:['East China Normal University','华东师范大学','ECNU'],lat:31.226,lon:121.403,cc:'CN'},
+  {n:['Nankai University','南开大学'],lat:39.113,lon:117.164,cc:'CN'},
+  {n:['Chubu University','中部大学'],lat:35.247,lon:136.977,cc:'JP'},
+  {n:['University of Hyogo','兵庫県立大学'],lat:34.725,lon:135.196,cc:'JP'},
+  // added by request
+  {n:['Technische Universität Berlin','Technical University of Berlin','TU Berlin'],lat:52.512,lon:13.327,cc:'DE'},
+  {n:['Boston College'],lat:42.335,lon:-71.168,cc:'US'},
+  {n:['Max-Planck-Institut für Kohlenforschung','Max Planck Institute for Coal Research','MPI für Kohlenforschung'],lat:51.424,lon:6.878,cc:'DE'},
+  {n:['Fukui University of Technology','福井工業大学'],lat:36.083,lon:136.238,cc:'JP'},
+  {n:['Ludwig-Maximilians-Universität München','Ludwig Maximilian University of Munich','LMU Munich','LMU München'],lat:48.150,lon:11.581,cc:'DE'},
+  {n:['Aichi Institute of Technology','愛知工業大学'],lat:35.183,lon:137.108,cc:'JP'},
+  {n:['University of Erlangen-Nuremberg','Friedrich-Alexander-Universität Erlangen-Nürnberg','FAU Erlangen-Nürnberg'],lat:49.598,lon:11.004,cc:'DE'},
+  {n:['Hangzhou Normal University','杭州师范大学'],lat:30.282,lon:120.150,cc:'CN'},
+  {n:['International Christian University','国際基督教大学','ICU'],lat:35.688,lon:139.527,cc:'JP'},
+  {n:['Technische Universität Braunschweig','Technical University of Braunschweig','TU Braunschweig'],lat:52.273,lon:10.527,cc:'DE'},
+  {n:['Dalian University of Technology','大连理工大学','DUT'],lat:38.882,lon:121.524,cc:'CN'},
+  {n:['University of Houston'],lat:29.719,lon:-95.343,cc:'US'},
+  {n:['Ewha Womans University','이화여자대학교'],lat:37.562,lon:126.946,cc:'KR'},
+  {n:['University of Guelph'],lat:43.532,lon:-80.226,cc:'CA'},
+  {n:['Kyoto Pharmaceutical University','京都薬科大学'],lat:34.951,lon:135.790,cc:'JP'},
+  {n:['National Chiao Tung University','國立交通大學','NCTU'],lat:24.787,lon:120.997,cc:'TW'},
 ];
 function normInst(name){
   return String(name||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'')
@@ -4437,7 +4643,9 @@ function ccToFlag(cc){
 // Small flag span for an institution string (empty when the country is unknown).
 function institutionFlagHtml(name){
   const co=resolveInstitutionCoords(name); const f=co&&co.cc?ccToFlag(co.cc):'';
-  return f?`<span class="instFlag" title="${esc(co.cc)}">${f}</span>`:'';
+  // ⁠ (word joiner) on both sides prevents a line break between the flag and the
+  // institution name — otherwise the flag emoji can orphan onto its own line.
+  return f?`⁠<span class="instFlag" title="${esc(co.cc)}">${f}</span>⁠`:'';
 }
 // Resolve an institution string to {lat,lon,source,label,cc}. User overrides win over
 // the built-in dictionary; falls back to a lenient substring match.
@@ -4542,7 +4750,7 @@ function researcherGridCardHtml(e){
   return `<div class="rGridCard ${researcherSel(e)}" ${researcherRowData(e)}>
     ${researcherAvatarHTML(e,'rAvXL')}
     <div class="rGridName">${esc(formatResearcherName(e))}</div>
-    <div class="rGridInst">${esc(inst||'—')}</div>
+    <div class="rGridInst">${esc(abbreviateAffiliation(inst)||'—')}</div>
     <div class="rGridMeta"><span>${esc(t('researcherColPapers'))} <b>${e.paperIds.size}</b></span><span>${esc(t('researcherTotalCitations'))} <b>${researcherCiteText(p)}</b></span></div>
   </div>`;
 }
@@ -4551,7 +4759,7 @@ function researcherProfileCardHtml(e){
   const p=e.profile, inst=primaryInstitution(p);
   const fields=researcherLines(p&&p.researchFields).slice(0,3).map(f=>`<span class="rTag">${esc(f)}</span>`).join('');
   return `<div class="rProfCard ${researcherSel(e)}" ${researcherRowData(e)}>
-    <div class="rProfTop">${researcherAvatarHTML(e,'rAvL')}<div class="rProfId"><div class="rProfName">${esc(formatResearcherName(e))}</div><div class="rProfInst">${esc(inst||'—')}</div><div class="rProfBadges">${researcherBadgesHtml(p)}</div></div></div>
+    <div class="rProfTop">${researcherAvatarHTML(e,'rAvL')}<div class="rProfId"><div class="rProfName">${esc(formatResearcherName(e))}</div><div class="rProfInst">${esc(abbreviateAffiliation(inst)||'—')}</div><div class="rProfBadges">${researcherBadgesHtml(p)}</div></div></div>
     ${fields?`<div class="rProfTags">${fields}</div>`:''}
     <div class="rProfFoot">
       <div class="rStat"><b>${e.paperIds.size}</b><small>${esc(t('researcherColPapers'))}</small></div>
@@ -4571,7 +4779,7 @@ function researcherLargeRowHtml(e){
     ${researcherAvatarHTML(e,'rAvM')}
     <div class="rLMain">
       <div class="rLTop"><span class="rLName">${esc(formatResearcherName(e))}</span>${phd}<span class="rLBadges">${idBadges}</span></div>
-      <div class="rLInstLine">${inst?institutionFlagHtml(inst):''}${esc(inst||'—')}${past.length?` <span class="rLPastInline">· ${esc(past.slice(0,2).join(' / '))}</span>`:''}${web?` <span class="rLPastInline">· </span>${web}`:''}</div>
+      <div class="rLInstLine">${inst?institutionFlagHtml(inst):''}${esc(abbreviateAffiliation(inst)||'—')}${past.length?` <span class="rLPastInline">· ${esc(past.slice(0,2).map(abbreviateAffiliation).join(' / '))}</span>`:''}${web?` <span class="rLPastInline">· </span>${web}`:''}</div>
       ${fields?`<div class="rLTags">${fields}</div>`:''}
     </div>
     <div class="rLMetrics">
@@ -4596,7 +4804,7 @@ function researcherLeaderboardHtml(shown){
     const v=value(e), pct=v/max*100, val=v? v.toLocaleString():'—';
     return `<div class="rLbRow ${researcherSel(e)}" ${researcherRowData(e)}>
       <div class="rLbRank">${i+1}</div>${researcherAvatarHTML(e,'rAvS')}
-      <div class="rLbMid"><div class="rLbName">${esc(formatResearcherName(e))} <span class="rLbInst">· ${esc(primaryInstitution(e.profile)||'—')}</span></div>
+      <div class="rLbMid"><div class="rLbName">${esc(formatResearcherName(e))} <span class="rLbInst">· ${esc(abbreviateAffiliation(primaryInstitution(e.profile))||'—')}</span></div>
         <div class="rLbBarWrap"><div class="rLbBar" style="width:${pct.toFixed(0)}%"></div></div></div>
       <div class="rLbVal">${val}<small>${esc(t(label))}</small></div>
     </div>`;
@@ -4650,6 +4858,25 @@ let mapVB={x:0,y:0,w:0,h:0};
 const MAP_ZOOM_MIN=1, MAP_ZOOM_MAX=40, MAP_AV_R=9;
 // 案A: past this zoom a single-institution pin becomes its researchers' photos
 const mapPhotoZoom=()=>Number(mapPrefs.photoZoom)||4;
+const mapPhotoSize=()=>{ const v=Number(mapPrefs.photoSize); return v>0?v:1.8; };
+const mapPinSize=()=>{ const v=Number(mapPrefs.pinSize); return v>0?v:0.7; };
+const MAP_GRID_STEPS=[30,20,15,10];
+const mapGridStep=()=>{ const v=Number(mapPrefs.gridStep); return MAP_GRID_STEPS.includes(v)?v:30; };
+// which affiliations to plot: 'current' (default) or 'all' (every past+present affiliation)
+const mapAffScope=()=>mapPrefs.affScope==='all'?'all':'current';
+// institutions the user chose to ignore (never show in the "未配置の所属" alerts)
+function ignoredInstitutionSet(){ const o=lib&&lib.ignoredInstitutions; return new Set(Array.isArray(o)?o.map(normInst):[]); }
+function ignoreInstitution(name){
+  if(!name) return;
+  if(!Array.isArray(lib.ignoredInstitutions)) lib.ignoredInstitutions=[];
+  const k=normInst(name);
+  if(!lib.ignoredInstitutions.some(x=>normInst(x)===k)){ lib.ignoredInstitutions.push(name); touch(); }
+}
+function unignoreInstitution(name){
+  if(!Array.isArray(lib.ignoredInstitutions)) return;
+  const k=normInst(name);
+  lib.ignoredInstitutions=lib.ignoredInstitutions.filter(x=>normInst(x)!==k); touch();
+}
 const mapPlotMode=()=>mapPrefs.plot==='institutions'?'institutions':'researchers';
 // grow the viewBox to match the SVG element's aspect ratio, keeping the whole world
 // visible (never cropped) and centred; the surplus is shown as surrounding sea.
@@ -4690,15 +4917,17 @@ function visibleLandPaths(){
   });
   return VISIBLE_LAND_PATHS;
 }
-// Ring layout that keeps avatars from overlapping; wraps onto concentric rings so a
-// crowded institution stays readable instead of collapsing into one blob.
+// Grid layout: pack an institution's researchers into a tidy square-ish block centred
+// on its coordinate (replaces the old radial "spider", which scattered the photos).
+// `rad` is the spacing between avatar centres.
 function mapAvatarLayout(cx,cy,n,rad){
   if(n<=1) return [[cx,cy]];
-  const per=Math.min(8,Math.max(4,Math.ceil(n/2))), pos=[];
+  const cols=Math.max(1,Math.ceil(Math.sqrt(n))), rows=Math.ceil(n/cols), pos=[];
   for(let i=0;i<n;i++){
-    const ring=Math.floor(i/per), inRing=Math.min(per,n-ring*per), idxInRing=i-ring*per;
-    const r=rad*(1+ring*0.72), ang=idxInRing/inRing*Math.PI*2 - Math.PI/2;
-    pos.push([cx+Math.cos(ang)*r, cy+Math.sin(ang)*r]);
+    const row=Math.floor(i/cols), col=i-row*cols, inRow=Math.min(cols,n-row*cols);
+    const x=cx-(inRow-1)*rad/2+col*rad;
+    const y=cy-(rows-1)*rad/2+row*rad;
+    pos.push([x,y]);
   }
   return pos;
 }
@@ -4711,13 +4940,26 @@ function mapAvatarNode(e,ax,ay,r,idx,key){
   const hit=`<circle class="mapPinHit" cx="${ax.toFixed(1)}" cy="${ay.toFixed(1)}" r="${Math.max(r+5,12).toFixed(1)}"></circle></g>`;
   if(p&&p.imageUrl){
     const cid='mapAvClip'+idx;
-    const scale=researcherImageScale(p), pos=researcherImagePosition(p), size=r*2*scale;
-    const dx=(50-pos.x)/50*(size-r*2)/2, dy=(50-pos.y)/50*(size-r*2)/2;
+    // Mirror the detail-view crop (researcherImagePositionStyle) exactly so the face
+    // sits where the user positioned it — otherwise the photo looks shifted on the map.
+    const D=2*r, ox=ax-r, oy=ay-r, aspect=researcherImageAspect(p);
+    let img;
+    if(aspect>0){
+      const {x:fx,y:fy}=researcherImageFocus(p), z=researcherImageZoom(p);
+      const wF=z*Math.max(1,aspect), hF=z*Math.max(1,1/aspect);
+      const iw=wF*D, ih=hF*D, ix=ox+(0.5-fx*wF)*D, iy=oy+(0.5-fy*hF)*D;
+      img=`<image href="${esc(p.imageUrl)}" x="${ix.toFixed(1)}" y="${iy.toFixed(1)}" width="${iw.toFixed(1)}" height="${ih.toFixed(1)}" preserveAspectRatio="none" clip-path="url(#${cid})" referrerpolicy="no-referrer"></image>`;
+    }else{
+      // legacy images (no stored aspect): centred cover crop
+      const pos=researcherImagePosition(p), scale=researcherImageScale(p), size=D*scale;
+      const dx=(50-pos.x)/50*(size-D)/2, dy=(50-pos.y)/50*(size-D)/2;
+      img=`<image href="${esc(p.imageUrl)}" x="${(ax-size/2-dx).toFixed(1)}" y="${(ay-size/2-dy).toFixed(1)}" width="${size.toFixed(1)}" height="${size.toFixed(1)}" preserveAspectRatio="xMidYMid slice" clip-path="url(#${cid})" referrerpolicy="no-referrer"></image>`;
+    }
     return {def:`<clipPath id="${cid}"><circle cx="${ax.toFixed(1)}" cy="${ay.toFixed(1)}" r="${r.toFixed(1)}"></circle></clipPath>`,
-      node:`${open}<image href="${esc(p.imageUrl)}" x="${(ax-size/2-dx).toFixed(1)}" y="${(ay-size/2-dy).toFixed(1)}" width="${size.toFixed(1)}" height="${size.toFixed(1)}" preserveAspectRatio="xMidYMid slice" clip-path="url(#${cid})" referrerpolicy="no-referrer"></image><circle class="mapAvRing${sel?' sel':''}" cx="${ax.toFixed(1)}" cy="${ay.toFixed(1)}" r="${r.toFixed(1)}"></circle>${hit}`};
+      node:`${open}${img}<circle class="mapAvRing${sel?' sel':''}" cx="${ax.toFixed(1)}" cy="${ay.toFixed(1)}" r="${r.toFixed(1)}"></circle>${hit}`};
   }
   const col=avatarColor(e.name||name);
-  return {def:'', node:`${open}<circle class="mapAvInit${sel?' sel':''}" cx="${ax.toFixed(1)}" cy="${ay.toFixed(1)}" r="${r.toFixed(1)}" fill="${col}"></circle><text class="mapAvTx" x="${ax.toFixed(1)}" y="${ay.toFixed(1)}" style="font-size:${(r*0.9).toFixed(1)}px">${esc(researcherInitials(name))}</text>${hit}`};
+  return {def:'', node:`${open}<circle class="mapAvInit${sel?' sel':''}" cx="${ax.toFixed(1)}" cy="${ay.toFixed(1)}" r="${r.toFixed(1)}" fill="${col}"></circle><text class="mapAvTx" x="${ax.toFixed(1)}" y="${ay.toFixed(1)}" dy="0.35em" style="font-size:${(r*0.9).toFixed(1)}px">${esc(researcherInitials(name))}</text>${hit}`};
 }
 // ---- institution markers --------------------------------------------------
 // Three interchangeable styles (settings → 研究機関のマーカー):
@@ -4725,6 +4967,9 @@ function mapAvatarNode(e,ax,ay,r,idx,key){
 //   pin  … teardrop whose tip is the exact coordinate
 //   heat … blurred density field plus small dots (overview at low zoom)
 const MAP_INST_MARKERS=['dot','pin','heat'];
+// small teardrop used in the legend when the institution marker is a pin (fill passed in
+// directly — currentColor did not reliably inherit the CSS var, so the pin looked grey)
+const mapLegendPinSvg=(fill)=>`<svg width="11" height="15" viewBox="0 0 24 32" aria-hidden="true"><path d="M12 31C5 21 1 15.5 1 10a11 11 0 0 1 22 0c0 5.5-4 11-11 21Z" style="fill:${fill}"></path><circle cx="12" cy="10" r="4.2" fill="#fff"></circle></svg>`;
 const mapInstMarker=()=>MAP_INST_MARKERS.includes(mapPrefs.instMarker)?mapPrefs.instMarker:'dot';
 const MAP_HEAT_FILTER='<filter id="rMapHeat" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5"></feGaussianBlur></filter>';
 // institutions that actually have researchers in this library are highlighted
@@ -4771,24 +5016,22 @@ function mapPinNode(cx,cy,r,fill,label,textFill,stroke,key,sel,kind){
   const fs=Math.max(6,Math.min(11,r*0.85)).toFixed(1);
   return `<g class="mapPin ${kind}${sel?' sel':''}" data-key="${esc(key)}">`
     + `<circle class="mapPinDot" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r.toFixed(1)}" style="fill:${fill};stroke:${sel?'var(--accent)':stroke};stroke-width:${sel?2.2:1.3}px"></circle>`
-    + `<text class="mapPinCount" x="${cx.toFixed(1)}" y="${cy.toFixed(1)}" style="font-size:${fs}px;fill:${textFill}">${label}</text>`
+    + `<text class="mapPinCount" x="${cx.toFixed(1)}" y="${cy.toFixed(1)}" dy="0.35em" style="font-size:${fs}px;fill:${textFill}">${label}</text>`
     + `<circle class="mapPinHit" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${Math.max(r+8,14).toFixed(1)}"></circle></g>`;
 }
-// nested-circle "area = researchers" legend
-function mapSizeLegendSvg(maxN){
+// Combined graduated-symbol legend: nested circles that are BOTH sized and coloured by
+// researcher count, so area and colour can never disagree (one "研究者数" legend).
+function mapCombinedLegendSvg(maxN,scale){
+  scale=scale>0?scale:1;
   const vals=[...new Set([1,Math.max(2,Math.round(maxN/3)),maxN])].filter(v=>v<=maxN);
-  const big=mapRadius(maxN,maxN), w=big*2+8, h=big*2+16;
-  const cx=big+2, base=h-2;
-  const circles=vals.map(v=>{ const r=mapRadius(v,maxN);
-    return `<circle cx="${cx}" cy="${(base-r).toFixed(1)}" r="${r.toFixed(1)}" fill="none" stroke="currentColor" stroke-opacity=".55"></circle>`
-      +`<text x="${cx}" y="${(base-2*r-2).toFixed(1)}" font-size="8" text-anchor="middle" fill="currentColor">${v}</text>`; }).join('');
-  return `<svg width="${w.toFixed(0)}" height="${h.toFixed(0)}" style="overflow:visible">${circles}</svg>`;
-}
-function mapRampLegendSvg(maxN){
-  const seg=MAP_RAMP.map((c,i)=>`<rect x="${i*16}" y="0" width="16" height="9" fill="${mapRamp(i/(MAP_RAMP.length-1))}"></rect>`).join('');
-  return `<svg width="${MAP_RAMP.length*16}" height="20" style="overflow:visible">${seg}`
-    +`<text x="0" y="18" font-size="8.5" fill="currentColor">1</text>`
-    +`<text x="${MAP_RAMP.length*16}" y="18" font-size="8.5" text-anchor="end" fill="currentColor">${maxN}</text></svg>`;
+  const big=mapRadius(maxN,maxN)*scale, w=big*2+42, h=big*2+14, cx=big+2, base=h-3;
+  const stroke=mapPinStroke();
+  const circ=vals.slice().reverse().map(v=>{ const r=mapRadius(v,maxN)*scale, tt=Math.sqrt(v/maxN);
+    return `<circle cx="${cx.toFixed(1)}" cy="${(base-r).toFixed(1)}" r="${r.toFixed(1)}" fill="${mapRamp(tt)}" stroke="${stroke}" stroke-width="1"></circle>`; }).join('');
+  const labels=vals.map(v=>{ const r=mapRadius(v,maxN)*scale;
+    return `<line x1="${cx.toFixed(1)}" y1="${(base-2*r).toFixed(1)}" x2="${(cx+big+7).toFixed(1)}" y2="${(base-2*r).toFixed(1)}" stroke="currentColor" stroke-opacity=".3" stroke-dasharray="2 2"></line>`
+      +`<text x="${(cx+big+10).toFixed(1)}" y="${(base-2*r+3).toFixed(1)}" font-size="8.5" fill="currentColor">${v}</text>`; }).join('');
+  return `<svg width="${w.toFixed(0)}" height="${h.toFixed(0)}" style="overflow:visible">${circ}${labels}</svg>`;
 }
 // Build the plotted set for the current mode.
 //  researchers  : one entry per institution that someone is affiliated with,
@@ -4799,10 +5042,12 @@ function mapRampLegendSvg(maxN){
 function mapBuildGroups(entries){
   const placed=new Map(), unplaced=new Map();
   const instMode=mapPlotMode()==='institutions';
+  const ignored=ignoredInstitutionSet();
   const add=(inst,e)=>{
     if(!inst) return;
     const co=resolveInstitutionCoords(inst);
     if(!co){
+      if(ignored.has(normInst(inst))) return; // user chose to ignore this affiliation
       const k=normInst(inst); const u=unplaced.get(k)||{name:inst,entries:[]};
       if(!u.entries.includes(e)) u.entries.push(e); unplaced.set(k,u); return;
     }
@@ -4816,6 +5061,11 @@ function mapBuildGroups(entries){
   };
   entries.forEach(e=>{
     if(instMode) researcherAffiliations(e.profile).forEach(a=>add(a.name,e));
+    else if(mapAffScope()==='all'){
+      // every distinct affiliation (past + present) the researcher has had
+      const seen=new Set();
+      researcherAffiliations(e.profile).forEach(a=>{ const k=normInst(a.name); if(a.name&&!seen.has(k)){ seen.add(k); add(a.name,e); } });
+    }
     else add(primaryInstitution(e.profile),e);
   });
   const unplacedList=[...unplaced.values()].sort((a,b)=>b.entries.length-a.entries.length);
@@ -4849,10 +5099,16 @@ function researcherMapHtml(entries){
   researcherMapClusters=mapPlaced;
   const unpCount=mapUnplaced.length, manualCount=mapPlaced.filter(c=>c.source==='user').length;
   const maxN=Math.max(1,...mapPlaced.map(c=>c.n));
-  // graticule (decorative; toggled by the .showGrat class on the wrapper)
-  const grat=[];
-  for(let lon=-150;lon<=150;lon+=30){ const x=(lon+180)/360*MAP_W; grat.push(`M${x},0 L${x},${MAP_H}`); }
-  for(let lat=-60;lat<=60;lat+=30){ const y=(90-lat)/180*MAP_H; grat.push(`M0,${y} L${MAP_W},${y}`); }
+  // graticule (decorative; toggled by the .showGrat class on the wrapper). Spacing is
+  // adjustable (mapPrefs.gridStep); labels stay sparse (every 30°) even on a fine grid.
+  const grat=[], gratLabels=[];
+  const step=mapGridStep(), labelStep=step>=30?step:30;
+  const lonLabel=v=>v===0?'0°':v>0?`${v}°E`:`${-v}°W`;
+  const latLabel=v=>v===0?'0°':v>0?`${v}°N`:`${-v}°S`;
+  for(let lon=-180+step;lon<=180-step+0.001;lon+=step){ const x=(lon+180)/360*MAP_W; grat.push(`M${x},0 L${x},${MAP_H}`);
+    if(Math.abs(lon%labelStep)<0.001) gratLabels.push(`<text class="mapGratLabel" x="${x.toFixed(1)}" y="9" text-anchor="middle">${lonLabel(Math.round(lon))}</text>`); }
+  for(let lat=-90+step;lat<=90-step+0.001;lat+=step){ const y=(90-lat)/180*MAP_H; grat.push(`M0,${y} L${MAP_W},${y}`);
+    if(Math.abs(lat%labelStep)<0.001) gratLabels.push(`<text class="mapGratLabel" x="4" y="${y.toFixed(1)}" dy="-2" text-anchor="start">${latLabel(Math.round(lat))}</text>`); }
   // land drawn 3× (−W / 0 / +W) so the chosen centre wraps seamlessly across the seam
   const landPaths=visibleLandPaths();
   const landHtml=landPaths.map(p=>`<path class="mapLand" d="${p}"></path>`).join('');
@@ -4863,7 +5119,7 @@ function researcherMapHtml(entries){
   const svg=`<div class="rMapWrap${HAS_WORLD_MAP?' realMap':''}${mapPrefs.grid?' showGrat':''}" id="rMapWrap"><svg id="rMapSvg" viewBox="0 0 ${MAP_W} ${MAP_H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${esc(t('viewMap'))}">
       <defs id="rMapDefs"></defs>
       <g id="rMapRoot">
-        <g class="mapGrat">${grat.map(p=>`<path d="${p}"></path>`).join('')}</g>
+        <g class="mapGrat">${grat.map(p=>`<path d="${p}"></path>`).join('')}${gratLabels.join('')}</g>
         <g class="mapLandG">${landCopies}</g>
       </g>
       <g id="rMapOverlay"></g>
@@ -4873,15 +5129,18 @@ function researcherMapHtml(entries){
     <aside class="mapClusterPanel" id="rMapClusterPanel" hidden aria-live="polite"></aside>
     <div class="mapHint" id="rMapHint" hidden></div></div>`;
   const withPeople=mapPlaced.filter(c=>c.people>0).length;
+  // legend swatch matches the current institution marker (dot vs teardrop pin)
+  const legendSwatch=(cls,color)=> mapInstMarker()==='pin'
+    ? `<span class="lgPin">${mapLegendPinSvg(color)}</span>`
+    : `<span class="lgDot ${cls}"></span>`;
   const legend = instMode
     ? `<div class="mapLegend">
-        <span class="lg"><span class="lgDot lgInst"></span><span>${esc(t('mapInstMarkerLegend'))}</span></span>
-        <span class="lg"><span class="lgDot lgInstPeople"></span><span>${esc(I18N[lang].mapInstWithResearchers(withPeople))}</span></span>
+        <span class="lg">${legendSwatch('lgInst','var(--accent)')}<span>${esc(t('mapInstMarkerLegend'))}</span></span>
+        <span class="lg">${legendSwatch('lgInstPeople','var(--amber,#d97706)')}<span>${esc(I18N[lang].mapInstWithResearchers(withPeople))}</span></span>
         ${mapInstMarker()==='heat'?`<span class="lg"><span class="lgTitle">${esc(t('mapInstHeatLegend'))}</span></span>`:''}
         <span class="lg mapNote">${esc(t('mapInstHint'))}</span></div>`
     : `<div class="mapLegend">
-        <span class="lg"><span class="lgTitle">${esc(t('mapPinAreaLegend'))}</span><span id="mapSizeLegend">${mapSizeLegendSvg(maxN)}</span></span>
-        <span class="lg"><span class="lgTitle">${esc(t('mapPinColorLegend'))}</span><span id="mapRampLegend">${mapRampLegendSvg(maxN)}</span></span>
+        <span class="lg"><span class="lgTitle">${esc(t('mapCountLegend'))}</span><span id="mapCombinedLegend">${mapCombinedLegendSvg(maxN)}</span></span>
         <span class="lg mapNote">${esc(t('mapPhotoHint'))}</span></div>`;
   return `<div class="rMap"><div class="rMapView">${svg}</div>${legend}</div>`;
 }
@@ -4934,15 +5193,19 @@ function renderMapPins(){
   const clusters=mapClusterScreen(3);
   mapScreenClusters=clusters;
   const maxN=Math.max(1,...clusters.map(c=>c.n));
-  // keep the legend in step with the largest circle currently on screen
-  const sizeLeg=$('#mapSizeLegend'), rampLeg=$('#mapRampLegend');
-  if(sizeLeg) sizeLeg.innerHTML=mapSizeLegendSvg(maxN);
-  if(rampLeg) rampLeg.innerHTML=mapRampLegendSvg(maxN);
+  // pins keep a constant screen size by default; grow them gently as the user zooms
+  // in so a lone marker doesn't look tiny against the enlarged map.
+  const zoomPinScale = Math.min(3, 1 + (Math.max(1,mapZoom)-1)*0.32);
   const stroke=mapPinStroke(), selKey=selectedResearcherKey;
   const isSel=members=>!!selKey&&members.some(m=>m.items.some(e=>e.key===selKey));
   // 案A: past the photo zoom a single-institution pin becomes its researchers' faces
   const photoOn = !instMode && mapZoom>=mapPhotoZoom();
   const marker = instMode ? mapInstMarker() : null;
+  // combined size factor: zoom growth × the user's "ピンの大きさ" setting
+  const pinScale = zoomPinScale*mapPinSize();
+  // keep the legend in step with the largest circle on screen and the current pin scale
+  const combLeg=$('#mapCombinedLegend');
+  if(combLeg) combLeg.innerHTML=mapCombinedLegendSvg(maxN, pinScale);
   const defs=[]; let avI=0, html='', heat='';
   for(const c of clusters){
     // A lone institution becomes its researchers' photos at high zoom. Clusters stay
@@ -4951,23 +5214,25 @@ function renderMapPins(){
       const m=c.members[0];
       if(instMode){
         if(marker==='heat'){
-          heat+=mapInstHeatBlob(c.sx,c.sy,11);
-          html+=mapInstDotNode(c.sx,c.sy,2.6,m,c.key,isSel([m]));
+          heat+=mapInstHeatBlob(c.sx,c.sy,11*pinScale);
+          html+=mapInstDotNode(c.sx,c.sy,3.4*pinScale,m,c.key,isSel([m]));
         }else if(marker==='pin'){
-          html+=mapInstPinNode(c.sx,c.sy,4.4,m,c.key,isSel([m]));
+          html+=mapInstPinNode(c.sx,c.sy,5.6*pinScale,m,c.key,isSel([m]));
         }else{
-          html+=mapInstDotNode(c.sx,c.sy,3.3,m,c.key,isSel([m]));
+          html+=mapInstDotNode(c.sx,c.sy,4.4*pinScale,m,c.key,isSel([m]));
         }
         continue;
       }
       if(photoOn){
-        const r=Math.min(14,Math.max(MAP_AV_R,mapRadius(m.n,maxN)));
-        const pos=mapAvatarLayout(c.sx,c.sy,m.items.length,r*2.15);
+        // every face is the SAME size (a photo is a photo) — size follows only the
+        // "顔写真の大きさ" setting, not how many researchers the institution has.
+        const r=Math.max(8,Math.min(40, MAP_AV_R*mapPhotoSize()));
+        const pos=mapAvatarLayout(c.sx,c.sy,m.items.length,r*2.12);
         m.items.forEach((e,i)=>{ const a=mapAvatarNode(e,pos[i][0],pos[i][1],r,avI++,c.key); if(a.def) defs.push(a.def); html+=a.node; });
         continue;
       }
     }
-    const r=mapRadius(c.n,maxN), tt=Math.sqrt(c.n/maxN);
+    const r=mapRadius(c.n,maxN)*pinScale, tt=Math.sqrt(c.n/maxN);
     html+=mapPinNode(c.sx,c.sy,r,mapRamp(tt),c.n,mapRampText(tt),stroke,c.key,isSel(c.members),c.members.length>1?'cluster':'leaf');
   }
   const defsEl=$('#rMapDefs'); if(defsEl) defsEl.innerHTML=MAP_HEAT_FILTER+defs.join('');
@@ -4990,7 +5255,7 @@ function renderMapClusterPanel(){
     mapClusterPanelKey=null; panel.hidden=true; panel.innerHTML=''; return;
   }
   const rows=mapClusterPanelEntries(cluster.members);
-  panel.innerHTML=`<div class="mapClusterPanelHead"><div><strong>${esc(I18N[lang].mapClusterPanelTitle(rows.length))}</strong><small>${esc(I18N[lang].mapClusterPanelInstCount(cluster.members.length))}</small></div><button type="button" class="mapClusterPanelClose" data-map-cluster-close aria-label="${esc(t('mapClusterPanelClose'))}" title="${esc(t('mapClusterPanelClose'))}">×</button></div><div class="mapClusterPanelList">${rows.map(({entry,institution})=>`<button type="button" class="mapClusterPanelRow" data-map-cluster-researcher="${esc(entry.key)}">${researcherAvatarHTML(entry,'mapClusterPanelAvatar')}<span><b>${esc(formatResearcherName(entry))}</b><small>${esc(institution)}</small></span></button>`).join('')}</div>`;
+  panel.innerHTML=`<div class="mapClusterPanelHead"><div><strong>${esc(I18N[lang].mapClusterPanelTitle(rows.length))}</strong><small>${esc(I18N[lang].mapClusterPanelInstCount(cluster.members.length))}</small></div><button type="button" class="mapClusterPanelClose" data-map-cluster-close aria-label="${esc(t('mapClusterPanelClose'))}" title="${esc(t('mapClusterPanelClose'))}">×</button></div><div class="mapClusterPanelList">${rows.map(({entry,institution})=>`<button type="button" class="mapClusterPanelRow" data-map-cluster-researcher="${esc(entry.key)}">${researcherAvatarHTML(entry,'mapClusterPanelAvatar')}<span><b>${esc(formatResearcherName(entry))}</b><small class="mapClusterPanelInst"><span class="mapClusterPanelUniv">${esc(institution)}</span>${institutionFlagHtml(institution)}</small></span></button>`).join('')}</div>`;
   const wrap=$('#rMapWrap'), svg=$('#rMapSvg'); if(!wrap||!svg) return;
   panel.hidden=false; panel.style.visibility='hidden';
   const rect=svg.getBoundingClientRect();
@@ -5179,27 +5444,62 @@ function openMapSettingsPop(anchorEl){
         <button type="button" data-map-center-set="asia" class="${isEu?'':'on'}">${esc(t('mapCenterAsia'))}</button>
         <button type="button" data-map-center-set="europe" class="${isEu?'on':''}">${esc(t('mapCenterEurope'))}</button>
       </div></div>
+    <div class="fRow"><label class="mapSegLabel">${esc(t('mapAffScope'))}</label>
+      <div class="mapCenterSeg">
+        <button type="button" data-aff-scope="current" class="${mapAffScope()==='current'?'on':''}">${esc(t('mapAffScopeCurrent'))}</button>
+        <button type="button" data-aff-scope="all" class="${mapAffScope()==='all'?'on':''}">${esc(t('mapAffScopeAll'))}</button>
+      </div></div>
     <div class="fRow"><label class="mapSegLabel">${esc(t('mapInstMarker'))}</label>
       <div class="mapCenterSeg">
         ${MAP_INST_MARKERS.map(k=>`<button type="button" data-inst-marker="${k}" class="${mapInstMarker()===k?'on':''}">${esc(t('mapInstMarker_'+k))}</button>`).join('')}
       </div></div>
+    <div class="fRow mapSensRow"><label>${esc(t('mapPinSize'))} <output id="mapPinSizeOut">${mapPinSize().toFixed(1)}×</output></label>
+      <input type="range" class="uiSlider" id="mapPinSizeRange" min="0.5" max="3" step="0.1" value="${mapPinSize()}"></div>
     <div class="fRow mapSensRow"><label>${esc(t('mapWheelSensitivity'))} <output id="mapSensOut">${(Number(mapPrefs.sens)||1).toFixed(1)}×</output></label>
-      <input type="range" id="mapSensRange" min="0.2" max="2" step="0.1" value="${Number(mapPrefs.sens)||1}"></div>
+      <input type="range" class="uiSlider" id="mapSensRange" min="0.2" max="2" step="0.1" value="${Number(mapPrefs.sens)||1}"></div>
     <div class="fRow mapSensRow"><label>${esc(t('mapPhotoZoom'))} <output id="mapPhotoOut">${mapPhotoZoom().toFixed(1)}×</output></label>
-      <input type="range" id="mapPhotoRange" min="1.5" max="12" step="0.5" value="${mapPhotoZoom()}"></div>
-    <label class="mapToggleRow"><input type="checkbox" id="mapGridChk"${mapPrefs.grid?' checked':''}> ${esc(t('mapGridToggle'))}</label>`;
+      <input type="range" class="uiSlider" id="mapPhotoRange" min="1.5" max="12" step="0.5" value="${mapPhotoZoom()}"></div>
+    <div class="fRow mapSensRow"><label>${esc(t('mapPhotoSize'))} <output id="mapPhotoSizeOut">${mapPhotoSize().toFixed(1)}×</output></label>
+      <input type="range" class="uiSlider" id="mapPhotoSizeRange" min="0.8" max="3" step="0.1" value="${mapPhotoSize()}"></div>
+    <label class="mapToggleRow"><input type="checkbox" id="mapGridChk"${mapPrefs.grid?' checked':''}> ${esc(t('mapGridToggle'))}</label>
+    <div class="fRow mapGridStepRow"${mapPrefs.grid?'':' hidden'}><label class="mapSegLabel">${esc(t('mapGridStep'))}</label>
+      <div class="mapCenterSeg">
+        ${MAP_GRID_STEPS.map(s=>`<button type="button" data-grid-step="${s}" class="${mapGridStep()===s?'on':''}">${s}°</button>`).join('')}
+      </div></div>`;
   positionMiniPop(pop, anchorEl); wireMiniPopClose(pop);
+  // keep the coloured "fill" of each styled slider in sync with its value
+  const setFill=(el)=>{ if(!el) return; const min=+el.min, max=+el.max, v=+el.value; el.style.setProperty('--rm-fill', `${((v-min)/(max-min||1))*100}%`); };
+  const psRange=$('#mapPinSizeRange'), psOut=$('#mapPinSizeOut');
+  setFill(psRange);
+  if(psRange) psRange.addEventListener('input', ()=>{ mapPrefs.pinSize=+psRange.value; psOut.textContent=(+psRange.value).toFixed(1)+'×'; setFill(psRange); saveMapPrefs(); renderMapPins(); });
   const range=$('#mapSensRange'), out=$('#mapSensOut');
-  range.addEventListener('input', ()=>{ mapPrefs.sens=+range.value; out.textContent=(+range.value).toFixed(1)+'×'; saveMapPrefs(); });
+  setFill(range);
+  range.addEventListener('input', ()=>{ mapPrefs.sens=+range.value; out.textContent=(+range.value).toFixed(1)+'×'; setFill(range); saveMapPrefs(); });
   const pRange=$('#mapPhotoRange'), pOut=$('#mapPhotoOut');
-  if(pRange) pRange.addEventListener('input', ()=>{ mapPrefs.photoZoom=+pRange.value; pOut.textContent=(+pRange.value).toFixed(1)+'×'; saveMapPrefs(); renderMapPins(); });
-  $('#mapGridChk').addEventListener('change', ()=>{ mapPrefs.grid=$('#mapGridChk').checked; saveMapPrefs(); const w=$('#rMapWrap'); if(w) w.classList.toggle('showGrat', mapPrefs.grid); });
+  setFill(pRange);
+  if(pRange) pRange.addEventListener('input', ()=>{ mapPrefs.photoZoom=+pRange.value; pOut.textContent=(+pRange.value).toFixed(1)+'×'; setFill(pRange); saveMapPrefs(); renderMapPins(); });
+  const szRange=$('#mapPhotoSizeRange'), szOut=$('#mapPhotoSizeOut');
+  setFill(szRange);
+  if(szRange) szRange.addEventListener('input', ()=>{ mapPrefs.photoSize=+szRange.value; szOut.textContent=(+szRange.value).toFixed(1)+'×'; setFill(szRange); saveMapPrefs(); renderMapPins(); });
+  $('#mapGridChk').addEventListener('change', ()=>{ mapPrefs.grid=$('#mapGridChk').checked; saveMapPrefs(); const w=$('#rMapWrap'); if(w) w.classList.toggle('showGrat', mapPrefs.grid); const gr=pop.querySelector('.mapGridStepRow'); if(gr) gr.hidden=!mapPrefs.grid; });
+  pop.querySelectorAll('[data-grid-step]').forEach(b=>b.addEventListener('click', ()=>{
+    const s=+b.dataset.gridStep; if(mapGridStep()===s) return;
+    mapPrefs.gridStep=s; saveMapPrefs();
+    pop.querySelectorAll('[data-grid-step]').forEach(x=>x.classList.toggle('on',x===b));
+    renderResearcherList(); // rebuild the graticule at the new spacing
+  }));
   pop.querySelectorAll('[data-inst-marker]').forEach(b=>b.addEventListener('click', ()=>{
     const k=b.dataset.instMarker; if(mapInstMarker()===k) return;
     mapPrefs.instMarker=k; saveMapPrefs();
     pop.querySelectorAll('[data-inst-marker]').forEach(x=>x.classList.toggle('on',x===b));
     // markers only exist in institution mode; refresh the legend too
     if(mapPlotMode()==='institutions') renderResearcherList();
+  }));
+  pop.querySelectorAll('[data-aff-scope]').forEach(b=>b.addEventListener('click', ()=>{
+    const s=b.dataset.affScope; if(mapAffScope()===s) return;
+    mapPrefs.affScope=s; saveMapPrefs();
+    pop.querySelectorAll('[data-aff-scope]').forEach(x=>x.classList.toggle('on',x===b));
+    renderResearcherList(); // re-plot with the new affiliation scope
   }));
   pop.querySelectorAll('[data-map-center-set]').forEach(b=>b.addEventListener('click', ()=>{
     const c=b.dataset.mapCenterSet; if(mapPrefs.center===c) return;
@@ -5219,7 +5519,8 @@ function openMapAlertsPop(anchorEl){
     if(unp.length) body+=`<div class="mapAlertSec">${ic('alert')}${esc(t('mapAlertsTitle'))} <span class="mapPanelCount">${unp.length}</span></div>
       <div class="mapAlertHint">${esc(t('mapUnplacedHint'))}</div>
       <div class="mapUnpList">`+unp.map(u=>`<div class="mapUnpRow"><div class="mapUnpName">${esc(u.name)} <span class="mapUnpN">${esc(I18N[lang].mapPeopleCount(u.entries.length))}</span></div>
-        <div class="mapUnpBtns"><button class="tbtn" data-map-place="${esc(u.name)}">${ic('mapPin')}${esc(t('mapPlaceOnMap'))}</button><button class="tbtn" data-map-coord="${esc(u.name)}">${esc(t('mapEnterCoords'))}</button></div></div>`).join('')+`</div>`;
+        <div class="mapUnpWho">${u.entries.map(e=>`<button type="button" class="researcherRelatedLink" data-researcher-related-key="${esc(e.key)}" title="${esc(t('researcherOpen'))}">${ic('user')}${esc(formatResearcherName(e))}</button>`).join('')}</div>
+        <div class="mapUnpBtns"><button class="tbtn" data-map-place="${esc(u.name)}">${ic('mapPin')}${esc(t('mapPlaceOnMap'))}</button><button class="tbtn" data-map-coord="${esc(u.name)}">${esc(t('mapEnterCoords'))}</button><button class="tbtn" data-map-ignore="${esc(u.name)}" title="${esc(t('mapIgnoreHint'))}">${esc(t('mapIgnore'))}</button></div></div>`).join('')+`</div>`;
     if(manual.length) body+=`<div class="mapAlertSec">${esc(t('mapManualTitle'))} <span class="mapPanelCount">${manual.length}</span></div>
       <div class="mapUnpList">`+manual.map(c=>`<div class="mapUnpRow"><div class="mapUnpName">${esc(c.label)} <span class="mapUnpN">${c.lat.toFixed(2)}, ${c.lon.toFixed(2)}</span></div><div class="mapUnpBtns"><button class="tbtn" data-map-reset="${esc(c.label)}">${esc(t('mapReset'))}</button></div></div>`).join('')+`</div>`;
   }
@@ -5227,9 +5528,14 @@ function openMapAlertsPop(anchorEl){
   positionMiniPop(pop, anchorEl); wireMiniPopClose(pop); renderIcons(pop);
   // the pop lives outside #researcherList, so wire its action buttons directly
   pop.onclick=(ev)=>{
+    const rel=ev.target.closest('[data-researcher-related-key]');
+    if(rel){ const key=rel.dataset.researcherRelatedKey, entry=researcherEntryByIdentity(key,null);
+      selectedResearcherKey=entry?entry.key:key; selectedResearcherId=entry&&entry.profile?entry.profile.id:null;
+      pop.classList.remove('open'); renderResearcherList(); renderResearcherDetail(); return; }
     const pl=ev.target.closest('[data-map-place]'); if(pl){ pop.classList.remove('open'); setMapPlacement(pl.dataset.mapPlace); return; }
     const co=ev.target.closest('[data-map-coord]'); if(co){ pop.classList.remove('open'); openMapCoordPop(co.dataset.mapCoord, co); return; }
-    const rs=ev.target.closest('[data-map-reset]'); if(rs){ removeUserInstitutionCoords(rs.dataset.mapReset); renderResearcherList(); openMapAlertsPop(anchorEl); return; }
+    const ig=ev.target.closest('[data-map-ignore]'); if(ig){ ignoreInstitution(ig.dataset.mapIgnore); renderResearcherList(); openMapAlertsPop($('[data-map-alerts]')||anchorEl); return; }
+    const rs=ev.target.closest('[data-map-reset]'); if(rs){ removeUserInstitutionCoords(rs.dataset.mapReset); renderResearcherList(); openMapAlertsPop($('[data-map-alerts]')||anchorEl); return; }
   };
 }
 function openMapCoordPop(inst, anchorEl){
@@ -5300,9 +5606,17 @@ function instDictBadge(origin){
 function renderInstDictList(){
   const list=$('#instDictList'); if(!list) return;
   updateInstDictSortButtons();
-  const rows=institutionDictRows($('#instDictSearch')?.value||'');
-  if(!rows.length){ list.innerHTML=`<div class="researcherMeta" style="padding:14px;text-align:center">${esc(t('instDictEmpty'))}</div>`; return; }
-  list.innerHTML=rows.map(r=>`<div class="instDictRow" data-inst-name="${esc(r.name)}">
+  const q=$('#instDictSearch')?.value||'';
+  const rows=institutionDictRows(q);
+  // ignored affiliations live here too, so the user can restore them
+  const nq=normInst(q);
+  const ignored=(Array.isArray(lib.ignoredInstitutions)?lib.ignoredInstitutions:[]).filter(n=>!nq||normInst(n).includes(nq));
+  const ignoredHtml = ignored.length
+    ? `<div class="instDictIgnoredSec">${ic('eyeOff')}${esc(t('mapIgnoredTitle'))} <span class="instDictBadge iu">${ignored.length}</span></div>`
+      + ignored.map(n=>`<div class="instDictRow instDictIgnoredRow"><div class="instDictNameCell"><span class="instDictName">${esc(n)}</span></div><div class="instDictCoordCell"><button class="tbtn" data-inst-unignore="${esc(n)}">${ic('eye')}${esc(t('mapUnignore'))}</button></div></div>`).join('')
+    : '';
+  if(!rows.length && !ignored.length){ list.innerHTML=`<div class="researcherMeta" style="padding:14px;text-align:center">${esc(t('instDictEmpty'))}</div>`; return; }
+  list.innerHTML=ignoredHtml+rows.map(r=>`<div class="instDictRow" data-inst-name="${esc(r.name)}">
     <div class="instDictNameCell"><span class="instDictFlag">${r.cc?ccToFlag(r.cc):''}</span><span class="instDictName">${esc(r.name)}</span>${instDictBadge(r.origin)}</div>
     <div class="instDictCoordCell">
       ${r.origin==='user'?`<input type="text" class="instDictCc" maxlength="2" value="${esc(r.cc||'')}" placeholder="${esc(t('instDictCountry'))}" aria-label="${esc(t('instDictCountry'))}">`:''}
@@ -5324,15 +5638,15 @@ function openInstDict(){
   const s=$('#instDictSearch'); if(s){ s.value=''; }
 }
 function researcherLinksHtml(p){
-  const links=[['orcid','ORCID'],['googleScholar','Google Scholar'],['researchGate','ResearchGate'],['linkedin','LinkedIn'],['wikipedia','Wikipedia'],['researchmap','researchmap'],['openalex','OpenAlex'],['scopus','Scopus'],['researcherId','ResearcherID'],['dblp','DBLP'],['cinii','CiNii Research'],['chemstation','Chem-Station']].map(([type,label])=>{
+  const links=[['orcid','ORCID'],['googleScholar','Google Scholar'],['researchGate','ResearchGate'],['linkedin','LinkedIn'],['x','X'],['bluesky','Bluesky'],['wikipedia','Wikipedia'],['researchmap','researchmap'],['openalex','OpenAlex'],['scopus','Scopus'],['researcherId','ResearcherID'],['dblp','DBLP'],['cinii','CiNii Research'],['chemstation','Chem-Station']].map(([type,label])=>{
     const url=researcherExternalUrl(p,type); return url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`:'';
   }).filter(Boolean);
   if(p.website&&/^https?:\/\//i.test(p.website)) links.push(`<a href="${esc(p.website)}" target="_blank" rel="noopener noreferrer">${esc(t('researcherWebsite'))}</a>`);
   return links.join('');
 }
 function researcherDetailLinksHtml(p){
-  const marks={orcid:'iD',googleScholar:'G',researchGate:'RG',linkedin:'in',wikipedia:'W',researchmap:'R',openalex:'OA',scopus:'S',researcherId:'W',dblp:'DB',cinii:'Ci',chemstation:'CS'}, labels={orcid:'ORCID',googleScholar:'Scholar',researchGate:'ResearchGate',linkedin:'LinkedIn',wikipedia:'Wikipedia',researchmap:'researchmap',openalex:'OpenAlex',scopus:'Scopus',researcherId:'ResearcherID',dblp:'DBLP',cinii:'CiNii',chemstation:'Chem-Station'};
-  const links=['orcid','googleScholar','researchmap','researchGate','linkedin','wikipedia','openalex','scopus','researcherId','dblp','cinii','chemstation'].map(type=>{
+  const marks={orcid:'iD',googleScholar:'G',researchGate:'RG',linkedin:'in',x:'𝕏',bluesky:'🦋',wikipedia:'W',researchmap:'R',openalex:'OA',scopus:'S',researcherId:'W',dblp:'DB',cinii:'Ci',chemstation:'CS'}, labels={orcid:'ORCID',googleScholar:'Scholar',researchGate:'ResearchGate',linkedin:'LinkedIn',x:'X',bluesky:'Bluesky',wikipedia:'Wikipedia',researchmap:'researchmap',openalex:'OpenAlex',scopus:'Scopus',researcherId:'ResearcherID',dblp:'DBLP',cinii:'CiNii',chemstation:'Chem-Station'};
+  const links=['orcid','googleScholar','researchmap','researchGate','linkedin','x','bluesky','wikipedia','openalex','scopus','researcherId','dblp','cinii','chemstation'].map(type=>{
     const raw=String(p&&p.identifiers&&p.identifiers[type]||'').trim(), url=researcherExternalUrl(p,type);
     if(url) return `<a class="researcherExternalButton" href="${esc(url)}" target="_blank" rel="noopener noreferrer"><b>${esc(marks[type])}</b><span>${esc(labels[type])}</span></a>`;
     return raw?`<span class="researcherExternalButton" title="${esc(raw)}"><b>${esc(marks[type])}</b><span>${esc(labels[type])}: ${esc(raw)}</span></span>`:'';
@@ -5368,6 +5682,41 @@ function researcherNamedSourceLinksHtml(profile,key,name){
   const map=profile&&profile[`${key}Sources`], urls=map&&map[name];
   return researcherSourceLinksHtml(urls);
 }
+// Which fields/records currently have their source editor expanded in the researcher
+// editor. Keyed by the field name, or `rec:<id>` for a career/education/award record.
+let researcherEditorSourceOpen=new Set();
+function researcherEditorSourceValues(draft,key){
+  return researcherSourceUrlList(draft&&draft.fieldSources&&draft.fieldSources[key]&&(draft.fieldSources[key].urls||draft.fieldSources[key].url));
+}
+function researcherEditorSetFieldSources(draft,key,text){
+  if(!draft||!key) return;
+  const urls=uniqueResearcherStrings(String(text||'').split(/\r?\n/).map(x=>x.trim()));
+  draft.fieldSources=draft.fieldSources||{};
+  if(urls.length) draft.fieldSources[key]={source:'manual',urls,url:urls[0],retrievedAt:new Date().toISOString()};
+  else delete draft.fieldSources[key];
+}
+// Editable source control shown under each editor field: existing source links plus a
+// toggle that reveals a textarea (one URL per line) for manual add/edit/delete.
+function researcherEditorFieldSourceHtml(draft,key){
+  if(!key) return '';
+  const urls=researcherEditorSourceValues(draft,key), open=researcherEditorSourceOpen.has(key);
+  const links=urls.length?researcherSourceLinksHtml(urls):'';
+  const label=t(urls.length?'researcherEditorSourceEdit':'researcherEditorSourceAdd');
+  const btn=`<button type="button" class="researcherEditorSrcToggle${open?' on':''}${urls.length?' hasSrc':''}" data-editor-src-toggle="${esc(key)}" title="${esc(label)}">${ic('link')}<span>${esc(open?t('researcherEditorSourceHide'):label)}</span></button>`;
+  const editor=open?`<textarea class="researcherEditorSrcInput" data-editor-src-field="${esc(key)}" rows="2" placeholder="${esc(t('researcherEditorSourcePh'))}">${esc(urls.join('\n'))}</textarea>`:'';
+  return `<div class="researcherEditorFieldSource">${links}${btn}${editor}</div>`;
+}
+// Same control for a career/education/award record, editing its sourceUrls in place.
+function researcherEditorRecordSourceHtml(rec){
+  if(!rec) return '';
+  if(!rec._srcId) rec._srcId='s'+Math.random().toString(36).slice(2,9);
+  const key='rec:'+rec._srcId, urls=researcherSourceUrlList(rec.sourceUrls||rec.sourceUrl), open=researcherEditorSourceOpen.has(key);
+  const links=urls.length?researcherSourceLinksHtml(urls):'';
+  const label=t(urls.length?'researcherEditorSourceEdit':'researcherEditorSourceAdd');
+  const btn=`<button type="button" class="researcherEditorSrcToggle${open?' on':''}${urls.length?' hasSrc':''}" data-editor-src-toggle="${esc(key)}" title="${esc(label)}">${ic('link')}<span>${esc(open?t('researcherEditorSourceHide'):label)}</span></button>`;
+  const editor=open?`<textarea class="researcherEditorSrcInput" data-editor-src-rec="${esc(rec._srcId)}" rows="2" placeholder="${esc(t('researcherEditorSourcePh'))}">${esc(urls.join('\n'))}</textarea>`:'';
+  return `<div class="researcherEditorFieldSource">${links}${btn}${editor}</div>`;
+}
 function researcherDetailSourceLinksHtml(value){ return researcherDetailPrefs.sources?researcherSourceLinksHtml(value):''; }
 function researcherDetailProfileSourceLinksHtml(profile,key){ return researcherDetailPrefs.sources?researcherProfileSourceLinksHtml(profile,key):''; }
 function researcherDetailNamedSourceLinksHtml(profile,key,name){ return researcherDetailPrefs.sources?researcherNamedSourceLinksHtml(profile,key,name):''; }
@@ -5379,10 +5728,35 @@ function researcherRelatedEntry(name){
 }
 function researcherDetailRelatedHtml(profile){
   return researcherLines(profile&&profile.relatedResearchers).map(name=>{
-    const entry=researcherRelatedEntry(name);
-    const tag=entry?`<button type="button" class="researcherRelatedLink" data-researcher-related-key="${esc(entry.key)}">${esc(name)}</button>`:`<span class="researcherTag">${esc(name)}</span>`;
+    const entry=researcherRelatedEntry(name), inner=`${ic('user')}${esc(name)}`;
+    const tag=entry?`<button type="button" class="researcherRelatedLink" data-researcher-related-key="${esc(entry.key)}">${inner}</button>`:`<span class="researcherTag">${inner}</span>`;
     return `${tag}${researcherDetailNamedSourceLinksHtml(profile,'relatedResearchers',name)}`;
   }).join('');
+}
+// Reciprocal related researchers: other registered researchers who list THIS person
+// as related, even when this profile does not list them back. Excludes anyone already
+// shown in the profile's own related list.
+function researcherReciprocalRelatedNames(profile){
+  if(!profile) return [];
+  const own=new Set(researcherLines(profile.relatedResearchers).map(researcherKey));
+  const out=[];
+  (lib.researchers||[]).forEach(q=>{
+    if(!q||q.id===profile.id) return;
+    if(!researcherLines(q.relatedResearchers).some(name=>researcherMatchesName(profile,name))) return;
+    const qName=researcherCanonicalDisplayName(q,q.displayName);
+    if(!own.has(researcherKey(qName))) out.push(qName);
+  });
+  return uniqueResearcherStrings(out);
+}
+function researcherReciprocalRelatedHtml(profile){
+  if(!researcherDetailPrefs.reciprocalRelated) return '';
+  return researcherReciprocalRelatedNames(profile).map(name=>{
+    const entry=researcherRelatedEntry(name), inner=`${ic('user')}${esc(name)}<span class="researcherRelatedReciprocalMark" title="${esc(t('researcherRelatedReciprocalHint'))}">↩</span>`;
+    return entry?`<button type="button" class="researcherRelatedLink reciprocal" data-researcher-related-key="${esc(entry.key)}" title="${esc(t('researcherRelatedReciprocalHint'))}">${inner}</button>`:`<span class="researcherTag reciprocal" title="${esc(t('researcherRelatedReciprocalHint'))}">${inner}</span>`;
+  }).join('');
+}
+function researcherDetailHasRelated(profile){
+  return !!(researcherLines(profile&&profile.relatedResearchers).length || (researcherDetailPrefs.reciprocalRelated && researcherReciprocalRelatedNames(profile).length));
 }
 function researcherPaperHtml(it){
   const meta=[journalDisplay(it),it.year].filter(Boolean).join(' · '), authors=authorsShort(it.authors||[]);
@@ -5393,19 +5767,39 @@ function researcherImageEditorHtml(p){
   return `<div class="researcherImageEditor"><button class="researcherImageTap" data-researcher-image-paste title="${esc(t('researcherImagePaste'))}">${preview}</button><div class="researcherImageActions"><button class="tbtn" data-researcher-image-file>${ic('image')}${esc(t('researcherImageSelect'))}</button><button class="tbtn" data-researcher-image-paste>${ic('clipboard')}${esc(t('researcherImagePaste'))}</button></div></div>`;
 }
 function researcherImagePosition(profile){
-  // x/y are literal object-position percentages (0=top/left edge, 100=bottom/right
-  // edge of the source image), not an offset from center — see researcherImagePositionStyle.
+  // Legacy: x/y are literal object-position percentages (0=top/left edge,
+  // 100=bottom/right edge). Kept only for images saved before the pan/zoom model.
   const clamp=value=>Math.max(0,Math.min(100,Number.isFinite(Number(value))?Number(value):50));
   return {x:clamp(profile&&profile.imagePositionX),y:clamp(profile&&profile.imagePositionY)};
 }
 function researcherImageScale(profile){ return Math.max(1,Math.min(3,Number.isFinite(Number(profile&&profile.imageScale))?Number(profile.imageScale):1)); }
-// object-fit:cover + object-position lets the browser compute the crop from the
-// image's real dimensions, so the full source (e.g. the top of a tall portrait)
-// stays reachable via x/y alone; zoom (scale) then magnifies around that same anchor.
+// --- pan/zoom crop model (size-independent) --------------------------------
+// A stored image carries: imageAspect (natW/natH), imageFocusX/Y (0..1, the point
+// of the source that sits at the circle centre) and imageZoom (1 = "cover" the
+// frame; below 1 shows more of the image, so the top of a tall portrait can be
+// centred — unreachable with the old object-fit:cover model). All three are
+// resolution-independent, so the same crop reproduces at 24/48/168px.
+function researcherImageAspect(profile){ const a=Number(profile&&profile.imageAspect); return Number.isFinite(a)&&a>0?a:0; }
+function researcherImageFocus(profile){
+  const c=v=>Math.max(0,Math.min(1,Number.isFinite(Number(v))?Number(v):0.5));
+  return {x:c(profile&&profile.imageFocusX), y:c(profile&&profile.imageFocusY)};
+}
+function researcherImageZoom(profile){ const z=Number(profile&&profile.imageZoom); return Number.isFinite(z)&&z>0?z:1; }
+// Smallest zoom that still fits the whole image inside the circle (contain).
+function researcherImageContainZoom(aspect){ return aspect>0 ? Math.min(aspect,1/aspect) : 1; }
+// Inline style for the <img> inside a square, position:relative frame. New model
+// when the aspect ratio is known; otherwise the legacy object-fit:cover style so
+// pre-existing images render exactly as before (no regression / migrate on edit).
 function researcherImagePositionStyle(profile){
-  const {x,y}=researcherImagePosition(profile);
-  const scale=researcherImageScale(profile);
-  return ` style="object-position:${x}% ${y}%;transform-origin:${x}% ${y}%;--researcher-image-scale:${scale}"`;
+  const aspect=researcherImageAspect(profile);
+  if(aspect>0){
+    const {x:fx,y:fy}=researcherImageFocus(profile), z=researcherImageZoom(profile);
+    const wF=z*Math.max(1,aspect), hF=z*Math.max(1,1/aspect);
+    const left=(0.5-fx*wF)*100, top=(0.5-fy*hF)*100;
+    return ` style="width:${(wF*100).toFixed(3)}%;height:${(hF*100).toFixed(3)}%;left:${left.toFixed(3)}%;top:${top.toFixed(3)}%"`;
+  }
+  const {x,y}=researcherImagePosition(profile), scale=researcherImageScale(profile);
+  return ` style="inset:0;width:100%;height:100%;object-fit:cover;object-position:${x}% ${y}%;transform:scale(${scale});transform-origin:${x}% ${y}%"`;
 }
 function researcherEntryForDetail(){
   return researcherEntryByIdentity(selectedResearcherKey, selectedResearcherId);
@@ -5444,7 +5838,7 @@ function researcherSourceLabel(source){
   return t('researcherSourceUnknown');
 }
 function researcherIdentifierLabel(key){
-  return ({orcid:'ORCID',openalex:'OpenAlex',researchmap:'researchmap',googleScholar:'Google Scholar',researchGate:'ResearchGate',linkedin:'LinkedIn',wikipedia:'Wikipedia',scopus:'Scopus Author ID',researcherId:'ResearcherID',dblp:'DBLP',cinii:'CiNii Research',chemstation:'Chem-Station'})[key]||key;
+  return ({orcid:'ORCID',openalex:'OpenAlex',researchmap:'researchmap',googleScholar:'Google Scholar',researchGate:'ResearchGate',linkedin:'LinkedIn',x:'X',bluesky:'Bluesky',wikipedia:'Wikipedia',scopus:'Scopus Author ID',researcherId:'ResearcherID',dblp:'DBLP',cinii:'CiNii Research',chemstation:'Chem-Station'})[key]||key;
 }
 function researcherSourceKeyForInput(id){
   return ({'r-displayName':'displayName','r-aliases':'aliases','r-currentInstitutions':'currentInstitutions','r-pastInstitutions':'pastInstitutions','r-birthDate':'birthDate','r-phdYear':'phdYear','r-totalCitations':'totalCitations','r-hIndex':'hIndex','r-i10Index':'i10Index','r-worksCount':'worksCount','r-imageUrl':'imageUrl','r-researchFields':'researchFields','r-relatedResearchers':'relatedResearchers','r-website':'website','r-orcid':'identifiers.orcid','r-googleScholar':'identifiers.googleScholar','r-researchGate':'identifiers.researchGate','r-linkedin':'identifiers.linkedin','r-wikipedia':'identifiers.wikipedia','r-researchmap':'identifiers.researchmap','r-openalex':'identifiers.openalex','r-scopus':'identifiers.scopus','r-researcherId':'identifiers.researcherId','r-dblp':'identifiers.dblp','r-cinii':'identifiers.cinii','r-chemstation':'identifiers.chemstation'})[id]||'';
@@ -5468,6 +5862,14 @@ function markResearcherFieldSource(profile,key,source,url){
   if(!profile||!key) return;
   profile.fieldSources=profile.fieldSources||{};
   profile.fieldSources[key]={source:source||'manual',url:url||'',retrievedAt:new Date().toISOString()};
+}
+// Flag a field as manually set while preserving any source URLs the user has already
+// entered — used when editing a picker (advisors/related) that has its own source editor.
+function markResearcherFieldManual(profile,key){
+  if(!profile||!key) return;
+  profile.fieldSources=profile.fieldSources||{};
+  const cur=profile.fieldSources[key], urls=researcherSourceUrlList(cur&&(cur.urls||cur.url));
+  profile.fieldSources[key]=urls.length?{source:'manual',urls,url:urls[0],retrievedAt:new Date().toISOString()}:{source:'manual',url:'',retrievedAt:new Date().toISOString()};
 }
 function researcherFieldRow(profile,key,label,id,value,type){
   const control=type==='textarea'?`<textarea data-f="${esc(id)}">${esc(value)}</textarea>`:`<input type="text" data-f="${esc(id)}" value="${esc(value)}">`;
@@ -5535,6 +5937,8 @@ function externalProfileInfo(raw){
   if(host.endsWith('researchgate.net')) return {source:'researchGate',id:url.href,url:url.href};
   if(host.endsWith('linkedin.com') && /^(in|pub)\//i.test(path)) return {source:'linkedin',id:url.href,url:url.href};
   if(host.endsWith('wikipedia.org') && /^wiki\//i.test(path)) return {source:'wikipedia',id:url.href,url:url.href};
+  if((host==='x.com'||host==='twitter.com'||host==='mobile.twitter.com') && path && !/^(home|search|i|explore|notifications|messages)$/i.test(path)) return {source:'x',id:url.href,url:url.href};
+  if(host==='bsky.app' && /^profile\//i.test(path)) return {source:'bluesky',id:url.href,url:url.href};
   // Chem-Station chemist database (ケムステの人物データベース). The chemist-db slug
   // encodes the romanised name, so no page fetch is needed to seed given/family.
   if(host==='chem-station.com' && /^chemist-db\//i.test(path)) return {source:'chemstation',id:url.href,url:url.href};
@@ -5649,6 +6053,21 @@ function parseBirthDate(v){
   const m=String(v||'').match(/^(\d{4})?(?:-(\d{2}))?(?:-(\d{2}))?/);
   return { y:(m&&m[1])||'', m:(m&&m[2])||'', d:(m&&m[3])||'' };
 }
+// Age from a birth date. Returns { age, approx } — approx is true when the month
+// (or day) is missing, so the true age could be off by up to a year.
+function researcherAgeInfo(v){
+  const p=parseBirthDate(v); const y=Number(p.y); if(!y) return null;
+  const now=new Date(), curY=now.getFullYear(), curM=now.getMonth()+1, curD=now.getDate();
+  let age=curY-y, approx=false;
+  if(p.m){ const m=Number(p.m); if(p.d){ const d=Number(p.d); if(curM<m||(curM===m&&curD<d)) age--; } else { approx=true; if(curM<m) age--; } }
+  else approx=true;
+  if(age<0||age>150) return null;
+  return { age, approx };
+}
+function researcherAgeLabel(v){
+  const info=researcherAgeInfo(v); if(!info) return '';
+  return t(info.approx?'researcherAgeApprox':'researcherAge')(info.age);
+}
 function birthDateSelectHtml(v){
   const p=parseBirthDate(v);
   return `<div class="rDateRow rBirthDateRow" id="rBirthDate">
@@ -5736,8 +6155,8 @@ function ensureResearcherProfileForDetail(){
 function researcherProfileDefaults(entry){
   const name=researcherLegacyNameParts(entry.name);
   return {
-    id:'', displayName:researcherCanonicalDisplayName({familyName:name.family,givenName:name.given}), familyName:name.family, givenName:name.given, middleName:'', aliases:uniqueResearcherStrings(Array.from(entry.aliases||[])), affiliation:'',
-    identifiers:{orcid:'',googleScholar:'',researchGate:'',linkedin:'',researchmap:'',openalex:'',scopus:'',researcherId:'',dblp:'',cinii:'',chemstation:''}, website:'',
+    id:'', displayName:researcherCanonicalDisplayName({familyName:name.family,givenName:name.given}), familyName:name.family, givenName:name.given, middleName:name.middle, aliases:uniqueResearcherStrings(Array.from(entry.aliases||[])), affiliation:'',
+    identifiers:{orcid:'',googleScholar:'',researchGate:'',linkedin:'',x:'',bluesky:'',researchmap:'',openalex:'',scopus:'',researcherId:'',dblp:'',cinii:'',chemstation:''}, website:'',
     affiliations:[], positions:[], education:[], awards:[], currentInstitutions:[], pastInstitutions:[], birthDate:'', phdYear:'', phdInstitution:'',phdDegree:'', phdAdvisor:'', totalCitations:'', hIndex:'', i10Index:'', worksCount:'', imageUrl:'', imagePositionX:50, imagePositionY:50, imageScale:1, researchFields:[], relatedResearchers:[], fieldSources:{}, enrichment:{}
   };
 }
@@ -5749,7 +6168,7 @@ function researcherAiSourceUrlsFromDraft(draft){
   if(ids.orcid) urls.push(/^https?:/i.test(ids.orcid)?ids.orcid:`https://orcid.org/${ids.orcid}`);
   if(ids.openalex) urls.push(/^https?:/i.test(ids.openalex)?ids.openalex:`https://openalex.org/${ids.openalex}`);
   if(ids.researchmap) urls.push(/^https?:/i.test(ids.researchmap)?ids.researchmap:`https://researchmap.jp/${ids.researchmap}`);
-  [ids.googleScholar,ids.researchGate,ids.linkedin,ids.wikipedia,ids.scopus,ids.researcherId,ids.dblp,ids.cinii,draft&&draft.website].forEach(x=>{ if(/^https?:\/\//i.test(String(x||''))) urls.push(String(x).trim()); });
+  [ids.googleScholar,ids.researchGate,ids.linkedin,ids.x,ids.bluesky,ids.wikipedia,ids.scopus,ids.researcherId,ids.dblp,ids.cinii,draft&&draft.website].forEach(x=>{ if(/^https?:\/\//i.test(String(x||''))) urls.push(String(x).trim()); });
   return uniqueResearcherStrings(urls).join('\n');
 }
 function researcherAiPrompt(draft){
@@ -5770,14 +6189,14 @@ function researcherAiPrompt(draft){
     "phdYear": "YYYY",
     "phdInstitution": "Degree-awarding institution",
     "phdDegree": "Ph.D. in Field",
-    "phdAdvisor": "Advisor Name",
+    "phdAdvisor": ["Advisor One", "Co-advisor Two"],
     "totalCitations": "1234",
     "hIndex": "42",
     "i10Index": "80",
     "worksCount": "156",
-    "positions": [{"institution": "Institution", "organization": "Department", "title": "Professor", "start": "YYYY", "end": "", "sourceUrls": ["https://example.org/cv"]}],
-    "education": [{"institution": "Institution", "program": "Program / major", "degree": "Degree or completion", "start": "YYYY", "end": "YYYY", "sourceUrls": ["https://example.org/cv"]}],
-    "identifiers": {"orcid": "0000-0000-0000-0000", "openalex": "A123", "researchmap": "https://researchmap.jp/...", "googleScholar": "https://scholar.google.com/...", "researchGate": "https://www.researchgate.net/...", "linkedin": "https://www.linkedin.com/in/...", "wikipedia": "https://en.wikipedia.org/wiki/...", "scopus": "12345678900", "researcherId": "A-1234-2020", "dblp": "12/3456", "cinii": "https://cir.nii.ac.jp/crid/..."},
+    "positions": [{"institution": "Institution", "organization": "Department", "title": "Professor", "start": "YYYY", "end": "", "related": ["Lab head or closely associated researcher during this period"], "sourceUrls": ["https://example.org/cv"]}],
+    "education": [{"institution": "Institution", "program": "Program / major", "degree": "Degree or completion", "start": "YYYY", "end": "YYYY", "related": ["Supervisor or lab head during this period"], "sourceUrls": ["https://example.org/cv"]}],
+    "identifiers": {"orcid": "0000-0000-0000-0000", "openalex": "A123", "researchmap": "https://researchmap.jp/...", "googleScholar": "https://scholar.google.com/...", "researchGate": "https://www.researchgate.net/...", "linkedin": "https://www.linkedin.com/in/...", "x": "https://x.com/handle", "bluesky": "https://bsky.app/profile/handle.bsky.social", "wikipedia": "https://en.wikipedia.org/wiki/...", "scopus": "12345678900", "researcherId": "A-1234-2020", "dblp": "12/3456", "cinii": "https://cir.nii.ac.jp/crid/..."},
     "website": "https://example.org/",
     "researchFields": [{"name": "Field", "sourceUrls": ["https://example.org/profile"]}],
     "awards": [{"name": "Award", "year": "YYYY", "organization": "Granting organization", "sourceUrls": ["https://example.org/profile"]}],
@@ -5791,8 +6210,8 @@ function researcherAiPrompt(draft){
   "query": {"name": "Researcher Name", "inputUrls": []},
   "candidates": [{"displayName": "Researcher Name", "affiliations": ["Institution"], "researchFields": ["Field"], "identifiers": {"orcid": "0000-0000-0000-0000", "openalex": "A123"}, "sourceUrls": ["https://example.org/profile"]}]
 }`;
-  if(lang==='en') return `Research the public profile of "${name}" for Paper Library.\n\nAdditional clue URLs (may be empty):\n${targets}\n\nResearch procedure:\n1. Search by name even when no URL is supplied. If URLs are supplied, use them as clues but also discover and check related public profiles: ORCID, OpenAlex, Google Scholar, ResearchGate, researchmap, institutional and laboratory pages.\n2. Verify identity using multiple independent details. Do not merge people with similar names.\n3. If identity cannot be resolved unambiguously, return status "needs_disambiguation" and up to 10 candidates only. Do not return profile in that case.\n4. If resolved, return status "resolved" and public, verified information only. Omit unverified properties; never guess.\n5. A URL is valid evidence only when its page explicitly states the value being returned. Do not cite a profile merely because it exists or because it links to the person. Record every used URL in top-level sources. Every returned scalar and identifier must have its own profile.fieldSources entry. Every position, education item, award, research field, and related researcher must have one or more direct sourceUrls. Omit an item when this cannot be provided.\n6. Return familyName, givenName, and middleName as the Latin-script components used in paper metadata. Do not use aliases for reordered Latin names; aliases are only for genuinely different language/script forms. Extract the full career: employment in positions, education in education. When a PhD is confirmed, also provide phdYear, phdInstitution, phdDegree, and phdAdvisor, each with fieldSources.\n7. If a total citation count is visibly published on Google Scholar or ResearchGate, return totalCitations and cite that exact profile URL in fieldSources.totalCitations. Do not estimate or combine counts.\n8. Do not infer advisor, collaborator, or any relationship from co-authorship, shared affiliation, or a page link; include it only when explicitly stated.\n9. When a public portrait or profile image is explicitly available for reuse, include its direct image URL as imageUrl and cite the page where it was found in profile.fieldSources.imageUrl. Otherwise omit imageUrl.\n10. Do not include publications or works. Return JSON only: no Markdown, comments, or prose. Use ordinary ASCII double quotes (\\\") for every JSON key and string.\n\nResolved output shape:\n${resolved}\n\nAmbiguous output shape:\n${candidates}`;
-  return `研究者「${name}」の公開プロフィール情報を、Paper Library用JSONとして調査してください。\n\n追加の手掛かりURL（空でも可）：\n${targets}\n\n調査手順：\n1. URLがなくても氏名から検索してください。URLがある場合も、そのURLだけに限定せず、関連する公開プロフィール（ORCID、OpenAlex、Google Scholar、ResearchGate、researchmap、所属機関・研究室ページ）を探して照合してください。\n2. 複数の独立した情報で本人性を確認し、同姓同名の別人を混ぜないでください。\n3. 本人を一意に確定できない場合は、status を "needs_disambiguation" とし、最大10件の候補だけを返してください。この場合 profile は返さないでください。\n4. 本人を確定できた場合は status を "resolved" とし、公開され確認できた情報だけを返してください。推測は禁止で、不明なプロパティは省略してください。\n5. URLが実在するだけでは出典にしないでください。返す値が、そのURLのページ本文に明記されている場合だけ出典にできます。使用した全URLをトップレベルのsourcesに記録してください。各基本項目・外部IDには profile.fieldSources を必ず付け、職歴・学歴・受賞歴・研究分野・関連研究者には各項目ごとに、根拠を直接示すsourceUrlsを必ず付けてください。これを満たせない項目は省略してください。\n6. familyName（姓）・givenName（名）・middleName（ミドルネーム）は、論文メタデータで使われる英字（ラテン文字）の独立した構成要素として返してください。単なる英字氏名の順序変更を aliases に入れてはいけません。aliases は日本語など、言語・文字体系が異なる表記だけにしてください。職歴は positions、学歴は education に分けてください。博士号が確認できた場合は、phdYear・phdInstitution・phdDegree・phdAdvisor（指導教員）も返し、それぞれに fieldSources を付けてください。\n7. Google Scholar または ResearchGate の公開プロフィールに総引用数が明記されている場合だけ、totalCitations として返してください。fieldSources.totalCitations には、その数値が表示されている正確なプロフィールURLを記録してください。推定・合算は禁止です。\n8. 共著、同一所属、ページへのリンクだけから advisor や collaborator 等の関係を推測してはいけません。関係が明記されている場合だけ含めてください。\n9. 公開プロフィール写真・顔写真が再利用可能であることを明示的に確認できる場合だけ、その画像の直接URLを imageUrl に記録し、見つけたページのURLを profile.fieldSources.imageUrl に記録してください。画像が確認できない場合は imageUrl を省略してください。\n10. 今回は論文・文献情報を一切含めないでください。Markdownのコード囲み、注釈、説明文を付けず、JSONオブジェクトだけを返してください。JSONのキーと文字列の引用符には通常の半角ダブルクォート (\\\") を使用してください。\n\n本人を確定できた場合：\n${resolved}\n\n同姓同名などで確定できない場合：\n${candidates}`;
+  if(lang==='en') return `Research the public profile of "${name}" for Paper Library.\n\nAdditional clue URLs (may be empty):\n${targets}\n\nResearch procedure:\n1. Search by name even when no URL is supplied. If URLs are supplied, use them as clues but also discover and check related public profiles: ORCID, OpenAlex, Google Scholar, ResearchGate, researchmap, institutional and laboratory pages.\n2. Verify identity using multiple independent details. Do not merge people with similar names.\n3. If identity cannot be resolved unambiguously, return status "needs_disambiguation" and up to 10 candidates only. Do not return profile in that case.\n4. If resolved, return status "resolved" and public, verified information only. Omit unverified properties; never guess.\n5. A URL is valid evidence only when its page explicitly states the value being returned. Do not cite a profile merely because it exists or because it links to the person. Record every used URL in top-level sources. Every returned scalar and identifier must have its own profile.fieldSources entry. Every position, education item, award, research field, and related researcher must have one or more direct sourceUrls. Omit an item when this cannot be provided.\n6. Return familyName, givenName, and middleName as the Latin-script components used in paper metadata. Do not use aliases for reordered Latin names; aliases are only for genuinely different language/script forms. Extract the full career: employment in positions, education in education. When a PhD is confirmed, also provide phdYear, phdInstitution, phdDegree, and phdAdvisor, each with fieldSources. phdAdvisor must be an array of individual people — never combine two supervisors into one string; when there are co-advisors, return one array element per person.\n7. If a total citation count is visibly published on Google Scholar or ResearchGate, return totalCitations and cite that exact profile URL in fieldSources.totalCitations. Do not estimate or combine counts.\n8. Do not infer advisor, collaborator, or any relationship from co-authorship, shared affiliation, or a page link; include it only when explicitly stated. For a position or education entry, you may list in that entry's related array the lab head / principal investigator / supervisor for that specific period, but only when a page explicitly states that person led the lab or supervised the researcher during that period; cite the evidence in that same entry's sourceUrls.\n9. When a public portrait or profile image is explicitly available for reuse, include its direct image URL as imageUrl and cite the page where it was found in profile.fieldSources.imageUrl. Otherwise omit imageUrl.\n10. Do not include publications or works. Return JSON only: no Markdown, comments, or prose. Use ordinary ASCII double quotes (\\\") for every JSON key and string.\n\nResolved output shape:\n${resolved}\n\nAmbiguous output shape:\n${candidates}`;
+  return `研究者「${name}」の公開プロフィール情報を、Paper Library用JSONとして調査してください。\n\n追加の手掛かりURL（空でも可）：\n${targets}\n\n調査手順：\n1. URLがなくても氏名から検索してください。URLがある場合も、そのURLだけに限定せず、関連する公開プロフィール（ORCID、OpenAlex、Google Scholar、ResearchGate、researchmap、所属機関・研究室ページ）を探して照合してください。\n2. 複数の独立した情報で本人性を確認し、同姓同名の別人を混ぜないでください。\n3. 本人を一意に確定できない場合は、status を "needs_disambiguation" とし、最大10件の候補だけを返してください。この場合 profile は返さないでください。\n4. 本人を確定できた場合は status を "resolved" とし、公開され確認できた情報だけを返してください。推測は禁止で、不明なプロパティは省略してください。\n5. URLが実在するだけでは出典にしないでください。返す値が、そのURLのページ本文に明記されている場合だけ出典にできます。使用した全URLをトップレベルのsourcesに記録してください。各基本項目・外部IDには profile.fieldSources を必ず付け、職歴・学歴・受賞歴・研究分野・関連研究者には各項目ごとに、根拠を直接示すsourceUrlsを必ず付けてください。これを満たせない項目は省略してください。\n6. familyName（姓）・givenName（名）・middleName（ミドルネーム）は、論文メタデータで使われる英字（ラテン文字）の独立した構成要素として返してください。単なる英字氏名の順序変更を aliases に入れてはいけません。aliases は日本語など、言語・文字体系が異なる表記だけにしてください。職歴は positions、学歴は education に分けてください。博士号が確認できた場合は、phdYear・phdInstitution・phdDegree・phdAdvisor（指導教員）も返し、それぞれに fieldSources を付けてください。phdAdvisor は必ず一人ずつを要素とした配列で返してください。指導教員が複数いる場合でも、「A and B」のように1つの文字列にまとめず、一人ごとに配列要素を分けてください。\n7. Google Scholar または ResearchGate の公開プロフィールに総引用数が明記されている場合だけ、totalCitations として返してください。fieldSources.totalCitations には、その数値が表示されている正確なプロフィールURLを記録してください。推定・合算は禁止です。\n8. 共著、同一所属、ページへのリンクだけから advisor や collaborator 等の関係を推測してはいけません。関係が明記されている場合だけ含めてください。職歴・学歴の各項目については、その期間に在籍した研究室の主宰者（PI）・指導教員など、その期間に関係する研究者を、その項目の related 配列に入れて構いません。ただし、その人物がその期間にその研究室を主宰していた／その研究者を指導していたとページに明記されている場合だけとし、根拠はその項目の sourceUrls に記録してください。日本語名が確認できる場合は日本語表記のままで構いません。\n9. 公開プロフィール写真・顔写真が再利用可能であることを明示的に確認できる場合だけ、その画像の直接URLを imageUrl に記録し、見つけたページのURLを profile.fieldSources.imageUrl に記録してください。画像が確認できない場合は imageUrl を省略してください。\n10. 今回は論文・文献情報を一切含めないでください。Markdownのコード囲み、注釈、説明文を付けず、JSONオブジェクトだけを返してください。JSONのキーと文字列の引用符には通常の半角ダブルクォート (\\\") を使用してください。\n\n本人を確定できた場合：\n${resolved}\n\n同姓同名などで確定できない場合：\n${candidates}`;
 }
 // Keep the core prompt readable while appending newly introduced, strict
 // metric/identifier rules to both language variants.
@@ -5803,10 +6222,10 @@ researcherAiPrompt=function(draft){
     ? '\n\nFinal output format (overrides the no-Markdown instruction above): Put the JSON response inside exactly one fenced code block beginning with ```json and ending with ```. Do not write anything before or after that block. Inside the block, return one valid, normally formatted JSON object only. This code block is required so URLs remain literal text and are not converted into Markdown links.'
     : '\n\n最終出力形式（上記の「コード囲みなし」の指定より優先）：JSONの回答は、開始行を ```json、終了行を ``` とするコードブロック1つだけの中に入れてください。ブロックの前後には何も書かないでください。ブロック内には、通常どおり整形した有効なJSONオブジェクト1つだけを返してください。URLがMarkdownリンクへ変換されないよう、このコードブロックは必須です。';
   if(lang==='en'){
-    const rules=`\n11. If Google Scholar visibly publishes them, return totalCitations, hIndex, i10Index, and worksCount (the visible publication count). Cite the exact Google Scholar profile URL separately in fieldSources for each value. ResearchGate may supply totalCitations only when it visibly states the total. Never estimate, calculate, merge, or substitute the library reference count for worksCount.\n12. Also return a publicly verified LinkedIn profile URL as identifiers.linkedin and, when a clearly matching biography exists, its public Wikipedia URL as identifiers.wikipedia. Also return Scopus Author ID as identifiers.scopus, Web of Science ResearcherID as identifiers.researcherId, DBLP author ID or profile URL as identifiers.dblp, and CiNii Research ID or direct profile URL as identifiers.cinii. Every returned identifier needs its own fieldSources entry; omit it when unverified.`;
+    const rules=`\n11. If Google Scholar visibly publishes them, return totalCitations, hIndex, i10Index, and worksCount (the visible publication count). Cite the exact Google Scholar profile URL separately in fieldSources for each value. ResearchGate may supply totalCitations only when it visibly states the total. Never estimate, calculate, merge, or substitute the library reference count for worksCount.\n12. Also return a publicly verified LinkedIn profile URL as identifiers.linkedin and, when a clearly matching biography exists, its public Wikipedia URL as identifiers.wikipedia. Also return publicly verified social-media profile URLs when they clearly belong to this researcher: X/Twitter as identifiers.x and Bluesky as identifiers.bluesky. Also return Scopus Author ID as identifiers.scopus, Web of Science ResearcherID as identifiers.researcherId, DBLP author ID or profile URL as identifiers.dblp, and CiNii Research ID or direct profile URL as identifiers.cinii. Every returned identifier needs its own fieldSources entry; omit it when unverified.`;
     return base.replace('\n\nResolved output shape:',rules+'\n\nResolved output shape:')+fencedOutputRule;
   }
-  const rules=`\n11. Google Scholarの公開プロフィールに総引用数・h-index・i10-index・論文数が明記されている場合だけ、それぞれ totalCitations・hIndex・i10Index・worksCount として返してください。各値の fieldSources には、数値が表示されている正確なGoogle ScholarプロフィールURLを個別に記録してください。ResearchGateは総引用数が明記されている場合だけ totalCitations に使えます。推定・合算・計算は禁止し、ライブラリ内の文献数を worksCount に使ってはいけません。\n12. 公開され本人確認できるLinkedInプロフィールURLは identifiers.linkedin、本人に明確に対応する公開Wikipedia記事がある場合はそのURLを identifiers.wikipedia として返してください。あわせて、公開プロフィールに明記されたScopus Author IDは identifiers.scopus、Web of Science ResearcherIDは identifiers.researcherId、DBLPの著者IDまたはプロフィールURLは identifiers.dblp、CiNii ResearchのIDまたは直接プロフィールURLは identifiers.cinii として返してください。各IDには identifiers.キー名 の fieldSources を必ず付け、確認できないIDは省略してください。`;
+  const rules=`\n11. Google Scholarの公開プロフィールに総引用数・h-index・i10-index・論文数が明記されている場合だけ、それぞれ totalCitations・hIndex・i10Index・worksCount として返してください。各値の fieldSources には、数値が表示されている正確なGoogle ScholarプロフィールURLを個別に記録してください。ResearchGateは総引用数が明記されている場合だけ totalCitations に使えます。推定・合算・計算は禁止し、ライブラリ内の文献数を worksCount に使ってはいけません。\n12. 公開され本人確認できるLinkedInプロフィールURLは identifiers.linkedin、本人に明確に対応する公開Wikipedia記事がある場合はそのURLを identifiers.wikipedia として返してください。本人のものと明確に確認できる公開SNSプロフィールURLも、X（旧Twitter）は identifiers.x、Bluesky は identifiers.bluesky として返してください。あわせて、公開プロフィールに明記されたScopus Author IDは identifiers.scopus、Web of Science ResearcherIDは identifiers.researcherId、DBLPの著者IDまたはプロフィールURLは identifiers.dblp、CiNii ResearchのIDまたは直接プロフィールURLは identifiers.cinii として返してください。各IDには identifiers.キー名 の fieldSources を必ず付け、確認できないIDは省略してください。`;
   return base.replace('\n\n本人を確定できた場合：',rules+'\n\n本人を確定できた場合：')+fencedOutputRule;
 };
 function researcherAiNormalizeJsonQuoteDelimiters(text){
@@ -5885,7 +6304,7 @@ function researcherAiNamedValues(value){
 function researcherAiCandidate(value){
   if(!value||typeof value!=='object') return null;
   const displayName=String(value.displayName||value.name||'').trim(); if(!displayName) return null;
-  const identifiers={}; ['orcid','openalex','researchmap','googleScholar','researchGate','linkedin','wikipedia','scopus','researcherId','dblp','cinii','chemstation'].forEach(k=>{ if(String(value.identifiers&&value.identifiers[k]||'').trim()) identifiers[k]=String(value.identifiers[k]).trim(); });
+  const identifiers={}; ['orcid','openalex','researchmap','googleScholar','researchGate','linkedin','x','bluesky','wikipedia','scopus','researcherId','dblp','cinii','chemstation'].forEach(k=>{ if(String(value.identifiers&&value.identifiers[k]||'').trim()) identifiers[k]=String(value.identifiers[k]).trim(); });
   const sourceUrls=researcherAiUrlArray(value.sourceUrls||value.sourceUrl);
   if(identifiers.orcid&&!/^https?:/i.test(identifiers.orcid)) sourceUrls.push(`https://orcid.org/${identifiers.orcid}`);
   if(identifiers.openalex&&!/^https?:/i.test(identifiers.openalex)) sourceUrls.push(`https://openalex.org/${identifiers.openalex}`);
@@ -5905,7 +6324,14 @@ function researcherAiResponseFromText(text){
   const sourceCandidates=[...(Array.isArray(data.sources)?data.sources.map(s=>s&&s.url):[]),...(Array.isArray(data.sourceUrls)?data.sourceUrls:[]),data.source&&data.source.url,...researcherEditorAiState.sourceUrls.split(/\r?\n/)];
   const sourceUrls=researcherAiUrlArray(sourceCandidates), strictSources=['paper-library.researcher-profile/v5','paper-library.researcher-profile/v4','paper-library.researcher-profile/v3'].includes(data.schema), p={source:'ai',retrievedAt,sourceUrls,sourceUrl:sourceUrls[0]||'',fieldSources:{}}, has=(k)=>Object.prototype.hasOwnProperty.call(raw,k);
   const setSource=(key,value,allowDirectEvidence=false)=>{ const record=researcherAiSourceRecord(raw.fieldSources&&raw.fieldSources[key],strictSources&&!allowDirectEvidence?[]:value, retrievedAt); if(record) p.fieldSources[key]=record; return !!record; };
-  ['displayName','familyName','givenName','middleName','phdYear','phdInstitution','phdDegree','phdAdvisor','website','imageUrl'].forEach(k=>{ if(has(k)&&String(raw[k]||'').trim()&&setSource(k,sourceUrls)) p[k]=String(raw[k]).trim(); });
+  ['displayName','familyName','givenName','middleName','phdYear','phdInstitution','phdDegree','website','imageUrl'].forEach(k=>{ if(has(k)&&String(raw[k]||'').trim()&&setSource(k,sourceUrls)) p[k]=String(raw[k]).trim(); });
+  // PhD advisor(s): accept an array, or a string that packs co-advisors as "A and B".
+  if(has('phdAdvisor')){
+    const named=researcherAiNamedValues(raw.phdAdvisor);
+    const values=uniqueResearcherStrings(named.flatMap(x=>researcherAdvisors({phdAdvisor:x.name})));
+    const itemUrls=uniqueResearcherStrings(named.flatMap(x=>x.sourceUrls));
+    if(values.length&&(!strictSources||itemUrls.length||sourceUrls.length)&&setSource('phdAdvisor',itemUrls.length?itemUrls:sourceUrls,true)) p.phdAdvisor=values;
+  }
   if(has('birthDate')&&/^\d{4}(?:-(?:0[1-9]|1[0-2])(?:-(?:0[1-9]|[12]\d|3[01]))?)?$/.test(String(raw.birthDate||'').trim())&&setSource('birthDate',sourceUrls)) p.birthDate=String(raw.birthDate).trim();
   ['totalCitations','hIndex','i10Index','worksCount'].forEach(k=>{ if(has(k)&&String(raw[k]).match(/\d/)&&setSource(k,sourceUrls)) p[k]=String(raw[k]).replace(/[^0-9]/g,''); });
   ['aliases','researchFields','relatedResearchers'].forEach(k=>{
@@ -5917,7 +6343,7 @@ function researcherAiResponseFromText(text){
     }
   });
   if(raw.identifiers&&typeof raw.identifiers==='object'){
-    const ids={}; ['orcid','openalex','researchmap','googleScholar','researchGate','linkedin','wikipedia','scopus','researcherId','dblp','cinii','chemstation'].forEach(k=>{ if(String(raw.identifiers[k]||'').trim()&&setSource(`identifiers.${k}`,sourceUrls)) ids[k]=String(raw.identifiers[k]).trim(); }); if(Object.keys(ids).length) p.identifiers=ids;
+    const ids={}; ['orcid','openalex','researchmap','googleScholar','researchGate','linkedin','x','bluesky','wikipedia','scopus','researcherId','dblp','cinii','chemstation'].forEach(k=>{ if(String(raw.identifiers[k]||'').trim()&&setSource(`identifiers.${k}`,sourceUrls)) ids[k]=String(raw.identifiers[k]).trim(); }); if(Object.keys(ids).length) p.identifiers=ids;
   }
   if(Array.isArray(raw.affiliations)){
     const affiliations=raw.affiliations.filter(a=>a&&String(a.name||'').trim()).map(a=>{ const start=researcherAiYear(a.start), end=researcherAiYear(a.end); if(start&&end&&Number(end)<Number(start)) throw new Error(t('researcherEditorInvalidPeriod')); const urls=researcherAiUrlArray(a.sourceUrls||a.sourceUrl); return {name:String(a.name).trim(),start,end,current:!end,sourceUrls:urls.length?urls:sourceUrls,sourceUrl:(urls[0]||sourceUrls[0]||'')}; });
@@ -5927,14 +6353,14 @@ function researcherAiResponseFromText(text){
   if(Array.isArray(raw.positions)){
     const positions=raw.positions.filter(x=>x&&String(x.institution||x.name||'').trim()).map(x=>{
       const start=researcherAiYear(x.start), end=researcherAiYear(x.end); if(start&&end&&Number(end)<Number(start)) throw new Error(t('researcherEditorInvalidPeriod'));
-      const urls=researcherAiUrlArray(x.sourceUrls||x.sourceUrl); return {institution:String(x.institution||x.name).trim(),organization:String(x.organization||'').trim(),title:String(x.title||'').trim(),start,end,sourceUrls:urls.length?urls:strictSources?[]:sourceUrls,sourceUrl:(urls[0]||sourceUrls[0]||'')};
+      const urls=researcherAiUrlArray(x.sourceUrls||x.sourceUrl); return {institution:String(x.institution||x.name).trim(),organization:String(x.organization||'').trim(),title:String(x.title||'').trim(),start,end,related:uniqueResearcherStrings(researcherAiNamedValues(x.related).map(r=>r.name)),sourceUrls:urls.length?urls:strictSources?[]:sourceUrls,sourceUrl:(urls[0]||sourceUrls[0]||'')};
     }).filter(x=>!strictSources||x.sourceUrls.length);
     if(positions.length){ p.positions=positions; setSource('positions',uniqueResearcherStrings(positions.flatMap(x=>x.sourceUrls)),true); }
   }
   if(Array.isArray(raw.education)){
     const education=raw.education.filter(x=>x&&String(x.institution||'').trim()).map(x=>{
       const start=researcherAiYear(x.start), end=researcherAiYear(x.end); if(start&&end&&Number(end)<Number(start)) throw new Error(t('researcherEditorInvalidPeriod'));
-      const urls=researcherAiUrlArray(x.sourceUrls||x.sourceUrl); return {institution:String(x.institution).trim(),program:String(x.program||'').trim(),degree:String(x.degree||'').trim(),start,end,sourceUrls:urls.length?urls:strictSources?[]:sourceUrls,sourceUrl:(urls[0]||sourceUrls[0]||'')};
+      const urls=researcherAiUrlArray(x.sourceUrls||x.sourceUrl); return {institution:String(x.institution).trim(),program:String(x.program||'').trim(),degree:String(x.degree||'').trim(),start,end,related:uniqueResearcherStrings(researcherAiNamedValues(x.related).map(r=>r.name)),sourceUrls:urls.length?urls:strictSources?[]:sourceUrls,sourceUrl:(urls[0]||sourceUrls[0]||'')};
     }).filter(x=>!strictSources||x.sourceUrls.length);
     if(education.length){ p.education=education; setSource('education',uniqueResearcherStrings(education.flatMap(x=>x.sourceUrls)),true); }
   }
@@ -5949,8 +6375,8 @@ function researcherAiResponseFromText(text){
 }
 function researcherAiValue(value,key){
   if(key==='affiliations') return (value||[]).map(a=>`${a.start||'—'}–${a.end||t('affPresent')} ${a.name}`).join('\n')||'—';
-  if(key==='positions') return (value||[]).map(x=>`${x.start||'—'}–${x.end||t('affPresent')} ${[x.institution,x.organization,x.title].filter(Boolean).join(' · ')}`).join('\n')||'—';
-  if(key==='education') return (value||[]).map(x=>`${x.start||'—'}–${x.end||'—'} ${[x.institution,x.program,x.degree].filter(Boolean).join(' · ')}`).join('\n')||'—';
+  if(key==='positions') return (value||[]).map(x=>`${x.start||'—'}–${x.end||t('affPresent')} ${[x.institution,x.organization,x.title].filter(Boolean).join(' · ')}${researcherLines(x.related).length?` 〔${t('researcherRecordRelated')}: ${researcherLines(x.related).join(', ')}〕`:''}`).join('\n')||'—';
+  if(key==='education') return (value||[]).map(x=>`${x.start||'—'}–${x.end||'—'} ${[x.institution,x.program,x.degree].filter(Boolean).join(' · ')}${researcherLines(x.related).length?` 〔${t('researcherRecordRelated')}: ${researcherLines(x.related).join(', ')}〕`:''}`).join('\n')||'—';
   if(key==='awards') return (value||[]).map(x=>`${x.year||'—'} ${[x.name,x.organization].filter(Boolean).join(' · ')}`).join('\n')||'—';
   return researcherEnrichmentValue(value);
 }
@@ -5965,8 +6391,8 @@ function researcherAiComparableValue(value,key){
   const item=value=>{
     if(!value||typeof value!=='object') return normalize(value);
     if(key==='affiliations') return normalize([value.name,value.start,value.end].join('|'));
-    if(key==='positions') return normalize([value.institution,value.organization,value.title,value.start,value.end].join('|'));
-    if(key==='education') return normalize([value.institution,value.program,value.degree,value.start,value.end].join('|'));
+    if(key==='positions') return normalize([value.institution,value.organization,value.title,value.start,value.end,researcherLines(value.related).join(',')].join('|'));
+    if(key==='education') return normalize([value.institution,value.program,value.degree,value.start,value.end,researcherLines(value.related).join(',')].join('|'));
     if(key==='awards') return normalize([value.name,value.year,value.organization].join('|'));
     return normalize(JSON.stringify(value));
   };
@@ -6045,26 +6471,43 @@ async function researcherAiCopyCandidatePrompt(){
   researcherEditorAiState.jsonText=''; researcherEditorAiState.proposal=null; researcherEditorAiState.candidates=[]; researcherEditorAiState.error=''; researcherEditorAiState.reviewed=false;
   renderResearcherEditor(); await researcherAiCopyPrompt(); showToast(t('researcherAiCandidateSelected'));
 }
+function researcherEditorRecordForEl(el){
+  if(!researcherEditorDraft||!el) return null;
+  const pRow=el.closest('[data-editor-position-row]');
+  if(pRow) return ensureResearcherPositions(researcherEditorDraft)[+pRow.dataset.editorPositionRow]||null;
+  const eRow=el.closest('[data-editor-education-row]');
+  if(eRow) return ensureResearcherEducation(researcherEditorDraft)[+eRow.dataset.editorEducationRow]||null;
+  return null;
+}
+function researcherEditorRecordBySrcId(id){
+  const d=researcherEditorDraft; if(!d||!id) return null;
+  return [...(Array.isArray(d.positions)?d.positions:[]),...(Array.isArray(d.education)?d.education:[]),...(Array.isArray(d.awards)?d.awards:[])].find(x=>x&&x._srcId===id)||null;
+}
+function researcherEditorRecordRelatedHtml(x){
+  const names=researcherLines(x&&x.related);
+  const tags=names.map((name,j)=>`<span class="researcherTag">${esc(name)}<button type="button" data-editor-record-related-delete="${j}" aria-label="${esc(t('affRemove'))}">×</button></span>`).join('');
+  return `<div class="researcherEditorRecordRelated"><span class="researcherEditorRecordRelatedLabel">${esc(t('researcherRecordRelated'))}</span><div class="researcherFieldPicker"><div class="researcherFieldTags">${tags}</div><div class="researcherFieldAdd"><input list="researcherEditorRelatedList" data-editor-record-related-input placeholder="${esc(t('researcherRelatedPlaceholder'))}"><button type="button" class="tbtn" data-editor-record-related-add>${ic('plus')}${esc(t('researcherFieldAdd'))}</button></div></div></div>`;
+}
 function researcherEditorPositionsHtml(draft){
   const list=ensureResearcherPositions(draft);
   const options=yearOptionsHtml('',1930).replace('>—</option>','>'+esc(t('affPresent'))+'</option>');
-  const rows=list.map((x,i)=>`<div class="researcherEditorRecord" data-editor-position-row="${i}">
+  const rows=list.map((x,i)=>`<div class="researcherEditorRecord${x.hidden?' isHidden':''}" data-editor-position-row="${i}">
     <div class="researcherEditorRecordPeriod"><select data-editor-position-start aria-label="${esc(t('affStart'))}">${yearOptionsHtml(x.start,1930)}</select><span>–</span><select data-editor-position-end aria-label="${esc(t('affEnd'))}">${options.replace(`value="${esc(String(x.end||''))}"`, `value="${esc(String(x.end||''))}" selected`)}</select></div>
-    <div class="researcherEditorRecordFields"><input list="researcherEditorInstitutionList" data-editor-position-institution value="${esc(x.institution||'')}" placeholder="${esc(t('affNamePh'))}" spellcheck="false"><input data-editor-position-organization value="${esc(x.organization||'')}" placeholder="${esc(t('researcherPositionOrganization'))}"><input data-editor-position-title value="${esc(x.title||'')}" placeholder="${esc(t('researcherPositionTitle'))}"></div>
-    <button type="button" class="researcherEditorAffDel" data-editor-position-delete="${i}" title="${esc(t('affRemove'))}" aria-label="${esc(t('affRemove'))}">×</button>${researcherSourceLinksHtml(x.sourceUrls||x.sourceUrl)}</div>`).join('');
+    <div class="researcherEditorRecordFields"><input list="researcherEditorInstitutionList" data-editor-position-institution value="${esc(x.institution||'')}" title="${esc(x.institution||'')}" placeholder="${esc(t('affNamePh'))}" spellcheck="false"><input data-editor-position-organization value="${esc(x.organization||'')}" title="${esc(x.organization||'')}" placeholder="${esc(t('researcherPositionOrganization'))}"><input data-editor-position-title value="${esc(x.title||'')}" title="${esc(x.title||'')}" placeholder="${esc(t('researcherPositionTitle'))}"></div>
+    <button type="button" class="researcherEditorAffDel" data-editor-position-delete="${i}" title="${esc(t('affRemove'))}" aria-label="${esc(t('affRemove'))}">×</button><div class="researcherEditorRecordActions"><button type="button" class="researcherEditorRecordHide${x.hidden?' on':''}" data-editor-position-hide="${i}" aria-pressed="${!!x.hidden}">${ic(x.hidden?'eye':'eyeOff')}<span>${esc(t(x.hidden?'researcherCareerShow':'researcherCareerHide'))}</span></button></div>${researcherEditorRecordSourceHtml(x)}${researcherEditorRecordRelatedHtml(x)}</div>`).join('');
   return `<datalist id="researcherEditorInstitutionList">${knownInstitutionNames().map(n=>`<option value="${esc(n)}"></option>`).join('')}</datalist><div class="researcherEditorRecordList">${rows||`<div class="rAffEmpty">${esc(t('affNone'))}</div>`}</div><button type="button" class="researcherEditorAddAff" data-editor-position-add>${ic('plus')}${esc(t('add'))}</button><p class="researcherEditorHint">${esc(t('affHint'))}</p>`;
 }
 function researcherEditorEducationHtml(draft){
   const list=ensureResearcherEducation(draft), options=yearOptionsHtml('',1930);
-  const rows=list.map((x,i)=>`<div class="researcherEditorRecord" data-editor-education-row="${i}">
+  const rows=list.map((x,i)=>`<div class="researcherEditorRecord${x.hidden?' isHidden':''}" data-editor-education-row="${i}">
     <div class="researcherEditorRecordPeriod"><select data-editor-education-start aria-label="${esc(t('affStart'))}">${yearOptionsHtml(x.start,1930)}</select><span>–</span><select data-editor-education-end aria-label="${esc(t('affEnd'))}">${options.replace(`value="${esc(String(x.end||''))}"`, `value="${esc(String(x.end||''))}" selected`)}</select></div>
-    <div class="researcherEditorRecordFields"><input list="researcherEditorInstitutionList" data-editor-education-institution value="${esc(x.institution||'')}" placeholder="${esc(t('affNamePh'))}" spellcheck="false"><input data-editor-education-program value="${esc(x.program||'')}" placeholder="${esc(t('researcherEducationProgram'))}"><input data-editor-education-degree value="${esc(x.degree||'')}" placeholder="${esc(t('researcherEducationDegree'))}"></div>
-    <button type="button" class="researcherEditorAffDel" data-editor-education-delete="${i}" title="${esc(t('affRemove'))}" aria-label="${esc(t('affRemove'))}">×</button>${researcherSourceLinksHtml(x.sourceUrls||x.sourceUrl)}</div>`).join('');
+    <div class="researcherEditorRecordFields"><input list="researcherEditorInstitutionList" data-editor-education-institution value="${esc(x.institution||'')}" title="${esc(x.institution||'')}" placeholder="${esc(t('affNamePh'))}" spellcheck="false"><input data-editor-education-program value="${esc(x.program||'')}" title="${esc(x.program||'')}" placeholder="${esc(t('researcherEducationProgram'))}"><input data-editor-education-degree value="${esc(x.degree||'')}" title="${esc(x.degree||'')}" placeholder="${esc(t('researcherEducationDegree'))}"></div>
+    <button type="button" class="researcherEditorAffDel" data-editor-education-delete="${i}" title="${esc(t('affRemove'))}" aria-label="${esc(t('affRemove'))}">×</button><div class="researcherEditorRecordActions"><button type="button" class="researcherEditorRecordHide${x.hidden?' on':''}" data-editor-education-hide="${i}" aria-pressed="${!!x.hidden}">${ic(x.hidden?'eye':'eyeOff')}<span>${esc(t(x.hidden?'researcherCareerShow':'researcherCareerHide'))}</span></button></div>${researcherEditorRecordSourceHtml(x)}${researcherEditorRecordRelatedHtml(x)}</div>`).join('');
   return `<div class="researcherEditorRecordList">${rows||`<div class="rAffEmpty">${esc(t('affNone'))}</div>`}</div><button type="button" class="researcherEditorAddAff" data-editor-education-add>${ic('plus')}${esc(t('add'))}</button>`;
 }
 function researcherAwards(draft){ return Array.isArray(draft&&draft.awards)?draft.awards:[]; }
 function researcherEditorAwardsHtml(draft){
-  const rows=researcherAwards(draft).map((x,i)=>`<div class="researcherEditorRecord" data-editor-award-row="${i}"><div class="researcherEditorRecordPeriod"><select data-editor-award-year aria-label="${esc(t('yearLabel'))}">${yearOptionsHtml(x.year,1900)}</select></div><div class="researcherEditorRecordFields"><input data-editor-award-name value="${esc(x.name||'')}" placeholder="${esc(t('researcherAwardName'))}"><input data-editor-award-organization value="${esc(x.organization||'')}" placeholder="${esc(t('researcherAwardOrganization'))}"></div><button type="button" class="researcherEditorAffDel" data-editor-award-delete="${i}" title="${esc(t('affRemove'))}" aria-label="${esc(t('affRemove'))}">×</button>${researcherSourceLinksHtml(x.sourceUrls||x.sourceUrl)}</div>`).join('');
+  const rows=researcherAwards(draft).map((x,i)=>`<div class="researcherEditorRecord" data-editor-award-row="${i}"><div class="researcherEditorRecordPeriod"><select data-editor-award-year aria-label="${esc(t('yearLabel'))}">${yearOptionsHtml(x.year,1900)}</select></div><div class="researcherEditorRecordFields"><input data-editor-award-name value="${esc(x.name||'')}" placeholder="${esc(t('researcherAwardName'))}"><input data-editor-award-organization value="${esc(x.organization||'')}" placeholder="${esc(t('researcherAwardOrganization'))}"></div><button type="button" class="researcherEditorAffDel" data-editor-award-delete="${i}" title="${esc(t('affRemove'))}" aria-label="${esc(t('affRemove'))}">×</button>${researcherEditorRecordSourceHtml(x)}</div>`).join('');
   return `<div class="researcherEditorRecordList">${rows||`<div class="rAffEmpty">${esc(t('affNone'))}</div>`}</div><button type="button" class="researcherEditorAddAff" data-editor-award-add>${ic('plus')}${esc(t('add'))}</button>`;
 }
 function knownResearchFields(){
@@ -6081,16 +6524,22 @@ function researcherEditorRelatedHtml(draft){
   const names=researcherLines(draft.relatedResearchers), options=knownRelatedResearchers();
   return `<div class="researcherFieldPicker"><div class="researcherFieldTags">${names.map((name,i)=>`<span class="researcherTag">${esc(name)}<button type="button" data-editor-related-delete="${i}" aria-label="${esc(t('affRemove'))}">×</button></span>`).join('')}</div><div class="researcherFieldAdd"><input id="researcherEditorRelatedInput" list="researcherEditorRelatedList" placeholder="${esc(t('researcherRelatedPlaceholder'))}"><datalist id="researcherEditorRelatedList">${options.map(x=>`<option value="${esc(x)}"></option>`).join('')}</datalist><button type="button" class="tbtn" data-editor-related-add>${ic('plus')}${esc(t('researcherFieldAdd'))}</button></div></div>`;
 }
+function researcherEditorAdvisorHtml(draft){
+  const names=researcherAdvisors(draft), options=knownRelatedResearchers();
+  return `<div class="researcherFieldPicker"><div class="researcherFieldTags">${names.map((name,i)=>`<span class="researcherTag">${esc(name)}<button type="button" data-editor-advisor-delete="${i}" aria-label="${esc(t('affRemove'))}">×</button></span>`).join('')}</div><div class="researcherFieldAdd"><input id="researcherEditorAdvisorInput" list="researcherEditorRelatedList" placeholder="${esc(t('researcherRelatedPlaceholder'))}"><button type="button" class="tbtn" data-editor-advisor-add>${ic('plus')}${esc(t('researcherFieldAdd'))}</button></div></div>`;
+}
 function researcherEditorSectionHtml(section,draft,entry){
   const ids=draft.identifiers||{}, birth=parseBirthDate(draft.birthDate), selected=section===researcherEditorSection?' active':'';
-  const field=(label,control,full='',sourceKey='')=>`<div class="researcherEditorField ${full}"><label>${esc(label)}</label>${control}${sourceKey?researcherProfileSourceLinksHtml(draft,sourceKey):''}</div>`;
+  const field=(label,control,full='',sourceKey='')=>`<div class="researcherEditorField ${full}"><label>${esc(label)}</label>${control}${sourceKey?researcherEditorFieldSourceHtml(draft,sourceKey):''}</div>`;
   const input=(key,value,type='text')=>`<input type="${type}" data-re-editor="${key}" value="${esc(value||'')}">`;
   const textarea=(key,value)=>`<textarea data-re-editor="${key}">${esc(value||'')}</textarea>`;
   if(section==='basic') return `<section class="researcherEditorSection${selected}" data-editor-section="basic"><h3>${esc(t('researcherEditorBasic'))}</h3><p class="researcherEditorIntro">${esc(t('researcherNameHelp'))}</p><div class="researcherEditorGrid">${field(t('researcherFamilyName'),input('familyName',draft.familyName),'','familyName')}${field(t('researcherGivenName'),input('givenName',draft.givenName),'','givenName')}${field(t('researcherMiddleName'),input('middleName',draft.middleName),'','middleName')}${field(t('researcherAliases'),textarea('aliases',(draft.aliases||[]).join('\n')),'','aliases')}${field(t('researcherBirthDate'),`<div class="researcherEditorDate"><label><select data-re-editor-birth="y">${yearOptionsHtml(birth.y,1910)}</select>${esc(t('yearLabel'))}</label><label><select data-re-editor-birth="m">${monthOptionsHtml(birth.m)}</select>${esc(t('monthLabel'))}</label><label><select data-re-editor-birth="d">${dayOptionsHtml(birth.d)}</select>${esc(t('dayLabel'))}</label></div>`,'','birthDate')}</div></section>`;
-  if(section==='education') return `<section class="researcherEditorSection${selected}" data-editor-section="education"><h3>${esc(t('researcherEditorEducation'))}</h3><div class="researcherEditorPhd"><h4>${esc(t('researcherCareerPhd'))}</h4><div class="researcherEditorGrid">${field(t('researcherPhdYear'),`<select data-re-editor="phdYear">${yearOptionsHtml(draft.phdYear,1940)}</select>`,'','phdYear')}${field(t('researcherPhdInstitution'),input('phdInstitution',draft.phdInstitution),'','phdInstitution')}${field(t('researcherPhdDegree'),input('phdDegree',draft.phdDegree),'','phdDegree')}${field(t('researcherPhdAdvisor'),input('phdAdvisor',draft.phdAdvisor),'','phdAdvisor')}</div></div>${researcherEditorEducationHtml(draft)}</section>`;
+  if(section==='education') return `<section class="researcherEditorSection${selected}" data-editor-section="education"><h3>${esc(t('researcherEditorEducation'))}</h3><div class="researcherEditorPhd"><h4>${esc(t('researcherCareerPhd'))}</h4><div class="researcherEditorGrid">${field(t('researcherPhdYear'),`<select data-re-editor="phdYear">${yearOptionsHtml(draft.phdYear,1940)}</select>`,'','phdYear')}${field(t('researcherPhdInstitution'),input('phdInstitution',draft.phdInstitution),'','phdInstitution')}${field(t('researcherPhdDegree'),input('phdDegree',draft.phdDegree),'','phdDegree')}${field(t('researcherPhdAdvisor'),researcherEditorAdvisorHtml(draft),'full','phdAdvisor')}</div></div>${researcherEditorEducationHtml(draft)}</section>`;
   if(section==='image'){
-    const preview=draft.imageUrl?`<span class="researcherImageFrame"><img class="researcherImage" src="${esc(draft.imageUrl)}" alt="" referrerpolicy="no-referrer"${researcherImagePositionStyle(draft)}></span>`:`<span class="researcherImagePlaceholder">${ic('image')}</span>`, position=researcherImagePosition(draft), scale=researcherImageScale(draft);
-    return `<section class="researcherEditorSection${selected}" data-editor-section="image"><h3>${esc(t('researcherEditorImage'))}</h3><div class="researcherEditorImage">${preview}<div class="researcherEditorImageActions"><button type="button" class="tbtn" data-editor-image-file>${ic('image')}${esc(t('researcherImageSelect'))}</button><button type="button" class="tbtn" data-editor-image-paste>${ic('clipboard')}${esc(t('researcherImagePaste'))}</button></div></div>${draft.imageUrl?`<div class="researcherImagePosition"><strong>${esc(t('researcherImagePosition'))}</strong><label>${esc(t('researcherImagePositionX'))}<input type="range" min="0" max="100" value="${position.x}" data-editor-image-position="x"></label><label>${esc(t('researcherImagePositionY'))}<input type="range" min="0" max="100" value="${position.y}" data-editor-image-position="y"></label><label>${esc(t('researcherImageScale'))}<input type="range" min="1" max="3" step="0.05" value="${scale}" data-editor-image-position="scale"></label><button type="button" class="tbtn" data-editor-image-position-reset>${esc(t('researcherImagePositionReset'))}</button></div>`:''}</section>`;
+    const aspect=researcherImageAspect(draft), zoom=researcherImageZoom(draft), containZoom=researcherImageContainZoom(aspect);
+    const preview=draft.imageUrl?`<span class="researcherImageFrame researcherCropFrame" data-editor-image-crop><img class="researcherImage" src="${esc(draft.imageUrl)}" alt="" referrerpolicy="no-referrer"${researcherImagePositionStyle(draft)}></span>`:`<span class="researcherImagePlaceholder">${ic('image')}</span>`;
+    const cropTools=draft.imageUrl?`<div class="researcherCropTools"><div class="researcherCropRow"><span>${esc(t('researcherImageScale'))}</span><input type="range" class="uiSlider" style="--rm-fill:${(((zoom-containZoom)/((3-containZoom)||1))*100).toFixed(1)}%" min="${containZoom.toFixed(3)}" max="3" step="0.01" value="${zoom.toFixed(3)}" data-editor-image-zoom${aspect>0?'':' disabled'}></div><div class="researcherCropBtns"><button type="button" class="tbtn" data-editor-image-fit="contain">${esc(t('researcherImageFitWhole'))}</button><button type="button" class="tbtn" data-editor-image-fit="cover">${esc(t('researcherImageFitFill'))}</button><button type="button" class="tbtn" data-editor-image-position-reset>${esc(t('researcherImagePositionReset'))}</button></div><small class="researcherCropHint">${esc(t('researcherImageCropHint'))}</small></div>`:'';
+    return `<section class="researcherEditorSection${selected}" data-editor-section="image"><h3>${esc(t('researcherEditorImage'))}</h3><div class="researcherEditorImage">${preview}<div class="researcherEditorImageActions"><button type="button" class="tbtn" data-editor-image-file>${ic('image')}${esc(t('researcherImageSelect'))}</button><button type="button" class="tbtn" data-editor-image-paste>${ic('clipboard')}${esc(t('researcherImagePaste'))}</button></div></div><small class="researcherImagePasteHint">${esc(t('researcherImagePasteHint'))}</small>${cropTools}</section>`;
   }
   if(section==='basic') return `<section class="researcherEditorSection${selected}" data-editor-section="basic"><h3>${esc(t('researcherEditorBasic'))}</h3><p class="researcherEditorIntro">${esc(t('researcherNameHelp'))}</p><div class="researcherEditorGrid">${field(t('researcherFamilyName'),input('familyName',draft.familyName),'','familyName')}${field(t('researcherGivenName'),input('givenName',draft.givenName),'','givenName')}${field(t('researcherMiddleName'),input('middleName',draft.middleName),'','middleName')}${field(t('researcherAliases'),textarea('aliases',(draft.aliases||[]).join('\n')),'','aliases')}${field(t('researcherBirthDate'),`<div class="researcherEditorDate"><label><select data-re-editor-birth="y">${yearOptionsHtml(birth.y,1910)}</select>${esc(t('yearLabel'))}</label><label><select data-re-editor-birth="m">${monthOptionsHtml(birth.m)}</select>${esc(t('monthLabel'))}</label><label><select data-re-editor-birth="d">${dayOptionsHtml(birth.d)}</select>${esc(t('dayLabel'))}</label></div>`,'','birthDate')}${field(t('researcherPhdYear'),`<select data-re-editor="phdYear">${yearOptionsHtml(draft.phdYear,1940)}</select>`,'','phdYear')}${field(t('researcherPhdInstitution'),input('phdInstitution',draft.phdInstitution),'','phdInstitution')}${field(t('researcherPhdDegree'),input('phdDegree',draft.phdDegree),'','phdDegree')}${field(t('researcherPhdAdvisor'),input('phdAdvisor',draft.phdAdvisor),'','phdAdvisor')}</div></section>`;
   if(section==='aiimport'){
@@ -6102,16 +6551,16 @@ function researcherEditorSectionHtml(section,draft,entry){
   if(section==='education') return `<section class="researcherEditorSection${selected}" data-editor-section="education"><h3>${esc(t('researcherEditorEducation'))}</h3>${researcherEditorEducationHtml(draft)}</section>`;
   if(section==='research') return `<section class="researcherEditorSection${selected}" data-editor-section="research"><h3>${esc(t('researcherEditorResearch'))}</h3><div class="researcherEditorGrid">${field(t('researcherFields'),researcherEditorResearchFieldsHtml(draft),'full','researchFields')}${field(t('researcherTotalCitations'),input('totalCitations',draft.totalCitations),'','totalCitations')}${field(t('researcherHIndex'),input('hIndex',draft.hIndex),'','hIndex')}${field(t('researcherI10Index'),input('i10Index',draft.i10Index),'','i10Index')}${field(t('researcherWorksCount'),input('worksCount',draft.worksCount),'','worksCount')}${field(t('researcherHomepage'),input('website',draft.website),'','website')}</div></section>`;
   if(section==='awards') return `<section class="researcherEditorSection${selected}" data-editor-section="awards"><h3>${esc(t('researcherEditorAwards'))}</h3>${researcherEditorAwardsHtml(draft)}</section>`;
-  if(section==='profiles') return `<section class="researcherEditorSection${selected}" data-editor-section="profiles"><h3>${esc(t('researcherEditorProfiles'))}</h3><div class="researcherEditorGrid">${field('ORCID',input('identifiers.orcid',ids.orcid),'','identifiers.orcid')}${field('OpenAlex',input('identifiers.openalex',ids.openalex),'','identifiers.openalex')}${field('Google Scholar',input('identifiers.googleScholar',ids.googleScholar),'','identifiers.googleScholar')}${field('ResearchGate',input('identifiers.researchGate',ids.researchGate),'','identifiers.researchGate')}${field(t('researcherLinkedIn'),input('identifiers.linkedin',ids.linkedin),'','identifiers.linkedin')}${field(t('researcherWikipedia'),input('identifiers.wikipedia',ids.wikipedia),'','identifiers.wikipedia')}${field('researchmap',input('identifiers.researchmap',ids.researchmap),'','identifiers.researchmap')}${field('Chem-Station',input('identifiers.chemstation',ids.chemstation),'','identifiers.chemstation')}${field('Scopus Author ID',input('identifiers.scopus',ids.scopus),'','identifiers.scopus')}${field('ResearcherID',input('identifiers.researcherId',ids.researcherId),'','identifiers.researcherId')}${field('DBLP',input('identifiers.dblp',ids.dblp),'','identifiers.dblp')}${field('CiNii Research ID / URL',input('identifiers.cinii',ids.cinii),'','identifiers.cinii')}</div></section>`;
+  if(section==='profiles') return `<section class="researcherEditorSection${selected}" data-editor-section="profiles"><h3>${esc(t('researcherEditorProfiles'))}</h3><div class="researcherEditorGrid">${field('ORCID',input('identifiers.orcid',ids.orcid),'','identifiers.orcid')}${field('OpenAlex',input('identifiers.openalex',ids.openalex),'','identifiers.openalex')}${field('Google Scholar',input('identifiers.googleScholar',ids.googleScholar),'','identifiers.googleScholar')}${field('ResearchGate',input('identifiers.researchGate',ids.researchGate),'','identifiers.researchGate')}${field(t('researcherLinkedIn'),input('identifiers.linkedin',ids.linkedin),'','identifiers.linkedin')}${field('X (Twitter)',input('identifiers.x',ids.x),'','identifiers.x')}${field('Bluesky',input('identifiers.bluesky',ids.bluesky),'','identifiers.bluesky')}${field(t('researcherWikipedia'),input('identifiers.wikipedia',ids.wikipedia),'','identifiers.wikipedia')}${field('researchmap',input('identifiers.researchmap',ids.researchmap),'','identifiers.researchmap')}${field('Chem-Station',input('identifiers.chemstation',ids.chemstation),'','identifiers.chemstation')}${field('Scopus Author ID',input('identifiers.scopus',ids.scopus),'','identifiers.scopus')}${field('ResearcherID',input('identifiers.researcherId',ids.researcherId),'','identifiers.researcherId')}${field('DBLP',input('identifiers.dblp',ids.dblp),'','identifiers.dblp')}${field('CiNii Research ID / URL',input('identifiers.cinii',ids.cinii),'','identifiers.cinii')}</div></section>`;
   const preview=draft.imageUrl?`<span class="researcherImageFrame"><img class="researcherImage" src="${esc(draft.imageUrl)}" alt="" referrerpolicy="no-referrer"${researcherImagePositionStyle(draft)}></span>`:`<span class="researcherImagePlaceholder">${ic('image')}</span>`, imageUrl=String(draft.imageUrl||''), storedImage=/^data:image\//i.test(imageUrl), position=researcherImagePosition(draft), scale=researcherImageScale(draft);
-  if(section==='image') return `<section class="researcherEditorSection${selected}" data-editor-section="image"><h3>${esc(t('researcherEditorImage'))}</h3><div class="researcherEditorImage">${preview}<div class="researcherEditorImageActions"><button type="button" class="tbtn" data-editor-image-file>${ic('image')}${esc(t('researcherImageSelect'))}</button><button type="button" class="tbtn" data-editor-image-paste>${ic('clipboard')}${esc(t('researcherImagePaste'))}</button></div></div>${draft.imageUrl?`<div class="researcherImagePosition"><strong>${esc(t('researcherImagePosition'))}</strong><label>${esc(t('researcherImagePositionX'))}<input type="range" min="0" max="100" value="${position.x}" data-editor-image-position="x"></label><label>${esc(t('researcherImagePositionY'))}<input type="range" min="0" max="100" value="${position.y}" data-editor-image-position="y"></label><label>${esc(t('researcherImageScale'))}<input type="range" min="1" max="3" step="0.05" value="${scale}" data-editor-image-position="scale"></label><button type="button" class="tbtn" data-editor-image-position-reset>${esc(t('researcherImagePositionReset'))}</button></div>`:''}<div class="researcherEditorGrid">${field(t('researcherImageUrlOptional'),`<input type="url" data-re-editor="imageUrl" value="${esc(storedImage?'':imageUrl)}" placeholder="https://example.org/photo.jpg">${storedImage?`<small class="researcherImageStored">${esc(t('researcherImageStored'))}</small>`:''}${`<small class="researcherImageUrlHelp">${esc(t('researcherImageUrlHelp'))}</small>`}`,'full','imageUrl')}</div></section>`;
+  if(section==='image') return `<section class="researcherEditorSection${selected}" data-editor-section="image"><h3>${esc(t('researcherEditorImage'))}</h3><div class="researcherEditorImage">${preview}<div class="researcherEditorImageActions"><button type="button" class="tbtn" data-editor-image-file>${ic('image')}${esc(t('researcherImageSelect'))}</button><button type="button" class="tbtn" data-editor-image-paste>${ic('clipboard')}${esc(t('researcherImagePaste'))}</button></div></div>${draft.imageUrl?`<div class="researcherImagePosition"><strong>${esc(t('researcherImagePosition'))}</strong><label>${esc(t('researcherImagePositionX'))}<input type="range" class="uiSlider" style="--rm-fill:${(+position.x).toFixed(1)}%" min="0" max="100" value="${position.x}" data-editor-image-position="x"></label><label>${esc(t('researcherImagePositionY'))}<input type="range" class="uiSlider" style="--rm-fill:${(+position.y).toFixed(1)}%" min="0" max="100" value="${position.y}" data-editor-image-position="y"></label><label>${esc(t('researcherImageScale'))}<input type="range" class="uiSlider" style="--rm-fill:${(((scale-1)/2)*100).toFixed(1)}%" min="1" max="3" step="0.05" value="${scale}" data-editor-image-position="scale"></label><button type="button" class="tbtn" data-editor-image-position-reset>${esc(t('researcherImagePositionReset'))}</button></div>`:''}<div class="researcherEditorGrid">${field(t('researcherImageUrlOptional'),`<input type="url" data-re-editor="imageUrl" value="${esc(storedImage?'':imageUrl)}" placeholder="https://example.org/photo.jpg">${storedImage?`<small class="researcherImageStored">${esc(t('researcherImageStored'))}</small>`:''}${`<small class="researcherImageUrlHelp">${esc(t('researcherImageUrlHelp'))}</small>`}`,'full','imageUrl')}</div></section>`;
   return `<section class="researcherEditorSection${selected}" data-editor-section="related"><h3>${esc(t('researcherEditorRelated'))}</h3><div class="researcherEditorGrid">${field(t('researcherRelated'),researcherEditorRelatedHtml(draft),'full','relatedResearchers')}</div></section>`;
 }
 function researcherEditorHasValue(section,draft){
   if(section==='basic') return !!(draft.displayName||draft.familyName||draft.givenName||draft.birthDate||(draft.aliases||[]).length);
   if(section==='aiimport') return !!(researcherEditorAiState.jsonText||(draft.enrichment&&draft.enrichment.ai));
   if(section==='affiliations') return researcherPositions(draft).some(x=>x.institution||x.start||x.end||x.title||x.organization);
-  if(section==='education') return !!(draft.phdYear||draft.phdInstitution||draft.phdDegree||draft.phdAdvisor||researcherEducation(draft).some(x=>x.institution||x.start||x.end||x.program||x.degree));
+  if(section==='education') return !!(draft.phdYear||draft.phdInstitution||draft.phdDegree||researcherAdvisors(draft).length||researcherEducation(draft).some(x=>x.institution||x.start||x.end||x.program||x.degree));
   if(section==='awards') return researcherAwards(draft).some(x=>x.name||x.year||x.organization);
   if(section==='research') return !!(draft.website||draft.totalCitations||draft.hIndex||draft.i10Index||draft.worksCount||(draft.researchFields||[]).length);
   if(section==='profiles') return !!Object.values(draft.identifiers||{}).some(Boolean);
@@ -6126,16 +6575,17 @@ function renderResearcherEditor(){
   $('#researcherEditorContent').innerHTML=secs.map(([key])=>researcherEditorSectionHtml(key,draft,entry)).join('');
   $('#btnResearcherEditorDelete').hidden=!draft.id;
   renderIcons($('#dlgResearcherEditor'));
+  wireResearcherImageCropper();
 }
 function openResearcherEditor(){
   const entry=researcherEntryForDetail(); if(!entry) return;
   researcherEditorEntryKey=entry.key; researcherEditorDraft=entry.profile?cloneResearcherProfile(entry.profile):researcherProfileDefaults(entry);
-  if(!researcherEditorDraft.familyName&&!researcherEditorDraft.givenName&&!researcherEditorDraft.middleName){ const legacy=researcherLegacyNameParts(researcherEditorDraft.displayName||entry.name); researcherEditorDraft.familyName=legacy.family; researcherEditorDraft.givenName=legacy.given; researcherEditorDraft.middleName=''; }
+  if(!researcherEditorDraft.familyName&&!researcherEditorDraft.givenName&&!researcherEditorDraft.middleName){ const legacy=researcherLegacyNameParts(researcherEditorDraft.displayName||entry.name); researcherEditorDraft.familyName=legacy.family; researcherEditorDraft.givenName=legacy.given; researcherEditorDraft.middleName=legacy.middle; }
   researcherEditorDraft.displayName=researcherCanonicalDisplayName(researcherEditorDraft,researcherEditorDraft.displayName||entry.name);
   researcherEditorDraft.awards=researcherAwards(researcherEditorDraft);
   if(!Array.isArray(researcherEditorDraft.affiliations)) researcherEditorDraft.affiliations=researcherAffiliations(researcherEditorDraft);
   ensureResearcherPositions(researcherEditorDraft); ensureResearcherEducation(researcherEditorDraft);
-  researcherEditorDirty=false; researcherEditorSection='basic'; researcherEditorAiState={queryName:researcherEditorDraft.displayName||entry.name,sourceUrls:researcherAiSourceUrlsFromDraft(researcherEditorDraft),jsonText:'',proposal:null,candidates:[],error:'',reviewed:false}; renderResearcherEditor();
+  researcherEditorDirty=false; researcherEditorSection='basic'; researcherEditorSourceOpen=new Set(); researcherEditorAiState={queryName:researcherEditorDraft.displayName||entry.name,sourceUrls:researcherAiSourceUrlsFromDraft(researcherEditorDraft),jsonText:'',proposal:null,candidates:[],error:'',reviewed:false}; renderResearcherEditor();
   $('#dlgResearcherEditor').showModal();
 }
 function closeResearcherEditor(discard=false){
@@ -6152,16 +6602,47 @@ function researcherEditorSetValue(key,value){
   else if(['totalCitations','hIndex','i10Index','worksCount'].includes(key)) d[key]=value.replace(/[^0-9]/g,'');
   else d[key]=value;
   if(['familyName','givenName','middleName'].includes(key)) d.displayName=researcherCanonicalDisplayName(d,d.displayName);
+  if(key==='imageUrl') researcherEditorResetCrop(d); // new image → re-measure aspect, reset framing
   markResearcherFieldSource(d,key,'manual');
   researcherEditorMarkDirty();
 }
-function researcherEditorSetImagePosition(axis,value){
+// Reset the pan/zoom crop to a centred "cover" (used when a new image is loaded,
+// so a fresh photo doesn't inherit the previous one's framing / aspect ratio).
+function researcherEditorResetCrop(d){
+  if(!d) return;
+  d.imageAspect=0; d.imageFocusX=0.5; d.imageFocusY=0.5; d.imageZoom=1;
+  delete d.imagePositionX; delete d.imagePositionY; delete d.imageScale;
+}
+// Live-apply the current draft's crop to the editor preview <img> (during drag /
+// zoom) without a full re-render, so panning stays smooth.
+function applyResearcherCropPreview(){
   const d=researcherEditorDraft; if(!d) return;
-  if(axis==='scale'){ d.imageScale=Math.max(1,Math.min(3,Number(value)||1)); researcherEditorMarkDirty(); return; }
-  const n=Math.max(0,Math.min(100,Number.isFinite(Number(value))?Number(value):50));
-  if(axis==='x') d.imagePositionX=n;
-  else d.imagePositionY=n;
-  researcherEditorMarkDirty();
+  const img=document.querySelector('#dlgResearcherEditor [data-editor-image-crop] .researcherImage');
+  if(img) img.setAttribute('style', researcherImagePositionStyle(d).replace(/^\s*style="/,'').replace(/"\s*$/,''));
+}
+// Wire drag-to-pan + wheel-to-zoom on the editor's crop preview, and measure the
+// image's natural aspect ratio once (upgrading legacy images to the pan/zoom
+// model). Called after every editor render; the frame is a fresh element each
+// time, so pointer-captured listeners don't accumulate.
+function wireResearcherImageCropper(){
+  const d=researcherEditorDraft; if(!d) return;
+  const frame=document.querySelector('#dlgResearcherEditor [data-editor-image-crop]');
+  if(!frame || frame._cropWired) return;
+  const img=frame.querySelector('.researcherImage'); if(!img) return;
+  frame._cropWired=true;
+  const measure=()=>{ if(!researcherImageAspect(d) && img.naturalWidth && img.naturalHeight){ d.imageAspect=img.naturalWidth/img.naturalHeight; renderResearcherEditor(); } };
+  if(img.complete && img.naturalWidth) measure(); else img.addEventListener('load',measure,{once:true});
+  let dragging=false, lastX=0, lastY=0;
+  frame.addEventListener('pointerdown',ev=>{ if(!researcherImageAspect(d)) return; dragging=true; lastX=ev.clientX; lastY=ev.clientY; frame.setPointerCapture(ev.pointerId); frame.classList.add('dragging'); ev.preventDefault(); });
+  frame.addEventListener('pointermove',ev=>{ if(!dragging) return; const S=frame.getBoundingClientRect().width||1, aspect=researcherImageAspect(d), z=researcherImageZoom(d), wF=z*Math.max(1,aspect), hF=z*Math.max(1,1/aspect), f=researcherImageFocus(d);
+    d.imageFocusX=Math.max(0,Math.min(1, f.x-(ev.clientX-lastX)/(S*wF)));
+    d.imageFocusY=Math.max(0,Math.min(1, f.y-(ev.clientY-lastY)/(S*hF)));
+    lastX=ev.clientX; lastY=ev.clientY; researcherEditorMarkDirty(); applyResearcherCropPreview(); });
+  const end=ev=>{ if(dragging){ dragging=false; frame.classList.remove('dragging'); try{ frame.releasePointerCapture(ev.pointerId); }catch(_e){} } };
+  frame.addEventListener('pointerup',end); frame.addEventListener('pointercancel',end);
+  frame.addEventListener('wheel',ev=>{ if(!researcherImageAspect(d)) return; ev.preventDefault(); const min=researcherImageContainZoom(researcherImageAspect(d));
+    d.imageZoom=Math.max(min,Math.min(3, researcherImageZoom(d)*(ev.deltaY<0?1.05:0.95))); researcherEditorMarkDirty(); applyResearcherCropPreview();
+    const slider=document.querySelector('#dlgResearcherEditor [data-editor-image-zoom]'); if(slider){ slider.value=researcherImageZoom(d); const mn=+slider.min, mx=+slider.max; slider.style.setProperty('--rm-fill',`${(((+slider.value-mn)/((mx-mn)||1))*100).toFixed(1)}%`); } },{passive:false});
 }
 function researcherEditorSetBirth(){
   const host=$('#researcherEditorContent'); if(!host||!researcherEditorDraft) return;
@@ -6178,24 +6659,39 @@ function saveResearcherEditor(){
   const d=researcherEditorDraft, entry=researcherDirectoryEntries().find(x=>x.key===researcherEditorEntryKey); if(!d||!entry) return;
   if(researcherEditorHasUnreviewedAiResponse()&&!confirm(t('researcherEditorAiPendingSave'))) return;
   if(!researcherEditorValidate()){ showToast(t('researcherEditorInvalidPeriod'),true); researcherEditorSection='affiliations'; renderResearcherEditor(); return; }
-  d.positions=researcherPositions(d).filter(x=>String(x.institution||'').trim()||x.start||x.end||x.organization||x.title).map(x=>{ const sourceUrls=researcherSourceUrlList(x.sourceUrls||x.sourceUrl); return {institution:String(x.institution||'').trim(),organization:String(x.organization||'').trim(),title:String(x.title||'').trim(),start:String(x.start||''),end:String(x.end||''),sourceUrls,sourceUrl:sourceUrls[0]||''}; });
-  d.education=researcherEducation(d).filter(x=>String(x.institution||'').trim()||x.start||x.end||x.program||x.degree).map(x=>{ const sourceUrls=researcherSourceUrlList(x.sourceUrls||x.sourceUrl); return {institution:String(x.institution||'').trim(),program:String(x.program||'').trim(),degree:String(x.degree||'').trim(),start:String(x.start||''),end:String(x.end||''),sourceUrls,sourceUrl:sourceUrls[0]||''}; });
+  d.positions=researcherPositions(d).filter(x=>String(x.institution||'').trim()||x.start||x.end||x.organization||x.title).map(x=>{ const sourceUrls=researcherSourceUrlList(x.sourceUrls||x.sourceUrl); return {institution:String(x.institution||'').trim(),organization:String(x.organization||'').trim(),title:String(x.title||'').trim(),start:String(x.start||''),end:String(x.end||''),related:researcherLines(x.related),hidden:!!x.hidden,sourceUrls,sourceUrl:sourceUrls[0]||''}; });
+  d.education=researcherEducation(d).filter(x=>String(x.institution||'').trim()||x.start||x.end||x.program||x.degree).map(x=>{ const sourceUrls=researcherSourceUrlList(x.sourceUrls||x.sourceUrl); return {institution:String(x.institution||'').trim(),program:String(x.program||'').trim(),degree:String(x.degree||'').trim(),start:String(x.start||''),end:String(x.end||''),related:researcherLines(x.related),hidden:!!x.hidden,sourceUrls,sourceUrl:sourceUrls[0]||''}; });
   d.awards=researcherAwards(d).filter(x=>String(x.name||'').trim()||x.year||x.organization).map(x=>{ const sourceUrls=researcherSourceUrlList(x.sourceUrls||x.sourceUrl); return {name:String(x.name||'').trim(),year:String(x.year||''),organization:String(x.organization||'').trim(),sourceUrls,sourceUrl:sourceUrls[0]||''}; });
+  d.phdAdvisor=researcherAdvisors(d);
+  // Every person named as related on a career entry (position/education) or as a
+  // PhD advisor is also a related researcher, so union them into relatedResearchers.
+  const careerRelated=uniqueResearcherStrings([...d.positions.flatMap(x=>x.related||[]),...d.education.flatMap(x=>x.related||[]),...d.phdAdvisor]);
+  if(careerRelated.length) d.relatedResearchers=uniqueResearcherStrings([...(d.relatedResearchers||[]),...careerRelated]);
   d.displayName=researcherCanonicalDisplayName(d,d.displayName);
   syncAffiliationsFromPositions(d); d.dateModified=new Date().toISOString();
   const existing=(lib.researchers||[]).find(p=>p.id===d.id);
-  if(existing) Object.assign(existing,d); else { d.id=uid(); lib.researchers.push(d); selectedResearcherId=d.id; }
+  if(existing) Object.assign(existing,d); else { d.id=uid(); d.dateAdded=d.dateAdded||new Date().toISOString(); lib.researchers.push(d); selectedResearcherId=d.id; }
   researcherEditorDirty=false; $('#dlgResearcherEditor').close(); researcherEditorDraft=null; researcherEditorEntryKey=null; researcherEditorAiState={queryName:'',sourceUrls:'',jsonText:'',proposal:null,candidates:[],error:'',reviewed:false};
   touch(); renderSidebar(); renderResearcherList(); renderResearcherDetail(); showToast(t('researcherSaved'));
 }
 function researcherCareerEntries(profile){
-  const positions=researcherPositions(profile).map(x=>({kind:'position',institution:x.institution,detail:[x.organization,x.title].filter(Boolean).join(' · '),start:x.start,end:x.end,sourceUrls:x.sourceUrls||x.sourceUrl||''}));
-  const education=researcherEducation(profile).map(x=>({kind:'education',institution:x.institution,detail:[x.program,x.degree].filter(Boolean).join(' · '),start:x.start,end:x.end,sourceUrls:x.sourceUrls||x.sourceUrl||''}));
+  const positions=researcherPositions(profile).map(x=>({kind:'position',institution:x.institution,detail:[x.organization,x.title].filter(Boolean).join(' · '),start:x.start,end:x.end,related:x.related||[],hidden:!!x.hidden,sourceUrls:x.sourceUrls||x.sourceUrl||''}));
+  const education=researcherEducation(profile).map(x=>({kind:'education',institution:x.institution,detail:[x.program,x.degree].filter(Boolean).join(' · '),start:x.start,end:x.end,related:x.related||[],hidden:!!x.hidden,sourceUrls:x.sourceUrls||x.sourceUrl||''}));
   const phdYear=String(profile&&profile.phdYear||'').trim();
-  const phdIsAlreadyInEducation=education.some(x=>String(x.end||x.start||'')===phdYear&&/ph\.?d|博士|doctor/i.test(`${x.institution} ${x.detail}`));
+  const phdInstitution=String(profile&&profile.phdInstitution||'').trim();
+  const phdAdvisors=researcherAdvisors(profile);
+  // An education entry already covers the PhD when its year matches and it is clearly
+  // a doctorate — either by degree wording (PhD / Doctor / D.Sc / Dr. Eng. …) or by
+  // being at the same institution recorded for the PhD. This prevents the synthetic
+  // PhD row below from duplicating a real "Dr. Eng." education entry.
+  const phdMatch=phdYear?education.find(x=>String(x.end||x.start||'')===phdYear&&(
+    /ph\.?\s?d|博士|doctor|dr\.?\s?(eng|sc|phil|rer|med)|d\.?\s?(sc|eng|phil)\b/i.test(`${x.institution} ${x.detail}`)
+    || (phdInstitution&&researcherKey(x.institution)===researcherKey(phdInstitution))
+  )):null;
+  // Show the PhD advisor(s) as person chips on the relevant entry, like any other related researcher.
+  if(phdMatch&&phdAdvisors.length) phdMatch.related=uniqueResearcherStrings([...(phdMatch.related||[]),...phdAdvisors]);
   const phdSourceUrls=profile&&profile.fieldSources?uniqueResearcherStrings(['phdYear','phdInstitution','phdDegree','phdAdvisor'].flatMap(key=>researcherSourceUrlList(profile.fieldSources[key]&&(profile.fieldSources[key].urls||profile.fieldSources[key].url)))):[];
-  const phdDetail=[profile&&profile.phdDegree,profile&&profile.phdAdvisor?`${t('researcherPhdAdvisor')}: ${profile.phdAdvisor}`:''].filter(Boolean).join(' · ');
-  const phd=phdYear&&!phdIsAlreadyInEducation?[{kind:'education',institution:profile&&profile.phdInstitution||t('researcherCareerPhd'),detail:phdDetail,start:phdYear,end:phdYear,sourceUrls:phdSourceUrls}]:[];
+  const phd=phdYear&&!phdMatch?[{kind:'education',institution:profile&&profile.phdInstitution||t('researcherCareerPhd'),detail:String(profile&&profile.phdDegree||''),start:phdYear,end:phdYear,related:phdAdvisors,hidden:false,sourceUrls:phdSourceUrls}]:[];
   return [...positions,...education,...phd].sort((a,b)=>{
     const ay=Number(String(a.start||a.end||'').match(/\d{4}/)?.[0])||9999, by=Number(String(b.start||b.end||'').match(/\d{4}/)?.[0])||9999;
     if(ay!==by) return ay-by;
@@ -6209,13 +6705,23 @@ function researcherCareerPeriod(entry){
   return end||'—';
 }
 function researcherCareerTypeLabel(kind){ return t(kind==='education'?'researcherCareerEducation':kind==='phd'?'researcherCareerPhd':'researcherCareerPosition'); }
+function researcherEntryRelatedHtml(names){
+  const list=researcherLines(names); if(!list.length) return '';
+  const tags=list.map(name=>{
+    const entry=researcherRelatedEntry(name), inner=`${ic('user')}${esc(name)}`;
+    return entry?`<button type="button" class="researcherRelatedLink" data-researcher-related-key="${esc(entry.key)}" title="${esc(t('researcherRecordRelated'))}">${inner}</button>`:`<span class="researcherTag" title="${esc(t('researcherRecordRelated'))}">${inner}</span>`;
+  }).join('');
+  return `<div class="researcherCareerRelated"><span class="researcherCareerRelatedTags">${tags}</span></div>`;
+}
 function researcherDetailSettingsHtml(){
   if(!researcherDetailSettingsOpen) return '';
-  return `<div class="researcherDetailSettings" role="group" aria-label="${esc(t('researcherDisplaySettings'))}"><label><input type="checkbox" data-researcher-detail-pref="sources"${researcherDetailPrefs.sources?' checked':''}>${esc(t('researcherDisplaySources'))}</label><label><input type="checkbox" data-researcher-detail-pref="careerTypes"${researcherDetailPrefs.careerTypes?' checked':''}>${esc(t('researcherDisplayCareerTypes'))}</label></div>`;
+  return `<div class="researcherDetailSettings" role="group" aria-label="${esc(t('researcherDisplaySettings'))}"><label><input type="checkbox" data-researcher-detail-pref="sources"${researcherDetailPrefs.sources?' checked':''}>${esc(t('researcherDisplaySources'))}</label><label><input type="checkbox" data-researcher-detail-pref="careerTypes"${researcherDetailPrefs.careerTypes?' checked':''}>${esc(t('researcherDisplayCareerTypes'))}</label><label><input type="checkbox" data-researcher-detail-pref="showHidden"${researcherDetailPrefs.showHidden?' checked':''}>${esc(t('researcherDisplayHiddenCareer'))}</label><label><input type="checkbox" data-researcher-detail-pref="reciprocalRelated"${researcherDetailPrefs.reciprocalRelated?' checked':''}>${esc(t('researcherDisplayReciprocalRelated'))}</label><label class="researcherDetailSettingsAbbrev"><input type="checkbox" data-aff-abbrev-toggle${affAbbrevPrefs.enabled?' checked':''}>${esc(t('researcherDisplayAbbrev'))}<button type="button" class="tbtn researcherAbbrevEditBtn" data-aff-abbrev-edit>${ic('note')}${esc(t('affAbbrevEdit'))}</button></label></div>`;
 }
 function researcherCareerHtml(profile){
   const career=researcherCareerEntries(profile); if(!career.length) return '';
-  return `<section class="researcherDetailSection researcherCareerSection"><div class="researcherDetailLabel">${esc(t('researcherCareer'))}<span class="researcherDetailCount">${career.length}</span></div><div class="researcherCareerTimeline">${career.map(entry=>`<div class="researcherCareerEntry ${esc(entry.kind)}"><time>${esc(researcherCareerPeriod(entry))}</time><div><strong>${esc(entry.institution)}</strong>${entry.detail?`<small class="researcherDetailSubline">${esc(entry.detail)}</small>`:''}${researcherDetailPrefs.careerTypes?`<span class="researcherCareerType ${esc(entry.kind)}">${esc(researcherCareerTypeLabel(entry.kind))}</span>`:''}${researcherDetailSourceLinksHtml(entry.sourceUrls)}</div></div>`).join('')}</div></section>`;
+  const shown=researcherDetailPrefs.showHidden?career:career.filter(e=>!e.hidden);
+  if(!shown.length) return '';
+  return `<section class="researcherDetailSection researcherCareerSection"><div class="researcherDetailLabel">${esc(t('researcherCareer'))}<span class="researcherDetailCount">${shown.length}</span></div><div class="researcherCareerTimeline">${shown.map(entry=>`<div class="researcherCareerEntry ${esc(entry.kind)}${entry.hidden?' researcherCareerHidden':''}"><time>${esc(researcherCareerPeriod(entry))}</time><div><strong>${instDisp(entry.institution)}${institutionFlagHtml(entry.institution)}${entry.hidden?`<span class="researcherCareerHiddenBadge">${ic('eyeOff')}${esc(t('researcherCareerHiddenBadge'))}</span>`:''}</strong>${entry.detail?`<small class="researcherDetailSubline">${esc(entry.detail)}</small>`:''}${researcherDetailPrefs.careerTypes?`<span class="researcherCareerType ${esc(entry.kind)}">${esc(researcherCareerTypeLabel(entry.kind))}</span>`:''}${researcherEntryRelatedHtml(entry.related)}${researcherDetailSourceLinksHtml(entry.sourceUrls)}</div></div>`).join('')}</div></section>`;
 }
 function renderResearcherDetail(){
   const pane=$('#detail'), entry=researcherEntryForDetail(), p=entry&&entry.profile;
@@ -6224,7 +6730,7 @@ function renderResearcherDetail(){
   const avatar=p&&p.imageUrl?`<span class="researcherImageFrame"><img class="researcherImage" src="${esc(p.imageUrl)}" alt="" referrerpolicy="no-referrer"${researcherImagePositionStyle(p)}></span>`:`<span class="researcherDetailAvatar">${esc(name.split(/\s+/).map(x=>x[0]).join('').slice(0,2)||'—')}</span>`;
   const fields=researcherLines(p&&p.researchFields), externalLinks=p&&researcherDetailLinksHtml(p);
   const basicRows=[
-    p&&p.birthDate?`<dt>${esc(t('researcherBirthDate'))}</dt><dd>${esc(p.birthDate.replace(/-/g,lang==='ja'?'年':'-').replace(/(\d{2})$/,(_,d)=>lang==='ja'?Number(d)+'日':d))}${researcherDetailProfileSourceLinksHtml(p,'birthDate')}</dd>`:'',
+    p&&p.birthDate?`<dt>${esc(t('researcherBirthDate'))}</dt><dd>${esc(p.birthDate.replace(/-/g,lang==='ja'?'年':'-').replace(/(\d{2})$/,(_,d)=>lang==='ja'?Number(d)+'日':d))}${researcherAgeLabel(p.birthDate)?`<span class="researcherAge">${esc(researcherAgeLabel(p.birthDate))}</span>`:''}${researcherDetailProfileSourceLinksHtml(p,'birthDate')}</dd>`:'',
     p&&p.totalCitations?`<dt>${esc(t('researcherTotalCitations'))}</dt><dd>${esc(Number(p.totalCitations).toLocaleString())}${researcherDetailProfileSourceLinksHtml(p,'totalCitations')}</dd>`:'',
     p&&p.hIndex?`<dt>${esc(t('researcherHIndex'))}</dt><dd>${esc(Number(p.hIndex).toLocaleString())}${researcherDetailProfileSourceLinksHtml(p,'hIndex')}</dd>`:'',
     p&&p.i10Index?`<dt>${esc(t('researcherI10Index'))}</dt><dd>${esc(Number(p.i10Index).toLocaleString())}${researcherDetailProfileSourceLinksHtml(p,'i10Index')}</dd>`:'',
@@ -6234,9 +6740,9 @@ function renderResearcherDetail(){
   pane.innerHTML=`<div class="researcherDetailHead">${avatar}<div class="researcherDetailIdentity"><div class="dTitle">${esc(name)}</div>${researcherDetailProfileSourceLinksHtml(p,'displayName')}${p&&p.imageUrl?researcherDetailProfileSourceLinksHtml(p,'imageUrl'):''}</div><div class="researcherDetailActions"><button class="tbtn" data-researcher-edit>${ic('note')}${esc(t(p?'researcherEdit':'researcherCreateProfile'))}</button><button class="tbtn researcherDetailSettingsBtn${researcherDetailSettingsOpen?' active':''}" data-researcher-display-settings aria-expanded="${researcherDetailSettingsOpen}" title="${esc(t('researcherDisplaySettings'))}">${ic('sliders')}${esc(t('researcherDisplaySettings'))}</button></div></div>${researcherDetailSettingsHtml()}
     ${researcherCareerHtml(p)}
     ${basicRows?`<section class="researcherDetailSection"><div class="researcherDetailLabel">${esc(t('researcherEditorBasic'))}</div><dl class="researcherDetailMeta">${basicRows}</dl></section>`:''}
-    ${(fields.length||researcherLines(p&&p.relatedResearchers).length)?`<section class="researcherDetailSection">${fields.length?`<div class="researcherDetailLabel">${esc(t('researcherFields'))}</div><div class="researcherTagList">${fields.map(x=>`<span class="researcherTag">${esc(x)}</span>${researcherDetailNamedSourceLinksHtml(p,'researchFields',x)}`).join('')}</div>${researcherDetailProfileSourceLinksHtml(p,'researchFields')}`:''}${researcherLines(p&&p.relatedResearchers).length?`<div class="researcherDetailLabel" style="margin-top:${fields.length?'11px':'0'}">${esc(t('researcherRelated'))}</div><div class="researcherTagList">${researcherDetailRelatedHtml(p)}</div>${researcherDetailProfileSourceLinksHtml(p,'relatedResearchers')}`:''}</section>`:''}
+    ${(fields.length||researcherDetailHasRelated(p))?`<section class="researcherDetailSection">${fields.length?`<div class="researcherDetailLabel">${esc(t('researcherFields'))}</div><div class="researcherTagList">${fields.map(x=>`<span class="researcherTag">${esc(x)}</span>${researcherDetailNamedSourceLinksHtml(p,'researchFields',x)}`).join('')}</div>${researcherDetailProfileSourceLinksHtml(p,'researchFields')}`:''}${researcherDetailHasRelated(p)?`<div class="researcherDetailLabel" style="margin-top:${fields.length?'11px':'0'}">${esc(t('researcherRelated'))}</div><div class="researcherTagList">${researcherDetailRelatedHtml(p)}${researcherReciprocalRelatedHtml(p)}</div>${researcherDetailProfileSourceLinksHtml(p,'relatedResearchers')}`:''}</section>`:''}
     ${researcherAwards(p).length?`<section class="researcherDetailSection"><div class="researcherDetailLabel">${esc(t('researcherAwards'))}<span class="researcherDetailCount">${researcherAwards(p).length}</span></div><div class="researcherAwardList">${researcherAwards(p).map(x=>`<div class="researcherAward"><time>${esc(x.year||'—')}</time><div><strong>${esc(x.name)}</strong>${x.organization?`<small class="researcherDetailSubline">${esc(x.organization)}</small>`:''}${researcherDetailSourceLinksHtml(x.sourceUrls||x.sourceUrl)}</div></div>`).join('')}</div></section>`:''}
-    ${externalLinks?`<section class="researcherDetailSection"><div class="researcherDetailLabel">${esc(t('researcherIds'))}</div><div class="researcherDetailLinks">${externalLinks}</div>${researcherDetailPrefs.sources?['orcid','openalex','googleScholar','researchGate','linkedin','researchmap','scopus','researcherId','dblp','cinii'].map(id=>researcherDetailProfileSourceLinksHtml(p,`identifiers.${id}`)).join('')+researcherDetailProfileSourceLinksHtml(p,'website'):''}</section>`:''}
+    ${externalLinks?`<section class="researcherDetailSection"><div class="researcherDetailLabel">${esc(t('researcherIds'))}</div><div class="researcherDetailLinks">${externalLinks}</div>${researcherDetailPrefs.sources?['orcid','openalex','googleScholar','researchGate','linkedin','x','bluesky','researchmap','scopus','researcherId','dblp','cinii'].map(id=>researcherDetailProfileSourceLinksHtml(p,`identifiers.${id}`)).join('')+researcherDetailProfileSourceLinksHtml(p,'website'):''}</section>`:''}
     <section class="researcherDetailSection researcherPublications"><div class="researcherDetailLabel">${esc(t('researcherPublications'))}<span class="researcherDetailCount">${papers.length}</span></div><div class="researcherPaperGroup"><div class="researcherPaperGroupHead">${esc(t('researcherLibraryPapers'))}</div><div class="researcherPaperCards">${papers.map(researcherPaperHtml).join('')||`<div class="researcherMeta">${esc(t('researcherNoPapers'))}</div>`}</div></div></section>
     `;
   renderIcons(pane);
@@ -6268,10 +6774,10 @@ async function prepareOpenAlexEnrichment(entry, candidate, key, directAuthor, ta
 function createResearcherProfileFromEntry(entry){
   const name=researcherLegacyNameParts(entry.name);
   const profile={
-    id:uid(), displayName:researcherCanonicalDisplayName({familyName:name.family,givenName:name.given}), familyName:name.family, givenName:name.given, middleName:'', aliases:uniqueResearcherStrings(Array.from(entry.aliases||[])), affiliation:'',
-    identifiers:{orcid:'',googleScholar:'',researchGate:'',linkedin:'',researchmap:'',openalex:'',scopus:'',researcherId:'',dblp:'',cinii:'',chemstation:''}, website:'',
+    id:uid(), displayName:researcherCanonicalDisplayName({familyName:name.family,givenName:name.given}), familyName:name.family, givenName:name.given, middleName:name.middle, aliases:uniqueResearcherStrings(Array.from(entry.aliases||[])), affiliation:'',
+    identifiers:{orcid:'',googleScholar:'',researchGate:'',linkedin:'',x:'',bluesky:'',researchmap:'',openalex:'',scopus:'',researcherId:'',dblp:'',cinii:'',chemstation:''}, website:'',
     affiliations:[], positions:[], education:[], awards:[], currentInstitutions:[], pastInstitutions:[], birthDate:'', phdYear:'', phdInstitution:'', phdDegree:'', phdAdvisor:'', totalCitations:'', hIndex:'', i10Index:'', worksCount:'', imageUrl:'', imagePositionX:50, imagePositionY:50, imageScale:1, researchFields:[], relatedResearchers:[],
-    dateModified:new Date().toISOString()
+    dateAdded:new Date().toISOString(), dateModified:new Date().toISOString()
   };
   lib.researchers=lib.researchers||[]; lib.researchers.push(profile); selectedResearcherId=profile.id;
   return profile;
@@ -6296,6 +6802,19 @@ function applyResearcherEnrichment(){
 }
 function researcherImageDataUrl(blob){
   return new Promise((resolve,reject)=>{ const reader=new FileReader(); reader.onload=()=>resolve(String(reader.result||'')); reader.onerror=()=>reject(reader.error); reader.readAsDataURL(blob); });
+}
+// Apply an image blob to the researcher editor draft. Shared by the paste button
+// (navigator.clipboard.read) and the paste-event handler (⌘/Ctrl+V), so the two
+// entry points behave identically.
+async function applyResearcherEditorImageBlob(blob){
+  if(!blob||!researcherEditorDraft||!String(blob.type||'').startsWith('image/')){ showToast(t('researcherImageUnavailable'),true); return false; }
+  if(blob.size>2*1024*1024){ showToast(t('researcherImageTooLarge'),true); return false; }
+  try{
+    researcherEditorDraft.imageUrl=await researcherImageDataUrl(blob);
+    researcherEditorResetCrop(researcherEditorDraft);
+    markResearcherFieldSource(researcherEditorDraft,'imageUrl','manual');
+    researcherEditorMarkDirty(); renderResearcherEditor(); return true;
+  }catch(err){ console.error(err); showToast(t('researcherImageUnavailable'),true); return false; }
 }
 async function setResearcherImage(profile, blob){
   if(!profile || !blob || !String(blob.type||'').startsWith('image/')){ showToast(t('researcherImageUnavailable'),true); return; }
@@ -6523,10 +7042,12 @@ function renderSidebar(){
     const folderIc = hasKids
       ? `<span class="collFolderToggle" data-act="toggleColl" data-id="${c.id}" title="${esc(closed ? t('expand') : t('collapse'))}">${folderIcInner}</span>`
       : folderIcInner;
-    // Indent via left-padding rather than a leading spacer element, so the folder
-    // icon sits at the same left edge as the fixed filters and tag rows (a 0-width
+    // Indent via left-padding rather than a leading spacer element (a 0-width
     // spacer still adds a flex gap, which pushed collection icons out of line).
-    return `<div class="sideItem ${filter.coll===c.id?'active':''} ${selectedCollectionIds.has(c.id)?'collMultiSel':''}" data-coll="${c.id}" data-drop-coll="${c.id}" draggable="true" style="padding-left:${8 + Math.min(depth*8, 24)}px">
+    // Base 16px indents the top-level folders slightly under the "Collections"
+    // header title (which starts ~29px in), so the tree reads as belonging to it;
+    // each nesting level adds 10px, capped at three levels so deep trees stay tidy.
+    return `<div class="sideItem ${filter.coll===c.id?'active':''} ${selectedCollectionIds.has(c.id)?'collMultiSel':''}" data-coll="${c.id}" data-drop-coll="${c.id}" draggable="true" style="padding-left:${16 + Math.min(depth*10, 30)}px">
       ${folderIc}<span style="overflow:hidden;text-overflow:ellipsis;flex:1">${esc(c.name)}</span>
       <span class="rowbtns">
         <button data-act="sub" data-id="${c.id}" title="${esc(t('newSubCollection'))}">${ic('folderPlus')}</button>
@@ -7024,7 +7545,53 @@ function renderImageField(it){
       <button class="tbtn" data-act="pasteImage">${ic('clipboard')}${esc(t('imagePaste'))}</button>
       <button class="tbtn" data-act="pickImage">${ic('image')}${esc(hasImg ? t('imageReplace') : t('imageFromFile'))}</button>
     </div>
+    <small class="figPasteHint">${esc(t('imagePasteHint'))}</small>
   </div>`;
+}
+// A corresponding author must be one of the paper's authors, so present the
+// field as a checkbox list built from it.authors instead of free text. Any
+// stored corresponding entry that matches no author (e.g. an OpenAlex import
+// with a slightly different spelling) is preserved and shown as a removable
+// chip so nothing is silently lost.
+function correspondingAuthorText(a){ return a && a.given ? `${a.family}, ${a.given}` : String(a && a.family || ''); }
+function renderCorrespondingPicker(it){
+  const authors=it.authors||[];
+  const corr=parseAuthorListText(it.correspondingAuthors);
+  // Selected corresponding authors → removable chips.
+  const chips=corr.map(c=>{
+    const txt=correspondingAuthorText(c)||'—';
+    return `<span class="corrChip">${esc(txt)}<button type="button" class="corrChipX" data-corr-remove="${esc(txt)}" aria-label="✕">${ic('x')}</button></span>`;
+  }).join('');
+  // Suggestions = the paper's authors not already chosen (type or pick, like the
+  // institution field). Free text is still allowed for authors not in the list.
+  const opts=authors.filter(a=>!corr.some(c=>authorMatchesCorresponding(a,[c])))
+    .map(a=>`<option value="${esc(correspondingAuthorText(a))}"></option>`).join('');
+  return `<div class="fRow"><label>${esc(t('correspondingAuthors'))}</label>
+    <div class="corrPick">
+      <div class="corrChips">${chips||`<span class="corrEmpty">${esc(t('correspondingEmpty'))}</span>`}</div>
+      <div class="corrAddWrap">
+        <input type="text" id="corrAddInput" class="corrAddInput" list="corrAuthorList" placeholder="${esc(t('correspondingAddPh'))}" autocomplete="off" spellcheck="false">
+        <datalist id="corrAuthorList">${opts}</datalist>
+        <button type="button" class="tbtn" data-corr-add>${ic('plus')}${esc(t('add'))}</button>
+      </div>
+      <div class="corrPickHint">${esc(t('correspondingPickHint'))}</div>
+    </div></div>`;
+}
+// Add the current input value (a picked "Family, Given" suggestion or free text)
+// to the selected item's corresponding authors, de-duplicating by display text.
+function addCorrespondingFromInput(){
+  const input=document.querySelector('#corrAddInput'); if(!input) return;
+  const val=input.value.trim();
+  const it=lib.items.find(x=>x.id===selectedId); if(!it) return;
+  if(!val){ input.focus(); return; }
+  const cur=parseAuthorListText(it.correspondingAuthors);
+  parseAuthorListText(val).forEach(a=>{
+    const txt=correspondingAuthorText(a);
+    if(txt && !cur.some(c=>correspondingAuthorText(c).toLowerCase()===txt.toLowerCase())) cur.push(a);
+  });
+  it.correspondingAuthors=cur.map(correspondingAuthorText).filter(Boolean).join('; ');
+  it.correspondingStatus=it.correspondingAuthors.trim()?'':it.correspondingStatus;
+  touch(it); updateCitePreview(); renderDetail(); renderList(); renderSidebar();
 }
 // Design B: assigned tags as a removable pill row, with a separate bordered
 // search/add field (and suggestion dropdown) below — no nested frames.
@@ -7479,7 +8046,7 @@ function detailEditBodyHtml(it){
     ${fieldRow('DOI','doi',it.doi)}
     ${fieldRow(t('citekey'),'citekey',it.citekey)}
     ${fieldRow('URL','url',it.url)}
-    ${fieldRow(t('correspondingAuthors'),'correspondingAuthors',it.correspondingAuthors)}
+    ${renderCorrespondingPicker(it)}
     ${fieldRow(t('abstract'),'abstract',it.abstract,'textarea')}
     <div class="dSection">${esc(t('imageSection'))}</div>
     ${renderImageField(it)}
@@ -8689,25 +9256,43 @@ const MANUAL = {
         'フォルダ構成の移行が必要で、その形式でうまく引き継げない場合は、一度 Zotero に取り込んでから Zotero RDF で書き出す方法が確実です。',
       ]},
     ]},
-    { h:'拡張機能で保存する', tab:'拡張機能', blocks:[
-      {p:'Paper Library Connector は、論文ページを開いたまま Chrome のツールバーから文献を保存するための付属拡張機能です。保存した文献は、Paper Library を開いたときに自動でライブラリへ取り込まれます。'},
+    { h:'Chrome 拡張機能で保存する', tab:'Chrome拡張機能', blocks:[
+      {p:'Paper Library Connector は、論文ページを開いたまま文献を保存するための付属拡張機能です。Google Chrome 専用で、Safari・Firefox・Edge など他のブラウザでは動作しません（Chromium 系ブラウザでも動作は保証されません）。保存した文献は、Paper Library を開いたときに自動でライブラリへ取り込まれます。'},
       {fig:'connector'},
-      {sub:'インストール'},
+      {sub:'インストール（Google Chrome）'},
       {dl:'拡張機能をダウンロード（ZIP）'},
       {ul:[
-        '上のボタンで ZIP をダウンロードし、解凍します。解凍してできた「paper-library-connector」フォルダは、あとで消したり動かしたりしない場所に置いてください（おすすめ：Windows は「ドキュメント\\PaperLibrary\\」、Mac は「書類/PaperLibrary/」など、普段片づけない固定のフォルダ。ダウンロードフォルダやデスクトップに置いたままだと、掃除のときに誤って消しやすいので避けてください）。',
+        'Google Chrome で作業してください。上のボタンで ZIP をダウンロードし、解凍します。解凍してできた「paper-library-connector」フォルダは、あとで消したり動かしたりしない場所に置いてください（おすすめ：Windows は「ドキュメント\\PaperLibrary\\」、Mac は「書類/PaperLibrary/」など、普段片づけない固定のフォルダ。ダウンロードフォルダやデスクトップに置いたままだと、掃除のときに誤って消しやすいので避けてください）。',
         'Chrome のアドレスバーに chrome://extensions と入力して開き、右上の「デベロッパーモード」を ON にします（chrome:// のページはリンクからは開けないため、アドレスバーに貼り付けて移動してください）。',
         '「パッケージ化されていない拡張機能を読み込む」を押し、先ほど置いた「paper-library-connector」フォルダを選びます。',
         '大切：読み込んだあとも Chrome はこのフォルダを直接参照し続けます。フォルダを削除・移動・名前変更すると拡張機能が動かなくなるので、そのままの場所に残しておいてください（消してしまった場合は、もう一度解凍して同じ場所に置き、この手順をやり直せば復活します）。',
         'GitHub Pages など https:// の Paper Library で使う場合は、このまま利用できます。ローカルの index.html を file:// で開いて使う場合だけ、拡張機能の「詳細」画面で「ファイルの URL へのアクセスを許可する」を ON にしてください。',
         '拡張機能を使う前に、一度 Paper Library をライブラリフォルダを開いた状態で表示しておいてください（保存先ライブラリとコレクション一覧を拡張機能に知らせるためです）。',
       ]},
+      {sub:'ツールバーに固定（ピン留め）する'},
+      {ul:[
+        '読み込んだ直後は、拡張機能はツールバーに常時表示されません。ツールバー右側にあるパズルのピース型のアイコン（拡張機能ボタン）をクリックすると、インストール済みの拡張機能の一覧が開きます。',
+        '一覧の中の「Paper Library Connector」の右にあるピン（画びょう）のアイコンをクリックすると、ツールバーに固定され、論文ページでいつでもワンクリックで開けるようになります。',
+        'ピン留めしないと毎回パズルのピースのメニューから開くことになるので、固定しておくのがおすすめです。',
+      ]},
       {sub:'論文ページから保存する'},
       {ul:[
-        '出版社ページや arXiv などの論文ページを開き、Chrome ツールバーの本のアイコンをクリックします。',
+        '出版社ページや arXiv などの論文ページを開き、ツールバーの本のアイコン（ピン留めした拡張機能）をクリックします。',
         'ポップアップには論文タイトル、著者、雑誌名略語、年が表示されます。DOI は表示を邪魔しないよう、ここでは出しません。',
         '入れたいコレクションにチェックを入れて「保存」を押します。コレクションを選ばなければ「未分類」（どのコレクションにも入れない状態）で保存されます。',
         'ライブラリにあるタグも一覧表示されるので、付けたいタグにチェックを入れて保存できます（タグは本体で一度作成したものが候補に出ます）。',
+      ]},
+      {sub:'画像（グラフィカルアブストラクト）を取り込む'},
+      {ul:[
+        'ポップアップの「取り込む画像」欄に、ページから見つかった画像のプレビューが表示されます。取り込む前に、どの画像が保存されるかをここで確認できます。',
+        '候補が複数ある場合は ◀ ▶ ボタンで切り替えられます。Angew. Chem.・Chem 系のほか、JACS などの ACS 系や Nature 系でも本文中の図から候補を探します（雑誌によっては自動取得できない画像もあります）。',
+        '良い候補が無い・自動取得できない場合は、「ファイルから選択」で手元の画像ファイル（スクリーンショットなど）を指定できます。',
+        '「この画像を取り込む」のチェックを外すと、画像なしで保存します。',
+      ]},
+      {sub:'PDF の自動取得（任意）'},
+      {ul:[
+        'ポップアップ下部の「オープンアクセスの PDF も自動取得する」にチェックを入れると、取り込み時にオープンアクセスの PDF が見つかれば自動で添付します。',
+        '初期状態はオフです。必要なときだけチェックしてください（PDF は保存後に本体からいつでも手動で添付できます）。',
       ]},
       {sub:'保存先ライブラリと取り込み'},
       {ul:[
@@ -8916,25 +9501,43 @@ const MANUAL = {
         'If you need to preserve folder structure and it doesn’t come through in that format, importing into Zotero first and then exporting as Zotero RDF is the most reliable route.',
       ]},
     ]},
-    { h:'Save with the extension', tab:'Extension', blocks:[
-      {p:'Paper Library Connector is the bundled Chrome extension for saving references from paper pages directly from the Chrome toolbar. Saved papers are imported automatically when Paper Library is open.'},
+    { h:'Save with the Chrome extension', tab:'Chrome extension', blocks:[
+      {p:'Paper Library Connector is the bundled extension for saving references from paper pages directly from the toolbar. It is for Google Chrome only — it does not work in Safari, Firefox, or Edge (other Chromium browsers are not supported either). Saved papers are imported automatically when Paper Library is open.'},
       {fig:'connector'},
-      {sub:'Install'},
+      {sub:'Install (Google Chrome)'},
       {dl:'Download the extension (ZIP)'},
       {ul:[
-        'Download the ZIP with the button above and unzip it. Put the resulting “paper-library-connector” folder somewhere permanent that you will not delete or move later (recommended: a fixed folder such as Documents\\PaperLibrary\\ on Windows or Documents/PaperLibrary/ on Mac — avoid leaving it in Downloads or on the Desktop, where it is easy to clean up by mistake).',
+        'Work in Google Chrome. Download the ZIP with the button above and unzip it. Put the resulting “paper-library-connector” folder somewhere permanent that you will not delete or move later (recommended: a fixed folder such as Documents\\PaperLibrary\\ on Windows or Documents/PaperLibrary/ on Mac — avoid leaving it in Downloads or on the Desktop, where it is easy to clean up by mistake).',
         'Type chrome://extensions into the Chrome address bar to open it, then turn on “Developer mode” at the top right (chrome:// pages cannot be opened from a link, so paste it into the address bar).',
         'Click “Load unpacked” and select the “paper-library-connector” folder you placed above.',
         'Important: after loading, Chrome keeps referencing this folder directly. Deleting, moving, or renaming it disables the extension, so leave it where it is (if you do remove it, just unzip again into the same place and repeat these steps to restore it).',
         'If you use Paper Library from GitHub Pages or another https:// page, no extra switch is needed. If you open a local index.html via file://, open the extension’s “Details” page and enable “Allow access to file URLs”.',
         'Before first use, open Paper Library once with your library folder open, so the extension learns your library name and collection list.',
       ]},
+      {sub:'Pin it to the toolbar'},
+      {ul:[
+        'Right after loading, the extension is not shown in the toolbar all the time. Click the puzzle-piece icon (the Extensions button) near the top-right of the Chrome toolbar to open the list of installed extensions.',
+        'In that list, click the pin icon next to “Paper Library Connector”. It is now fixed to the toolbar, so you can open it with one click from any paper page.',
+        'Without pinning you have to open it from the puzzle-piece menu each time, so pinning is recommended.',
+      ]},
       {sub:'Save from a paper page'},
       {ul:[
-        'Open a publisher page, arXiv page, or another paper page, then click the book icon in the Chrome toolbar.',
+        'Open a publisher page, arXiv page, or another paper page, then click the book icon in the toolbar (the pinned extension).',
         'The popup shows the paper title, authors, abbreviated journal name, and year. DOI is hidden here to keep the popup readable.',
         'Tick the collections you want and press “Save”. With nothing selected, the paper is saved as “uncategorized” (in no collection).',
         'Your library’s tags are listed too — tick any you want to apply (the choices are the tags you have already created in the app).',
+      ]},
+      {sub:'Import the image (graphical abstract)'},
+      {ul:[
+        'The popup’s “Image to import” box previews the image found on the page, so you can review exactly which image will be saved before importing.',
+        'When there are several candidates, switch between them with the ◀ ▶ buttons. Besides Angew. Chem. and Chem-family journals, it also looks through the article figures on ACS journals (JACS, etc.) and Nature-family journals (some images cannot be fetched automatically, depending on the publisher).',
+        'If none of the candidates is good — or an image cannot be fetched — use “Choose file” to pick an image from your computer (for example a screenshot).',
+        'Untick “Import this image” to save without any image.',
+      ]},
+      {sub:'Fetch the PDF (optional)'},
+      {ul:[
+        'Tick “Also fetch the open-access PDF automatically” near the bottom of the popup to attach an open-access PDF automatically on import when one is found.',
+        'This is off by default. Turn it on only when you want it (you can always attach a PDF manually in the app afterwards).',
       ]},
       {sub:'Destination library and import'},
       {ul:[
@@ -9501,7 +10104,7 @@ function researcherCandidateProfile(c){
     profile.fieldSources=JSON.parse(JSON.stringify(ai.fieldSources||profile.fieldSources));
     profile.enrichment={...(profile.enrichment||{}),ai:{urls:ai.sourceUrls||[],retrievedAt:ai.retrievedAt,fields:Object.keys(ai).filter(key=>!['source','sourceUrl','sourceUrls','retrievedAt','fieldSources'].includes(key))}};
   }
-  profile.intake={source,sourceUrl,createdAt:now}; profile.dateModified=now; return profile;
+  profile.intake={source,sourceUrl,createdAt:now}; profile.dateAdded=now; profile.dateModified=now; return profile;
 }
 function researcherCandidateMatches(c){
   const ids=c.identifiers||{}, keys=new Set(researcherNameKeys(researcherCandidateName(c))); (c.aliases||[]).forEach(name=>researcherNameKeys(name).forEach(key=>keys.add(key)));
@@ -9585,7 +10188,7 @@ function showResearcherReview(queue,opts={}){
   if(!researcherIntakeQueue.length){body.innerHTML=`<div class="researcherIntakeEmpty">${esc(t('researcherIntakeNone'))}</div>`;primary.hidden=true;}else{
     const toolbar=opts.searchable?intakeToolbarHtml(researcherIntakeQueue):'';
     body.innerHTML=toolbar+`<div class="researcherIntakeCandidates" id="researcherIntakeList">${researcherIntakeQueue.map((c,index)=>intakeCandidateCardHtml(c,index,opts)).join('')}</div>`+(opts.searchable?`<div class="researcherIntakeEmpty" id="intakeNoMatch" style="display:none">${esc(t('researcherIntakeNoMatch'))}</div>`:'');
-    primary.hidden=false;primary.textContent=t('researcherIntakeSave');primary.onclick=()=>{const selected=researcherIntakeQueue.map((c,index)=>({c,index})).filter(({index})=>body.querySelector(`[data-intake-check="${index}"]`)?.checked);if(!selected.length){showToast(t('researcherIntakeNoSelection'),true);return;}const profiles=selected.map(({c,index})=>researcherRegisterCandidate(c,body.querySelector(`[data-intake-target="${index}"]`)?.value||'',!!body.querySelector(`[data-intake-link="${index}"]`)?.checked));dlg.close();currentView='researchers';selectedResearcherId=profiles.at(-1).id;selectedResearcherKey=researcherDirectoryEntries().find(x=>x.profile&&x.profile.id===selectedResearcherId)?.key||'';renderAll();showToast(t('researcherIntakeSaved')(profiles.length));if(opts.extension)connectorResearcherResult(selected.map(({c})=>({id:c.extensionId,ok:true})).filter(x=>x.id));};
+    primary.hidden=false;primary.textContent=t('researcherIntakeSave');primary.onclick=()=>{const selected=researcherIntakeQueue.map((c,index)=>({c,index})).filter(({index})=>body.querySelector(`[data-intake-check="${index}"]`)?.checked);if(!selected.length){showToast(t('researcherIntakeNoSelection'),true);return;}const profiles=selected.map(({c,index})=>researcherRegisterCandidate(c,body.querySelector(`[data-intake-target="${index}"]`)?.value||'',!!body.querySelector(`[data-intake-link="${index}"]`)?.checked));dlg.close();currentView='researchers';selectedResearcherId=profiles.at(-1).id;selectedResearcherKey=researcherDirectoryEntries().find(x=>x.profile&&x.profile.id===selectedResearcherId)?.key||'';renderAll();showToast(t('researcherIntakeSaved')(profiles.length));};
     if(opts.searchable) wireIntakeFilters(body);
   } if(!dlg.open)dlg.showModal();
 }
@@ -9695,7 +10298,7 @@ async function addFromAddBar(){
     const source=researcherSourceCandidate(raw); $('#addBox').value=''; updateAddBarUI();
     // A URL/ID opens the manual form with the URL pre-filled (no API fetch);
     // plain text is treated as a display name.
-    if(source) showResearcherManual(researcherManualSeedFromSource(source, raw)); else { const parts=researcherLegacyNameParts(raw); showResearcherManual({familyName:parts.family,givenName:parts.given}); }
+    if(source) showResearcherManual(researcherManualSeedFromSource(source, raw)); else { const parts=researcherLegacyNameParts(raw); showResearcherManual({familyName:parts.family,givenName:parts.given,middleName:parts.middle}); }
     return;
   }
   await fetchAndAddQuick(raw, { btn: $('#btnAddGo'), onDone: ()=>{ $('#addBox').value = ''; updateAddBarUI(); } });
@@ -10280,6 +10883,22 @@ document.addEventListener('click', (e)=>{
   if(!e.target.closest('#researcherColFilterPop') && !e.target.closest('[data-researcher-filter]')) $('#researcherColFilterPop').classList.remove('open');
   if(!e.target.closest('#researcherNameDisplayPop') && !e.target.closest('[data-researcher-name-display]')) $('#researcherNameDisplayPop').classList.remove('open');
 });
+// Map popovers close when you click anywhere outside them — including buttons whose own
+// handlers call stopPropagation (e.g. the 地図 view menu). Runs on the CAPTURE phase so it
+// fires before those handlers can stop the event from reaching the document.
+document.addEventListener('click', (e)=>{
+  if(!e.target.closest('#mapSettingsPop') && !e.target.closest('[data-map-settings]')) $('#mapSettingsPop')?.classList.remove('open');
+  if(!e.target.closest('#mapAlertsPop') && !e.target.closest('[data-map-alerts]')) $('#mapAlertsPop')?.classList.remove('open');
+  if(!e.target.closest('#mapCoordPop') && !e.target.closest('[data-map-coord]')) $('#mapCoordPop')?.classList.remove('open');
+}, true);
+// keep the coloured fill of every .uiSlider in sync with its value as it is dragged
+document.addEventListener('input', (e)=>{
+  const el=e.target;
+  if(el&&el.classList&&el.classList.contains('uiSlider')){
+    const min=+el.min||0, max=+el.max, v=+el.value;
+    el.style.setProperty('--rm-fill', `${((v-min)/((max-min)||1))*100}%`);
+  }
+});
 
 /* ---- list wrap toggle ---- */
 let listWrap = localStorage.getItem('refshelf.listWrap') === '1'; // default: wrap off
@@ -10352,6 +10971,22 @@ function updateListViewButton(){
   if(filtersItem) filtersItem.style.display = listView==='table' ? 'none' : ''; // filters: non-table
   const gallerySettings=$('#gallerySettingsSection');
   if(gallerySettings) gallerySettings.style.display=isGallery?'':'none';     // grid columns + image fit: gallery / magazine
+  // sort: available for every card-style view rendered into #itemCards
+  // (cards / gallery / magazine), which — unlike the table — has no column
+  // headers to click for sorting.
+  const sortSection=$('#gallerySortSection');
+  if(sortSection) sortSection.style.display=(isCards||isGallery)?'':'none';
+  document.querySelectorAll('#gallerySortSection [data-gallery-sort]').forEach(el=>{
+    // 'added' and the default 'dateAdded' are the same order
+    const k=el.dataset.gallerySort;
+    el.classList.toggle('viewActive', k===sortKey || (k==='added' && sortKey==='dateAdded'));
+  });
+  const sortDirBtn=$('#gallerySortDir');
+  if(sortDirBtn){
+    sortDirBtn.classList.toggle('asc', sortAsc);
+    const lbl=$('#gallerySortDirLabel');
+    if(lbl) lbl.textContent=t(sortAsc?'sortDirAsc':'sortDirDesc');
+  }
   document.querySelectorAll('#galleryColsMenu [data-gallery-cols]').forEach(el=>el.classList.toggle('viewActive', el.dataset.galleryCols===galleryCols));
   document.querySelectorAll('#galleryColsMenu [data-gallery-fit]').forEach(el=>el.classList.toggle('viewActive', el.dataset.galleryFit===galleryFit));
   const corrSection=$('#galleryCorrSection');
@@ -10435,6 +11070,25 @@ $('#galleryColsMenu').addEventListener('click', (e)=>{
     galleryFit = f.dataset.galleryFit;
     localStorage.setItem('refshelf.galleryFit', galleryFit);
     applyListView(); // pure CSS fit change — no re-render of cards needed; keep menu open
+    return;
+  }
+  // sort direction toggle (asc / desc) for card-style views
+  const dir = e.target.closest('#gallerySortDir');
+  if(dir){
+    sortAsc = !sortAsc;
+    updateListViewButton();
+    renderList({skipBadges:true});
+    return;
+  }
+  // pick a sort key for card-style views; drives the shared sortKey/sortAsc used
+  // by visibleItems(), so the table stays in sync too. Keep the menu open.
+  const sortBtn = e.target.closest('[data-gallery-sort]');
+  if(sortBtn){
+    const key = sortBtn.dataset.gallerySort;
+    if(sortKey===key) sortAsc = !sortAsc;
+    else { sortKey = key; sortAsc = (key==='citedBy' || key==='starred') ? false : (key==='added' ? false : true); }
+    updateListViewButton();
+    renderList({skipBadges:true});
     return;
   }
   // 折り返し / 列数 / フィルタ moved here from the old 表示 menu
@@ -11273,6 +11927,19 @@ function renderListDebounce(){}
 // Researcher profiles are edited in a staged dialog. The detail pane deliberately
 // remains read-only, so Cancel/Esc can discard the draft without touching library data.
 $('#detail').addEventListener('click',e=>{
+  if(e.target.closest('[data-corr-add]')){ addCorrespondingFromInput(); return; }
+  const corrRemove=e.target.closest('[data-corr-remove]');
+  if(corrRemove){
+    const it=lib.items.find(x=>x.id===selectedId);
+    if(it){
+      const rk=corrRemove.dataset.corrRemove.toLowerCase();
+      const kept=parseAuthorListText(it.correspondingAuthors).filter(c=>correspondingAuthorText(c).toLowerCase()!==rk);
+      it.correspondingAuthors=kept.map(correspondingAuthorText).filter(Boolean).join('; ');
+      it.correspondingStatus=it.correspondingAuthors.trim()?'':it.correspondingStatus;
+      touch(it); updateCitePreview(); renderDetail(); renderList(); renderSidebar();
+    }
+    return;
+  }
   const authorLink=e.target.closest('[data-author-researcher-key]');
   if(authorLink){
     const entry=researcherEntryByIdentity(authorLink.dataset.authorResearcherKey, authorLink.dataset.authorResearcherId||null);
@@ -11286,13 +11953,15 @@ $('#detail').addEventListener('click',e=>{
   if(e.target.closest('[data-researcher-edit]')){ openResearcherEditor(); return; }
   const related=e.target.closest('[data-researcher-related-key]');
   if(related){ const entry=researcherEntryByIdentity(related.dataset.researcherRelatedKey,null); selectedResearcherKey=entry?entry.key:related.dataset.researcherRelatedKey; selectedResearcherId=entry&&entry.profile?entry.profile.id:null; researcherCandidates=[]; researcherEnrichmentPreview=null; renderResearcherList(); renderResearcherDetail(); return; }
-  if(e.target.closest('[data-researcher-display-settings]')){ researcherDetailSettingsOpen=!researcherDetailSettingsOpen; renderResearcherDetail(); }
+  if(e.target.closest('[data-researcher-display-settings]')){ researcherDetailSettingsOpen=!researcherDetailSettingsOpen; renderResearcherDetail(); return; }
+  if(e.target.closest('[data-aff-abbrev-edit]')){ openAffAbbrevEditor(); return; }
 });
 $('#detail').addEventListener('change',e=>{
   const visKey=e.target&&e.target.dataset&&e.target.dataset.detailVis;
   if(visKey){ referenceDetailPrefs.visible[visKey]=!!e.target.checked; saveReferenceDetailPrefs(); renderDetail(); return; }
   const prefKey=e.target&&e.target.dataset&&e.target.dataset.detailPref;
   if(prefKey){ referenceDetailPrefs[prefKey]=!!e.target.checked; saveReferenceDetailPrefs(); renderDetail(); return; }
+  if(e.target&&e.target.hasAttribute&&e.target.hasAttribute('data-aff-abbrev-toggle')){ affAbbrevPrefs.enabled=!!e.target.checked; saveAffAbbrevPrefs(); renderResearcherList(); renderResearcherDetail(); return; }
   const key=e.target&&e.target.dataset&&e.target.dataset.researcherDetailPref;
   if(!key) return;
   researcherDetailPrefs[key]=!!e.target.checked; saveResearcherDetailPrefs(); renderResearcherDetail();
@@ -11350,20 +12019,17 @@ $('#researcherEditorContent').addEventListener('input',e=>{
     e.target.closest('[data-editor-section="aiimport"]')?.querySelector('.researcherAiPreview,.researcherAiError')?.remove();
     return;
   }
+  if(e.target.hasAttribute('data-editor-src-field')&&researcherEditorDraft){ researcherEditorSetFieldSources(researcherEditorDraft,e.target.dataset.editorSrcField,e.target.value); researcherEditorMarkDirty(); return; }
+  if(e.target.hasAttribute('data-editor-src-rec')&&researcherEditorDraft){ const rec=researcherEditorRecordBySrcId(e.target.dataset.editorSrcRec); if(rec){ const urls=uniqueResearcherStrings(String(e.target.value||'').split(/\r?\n/).map(s=>s.trim())); rec.sourceUrls=urls; rec.sourceUrl=urls[0]||''; researcherEditorMarkDirty(); } return; }
   if(e.target.hasAttribute('data-re-editor')) researcherEditorSetValue(e.target.dataset.reEditor,e.target.value);
-  if(e.target.hasAttribute('data-editor-image-position')){
-    researcherEditorSetImagePosition(e.target.dataset.editorImagePosition,e.target.value);
-    const preview=e.target.closest('[data-editor-section="image"]')?.querySelector('.researcherImage');
-    if(preview){
-      const position=researcherImagePosition(researcherEditorDraft), scale=researcherImageScale(researcherEditorDraft);
-      preview.style.objectPosition=`${position.x}% ${position.y}%`;
-      preview.style.transformOrigin=`${position.x}% ${position.y}%`;
-      preview.style.setProperty('--researcher-image-scale',scale);
-    }
+  if(e.target.hasAttribute('data-editor-image-zoom') && researcherEditorDraft){
+    researcherEditorDraft.imageZoom=Math.max(0.1,Number(e.target.value)||1);
+    researcherEditorMarkDirty();
+    applyResearcherCropPreview();
   }
   if(e.target.hasAttribute('data-re-editor-birth')) researcherEditorSetBirth();
   const positionRow=e.target.closest('[data-editor-position-row]');
-  if(positionRow&&researcherEditorDraft){
+  if(positionRow&&researcherEditorDraft&&!e.target.hasAttribute('data-editor-record-related-input')){
     const x=ensureResearcherPositions(researcherEditorDraft)[+positionRow.dataset.editorPositionRow]; if(!x) return;
     if(e.target.hasAttribute('data-editor-position-institution')) x.institution=e.target.value;
     else if(e.target.hasAttribute('data-editor-position-organization')) x.organization=e.target.value;
@@ -11373,7 +12039,7 @@ $('#researcherEditorContent').addEventListener('input',e=>{
     x.sourceUrls=[]; x.sourceUrl=''; markResearcherFieldSource(researcherEditorDraft,'positions','manual'); syncAffiliationsFromPositions(researcherEditorDraft); researcherEditorMarkDirty();
   }
   const educationRow=e.target.closest('[data-editor-education-row]');
-  if(educationRow&&researcherEditorDraft){
+  if(educationRow&&researcherEditorDraft&&!e.target.hasAttribute('data-editor-record-related-input')){
     const x=ensureResearcherEducation(researcherEditorDraft)[+educationRow.dataset.editorEducationRow]; if(!x) return;
     if(e.target.hasAttribute('data-editor-education-institution')) x.institution=e.target.value;
     else if(e.target.hasAttribute('data-editor-education-program')) x.program=e.target.value;
@@ -11395,14 +12061,14 @@ $('#researcherEditorContent').addEventListener('change',e=>{
   if(e.target.hasAttribute('data-re-editor')) researcherEditorSetValue(e.target.dataset.reEditor,e.target.value);
   if(e.target.hasAttribute('data-re-editor-birth')) researcherEditorSetBirth();
   const positionRow=e.target.closest('[data-editor-position-row]');
-  if(positionRow&&researcherEditorDraft){
+  if(positionRow&&researcherEditorDraft&&(e.target.hasAttribute('data-editor-position-start')||e.target.hasAttribute('data-editor-position-end'))){
     const x=ensureResearcherPositions(researcherEditorDraft)[+positionRow.dataset.editorPositionRow]; if(!x) return;
     if(e.target.hasAttribute('data-editor-position-start')) x.start=e.target.value;
     else if(e.target.hasAttribute('data-editor-position-end')) x.end=e.target.value;
     x.sourceUrls=[]; x.sourceUrl=''; markResearcherFieldSource(researcherEditorDraft,'positions','manual'); syncAffiliationsFromPositions(researcherEditorDraft); researcherEditorMarkDirty();
   }
   const educationRow=e.target.closest('[data-editor-education-row]');
-  if(educationRow&&researcherEditorDraft){
+  if(educationRow&&researcherEditorDraft&&(e.target.hasAttribute('data-editor-education-start')||e.target.hasAttribute('data-editor-education-end'))){
     const x=ensureResearcherEducation(researcherEditorDraft)[+educationRow.dataset.editorEducationRow]; if(!x) return;
     if(e.target.hasAttribute('data-editor-education-start')) x.start=e.target.value;
     else if(e.target.hasAttribute('data-editor-education-end')) x.end=e.target.value;
@@ -11412,11 +12078,28 @@ $('#researcherEditorContent').addEventListener('change',e=>{
   if(awardRow&&researcherEditorDraft&&e.target.hasAttribute('data-editor-award-year')){ const x=researcherAwards(researcherEditorDraft)[+awardRow.dataset.editorAwardRow]; if(x){ x.year=e.target.value; x.sourceUrls=[]; x.sourceUrl=''; markResearcherFieldSource(researcherEditorDraft,'awards','manual'); researcherEditorMarkDirty(); } }
 });
 $('#researcherEditorContent').addEventListener('keydown',e=>{
-  if(!['researcherEditorResearchFieldInput','researcherEditorRelatedInput'].includes(e.target.id)||e.key!=='Enter') return;
+  if(e.key!=='Enter') return;
+  if(e.target.hasAttribute&&e.target.hasAttribute('data-editor-record-related-input')){ e.preventDefault(); e.target.closest('.researcherFieldAdd')?.querySelector('[data-editor-record-related-add]')?.click(); return; }
+  if(!['researcherEditorResearchFieldInput','researcherEditorRelatedInput','researcherEditorAdvisorInput'].includes(e.target.id)) return;
   e.preventDefault();
-  e.target.closest('.researcherFieldPicker')?.querySelector(e.target.id==='researcherEditorRelatedInput'?'[data-editor-related-add]':'[data-editor-field-add]')?.click();
+  const addSel=e.target.id==='researcherEditorRelatedInput'?'[data-editor-related-add]':e.target.id==='researcherEditorAdvisorInput'?'[data-editor-advisor-add]':'[data-editor-field-add]';
+  e.target.closest('.researcherFieldPicker')?.querySelector(addSel)?.click();
+});
+// Auto-commit a picker entry when a datalist option is chosen (selecting a registered
+// researcher / existing field), so no separate "Add" click is needed. Manual free text
+// still waits for the Add button or Enter.
+$('#researcherEditorContent').addEventListener('input',e=>{
+  const el=e.target; if(!el||!el.hasAttribute) return;
+  const value=String(el.value||'').trim(); if(!value) return;
+  const matches=(opts)=>opts.some(o=>o.toLocaleLowerCase()===value.toLocaleLowerCase());
+  if(el.hasAttribute('data-editor-record-related-input')){ if(matches(knownRelatedResearchers())) el.closest('.researcherFieldAdd')?.querySelector('[data-editor-record-related-add]')?.click(); return; }
+  if(el.id==='researcherEditorRelatedInput'){ if(matches(knownRelatedResearchers())) el.closest('.researcherFieldPicker')?.querySelector('[data-editor-related-add]')?.click(); return; }
+  if(el.id==='researcherEditorAdvisorInput'){ if(matches(knownRelatedResearchers())) el.closest('.researcherFieldPicker')?.querySelector('[data-editor-advisor-add]')?.click(); return; }
+  if(el.id==='researcherEditorResearchFieldInput'){ if(matches(knownResearchFields())) el.closest('.researcherFieldPicker')?.querySelector('[data-editor-field-add]')?.click(); return; }
 });
 $('#researcherEditorContent').addEventListener('click',async e=>{
+  const srcToggle=e.target.closest('[data-editor-src-toggle]');
+  if(srcToggle){ const key=srcToggle.dataset.editorSrcToggle; if(researcherEditorSourceOpen.has(key)) researcherEditorSourceOpen.delete(key); else researcherEditorSourceOpen.add(key); renderResearcherEditor(); return; }
   const addAiUrl=e.target.closest('[data-editor-ai-url-add]');
   if(addAiUrl){
     const values=Array.from(document.querySelectorAll('[data-editor-ai-url]')).map(x=>x.value), row=addAiUrl.closest('[data-editor-ai-url-row]'), index=Array.from(document.querySelectorAll('[data-editor-ai-url-row]')).indexOf(row);
@@ -11431,10 +12114,14 @@ $('#researcherEditorContent').addEventListener('click',async e=>{
   if(addPosition&&researcherEditorDraft){ ensureResearcherPositions(researcherEditorDraft).push({institution:'',organization:'',title:'',start:'',end:'',sourceUrls:[]}); researcherEditorMarkDirty(); researcherEditorSection='affiliations'; renderResearcherEditor(); $('#researcherEditorContent [data-editor-position-row]:last-child [data-editor-position-institution]')?.focus(); return; }
   const delPosition=e.target.closest('[data-editor-position-delete]');
   if(delPosition&&researcherEditorDraft){ ensureResearcherPositions(researcherEditorDraft).splice(+delPosition.dataset.editorPositionDelete,1); syncAffiliationsFromPositions(researcherEditorDraft); researcherEditorMarkDirty(); renderResearcherEditor(); return; }
+  const hidePosition=e.target.closest('[data-editor-position-hide]');
+  if(hidePosition&&researcherEditorDraft){ const x=ensureResearcherPositions(researcherEditorDraft)[+hidePosition.dataset.editorPositionHide]; if(x){ x.hidden=!x.hidden; researcherEditorMarkDirty(); renderResearcherEditor(); } return; }
   const addEducation=e.target.closest('[data-editor-education-add]');
   if(addEducation&&researcherEditorDraft){ ensureResearcherEducation(researcherEditorDraft).push({institution:'',program:'',degree:'',start:'',end:'',sourceUrls:[]}); researcherEditorMarkDirty(); researcherEditorSection='education'; renderResearcherEditor(); $('#researcherEditorContent [data-editor-education-row]:last-child [data-editor-education-institution]')?.focus(); return; }
   const delEducation=e.target.closest('[data-editor-education-delete]');
   if(delEducation&&researcherEditorDraft){ ensureResearcherEducation(researcherEditorDraft).splice(+delEducation.dataset.editorEducationDelete,1); researcherEditorMarkDirty(); renderResearcherEditor(); return; }
+  const hideEducation=e.target.closest('[data-editor-education-hide]');
+  if(hideEducation&&researcherEditorDraft){ const x=ensureResearcherEducation(researcherEditorDraft)[+hideEducation.dataset.editorEducationHide]; if(x){ x.hidden=!x.hidden; researcherEditorMarkDirty(); renderResearcherEditor(); } return; }
   const addAward=e.target.closest('[data-editor-award-add]');
   if(addAward&&researcherEditorDraft){ researcherEditorDraft.awards=researcherAwards(researcherEditorDraft); researcherEditorDraft.awards.push({name:'',year:'',organization:'',sourceUrls:[]}); researcherEditorMarkDirty(); researcherEditorSection='awards'; renderResearcherEditor(); $('#researcherEditorContent [data-editor-award-row]:last-child [data-editor-award-name]')?.focus(); return; }
   const delAward=e.target.closest('[data-editor-award-delete]');
@@ -11447,7 +12134,22 @@ $('#researcherEditorContent').addEventListener('click',async e=>{
   if(addRelated&&researcherEditorDraft){ const input=$('#researcherEditorRelatedInput'), value=String(input&&input.value||'').trim(); if(value){ researcherEditorDraft.relatedResearchers=uniqueResearcherStrings([...(researcherEditorDraft.relatedResearchers||[]),value]); researcherEditorDraft.relatedResearchersSources={}; markResearcherFieldSource(researcherEditorDraft,'relatedResearchers','manual'); researcherEditorMarkDirty(); renderResearcherEditor(); } return; }
   const delRelated=e.target.closest('[data-editor-related-delete]');
   if(delRelated&&researcherEditorDraft){ researcherEditorDraft.relatedResearchers=(researcherEditorDraft.relatedResearchers||[]).filter((_,i)=>i!==+delRelated.dataset.editorRelatedDelete); researcherEditorDraft.relatedResearchersSources={}; markResearcherFieldSource(researcherEditorDraft,'relatedResearchers','manual'); researcherEditorMarkDirty(); renderResearcherEditor(); return; }
-  if(e.target.closest('[data-editor-image-position-reset]')&&researcherEditorDraft){ researcherEditorDraft.imagePositionX=50; researcherEditorDraft.imagePositionY=50; researcherEditorDraft.imageScale=1; researcherEditorMarkDirty(); renderResearcherEditor(); return; }
+  const addAdvisor=e.target.closest('[data-editor-advisor-add]');
+  if(addAdvisor&&researcherEditorDraft){ const input=$('#researcherEditorAdvisorInput'), value=String(input&&input.value||'').trim(); if(value){ researcherEditorDraft.phdAdvisor=uniqueResearcherStrings([...researcherAdvisors(researcherEditorDraft),value]); markResearcherFieldManual(researcherEditorDraft,'phdAdvisor'); researcherEditorMarkDirty(); renderResearcherEditor(); } return; }
+  const delAdvisor=e.target.closest('[data-editor-advisor-delete]');
+  if(delAdvisor&&researcherEditorDraft){ researcherEditorDraft.phdAdvisor=researcherAdvisors(researcherEditorDraft).filter((_,i)=>i!==+delAdvisor.dataset.editorAdvisorDelete); markResearcherFieldManual(researcherEditorDraft,'phdAdvisor'); researcherEditorMarkDirty(); renderResearcherEditor(); return; }
+  const addRecordRelated=e.target.closest('[data-editor-record-related-add]');
+  if(addRecordRelated&&researcherEditorDraft){ const rec=researcherEditorRecordForEl(addRecordRelated), input=addRecordRelated.closest('.researcherFieldAdd')?.querySelector('[data-editor-record-related-input]'), value=String(input&&input.value||'').trim(); if(rec&&value){ rec.related=uniqueResearcherStrings([...(rec.related||[]),value]); researcherEditorMarkDirty(); renderResearcherEditor(); } return; }
+  const delRecordRelated=e.target.closest('[data-editor-record-related-delete]');
+  if(delRecordRelated&&researcherEditorDraft){ const rec=researcherEditorRecordForEl(delRecordRelated); if(rec){ rec.related=(rec.related||[]).filter((_,i)=>i!==+delRecordRelated.dataset.editorRecordRelatedDelete); researcherEditorMarkDirty(); renderResearcherEditor(); } return; }
+  if(e.target.closest('[data-editor-image-position-reset]')&&researcherEditorDraft){ researcherEditorDraft.imageFocusX=0.5; researcherEditorDraft.imageFocusY=0.5; researcherEditorDraft.imageZoom=1; researcherEditorMarkDirty(); renderResearcherEditor(); return; }
+  const fitBtn=e.target.closest('[data-editor-image-fit]');
+  if(fitBtn&&researcherEditorDraft){
+    const aspect=researcherImageAspect(researcherEditorDraft);
+    researcherEditorDraft.imageFocusX=0.5; researcherEditorDraft.imageFocusY=0.5;
+    researcherEditorDraft.imageZoom=fitBtn.dataset.editorImageFit==='contain'?researcherImageContainZoom(aspect):1;
+    researcherEditorMarkDirty(); renderResearcherEditor(); return;
+  }
   if(e.target.closest('[data-editor-ai-copy]')){ await researcherAiCopyPrompt(); return; }
   if(e.target.closest('[data-editor-ai-paste]')){ await researcherAiPasteJson(); return; }
   if(e.target.closest('[data-editor-ai-file]')){ $('#fileResearcherAiJson').click(); return; }
@@ -11456,7 +12158,7 @@ $('#researcherEditorContent').addEventListener('click',async e=>{
   if(e.target.closest('[data-editor-ai-candidate-copy]')){ await researcherAiCopyCandidatePrompt(); return; }
   if(e.target.closest('[data-editor-image-file]')){ $('#fileResearcherImage').click(); return; }
   if(e.target.closest('[data-editor-image-paste]')){
-    try{ const items=await navigator.clipboard.read(); for(const item of items){ const type=item.types.find(x=>x.startsWith('image/')); if(type){ const blob=await item.getType(type); if(blob.size>2*1024*1024){ showToast(t('researcherImageTooLarge'),true); return; } researcherEditorDraft.imageUrl=await researcherImageDataUrl(blob); markResearcherFieldSource(researcherEditorDraft,'imageUrl','manual'); researcherEditorMarkDirty(); renderResearcherEditor(); return; } } showToast(t('researcherImageUnavailable'),true); }
+    try{ const items=await navigator.clipboard.read(); for(const item of items){ const type=item.types.find(x=>x.startsWith('image/')); if(type){ await applyResearcherEditorImageBlob(await item.getType(type)); return; } } showToast(t('researcherImageUnavailable'),true); }
     catch(err){ console.error(err); showToast(t('researcherImageUnavailable'),true); }
   }
 });
@@ -11468,6 +12170,38 @@ $('#btnResearcherEditorDelete').addEventListener('click',()=>{
   lib.researchers=lib.researchers.filter(x=>x.id!==d.id); selectedResearcherId=null; researcherCandidates=[]; researcherEnrichmentPreview=null; researcherEditorDirty=false; closeResearcherEditor(true); touch(); renderSidebar(); renderResearcherList(); renderResearcherDetail();
 });
 $('#dlgResearcherEditor').addEventListener('cancel',e=>{ e.preventDefault(); closeResearcherEditor(); });
+// ⌘/Ctrl+V pastes a clipboard image straight into the editor without triggering
+// the browser's clipboard-read permission prompt (a real paste gesture exposes
+// clipboardData directly). Only hijacks the paste when an image is actually
+// present, so pasting text into name/URL fields still works.
+$('#dlgResearcherEditor').addEventListener('paste',async e=>{
+  if(!researcherEditorDraft) return;
+  const items=(e.clipboardData&&e.clipboardData.items)||[];
+  for(const item of items){
+    if(item.kind==='file'&&String(item.type||'').startsWith('image/')){
+      const blob=item.getAsFile();
+      if(blob){ e.preventDefault(); await applyResearcherEditorImageBlob(blob); return; }
+    }
+  }
+});
+// ⌘/Ctrl+V pastes a clipboard image onto the selected reference (its figure
+// image) without the clipboard-read permission prompt. Only hijacks the paste
+// when an image is actually present, so pasting text into title/notes still works.
+// Enter in the corresponding-author combobox adds the typed/picked value.
+$('#detail').addEventListener('keydown',e=>{
+  if(e.key==='Enter' && e.target && e.target.id==='corrAddInput'){ e.preventDefault(); addCorrespondingFromInput(); }
+});
+$('#detail').addEventListener('paste',async e=>{
+  if(currentView!=='items') return;
+  const it=lib.items.find(x=>x.id===selectedId); if(!it) return;
+  const items=(e.clipboardData&&e.clipboardData.items)||[];
+  for(const item of items){
+    if(item.kind==='file'&&String(item.type||'').startsWith('image/')){
+      const blob=item.getAsFile();
+      if(blob){ e.preventDefault(); await setItemImage(it, blob); return; }
+    }
+  }
+});
 
 $('#fileResearcherAiJson').addEventListener('change',async e=>{
   const file=e.target.files&&e.target.files[0]; e.target.value=''; if(!file) return;
@@ -11577,7 +12311,7 @@ $('#fileResearcherImage').addEventListener('change', async ()=>{
   if($('#dlgResearcherEditor').open && researcherEditorDraft){
     if(!String(file.type||'').startsWith('image/')){ showToast(t('researcherImageUnavailable'),true); return; }
     if(file.size>2*1024*1024){ showToast(t('researcherImageTooLarge'),true); return; }
-    try{ researcherEditorDraft.imageUrl=await researcherImageDataUrl(file); markResearcherFieldSource(researcherEditorDraft,'imageUrl','manual'); researcherEditorMarkDirty(); renderResearcherEditor(); }
+    try{ researcherEditorDraft.imageUrl=await researcherImageDataUrl(file); researcherEditorResetCrop(researcherEditorDraft); markResearcherFieldSource(researcherEditorDraft,'imageUrl','manual'); researcherEditorMarkDirty(); renderResearcherEditor(); }
     catch(err){ console.error(err); showToast(t('researcherImageUnavailable'),true); }
     return;
   }
@@ -11587,10 +12321,12 @@ $('#fileResearcherImage').addEventListener('change', async ()=>{
 // institution coordinate dictionary editor
 // map controls in the researcher status (bottom) bar
 $('#researcherStatus').addEventListener('click', (e)=>{
-  const a=e.target.closest('[data-map-alerts]'); if(a){ e.stopPropagation(); openMapAlertsPop(a); return; }
-  const pl=e.target.closest('[data-map-plot]'); if(pl){ e.stopPropagation(); toggleMapPlotMode(); return; }
-  const d=e.target.closest('[data-open-inst-dict]'); if(d){ e.stopPropagation(); openInstDict(); return; }
-  const s=e.target.closest('[data-map-settings]'); if(s){ e.stopPropagation(); openMapSettingsPop(s); return; }
+  // NOTE: no stopPropagation here — the document-level handler below closes any other
+  // open map popover, so clicking one toolbar button dismisses the panel of another.
+  const a=e.target.closest('[data-map-alerts]'); if(a){ openMapAlertsPop(a); return; }
+  const pl=e.target.closest('[data-map-plot]'); if(pl){ toggleMapPlotMode(); return; }
+  const d=e.target.closest('[data-open-inst-dict]'); if(d){ openInstDict(); return; }
+  const s=e.target.closest('[data-map-settings]'); if(s){ openMapSettingsPop(s); return; }
 });
 $('#instDictSearch').addEventListener('input', renderInstDictList);
 $('#instDictSortBar').addEventListener('click', (e)=>{
@@ -11627,6 +12363,8 @@ $('#instDictList').addEventListener('change', (e)=>{
   if(currentView==='researchers' && researcherListView==='map') renderResearcherList();
 });
 $('#instDictList').addEventListener('click', (e)=>{
+  const unig=e.target.closest('[data-inst-unignore]');
+  if(unig){ unignoreInstitution(unig.dataset.instUnignore); refreshInstDictAndMap(); return; }
   const row=e.target.closest('.instDictRow'); if(!row) return;
   if(e.target.closest('[data-inst-reset]')||e.target.closest('[data-inst-delete]')){
     removeUserInstitutionCoords(row.dataset.instName); refreshInstDictAndMap();
@@ -11634,7 +12372,7 @@ $('#instDictList').addEventListener('click', (e)=>{
 });
 
 function openResearcherColumnFilterPop(key, anchor){
-  const pop=$('#researcherColFilterPop'), current=researcherColumnFilters[key], numeric=['papers','citations','hIndex','i10Index','worksCount','phdYear'].includes(key), label=t(RESEARCHER_COLUMNS[key].label);
+  const pop=$('#researcherColFilterPop'), current=researcherColumnFilters[key], numeric=['papers','citations','hIndex','i10Index','worksCount','phdYear','age'].includes(key), label=t(RESEARCHER_COLUMNS[key].label);
   if(numeric){
     const from=current&&current.from!=null?current.from:'', to=current&&current.to!=null?current.to:'';
     pop.innerHTML=`<div class="fRow"><label>${esc(I18N[lang].filterTitle(label))}</label><div class="rangeRow"><input type="number" id="rcfFrom" value="${esc(from)}" placeholder="${esc(t('filterFrom'))}"> – <input type="number" id="rcfTo" value="${esc(to)}" placeholder="${esc(t('filterTo'))}"></div></div><div class="popActions"><button data-researcher-filter-clear>${esc(t('filterClear'))}</button></div>`;
@@ -11831,6 +12569,23 @@ $('#researcherList').addEventListener('scroll', ()=>{
    Citations dialog (OpenAlex references + cited-by)
 ---------------------------------------------------------------- */
 let citState = { ref:[], cited:[] };   // mapped RefShelf items backing each list
+let citViewPrefs = { query:'', sort:'default', dir:'desc' };   // shared filter/sort for both lists
+// Filter + sort a citation list for display. Returns [{it, idx}] so the row's
+// data-cit action still points at the item's original index in citState.
+function citListView(listName){
+  const q=String(citViewPrefs.query||'').trim().toLowerCase();
+  let rows=citState[listName].map((it,idx)=>({it,idx}));
+  if(q) rows=rows.filter(({it})=>[it.title,(it.authors||[]).map(a=>`${a.family} ${a.given}`).join(' '),it.journal,it.year].join(' ').toLowerCase().includes(q));
+  const key=citViewPrefs.sort;
+  if(key!=='default'){
+    const val=it=> key==='year' ? (Number(String(it.year).replace(/\D/g,''))||0)
+      : key==='citedByCount' ? (Number(it.citedByCount)||0)
+      : key==='authors' ? ((it.authors&&it.authors[0]&&(it.authors[0].family||it.authors[0].given))||'').toLowerCase()
+      : String(it.title||'').toLowerCase();
+    rows.sort((a,b)=>{ const va=val(a.it), vb=val(b.it); const cmp=typeof va==='number'?va-vb:String(va).localeCompare(String(vb),lang==='ja'?'ja':'en'); return citViewPrefs.dir==='asc'?cmp:-cmp; });
+  }
+  return rows;
+}
 function isInLibrary(it){
   if(it.doi) return lib.items.some(x=>x.doi && x.doi===it.doi);
   if(it.arxiv) return lib.items.some(x=>x.arxiv===it.arxiv);
@@ -11856,10 +12611,11 @@ function citRowHTML(it, listName, idx){
 }
 function renderCitList(listName){
   const box = listName==='ref' ? $('#citRefList') : $('#citCitedList');
-  const items = citState[listName];
-  box.innerHTML = items.length
-    ? items.map((it,i)=>citRowHTML(it, listName, i)).join('')
-    : `<div class="citEmpty">${esc(listName==='ref' ? t('citeRefNone') : t('citeCitedNone'))}</div>`;
+  if(!citState[listName].length){ box.innerHTML=`<div class="citEmpty">${esc(listName==='ref' ? t('citeRefNone') : t('citeCitedNone'))}</div>`; return; }
+  const rows = citListView(listName);
+  box.innerHTML = rows.length
+    ? rows.map(({it,idx})=>citRowHTML(it, listName, idx)).join('')
+    : `<div class="citEmpty">${esc(t('citFilterNoMatch'))}</div>`;
 }
 async function openCitationsDialog(item){
   citState = { ref:[], cited:[] };
@@ -11868,6 +12624,7 @@ async function openCitationsDialog(item){
   $('#citRefList').innerHTML = `<div class="citLoad">${esc(t('citeLoading'))}</div>`;
   $('#citCitedList').innerHTML = `<div class="citLoad">${esc(t('citeLoading'))}</div>`;
   const csp = $('#citSettingsPanel'); if(csp) csp.hidden = true;
+  syncCitViewControls();
   $('#dlgCitations').showModal();
   let work;
   try{ work = await resolveOpenAlexWork(item); }
@@ -11930,6 +12687,16 @@ $('#dlgCitations').addEventListener('cancel', (e)=>{
   const p = $('#citSettingsPanel');
   if(p && !p.hidden){ e.preventDefault(); p.hidden = true; }
 });
+// Filter + sort controls (shared by both citation lists).
+function syncCitViewControls(){
+  const inp=$('#citFilterInput'), sel=$('#citSortSelect'), dir=$('#citSortDir');
+  if(inp) inp.value=citViewPrefs.query;
+  if(sel) sel.value=citViewPrefs.sort;
+  if(dir){ dir.textContent=citViewPrefs.dir==='asc'?'↑':'↓'; dir.disabled=citViewPrefs.sort==='default'; }
+}
+$('#citFilterInput') && $('#citFilterInput').addEventListener('input', (e)=>{ citViewPrefs.query=e.target.value; renderCitList('ref'); renderCitList('cited'); });
+$('#citSortSelect') && $('#citSortSelect').addEventListener('change', (e)=>{ citViewPrefs.sort=e.target.value; syncCitViewControls(); renderCitList('ref'); renderCitList('cited'); });
+$('#citSortDir') && $('#citSortDir').addEventListener('click', ()=>{ citViewPrefs.dir=citViewPrefs.dir==='asc'?'desc':'asc'; syncCitViewControls(); renderCitList('ref'); renderCitList('cited'); });
 
 /* ---------------------------------------------------------------
    Researcher Map.
@@ -12618,6 +13385,9 @@ const GRAPH_POOL_REFS = 100;     // seed references considered (ranked by co-cit
 const GRAPH_CACHE_V = 3;         // bump to invalidate graphs cached without citation direction
 let graphState = null;           // { nodes, edges, view, selId, anim }
 let graphShowLabels = true;
+// show a green check badge on registered (already-in-library) nodes. When off,
+// registered nodes fall back to the subtle green ring instead.
+let graphShowRegisteredBadge = true;
 const GRAPH_PREFS_KEY = 'refshelf.graphPrefs';
 // solid | arrow | particle | dash (blue) | dashtrack (blue over gray line) | dashgray (gray, default)
 const GRAPH_CITE_STYLES = ['solid','arrow','particle','dash','dashtrack','dashgray'];
@@ -12647,9 +13417,10 @@ try{
   if(Number.isFinite(savedZoom)) graphZoom = Math.max(70, Math.min(180, savedZoom));
   if(Number.isFinite(+graphPrefs.spacing)) graphNodeSpacing = Math.max(80, Math.min(180, +graphPrefs.spacing));
   if(Number.isFinite(+graphPrefs.wheel)) graphWheelSensitivity = Math.max(20, Math.min(100, +graphPrefs.wheel));
+  if(typeof graphPrefs.regBadge === 'boolean') graphShowRegisteredBadge = graphPrefs.regBadge;
 }catch(e){}
 function saveGraphPrefs(){
-  try{ localStorage.setItem(GRAPH_PREFS_KEY, JSON.stringify({v:4, style:graphCitationStyle, reverse:graphReverseDirection, reverseChoice:graphDirectionChosen, zoom:graphZoom, spacing:graphNodeSpacing, wheel:graphWheelSensitivity, authorMode:graphAuthorMode, filterMode:graphFilterMode})); }catch(e){}
+  try{ localStorage.setItem(GRAPH_PREFS_KEY, JSON.stringify({v:4, style:graphCitationStyle, reverse:graphReverseDirection, reverseChoice:graphDirectionChosen, zoom:graphZoom, spacing:graphNodeSpacing, wheel:graphWheelSensitivity, authorMode:graphAuthorMode, filterMode:graphFilterMode, regBadge:graphShowRegisteredBadge})); }catch(e){}
 }
 
 // Fetch works by OpenAlex id: batched list queries first (1 request / 50 ids),
@@ -13101,6 +13872,8 @@ function updateGraphCitationControls(){
   if(authorSel) authorSel.value = graphAuthorMode;
   const labelsBtn = $('#btnGraphLabels');
   if(labelsBtn){ labelsBtn.classList.toggle('on', graphShowLabels); labelsBtn.setAttribute('aria-checked', String(graphShowLabels)); }
+  const regBadgeBtn = $('#btnGraphRegBadge');
+  if(regBadgeBtn){ regBadgeBtn.classList.toggle('on', graphShowRegisteredBadge); regBadgeBtn.setAttribute('aria-checked', String(graphShowRegisteredBadge)); }
   const reverseBtn = $('#btnGraphReverse');
   if(reverseBtn){
     // the reverse toggle only makes sense for the directional styles; the plain
@@ -13201,10 +13974,18 @@ function renderGraph(){
     const r = nodeRadii[i];
     const fill = graphYearColor(n.year, minY, maxY);
     const inLib = isInLibrary(n.item);
-    const cls = ['gNode', n.seed?'seed':'', (!n.seed && inLib)?'inlib':''].filter(Boolean).join(' ');
+    const registered = !n.seed && inLib;
+    // Registered nodes: show a green check badge (default) OR the subtle green
+    // ring when the badge is toggled off — never both, so the mark stays clean.
+    const showBadge = registered && graphShowRegisteredBadge;
+    const showRing = registered && !graphShowRegisteredBadge;
+    const cls = ['gNode', n.seed?'seed':'', showRing?'inlib':''].filter(Boolean).join(' ');
+    const badge = showBadge
+      ? `<g class="gRegBadge" transform="translate(${(r*0.72).toFixed(1)},${(-r*0.72).toFixed(1)})"><circle class="gRegBadgeBg" r="5.4"></circle><path class="gRegBadgeMark" d="M-2.4 0 L-0.7 1.9 L2.6 -2"></path></g>`
+      : '';
     return `<g class="${cls}" data-node="${i}" transform="translate(${n.x.toFixed(1)},${n.y.toFixed(1)})">`+
       (n.seed ? `<circle class="gSeedHalo" r="${(r+5).toFixed(1)}"></circle>` : '')+
-      `<circle r="${r.toFixed(1)}" fill="${fill}"><title>${esc(n.item.title)}</title></circle></g>`+
+      `<circle r="${r.toFixed(1)}" fill="${fill}"><title>${esc(n.item.title)}</title></circle>${badge}</g>`+
       `<text class="gLabel${n.seed?' seed':''}" data-lbl="${i}" x="${n.x.toFixed(1)}" y="${(n.y + r + (n.seed?16:10)).toFixed(1)}" text-anchor="middle">${esc(n.label)}</text>`;
   }).join('');
   svg.innerHTML = `<defs><filter id="gCiteGlow" x="-150%" y="-150%" width="400%" height="400%"><feGaussianBlur stdDeviation="2.2" result="blur"></feGaussianBlur><feMerge><feMergeNode in="blur"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter><marker id="gCiteArrow" class="gCiteArrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L8,4 L0,8 Z"></path></marker></defs><g>${edgeHtml}${citeHtml}${nodeHtml}</g>`;
@@ -13521,6 +14302,12 @@ $('#btnGraphFit').addEventListener('click', ()=>{
 });
 $('#btnGraphLabels').addEventListener('click', ()=>{
   graphShowLabels = !graphShowLabels;
+  renderGraph();
+});
+$('#btnGraphRegBadge').addEventListener('click', ()=>{
+  graphShowRegisteredBadge = !graphShowRegisteredBadge;
+  saveGraphPrefs();
+  updateGraphCitationControls();
   renderGraph();
 });
 $('#graphCitationStyle').addEventListener('change', e=>{
@@ -13871,16 +14658,16 @@ function downloadConnectorZip(){
 /* === CONNECTOR_FILES (auto-generated by sync-connector.py — do not edit by hand) === */
 const CONNECTOR_FILES = {
   "README.md": {text: "# Paper Library Connector\n\nPaper Library 用の Chrome 拡張機能です。論文ページを開いたまま、ツールバーのボタン一つでライブラリに保存できます。\n\nA Chrome extension for Paper Library: save the paper you are viewing to your library with one toolbar click.\n\nこの ZIP は Paper Library 本体（index.html）のマニュアル「文献を追加する」からダウンロードできます。\n\n## インストール / Install\n\n1. ダウンロードした `paper-library-connector.zip` を解凍する\n2. Chrome で `chrome://extensions` を開く\n3. 右上の「デベロッパーモード」を ON にする\n4. 「パッケージ化されていない拡張機能を読み込む」で、解凍してできた `paper-library-connector` フォルダを選ぶ\n5. 拡張機能の「詳細」を開き、**「ファイルの URL へのアクセスを許可する」を ON にする**（`index.html` をファイルとして開いているライブラリと連携するために必須）\n\nEnglish: unzip `paper-library-connector.zip`, open `chrome://extensions`, enable *Developer mode*, click *Load unpacked* and select the unzipped `paper-library-connector` folder, then open the extension's *Details* page and enable **Allow access to file URLs**.\n\n## 使い方 / Usage\n\n- 論文ページ（出版社ページ・arXiv など）でツールバーの本のアイコンをクリック → 入れるコレクションにチェック →「保存」。何も選ばなければ「未分類」（どのコレクションにも入れない状態）で保存されます\n- 保存先ライブラリはポップアップ上部に表示されます。複数のライブラリを Paper Library で開いたことがある場合は、プルダウンで保存先を切り替えられます\n- 雑誌名はポップアップで略語表示されます（例：J. Am. Chem. Soc.）\n- すでにライブラリにある論文のページでは、アイコンに緑の「✓」バッジが付き、ポップアップに所属コレクションが表示されます\n- 送信待ちの論文はオレンジの「…」バッジで表示されます\n- 保存した文献は、Paper Library（`index.html`）をライブラリフォルダを開いた状態で表示した瞬間に自動で取り込まれます。メタデータは CrossRef / arXiv API から自動補完されます\n\n## 仕組み / How it works\n\n- `sniffer.js` — 各ページで DOI / arXiv ID を検出し、ライブラリのミラーと照合してバッジを表示\n- `popup.js` — ページから書誌メタデータ（`citation_*` メタタグ等）を抽出し、保存キューに追加\n- `bridge.js` — Paper Library のページと `chrome.storage` の橋渡し（ライブラリのスナップショット保存・キューの受け渡し）\n- ライブラリ本体（library.json・PDF）には一切触れません。取り込みはすべて Paper Library 本体が行います\n\n## 注意 / Notes\n\n- お試しモード（フォルダ未選択）のライブラリとは同期しません。フォルダを開いた状態の Paper Library とだけ連携します\n- Paper Library のタブを複数同時に開くと二重取り込みの原因になるため、1 つだけ開いてください\n"},
-  "background.js": {text: "// Badge keeper: content scripts report whether the current page's paper is in\n// the library; we paint the toolbar badge for that tab.\n// '✓' = already in the library, '…' = queued, waiting for Paper Library to open.\nchrome.runtime.onMessage.addListener((msg, sender) => {\n  if (msg && msg.type === 'badge' && sender.tab && sender.tab.id != null) {\n    const text = msg.text || '';\n    chrome.action.setBadgeText({ tabId: sender.tab.id, text });\n    if (text) {\n      chrome.action.setBadgeBackgroundColor({\n        tabId: sender.tab.id,\n        color: text === '✓' ? '#16a34a' : '#d97706',\n      });\n      if (chrome.action.setBadgeTextColor) {\n        chrome.action.setBadgeTextColor({ tabId: sender.tab.id, color: '#ffffff' });\n      }\n    }\n  }\n});\n"},
-  "bridge.js": {text: "// Runs on the Paper Library page (file:// or localhost): relays messages\n// between the page and chrome.storage — stores each library's snapshot under\n// its id, and feeds queued saves addressed to THIS library into the page.\n(function () {\n  if (!document.querySelector('meta[name=\"refshelf-app\"]')) return;\n\n  let myLibId = '';        // id of the library currently open in this page\n  let deliveringPapers = false;\n  let deliveringResearchers = false;\n\n  function post(msg) {\n    window.postMessage(Object.assign({ source: 'refshelf-connector' }, msg), '*');\n  }\n\n  async function deliverPapers() {\n    if (!myLibId || deliveringPapers) return;\n    const { pending = [] } = await chrome.storage.local.get('pending');\n    // items addressed to this library, plus legacy items with no target\n    const mine = pending.filter(p => !p.targetLib || p.targetLib === myLibId);\n    if (!mine.length) return;\n    deliveringPapers = true;\n    post({ action: 'import', items: mine });\n  }\n\n  async function deliverResearchers() {\n    if (!myLibId || deliveringResearchers) return;\n    const { pendingResearchers = [] } = await chrome.storage.local.get('pendingResearchers');\n    const mine = pendingResearchers.filter(p => !p.targetLib || p.targetLib === myLibId);\n    if (!mine.length) return;\n    deliveringResearchers = true;\n    post({ action: 'researcher-import', items: mine });\n  }\n\n  function deliver() { deliverPapers(); deliverResearchers(); }\n\n  window.addEventListener('message', async (e) => {\n    const d = e.data;\n    if (e.source !== window || !d || d.source !== 'refshelf-app') return;\n    if (d.action === 'snapshot' && d.snapshot) {\n      // Trial (in-memory) libraries are not mirrored and get no queued saves:\n      // anything imported there would evaporate with the session.\n      if (!d.snapshot.persistent) return;\n      const snap = d.snapshot;\n      myLibId = snap.libraryId || snap.libraryName || 'default';\n      const store = await chrome.storage.local.get(['libraries', 'activeLib']);\n      const libraries = store.libraries || {};\n      libraries[myLibId] = {\n        id: myLibId,\n        name: snap.libraryName || '',\n        collections: snap.collections || [],\n        tags: snap.tags || [],\n        saved: snap.saved || {},\n        url: location.href, // so the popup can offer to open this library\n        snapshotAt: Date.now(),\n      };\n      const patch = { libraries, appUrl: location.href };\n      // Default the active (destination) library to whatever is open, until the\n      // user picks a specific one in the popup.\n      if (!store.activeLib || !libraries[store.activeLib]) patch.activeLib = myLibId;\n      await chrome.storage.local.set(patch);\n      deliver();\n    } else if (d.action === 'import-result') {\n      const done = new Set((d.results || []).map(r => r.id));\n      const { pending = [] } = await chrome.storage.local.get('pending');\n      await chrome.storage.local.set({ pending: pending.filter(p => !done.has(p.id)) });\n      deliveringPapers = false;\n      deliver(); // pick up anything that arrived while we were importing\n    } else if (d.action === 'researcher-import-result') {\n      const done = new Set((d.results || []).map(r => r.id));\n      const { pendingResearchers = [] } = await chrome.storage.local.get('pendingResearchers');\n      await chrome.storage.local.set({ pendingResearchers: pendingResearchers.filter(p => !done.has(p.id)) });\n      deliveringResearchers = false;\n      deliver(); // pick up anything that arrived while we were importing\n    }\n  });\n\n  chrome.storage.onChanged.addListener((ch, area) => {\n    if (area === 'local' && ((ch.pending && (ch.pending.newValue || []).length) || (ch.pendingResearchers && (ch.pendingResearchers.newValue || []).length))) deliver();\n  });\n\n  post({ action: 'hello' });\n})();\n"},
+  "background.js": {text: "// Badge keeper: content scripts report whether the current page's paper is in\n// the library; we paint the toolbar badge for that tab.\n// '✓' = already in the library (green), '…' = queued, waiting for Paper Library\n// to open (amber), '+' = a recognizable paper that is not saved yet (blue).\nconst BADGE_COLORS = { '✓': '#16a34a', '…': '#d97706', '+': '#2563eb' };\nchrome.runtime.onMessage.addListener((msg, sender) => {\n  if (msg && msg.type === 'badge' && sender.tab && sender.tab.id != null) {\n    const text = msg.text || '';\n    chrome.action.setBadgeText({ tabId: sender.tab.id, text });\n    if (text) {\n      chrome.action.setBadgeBackgroundColor({\n        tabId: sender.tab.id,\n        color: BADGE_COLORS[text] || '#2563eb',\n      });\n      if (chrome.action.setBadgeTextColor) {\n        chrome.action.setBadgeTextColor({ tabId: sender.tab.id, color: '#ffffff' });\n      }\n    }\n  }\n});\n"},
+  "bridge.js": {text: "// Runs on the Paper Library page (file:// or localhost): relays messages\n// between the page and chrome.storage — stores each library's snapshot under\n// its id, and feeds queued saves addressed to THIS library into the page.\n(function () {\n  if (!document.querySelector('meta[name=\"refshelf-app\"]')) return;\n\n  let myLibId = '';        // id of the library currently open in this page\n  let deliveringPapers = false;\n\n  function post(msg) {\n    window.postMessage(Object.assign({ source: 'refshelf-connector' }, msg), '*');\n  }\n\n  async function deliverPapers() {\n    if (!myLibId || deliveringPapers) return;\n    const { pending = [] } = await chrome.storage.local.get('pending');\n    // items addressed to this library, plus legacy items with no target\n    const mine = pending.filter(p => !p.targetLib || p.targetLib === myLibId);\n    if (!mine.length) return;\n    deliveringPapers = true;\n    post({ action: 'import', items: mine });\n  }\n\n  function deliver() { deliverPapers(); }\n\n  window.addEventListener('message', async (e) => {\n    const d = e.data;\n    if (e.source !== window || !d || d.source !== 'refshelf-app') return;\n    if (d.action === 'snapshot' && d.snapshot) {\n      // Trial (in-memory) libraries are not mirrored and get no queued saves:\n      // anything imported there would evaporate with the session.\n      if (!d.snapshot.persistent) return;\n      const snap = d.snapshot;\n      myLibId = snap.libraryId || snap.libraryName || 'default';\n      const store = await chrome.storage.local.get(['libraries', 'activeLib']);\n      const libraries = store.libraries || {};\n      libraries[myLibId] = {\n        id: myLibId,\n        name: snap.libraryName || '',\n        collections: snap.collections || [],\n        tags: snap.tags || [],\n        journals: snap.journals || [],\n        saved: snap.saved || {},\n        url: location.href, // so the popup can offer to open this library\n        snapshotAt: Date.now(),\n      };\n      const patch = { libraries, appUrl: location.href };\n      // Default the active (destination) library to whatever is open, until the\n      // user picks a specific one in the popup.\n      if (!store.activeLib || !libraries[store.activeLib]) patch.activeLib = myLibId;\n      await chrome.storage.local.set(patch);\n      deliver();\n    } else if (d.action === 'import-result') {\n      const done = new Set((d.results || []).map(r => r.id));\n      const { pending = [] } = await chrome.storage.local.get('pending');\n      await chrome.storage.local.set({ pending: pending.filter(p => !done.has(p.id)) });\n      deliveringPapers = false;\n      deliver(); // pick up anything that arrived while we were importing\n    }\n  });\n\n  chrome.storage.onChanged.addListener((ch, area) => {\n    if (area === 'local' && ch.pending && (ch.pending.newValue || []).length) deliver();\n  });\n\n  post({ action: 'hello' });\n})();\n"},
   "icons/icon128.png": {b64: "iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAADKElEQVR42u3dP2sTYRzA8b6DvAMzOfcFOKSbY1a3Gx2zuxQEcRDNIAhFJG9AqNAOHYSITuJwDgVxym6HFNQqIjzeEx61JE2T6vV6l3y+8KMlpH+S3yd3bZbb2JAkSZIkSZIkSZIkSZIkSZIkSSq5a1u77WI6xWwX0y9mWMw4fezU7fe9cfekU8ywmHH62C9mO93ettH5i94sppsWvZsWHJaYeL92DRa/mRYelph4v90Eoxu/dp0WHV/NWVp0XN5oyUUvmsFVQIiv6mIGSy5+0YwSjggji0eNph+2e1OH7VDBVAKh5MUvmtOnk16tTydp8aEGEyG0Gr74RdMB4PwZp1NNq4TFt9KheVyT5QNQBYSaLh6AMiGEENpxGrR4AP5z4n8eWVr+MPxtmJaf1XzxAJQx93cOx2GqJy9/NGHxAJQxjwYfpvcfnr36EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYA0B5Oky9P10+ddBjQEM0mVn++my7zkAy13O9fSCu+l7tc75WZvpa+oCIC57c97vm65H3CmmOwVktA4Afi94kBacpfu2S/qZwysEMCxjGcX3aCcgWQIyWACklgDaZS/4siCUAGBY5RLOANLe0FwIo0sEkNfy1acZCNl5EP4BQDwUZ57ZFYFwAQAWv0IQxhcAYPHL9Hj/uFdMXkyo+zx4fhRu3cnD9Zt7cwFs3fsabj/9HB6+qP/jSROf+95VLL7VlMWfBWHvzdEMgIP335u0+LMgtKoEkDf0iZrM24/fZgDE25r8mOJOqjzsN/rJen14MgMg3tb0x1XJ6aDpr/44OwfH4dPxzz/Lj5/H21YAQF4FgFV4oiYL33/3ZTIrsvzJALDm4xSw3pP7I3C9p+ffQK9+bwSt4/IrfSOoiW8Fr/Diq38rWJIkSZIkSZIkSZIkSVJN+wWzouI99lKbwgAAAABJRU5ErkJggg=="},
   "icons/icon16.png": {b64: "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAe0lEQVR42mNgGD5AzmF9PBCvB+LzQPweiOuBmN+66RsI1wPxeyA+D8TrgTgemwH7gfg/Mg7LP/w/Z+GP/0AN6Hj/qAGD1YB+aNyDsD8Q30cyABT//tD0AML9KJonb/ngD8T70fGElY//z9j19T82OZAeggYQwP6DIw8BAHNcStl941x5AAAAAElFTkSuQmCC"},
   "icons/icon32.png": {b64: "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAA4klEQVR42mNgGAWjYBRgAXIO6+WB2B6I64G4H4j3A/F7KG2PS5910zd7IN4PxO+hdD8Q10PF5Ym1HGTxfwIY5BB5JIv1oRb+J4DtqeUAMN534sX947f/3CfCYto44Nj51//P3f/zf9QBow4YdcCoA0YdMOoAWjsA1g5YD8T3iXAAqHZcj9QuINkBsMaIPg75eJhD0BwAsjgeR0NFn6hGyeQtH+SBuJ4YnNB05f65a+//X37053/uvE/3idUHsgOfA0AG/ScWn7z5HYxJ0QOyg2oOIBPfp0oUUIDlR5v9owAZAADCXwIiw7wc3wAAAABJRU5ErkJggg=="},
   "icons/icon48.png": {b64: "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAABQElEQVR42u2ZMUoDQRiFc4O5gZ11DpBi0wTLtHbT2c4BLBYDViIBbT1BEFYw/TTp5wamsLQYBZV0f/4Jf5YUYiYzu6uQ9+ArFpbZ98Fu87bXQxAEQZBjycmwKhjNlEzFOMbLtYo9ZzD5VkzJeMYxlVxrpmiy8JSxzJKhPQQRE1HeSHHaw5KxzDRHgBIIsvqH4lpK0aF0LVCLEJELpBb/awHaJqc8BCAAAQhAAAIQgAAEIAABCEAAAhBIF/CyDVUyYBkZuPo792m5L1YgrBR6Z3Lph0FLNqNShi673Y+6Wu2UCPpfBLwUVK0Xup+/FylcPryORxcLe3r2XAsMr7/o/O7TXs0+xqnnHlJcMY6hHG4e32qB26e8s4TQScUImAYetsG9rDY0dV7o1qlAC5jOXqEWiHuFcj/itsDfGQRB/mfWC5TjUOc+S18AAAAASUVORK5CYII="},
   "manifest.json": {text: "{\n  \"manifest_version\": 3,\n  \"name\": \"Paper Library Connector\",\n  \"version\": \"1.0\",\n  \"description\": \"Save the paper you are viewing to Paper Library and see at a glance whether it is already in your library.\",\n  \"icons\": {\n    \"16\": \"icons/icon16.png\",\n    \"32\": \"icons/icon32.png\",\n    \"48\": \"icons/icon48.png\",\n    \"128\": \"icons/icon128.png\"\n  },\n  \"action\": {\n    \"default_popup\": \"popup.html\",\n    \"default_icon\": {\n      \"16\": \"icons/icon16.png\",\n      \"32\": \"icons/icon32.png\"\n    }\n  },\n  \"background\": {\n    \"service_worker\": \"background.js\"\n  },\n  \"permissions\": [\"storage\", \"scripting\", \"activeTab\", \"tabs\"],\n  \"content_scripts\": [\n    {\n      \"matches\": [\"http://*/*\", \"https://*/*\"],\n      \"js\": [\"sniffer.js\"],\n      \"run_at\": \"document_idle\"\n    },\n    {\n      \"matches\": [\"file:///*\", \"http://localhost/*\", \"http://127.0.0.1/*\"],\n      \"js\": [\"bridge.js\"],\n      \"run_at\": \"document_idle\"\n    }\n  ]\n}\n"},
-  "popup.html": {text: "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<style>\n  :root{\n    --bg:#ffffff; --bg2:#f5f6f8; --border:#dcdfe4; --text:#1f2328; --text2:#59636e;\n    --accent:#2563eb; --accent-soft:#eaf1fe; --green:#16a34a; --green-soft:#e7f6ec; --amber:#d97706; --amber-soft:#fdf1e0;\n  }\n  @media (prefers-color-scheme: dark){\n    :root{\n      --bg:#1c2128; --bg2:#22272e; --border:#3a4048; --text:#e6e8eb; --text2:#9aa4af;\n      --accent:#6ba1f7; --accent-soft:#263a5c; --green:#3fbf6f; --green-soft:#1f3a2a; --amber:#e8a44a; --amber-soft:#3d3020;\n    }\n  }\n  html,body{margin:0; padding:0}\n  body{\n    width:340px; background:var(--bg); color:var(--text);\n    font:13px/1.5 -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Hiragino Sans\", \"Noto Sans JP\", sans-serif;\n  }\n  header{display:flex; align-items:center; gap:8px; padding:10px 14px; border-bottom:1px solid var(--border)}\n  header img{width:18px; height:18px}\n  header .name{font-weight:600; font-size:13px}\n  header .libname{margin-left:auto; font-size:11px; color:var(--text2); max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}\n  #body{padding:12px 14px}\n  #paperTitle{font-weight:600; font-size:13.5px; line-height:1.45; margin:0 0 3px}\n  #paperMeta{font-size:11.5px; color:var(--text2); margin:0 0 10px; overflow-wrap:break-word}\n  .chip{\n    display:inline-flex; align-items:center; gap:5px; padding:2px 9px; border-radius:999px;\n    font-size:11.5px; font-weight:600; margin:0 0 10px;\n  }\n  .chip.saved{background:var(--green-soft); color:var(--green)}\n  .chip.queued{background:var(--amber-soft); color:var(--amber)}\n  .chip.new{background:var(--accent-soft); color:var(--accent)}\n  #savedFolders{font-size:11.5px; color:var(--text2); margin:-6px 0 10px}\n  #destLib{\n    font-size:11.5px; color:var(--text2); background:var(--bg2);\n    border:1px solid var(--border); border-radius:8px; padding:6px 9px; margin:0 0 10px;\n  }\n  #destLib b{color:var(--text); font-weight:600}\n  #destLib .libRow{display:flex; align-items:center; gap:6px}\n  #destLib select{\n    flex:1; min-width:0; font:inherit; font-size:12px; color:var(--text);\n    background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:3px 6px;\n  }\n  .sectionLabel{font-size:11px; font-weight:600; color:var(--text2); margin:0 0 5px; text-transform:none}\n  #folders, #tags{\n    max-height:180px; overflow-y:auto; border:1px solid var(--border); border-radius:8px;\n    padding:5px 4px; margin-bottom:10px; background:var(--bg2);\n  }\n  #tags{max-height:120px}\n  #folders label, #tags label{display:flex; align-items:center; gap:7px; padding:3px 8px; border-radius:6px; cursor:pointer}\n  #folders label:hover, #tags label:hover{background:var(--accent-soft)}\n  #folders input, #tags input{margin:0; accent-color:var(--accent)}\n  #folders .none, #tags .none{color:var(--text2); font-size:11.5px; padding:4px 8px}\n  .tocRow{display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text2); margin:0 0 10px; cursor:pointer}\n  .tocRow input{margin:0; accent-color:var(--accent)}\n  button#save{\n    width:100%; padding:8px 0; border:none; border-radius:8px; background:var(--accent); color:#fff;\n    font-size:13px; font-weight:600; cursor:pointer;\n  }\n  button#save:hover{filter:brightness(1.07)}\n  button#save:disabled{opacity:.5; cursor:default}\n  #note{font-size:11.5px; color:var(--text2); margin:8px 0 0; line-height:1.5}\n  #note.ok{color:var(--green)}\n  #note button{\n    margin-top:6px; padding:5px 10px; border:1px solid var(--accent); border-radius:7px;\n    background:var(--accent-soft); color:var(--accent); font-size:12px; font-weight:600; cursor:pointer;\n  }\n  #note button:hover{filter:brightness(1.03)}\n  #warn{font-size:11.5px; color:var(--amber); margin:0 0 10px; line-height:1.5}\n  .researcherBox{border-top:1px solid var(--border);margin-top:14px;padding-top:12px}\n  .researcherBox label{display:grid;gap:3px;font-size:11px;color:var(--text2);margin:0 0 7px}\n  .researcherBox input{font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:6px 7px}\n  button#saveResearcher{width:100%;padding:7px 0;border:1px solid var(--accent);border-radius:8px;background:var(--accent-soft);color:var(--accent);font-size:12.5px;font-weight:600;cursor:pointer}\n  #researcherNote{font-size:11.5px;color:var(--text2);margin:7px 0 0;line-height:1.45}\n<\/style>\n<\/head>\n<body>\n<header>\n  <img src=\"icons/icon32.png\" alt=\"\">\n  <span class=\"name\">Paper Library Connector<\/span>\n<\/header>\n<div id=\"body\">\n  <div id=\"status\"><\/div>\n  <p id=\"paperTitle\"><\/p>\n  <p id=\"paperMeta\"><\/p>\n  <div id=\"savedFolders\"><\/div>\n  <div id=\"warn\" style=\"display:none\"><\/div>\n  <div id=\"destLib\" style=\"display:none\"><\/div>\n  <div class=\"sectionLabel\" id=\"foldersLabel\"><\/div>\n  <div id=\"folders\"><\/div>\n  <div class=\"sectionLabel\" id=\"tagsLabel\"><\/div>\n  <div id=\"tags\"><\/div>\n  <label id=\"tocRow\" class=\"tocRow\" style=\"display:none\"><input type=\"checkbox\" id=\"grabToc\" checked><span id=\"grabTocLabel\"><\/span><\/label>\n  <button id=\"save\"><\/button>\n  <p id=\"note\"><\/p>\n  <div class=\"researcherBox\">\n    <div class=\"sectionLabel\" id=\"researcherLabel\"><\/div>\n    <label><span id=\"researcherNameLabel\"><\/span><input id=\"researcherName\" autocomplete=\"name\"><\/label>\n    <label><span id=\"researcherUrlLabel\"><\/span><input id=\"researcherUrl\" type=\"url\"><\/label>\n    <button id=\"saveResearcher\"><\/button>\n    <p id=\"researcherNote\"><\/p>\n  <\/div>\n<\/div>\n<script src=\"popup.js\"><\/script>\n<\/body>\n<\/html>\n"},
-  "popup.js": {text: "// Popup: extracts the paper on the active tab, shows saved/queued status and\n// the collection tree for the chosen destination library, and queues the save.\n\nconst JA = (navigator.language || '').toLowerCase().startsWith('ja');\nconst T = JA ? {\n  saved: '✓ ライブラリに保存済み',\n  queued: '… 取り込み待ち',\n  notSaved: '未登録',\n  noPaper: 'このページから論文情報を見つけられませんでした。DOI 付きの論文ページで試してください。',\n  savedIn: (names) => `所属コレクション: ${names}`,\n  savedNoFolder: '所属コレクション: なし（未分類）',\n  destLib: '保存先ライブラリ',\n  folders: '入れるコレクション（複数選択可）',\n  noFolders: 'コレクションはまだありません（未分類として保存されます）',\n  tags: '付けるタグ（複数選択可）',\n  noTags: 'タグはまだありません',\n  grabToc: 'TOC画像（グラフィカルアブストラクト）も取り込む',\n  saveRoot: 'コレクションに入れずに保存（未分類）',\n  saveTo: (names) => `「${names}」に保存`,\n  addTo: (names) => `「${names}」に追加`,\n  uncat: '未分類',\n  openApp: 'Paper Library を開いて取り込む',\n  // after a save\n  doneOpen: (dest) => `保存しました → ${dest}。開いている Paper Library に取り込まれます。`,\n  doneClosed: (dest) => `保存しました → ${dest}。下のボタンを押すか、次に Paper Library を開くと取り込まれます。`,\n  doneNoUrl: (dest) => `保存しました → ${dest}。次に Paper Library を開くと取り込まれます。`,\n  // when the paper is already queued (popup reopened)\n  pendingOpen: 'この論文は取り込み待ちです。開いている Paper Library に取り込まれます。',\n  pendingClosed: 'この論文は取り込み待ちです。下のボタンを押すか、次に Paper Library を開くと取り込まれます。',\n  pendingNoUrl: 'この論文は取り込み待ちです。次に Paper Library を開くと取り込まれます。',\n  needSync: 'まだライブラリと同期していません。Paper Library をライブラリフォルダを開いた状態で一度表示すると、保存先ライブラリ・コレクション一覧・保存済み判定が使えるようになります（保存自体は今でも可能です）。',\n  restricted: 'このページでは拡張機能が動作できません。',\n  researcher: '研究者として追加', researcherName: '表示名（必須）', researcherUrl: 'プロフィールURL（任意）', saveResearcher: '研究者候補を保存', researcherNeedName: '研究者名を入力してください。', researcherQueued: '研究者候補を保存しました。Paper Library を開くと確認画面が表示されます。',\n} : {\n  saved: '✓ In your library',\n  queued: '… Pending import',\n  notSaved: 'Not in library',\n  noPaper: 'Could not find paper metadata on this page. Try a paper page with a DOI.',\n  savedIn: (names) => `In collections: ${names}`,\n  savedNoFolder: 'In collections: none (uncategorized)',\n  destLib: 'Destination library',\n  folders: 'Put in collections (multi-select)',\n  noFolders: 'No collections yet (saved as uncategorized)',\n  tags: 'Add tags (multi-select)',\n  noTags: 'No tags yet',\n  grabToc: 'Also import the TOC (graphical abstract) image',\n  saveRoot: 'Save without a collection (uncategorized)',\n  saveTo: (names) => `Save to “${names}”`,\n  addTo: (names) => `Add to “${names}”`,\n  uncat: 'uncategorized',\n  openApp: 'Open Paper Library to import',\n  doneOpen: (dest) => `Saved → ${dest}. Importing into the open Paper Library.`,\n  doneClosed: (dest) => `Saved → ${dest}. Press the button below, or it imports next time you open Paper Library.`,\n  doneNoUrl: (dest) => `Saved → ${dest}. It imports next time you open Paper Library.`,\n  pendingOpen: 'This paper is pending import. It will be imported into the open Paper Library.',\n  pendingClosed: 'This paper is pending import. Press the button below, or it imports next time you open Paper Library.',\n  pendingNoUrl: 'This paper is pending import. It imports next time you open Paper Library.',\n  needSync: 'Not synced with your library yet. Open Paper Library once (with your library folder open) to enable the destination-library picker, collection list, and saved-state checks. Saving still works now.',\n  restricted: 'The extension cannot run on this page.',\n  researcher: 'Add as researcher', researcherName: 'Display name (required)', researcherUrl: 'Profile URL (optional)', saveResearcher: 'Save researcher candidate', researcherNeedName: 'Enter a researcher name.', researcherQueued: 'Researcher candidate saved. Open Paper Library to review it.',\n};\n\nconst DOI_RE = /10\\.\\d{4,9}\\/[^\\s\"'<>&]+/;\n\n// A few common journals for an instant, offline abbreviation; anything else is\n// refined from CrossRef's short-container-title once it responds.\nconst ABBREV = {\n  'journal of the american chemical society': 'J. Am. Chem. Soc.',\n  'angewandte chemie international edition': 'Angew. Chem. Int. Ed.',\n  'angewandte chemie': 'Angew. Chem.',\n  'chemical science': 'Chem. Sci.',\n  'chemical communications': 'Chem. Commun.',\n  'chemical reviews': 'Chem. Rev.',\n  'chemistry - a european journal': 'Chem. Eur. J.',\n  'chemistry a european journal': 'Chem. Eur. J.',\n  'nature': 'Nature',\n  'nature chemistry': 'Nat. Chem.',\n  'nature communications': 'Nat. Commun.',\n  'nature materials': 'Nat. Mater.',\n  'science': 'Science',\n  'journal of organic chemistry': 'J. Org. Chem.',\n  'organic letters': 'Org. Lett.',\n  'organometallics': 'Organometallics',\n  'inorganic chemistry': 'Inorg. Chem.',\n  'dalton transactions': 'Dalton Trans.',\n  'journal of physical chemistry a': 'J. Phys. Chem. A',\n  'journal of physical chemistry b': 'J. Phys. Chem. B',\n  'journal of physical chemistry c': 'J. Phys. Chem. C',\n  'journal of physical chemistry letters': 'J. Phys. Chem. Lett.',\n  'journal of chemical physics': 'J. Chem. Phys.',\n  'physical review letters': 'Phys. Rev. Lett.',\n  'physical review b': 'Phys. Rev. B',\n  'proceedings of the national academy of sciences': 'Proc. Natl. Acad. Sci. U. S. A.',\n  'advanced materials': 'Adv. Mater.',\n  'acs nano': 'ACS Nano',\n  'journal of the chemical society': 'J. Chem. Soc.',\n};\nfunction abbreviate(journal, journalAbbr) {\n  if (journalAbbr) return journalAbbr;\n  const key = String(journal || '').toLowerCase().replace(/^the\\s+/, '').replace(/[.:]/g, '').replace(/\\s+/g, ' ').trim();\n  return ABBREV[key] || '';\n}\nasync function fetchCrossrefAbbrev(doi) {\n  try {\n    const r = await fetch('https://api.crossref.org/works/' + encodeURIComponent(doi) + '?select=short-container-title');\n    if (!r.ok) return '';\n    const m = (await r.json()).message || {};\n    return (m['short-container-title'] && m['short-container-title'][0]) || '';\n  } catch (e) { return ''; }\n}\n\n// ACS-style author list: \"Family, F. M.\" joined by \"; \" (matches the app).\nfunction acsAuthors(authors) {\n  return (authors || []).map(a => {\n    const s = String(a).trim();\n    if (!s) return '';\n    let family, given;\n    if (s.includes(',')) { const p = s.split(','); family = p[0].trim(); given = p.slice(1).join(',').trim(); }\n    else { const p = s.split(/\\s+/); family = p.pop() || ''; given = p.join(' '); }\n    const ini = given.split(/[\\s.\\-]+/).filter(Boolean).map(w => w[0].toUpperCase() + '.').join(' ');\n    return ini ? `${family}, ${ini}` : family;\n  }).filter(Boolean);\n}\n// ACS-style meta line: \"Doe, J.; Smith, A. B. Chem. Sci. 2026\" (no DOI).\nfunction acsMetaLine(authors, venue, year, cap) {\n  const names = acsAuthors(authors);\n  let auth = '';\n  if (names.length) {\n    const many = cap && names.length > cap;\n    auth = (many ? names.slice(0, cap) : names).join('; ');\n    if (many) auth += ' et al.';\n    if (!/\\.$/.test(auth)) auth += '.'; // period before the venue\n  }\n  return [auth, venue, year].filter(Boolean).join(' ');\n}\n\n// Injected into the page — must be self-contained.\nfunction extractPageMetadata() {\n  const doiRe = /10\\.\\d{4,9}\\/[^\\s\"'<>&]+/;\n  const one = (n) => {\n    const el = document.querySelector(`meta[name=\"${n}\" i], meta[property=\"${n}\" i]`);\n    return el && el.content ? el.content.trim() : '';\n  };\n  const all = (n) => Array.from(document.querySelectorAll(`meta[name=\"${n}\" i]`))\n    .map(e => (e.content || '').trim()).filter(Boolean);\n  let doi = '';\n  for (const n of ['citation_doi', 'dc.identifier', 'dc.identifier.doi', 'prism.doi', 'doi']) {\n    const m = one(n).match(doiRe);\n    if (m) { doi = m[0]; break; }\n  }\n  if (!doi) {\n    try {\n      const m = decodeURIComponent(location.href).match(doiRe);\n      if (m) doi = m[0].replace(/[.,;)\\]]+$/, '');\n    } catch (e) { /* malformed escape */ }\n  }\n  if (!doi) {\n    const a = document.querySelector('a[href*=\"doi.org/10.\"]');\n    if (a) {\n      const m = decodeURIComponent(a.href).match(doiRe);\n      if (m) doi = m[0];\n    }\n  }\n  let arxiv = one('citation_arxiv_id');\n  if (!arxiv) {\n    const m = location.href.match(/arxiv\\.org\\/(?:abs|pdf)\\/([a-z\\-]+(?:\\.[A-Z]{2})?\\/\\d{7}|\\d{4}\\.\\d{4,5})/i);\n    if (m) arxiv = m[1];\n  }\n  if (!arxiv && doi) {\n    const m = doi.match(/^10\\.48550\\/arxiv\\.(.+)$/i);\n    if (m) { arxiv = m[1]; doi = ''; }\n  }\n  const yr = (one('citation_publication_date') || one('citation_date') ||\n    one('citation_online_date') || one('prism.publicationdate')).match(/\\d{4}/);\n  return {\n    url: location.href.replace(/#.*$/, ''),\n    doi, arxiv,\n    title: one('citation_title') || one('og:title') || document.title || '',\n    authors: all('citation_author'),\n    journal: one('citation_journal_title') || one('og:site_name') || '',\n    journalAbbr: one('citation_journal_abbrev') || '',\n    year: yr ? yr[0] : '',\n    abstract: one('citation_abstract') || one('dcterms.abstract') || one('dc.description') || '',\n    // graphical abstract / TOC image — chemistry publishers expose it as og:image\n    image: one('og:image') || one('citation_image') || one('twitter:image') || '',\n  };\n}\n\n// Injected into the page to fetch the graphical-abstract image from the page's own\n// origin (activeTab grants this on the user's save click). Returns a data URL so the\n// bytes travel through chrome.storage to Paper Library, which writes them to disk.\nasync function fetchImageAsDataUrl(url) {\n  try {\n    const r = await fetch(url);\n    if (!r.ok) return null;\n    const b = await r.blob();\n    if (!/^image\\//.test(b.type || '') || b.size > 8 * 1024 * 1024) return null;\n    return await new Promise((res) => {\n      const fr = new FileReader();\n      fr.onload = () => res({ dataUrl: fr.result, type: b.type });\n      fr.onerror = () => res(null);\n      fr.readAsDataURL(b);\n    });\n  } catch (e) { return null; }\n}\n\n// Fallback when scripting is blocked (PDF viewer, chrome:// pages…).\nfunction metaFromUrl(url, title) {\n  const out = { url: String(url || ''), doi: '', arxiv: '', title: String(title || ''), authors: [], journal: '', journalAbbr: '', year: '', abstract: '' };\n  try {\n    const dec = decodeURIComponent(out.url);\n    const a = dec.match(/arxiv\\.org\\/(?:abs|pdf)\\/([a-z\\-]+(?:\\.[A-Z]{2})?\\/\\d{7}|\\d{4}\\.\\d{4,5})/i);\n    if (a) out.arxiv = a[1];\n    else {\n      const m = dec.match(DOI_RE);\n      if (m) out.doi = m[0].replace(/[.,;)\\]]+$/, '');\n    }\n  } catch (e) { /* ignore */ }\n  return out;\n}\n\nfunction normKeys(meta) {\n  return {\n    doiKey: meta.doi ? 'doi:' + meta.doi.toLowerCase() : '',\n    arxivKey: meta.arxiv ? 'arxiv:' + String(meta.arxiv).toLowerCase().replace(/v\\d+$/, '') : '',\n  };\n}\n\nfunction folderTree(collections) {\n  const byParent = new Map();\n  (collections || []).forEach(c => {\n    const k = c.parent || '';\n    if (!byParent.has(k)) byParent.set(k, []);\n    byParent.get(k).push(c);\n  });\n  for (const arr of byParent.values()) arr.sort((a, b) => a.name.localeCompare(b.name, JA ? 'ja' : 'en'));\n  const out = [];\n  (function walk(parent, depth) {\n    (byParent.get(parent) || []).forEach(c => {\n      out.push({ id: c.id, name: c.name, depth });\n      walk(c.id, depth + 1);\n    });\n  })('', 0);\n  return out;\n}\n\nconst $ = (s) => document.querySelector(s);\nfunction esc(s) {\n  return String(s).replace(/[&<>\"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', \"'\": '&#39;' }[c]));\n}\n\nasync function init() {\n  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });\n  let meta = null;\n  if (tab && /^(https?|file):/.test(tab.url || '')) {\n    try {\n      const res = await chrome.scripting.executeScript({ target: { tabId: tab.id }, func: extractPageMetadata });\n      meta = res && res[0] && res[0].result;\n    } catch (e) { /* injection blocked (PDF viewer etc.) */ }\n  }\n  if (!meta) meta = metaFromUrl(tab && tab.url, tab && tab.title);\n\n  const { doiKey, arxivKey } = normKeys(meta);\n  const identifiable = !!(meta.doi || meta.arxiv || meta.title);\n\n  // ---- title + ACS-style meta line (authors, journal abbrev, year; no DOI) ----\n  const venueOf = (journal) => journal || (meta.arxiv ? 'arXiv:' + meta.arxiv : '');\n  const renderMeta = (journal) => {\n    $('#paperMeta').textContent = acsMetaLine(meta.authors, venueOf(journal), meta.year, 10);\n  };\n  $('#paperTitle').textContent = meta.title || meta.doi || meta.arxiv || '';\n  const abbr = abbreviate(meta.journal, meta.journalAbbr);\n  renderMeta(abbr || meta.journal);\n  if (!abbr && meta.doi && meta.journal) {\n    fetchCrossrefAbbrev(meta.doi).then(a => { if (a) renderMeta(a); });\n  }\n\n  // ---- load libraries (with fallback from the old single-snapshot shape) ----\n  let { libraries = {}, activeLib, pending = [], appUrl = '' } =\n    await chrome.storage.local.get(['libraries', 'activeLib', 'pending', 'appUrl']);\n  if (!Object.keys(libraries).length) {\n    const { snapshot } = await chrome.storage.local.get('snapshot');\n    if (snapshot && snapshot.persistent) {\n      const id = snapshot.libraryId || snapshot.libraryName || 'default';\n      libraries = { [id]: { id, name: snapshot.libraryName || '', collections: snapshot.collections || [], tags: snapshot.tags || [], saved: snapshot.saved || {} } };\n      if (!activeLib) activeLib = id;\n    }\n  }\n  const libIds = Object.keys(libraries);\n  if (!activeLib || !libraries[activeLib]) activeLib = libIds[0];\n  const currentLib = () => libraries[activeLib] || null;\n\n  // ---- \"open Paper Library to import\" helpers ----\n  // The library folder can only be written by the Paper Library page (browser\n  // security — an extension can't write to your chosen folder). So a save is\n  // captured here and flushed when the page is open; offer to open it.\n  async function appTabState() {\n    const url = (currentLib() && currentLib().url) || appUrl || '';\n    if (!url) return { url: '', open: false };\n    try {\n      const base = url.split('#')[0];\n      const tabs = await chrome.tabs.query({});\n      return { url, open: tabs.some(t => t.url && t.url.split('#')[0] === base) };\n    } catch (e) { return { url, open: false }; }\n  }\n  function setNote(text, url) {\n    $('#note').className = 'ok';\n    $('#note').textContent = text;\n    if (url) {\n      const b = document.createElement('button');\n      b.textContent = T.openApp;\n      b.addEventListener('click', () => { chrome.tabs.create({ url }); window.close(); });\n      $('#note').appendChild(document.createElement('br'));\n      $('#note').appendChild(b);\n    }\n  }\n  async function showImportHint(msgOpen, msgClosed, msgNoUrl) {\n    const { url, open } = await appTabState();\n    if (open) setNote(msgOpen, '');\n    else if (url) setNote(msgClosed, url);\n    else setNote(msgNoUrl, '');\n  }\n\n  if (!libIds.length) { $('#warn').style.display = 'block'; $('#warn').textContent = T.needSync; }\n\n  // ---- destination-library picker ----\n  const renderDestLib = () => {\n    if (!libIds.length) { $('#destLib').style.display = 'none'; return; }\n    $('#destLib').style.display = 'block';\n    if (libIds.length === 1) {\n      $('#destLib').innerHTML = esc(T.destLib) + ': <b>' + esc(currentLib().name || activeLib) + '<\/b>';\n      return;\n    }\n    const opts = libIds.map(id =>\n      `<option value=\"${esc(id)}\"${id === activeLib ? ' selected' : ''}>${esc(libraries[id].name || id)}<\/option>`).join('');\n    $('#destLib').innerHTML = `<div class=\"libRow\"><span>${esc(T.destLib)}:<\/span><select id=\"libSel\">${opts}<\/select><\/div>`;\n    $('#libSel').addEventListener('change', async (e) => {\n      activeLib = e.target.value;\n      await chrome.storage.local.set({ activeLib });\n      renderForLibrary(); // collections/saved-state differ per library\n    });\n  };\n\n  // ---- per-library section (status, collections, save button) ----\n  const collName = (id) => {\n    const lib = currentLib();\n    const c = lib && (lib.collections || []).find(x => x.id === id);\n    return c ? c.name : '';\n  };\n  const btn = $('#save');\n  const checkedNames = () => Array.from(document.querySelectorAll('#folders input:checked'))\n    .map(el => collName(el.value)).filter(Boolean);\n\n  function renderForLibrary() {\n    const lib = currentLib();\n    const saved = (lib && lib.saved) || {};\n    const savedColls = (doiKey && saved[doiKey]) || (arxivKey && saved[arxivKey]) || null;\n    const isQueued = pending.some(p => {\n      const k = normKeys(p);\n      return (doiKey && k.doiKey === doiKey) || (arxivKey && k.arxivKey === arxivKey);\n    });\n\n    // status chip\n    $('#savedFolders').textContent = '';\n    if (savedColls) {\n      $('#status').innerHTML = `<span class=\"chip saved\">${esc(T.saved)}<\/span>`;\n      const names = (savedColls || []).map(collName).filter(Boolean);\n      $('#savedFolders').textContent = names.length ? T.savedIn(names.join(', ')) : T.savedNoFolder;\n    } else if (isQueued) {\n      $('#status').innerHTML = `<span class=\"chip queued\">${esc(T.queued)}<\/span>`;\n    } else if (identifiable) {\n      $('#status').innerHTML = `<span class=\"chip new\">${esc(T.notSaved)}<\/span>`;\n    } else {\n      $('#status').innerHTML = '';\n    }\n\n    // collection list\n    $('#foldersLabel').textContent = T.folders;\n    const tree = folderTree(lib && lib.collections);\n    $('#folders').innerHTML = tree.length\n      ? tree.map(c => `<label style=\"padding-left:${8 + c.depth * 16}px\"><input type=\"checkbox\" value=\"${esc(c.id)}\">${esc(c.name)}<\/label>`).join('')\n      : `<div class=\"none\">${esc(T.noFolders)}<\/div>`;\n\n    // tag list (tag names, sorted)\n    $('#tagsLabel').textContent = T.tags;\n    const tagNames = ((lib && lib.tags) || []).slice().sort((a, b) => String(a).localeCompare(String(b), JA ? 'ja' : 'en'));\n    $('#tags').innerHTML = tagNames.length\n      ? tagNames.map(name => `<label><input type=\"checkbox\" value=\"${esc(name)}\">${esc(name)}<\/label>`).join('')\n      : `<div class=\"none\">${esc(T.noTags)}<\/div>`;\n\n    // button label\n    btn.dataset.saved = savedColls ? '1' : '';\n    updateBtn();\n  }\n\n  const updateBtn = () => {\n    const names = checkedNames();\n    if (!names.length) btn.textContent = T.saveRoot;\n    else btn.textContent = (btn.dataset.saved ? T.addTo : T.saveTo)(names.join('・'));\n  };\n\n  renderDestLib();\n  renderForLibrary();\n\n  // Researcher capture is intentionally independent from paper detection: a\n  // university profile, lab page, or a search result can be queued even when\n  // it exposes no citation metadata. Paper Library shows its normal duplicate\n  // review before anything is written to the library.\n  $('#researcherLabel').textContent = T.researcher;\n  $('#researcherNameLabel').textContent = T.researcherName;\n  $('#researcherUrlLabel').textContent = T.researcherUrl;\n  $('#saveResearcher').textContent = T.saveResearcher;\n  if (tab && /^https?:/.test(tab.url || '')) $('#researcherUrl').value = tab.url.replace(/#.*$/, '');\n  $('#saveResearcher').addEventListener('click', async () => {\n    const name = $('#researcherName').value.trim();\n    if (!name) { $('#researcherNote').textContent = T.researcherNeedName; return; }\n    const url = $('#researcherUrl').value.trim();\n    const candidate = {\n      id: (crypto.randomUUID && crypto.randomUUID()) || String(Date.now()) + Math.random().toString(36).slice(2),\n      displayName: name, url, website: url, targetLib: activeLib || '', savedAt: Date.now(),\n    };\n    const { pendingResearchers = [] } = await chrome.storage.local.get('pendingResearchers');\n    pendingResearchers.push(candidate);\n    await chrome.storage.local.set({ pendingResearchers });\n    $('#saveResearcher').disabled = true;\n    $('#researcherNote').textContent = T.researcherQueued;\n  });\n\n  // TOC image capture: only offered when the page exposes a graphical-abstract\n  // image and we were able to script the tab (activeTab, http/https pages).\n  const canGrabToc = !!(meta.image && tab && tab.id != null && /^https?:/.test(tab.url || ''));\n  if (canGrabToc) {\n    $('#grabTocLabel').textContent = T.grabToc;\n    $('#tocRow').style.display = 'flex';\n  }\n\n  $('#folders').addEventListener('change', updateBtn);\n\n  if (!identifiable) {\n    btn.disabled = true;\n    $('#note').textContent = T.noPaper;\n    return;\n  }\n\n  btn.addEventListener('click', async () => {\n    btn.disabled = true;\n    const collIds = Array.from(document.querySelectorAll('#folders input:checked')).map(el => el.value);\n    const tagNames = Array.from(document.querySelectorAll('#tags input:checked')).map(el => el.value);\n    // Best-effort TOC image grab (never blocks the save on failure).\n    let imageData = '', imageType = '';\n    if (canGrabToc && $('#grabToc') && $('#grabToc').checked) {\n      try {\n        const res = await chrome.scripting.executeScript({ target: { tabId: tab.id }, func: fetchImageAsDataUrl, args: [meta.image] });\n        const got = res && res[0] && res[0].result;\n        if (got && got.dataUrl) { imageData = got.dataUrl; imageType = got.type || ''; }\n      } catch (e) { /* CORS or scripting blocked → fall back to manual paste */ }\n    }\n    const item = {\n      id: (crypto.randomUUID && crypto.randomUUID()) || String(Date.now()) + Math.random().toString(36).slice(2),\n      doi: meta.doi || '', arxiv: meta.arxiv || '', url: meta.url || '',\n      title: meta.title || '', authors: meta.authors || [], journal: meta.journal || '',\n      year: meta.year || '', abstract: meta.abstract || '',\n      collections: collIds, tags: tagNames, imageData, imageType, targetLib: activeLib || '', savedAt: Date.now(),\n    };\n    const { pending: cur = [] } = await chrome.storage.local.get('pending');\n    cur.push(item);\n    await chrome.storage.local.set({ pending: cur });\n    const destColl = checkedNames().join('・') || T.uncat;\n    const libLabel = (currentLib() && currentLib().name) || '';\n    const dest = libLabel ? `${libLabel} / ${destColl}` : destColl;\n    $('#status').innerHTML = `<span class=\"chip queued\">${esc(T.queued)}<\/span>`;\n    await showImportHint(T.doneOpen(dest), T.doneClosed(dest), T.doneNoUrl(dest));\n  });\n\n  // if this paper is already queued (popup reopened before importing), explain\n  // how it gets into the library rather than looking stuck\n  const alreadyQueued = pending.some(p => {\n    const k = normKeys(p);\n    return (doiKey && k.doiKey === doiKey) || (arxivKey && k.arxivKey === arxivKey);\n  });\n  const savedNow = (() => {\n    const saved = (currentLib() && currentLib().saved) || {};\n    return (doiKey && saved[doiKey]) || (arxivKey && saved[arxivKey]) || null;\n  })();\n  if (alreadyQueued && !savedNow) {\n    showImportHint(T.pendingOpen, T.pendingClosed, T.pendingNoUrl);\n  }\n}\n\ninit().catch(e => {\n  console.error(e);\n  $('#note').textContent = T.restricted;\n});\n"},
-  "sniffer.js": {text: "// Runs on every http(s) page: detects the paper's DOI / arXiv id and asks the\n// background worker to show an \"already in library\" badge for this tab.\n(function () {\n  if (document.querySelector('meta[name=\"refshelf-app\"]')) return; // the app itself\n\n  const DOI_RE = /10\\.\\d{4,9}\\/[^\\s\"'<>&]+/;\n\n  function meta(name) {\n    const el = document.querySelector(`meta[name=\"${name}\" i], meta[property=\"${name}\" i]`);\n    return el && el.content ? el.content.trim() : '';\n  }\n\n  function findIds() {\n    let doi = '';\n    for (const n of ['citation_doi', 'dc.identifier', 'dc.identifier.doi', 'prism.doi', 'doi']) {\n      const m = meta(n).match(DOI_RE);\n      if (m) { doi = m[0]; break; }\n    }\n    if (!doi) {\n      try {\n        const m = decodeURIComponent(location.href).match(DOI_RE);\n        if (m) doi = m[0].replace(/[.,;)\\]]+$/, '');\n      } catch (e) { /* malformed escape in URL */ }\n    }\n    if (!doi) {\n      const a = document.querySelector('a[href*=\"doi.org/10.\"]');\n      if (a) {\n        const m = decodeURIComponent(a.href).match(DOI_RE);\n        if (m) doi = m[0];\n      }\n    }\n    let arxiv = meta('citation_arxiv_id');\n    if (!arxiv) {\n      const m = location.href.match(/arxiv\\.org\\/(?:abs|pdf)\\/([a-z\\-]+(?:\\.[A-Z]{2})?\\/\\d{7}|\\d{4}\\.\\d{4,5})/i);\n      if (m) arxiv = m[1];\n    }\n    if (!arxiv && doi) {\n      const m = doi.match(/^10\\.48550\\/arxiv\\.(.+)$/i);\n      if (m) { arxiv = m[1]; doi = ''; }\n    }\n    return {\n      doi: doi.toLowerCase(),\n      arxiv: String(arxiv || '').toLowerCase().replace(/v\\d+$/, ''),\n    };\n  }\n\n  async function update() {\n    const { doi, arxiv } = findIds();\n    let text = '';\n    if (doi || arxiv) {\n      const { libraries = {}, activeLib, pending = [] } =\n        await chrome.storage.local.get(['libraries', 'activeLib', 'pending']);\n      // badge reflects the active (destination) library, matching the popup\n      const lib = libraries[activeLib] || Object.values(libraries)[0] || null;\n      const saved = (lib && lib.saved) || {};\n      const queued = pending.some(p =>\n        (doi && String(p.doi || '').toLowerCase() === doi) ||\n        (arxiv && String(p.arxiv || '').toLowerCase().replace(/v\\d+$/, '') === arxiv));\n      if ((doi && saved['doi:' + doi]) || (arxiv && saved['arxiv:' + arxiv])) text = '✓';\n      else if (queued) text = '…';\n    }\n    try { await chrome.runtime.sendMessage({ type: 'badge', text }); }\n    catch (e) { /* extension reloaded / worker unavailable */ }\n  }\n\n  chrome.storage.onChanged.addListener((ch, area) => {\n    if (area === 'local' && (ch.libraries || ch.activeLib || ch.pending)) update();\n  });\n  update();\n})();\n"},
+  "popup.html": {text: "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<style>\n  :root{\n    --bg:#ffffff; --bg2:#f5f6f8; --border:#dcdfe4; --text:#1f2328; --text2:#59636e;\n    --accent:#2563eb; --accent-soft:#eaf1fe; --green:#16a34a; --green-soft:#e7f6ec; --amber:#d97706; --amber-soft:#fdf1e0;\n  }\n  @media (prefers-color-scheme: dark){\n    :root{\n      --bg:#1c2128; --bg2:#22272e; --border:#3a4048; --text:#e6e8eb; --text2:#9aa4af;\n      --accent:#6ba1f7; --accent-soft:#263a5c; --green:#3fbf6f; --green-soft:#1f3a2a; --amber:#e8a44a; --amber-soft:#3d3020;\n    }\n  }\n  html,body{margin:0; padding:0}\n  body{\n    width:460px; background:var(--bg); color:var(--text);\n    font:13px/1.5 -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Hiragino Sans\", \"Noto Sans JP\", sans-serif;\n  }\n  header{display:flex; align-items:center; gap:8px; padding:10px 16px; border-bottom:1px solid var(--border)}\n  header img{width:18px; height:18px}\n  header .name{font-weight:600; font-size:13px}\n  header .libname{margin-left:auto; font-size:11px; color:var(--text2); max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}\n  #body{padding:12px 16px}\n  #paperTitle{font-weight:600; font-size:13.5px; line-height:1.45; margin:0 0 3px}\n  #paperMeta{font-size:11.5px; color:var(--text2); margin:0 0 10px; overflow-wrap:break-word}\n  .chip{\n    display:inline-flex; align-items:center; gap:5px; padding:2px 9px; border-radius:999px;\n    font-size:11.5px; font-weight:600; margin:0 0 10px;\n  }\n  .chip.saved{background:var(--green-soft); color:var(--green)}\n  .chip.queued{background:var(--amber-soft); color:var(--amber)}\n  .chip.new{background:var(--accent-soft); color:var(--accent)}\n  #savedFolders{font-size:11.5px; color:var(--text2); margin:-6px 0 10px}\n  #destLib{\n    font-size:11.5px; color:var(--text2); background:var(--bg2);\n    border:1px solid var(--border); border-radius:8px; padding:6px 9px; margin:0 0 10px;\n  }\n  #destLib .libRow{display:flex; align-items:center; gap:6px}\n  #destLib select{\n    flex:1; min-width:0; font:inherit; font-size:12px; color:var(--text);\n    background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:3px 6px;\n  }\n  .sectionLabel{display:flex; align-items:center; gap:6px; font-size:11px; font-weight:600; color:var(--text2); margin:0 0 5px; text-transform:none}\n  .btnIcon{width:14px; height:14px; flex:none}\n  .tabs{display:flex; border-bottom:1px solid var(--border)}\n  .tab{flex:1; display:inline-flex; align-items:center; justify-content:center; gap:6px; font:inherit; font-size:12.5px; font-weight:600; color:var(--text2); background:transparent; border:none; border-bottom:2px solid transparent; padding:9px 4px; cursor:pointer}\n  .tab:hover{background:var(--bg2)}\n  .tab.active{color:var(--accent); border-bottom-color:var(--accent)}\n  .listTools{display:flex; gap:6px; align-items:center; margin:0 0 6px}\n  .miniSearch{flex:1; min-width:0; font:inherit; font-size:12px; color:var(--text); background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:4px 8px}\n  .miniSearch::placeholder{color:var(--text2)}\n  .miniBtn{flex:none; display:inline-flex; align-items:center; justify-content:center; gap:5px; font:inherit; font-size:11.5px; color:var(--accent); background:var(--accent-soft); border:1px solid var(--border); border-radius:6px; padding:4px 8px; cursor:pointer; white-space:nowrap}\n  .miniBtn:hover{filter:brightness(1.04)}\n  .newForm{display:flex; gap:6px; align-items:center; margin:0 0 8px}\n  .newForm input[type=text]{flex:1; min-width:0; font:inherit; font-size:12px; color:var(--text); background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:4px 8px}\n  .newForm select{flex:none; max-width:150px; min-width:0; font:inherit; font-size:12px; color:var(--text); background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:4px 4px}\n  .addBtn{flex:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; font:inherit; font-size:12px; font-weight:600; color:#fff; background:var(--accent); border:none; border-radius:6px; padding:5px 12px; cursor:pointer}\n  .addBtn:hover{filter:brightness(1.06)}\n  #folders, #tags{\n    max-height:210px; overflow-y:auto; overflow-x:hidden; border:1px solid var(--border); border-radius:8px;\n    padding:5px 4px; margin-bottom:10px; background:var(--bg2);\n  }\n  #tags{max-height:130px}\n  #tags label{display:flex; align-items:center; gap:7px; padding:3px 8px; border-radius:6px; cursor:pointer}\n  #tags label:hover{background:var(--accent-soft)}\n  #folders input, #tags input{margin:0; accent-color:var(--accent)}\n  #folders .none, #tags .none{color:var(--text2); font-size:11.5px; padding:4px 8px}\n  .collRow{display:flex; align-items:center; gap:2px; border-radius:6px}\n  .collRow:hover{background:var(--accent-soft)}\n  .collRow > label{display:flex; align-items:center; gap:7px; padding:3px 6px; flex:1; min-width:0; cursor:pointer}\n  .collRow .cn{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}\n  .collRow .newTag{flex:none; color:var(--accent); font-weight:600; font-size:10px; background:var(--accent-soft); border-radius:4px; padding:0 4px}\n  .twist{width:16px; height:24px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text2); font-size:8px; flex:none; user-select:none; transition:transform .12s}\n  .twist.open{transform:rotate(90deg)}\n  .twist.leaf{cursor:default; visibility:hidden}\n  /* image (graphical abstract) picker */\n  .imgSection{margin:0 0 10px}\n  .imgBox{border:1px solid var(--border); border-radius:8px; background:var(--bg2); padding:8px}\n  .imgPreviewWrap{position:relative; display:flex; align-items:center; justify-content:center; min-height:96px; max-height:200px; background:var(--bg); border:1px solid var(--border); border-radius:6px; overflow:hidden}\n  .imgPreviewWrap img{max-width:100%; max-height:200px; object-fit:contain; display:none}\n  .imgEmpty{font-size:11.5px; color:var(--text2); text-align:center; padding:14px 10px; line-height:1.5}\n  .imgControls{display:flex; align-items:center; gap:6px; margin-top:8px; flex-wrap:wrap}\n  .imgNav{flex:none; display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; font:inherit; font-size:12px; color:var(--text); background:var(--bg); border:1px solid var(--border); border-radius:6px; cursor:pointer}\n  .imgNav:hover:not(:disabled){background:var(--accent-soft)}\n  .imgNav:disabled{opacity:.4; cursor:default}\n  .imgCount{font-size:11px; color:var(--text2); min-width:34px; text-align:center}\n  .imgBtn{flex:none; display:inline-flex; align-items:center; justify-content:center; gap:5px; font:inherit; font-size:11.5px; color:var(--accent); background:var(--accent-soft); border:1px solid var(--border); border-radius:6px; padding:5px 9px; cursor:pointer; white-space:nowrap}\n  .imgBtn:hover{filter:brightness(1.04)}\n  .imgBtn.ghost{color:var(--text2); background:var(--bg)}\n  .imgIncludeRow{display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text2); margin-top:8px; cursor:pointer}\n  .imgIncludeRow input{margin:0; accent-color:var(--accent)}\n  .imgHint{font-size:11px; color:var(--amber); margin-top:6px; line-height:1.45; display:none}\n  .pdfRow{display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text2); margin:0 0 10px; cursor:pointer}\n  .pdfRow input{margin:0; accent-color:var(--accent)}\n  button#save{\n    width:100%; display:inline-flex; align-items:center; justify-content:center; gap:7px;\n    padding:8px 0; border:none; border-radius:8px; background:var(--accent); color:#fff;\n    font-size:13px; font-weight:600; cursor:pointer;\n  }\n  button#save:hover{filter:brightness(1.07)}\n  button#save:disabled{opacity:.5; cursor:default}\n  #note{font-size:11.5px; color:var(--text2); margin:8px 0 0; line-height:1.5}\n  #note.ok{color:var(--green)}\n  #note button{\n    margin-top:6px; padding:5px 10px; border:1px solid var(--accent); border-radius:7px;\n    background:var(--accent-soft); color:var(--accent); font-size:12px; font-weight:600; cursor:pointer;\n  }\n  #note button:hover{filter:brightness(1.03)}\n  #warn{font-size:11.5px; color:var(--amber); margin:0 0 10px; line-height:1.5}\n  .findHint{font-size:11.5px; color:var(--text2); margin:0 0 12px; line-height:1.5}\n  #paneFind .findInput, .findGrid input{width:100%; box-sizing:border-box; font:inherit; font-size:12px; color:var(--text); background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:6px 9px}\n  #paneFind .findInput{margin:0 0 7px}\n  #paneFind input::placeholder{color:var(--text2)}\n  .findGrid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin:0 0 7px}\n  #paneFind > .addBtn{width:100%; padding:8px 0}\n  .findStatus{font-size:11.5px; color:var(--text2); margin:8px 0 0; line-height:1.4}\n  .findResults{margin-top:10px; display:flex; flex-direction:column; gap:8px}\n  .findCand{border:1px solid var(--border); border-radius:8px; padding:8px 10px; background:var(--bg2)}\n  .findCand .ct{font-size:12px; font-weight:600; color:var(--text); line-height:1.35; margin:0 0 2px}\n  .findCand .cm{font-size:11px; color:var(--text2); line-height:1.4; margin:0 0 8px}\n  .findCand .exact{display:inline-block; font-size:10px; font-weight:600; color:var(--green); background:var(--green-soft); border-radius:4px; padding:0 5px; margin-left:6px; white-space:nowrap}\n  .candBtns{display:flex; gap:6px}\n  .candBtns button{flex:1; display:inline-flex; align-items:center; justify-content:center; gap:5px; font:inherit; font-size:11.5px; font-weight:600; border-radius:6px; padding:6px 0; cursor:pointer}\n  .candBtns button:disabled{opacity:.45; cursor:default}\n  .candReg{background:var(--accent); color:#fff; border:none}\n  .candReg:hover{filter:brightness(1.06)}\n  .candOpen{background:var(--bg); color:var(--accent); border:1px solid var(--accent)}\n  .candOpen:hover{filter:brightness(1.03)}\n<\/style>\n<\/head>\n<body>\n<header>\n  <img src=\"icons/icon32.png\" alt=\"\">\n  <span class=\"name\">Paper Library Connector<\/span>\n<\/header>\n<div class=\"tabs\">\n  <button type=\"button\" id=\"tabAdd\" class=\"tab\"><\/button>\n  <button type=\"button\" id=\"tabFind\" class=\"tab\"><\/button>\n<\/div>\n<div id=\"body\">\n  <div id=\"paneAdd\" class=\"pane\">\n    <div id=\"status\"><\/div>\n    <p id=\"paperTitle\"><\/p>\n    <p id=\"paperMeta\"><\/p>\n    <div id=\"savedFolders\"><\/div>\n    <div id=\"warn\" style=\"display:none\"><\/div>\n    <div id=\"destLib\" style=\"display:none\"><\/div>\n    <div class=\"sectionLabel\" id=\"foldersLabel\"><\/div>\n    <div class=\"listTools\">\n      <input type=\"search\" id=\"collSearch\" class=\"miniSearch\">\n      <button type=\"button\" id=\"collExpandAll\" class=\"miniBtn\"><\/button>\n      <button type=\"button\" id=\"collNewBtn\" class=\"miniBtn\"><\/button>\n    <\/div>\n    <div id=\"collNewForm\" class=\"newForm\" style=\"display:none\">\n      <input type=\"text\" id=\"collNewName\">\n      <select id=\"collNewParent\"><\/select>\n      <button type=\"button\" id=\"collNewAdd\" class=\"addBtn\"><\/button>\n    <\/div>\n    <div id=\"folders\"><\/div>\n    <div class=\"sectionLabel\" id=\"tagsLabel\"><\/div>\n    <div class=\"listTools\">\n      <input type=\"search\" id=\"tagSearch\" class=\"miniSearch\">\n      <button type=\"button\" id=\"tagNewBtn\" class=\"miniBtn\"><\/button>\n    <\/div>\n    <div id=\"tagNewForm\" class=\"newForm\" style=\"display:none\">\n      <input type=\"text\" id=\"tagNewName\">\n      <button type=\"button\" id=\"tagNewAdd\" class=\"addBtn\"><\/button>\n    <\/div>\n    <div id=\"tags\"><\/div>\n    <div id=\"imgSection\" class=\"imgSection\" style=\"display:none\">\n      <div class=\"sectionLabel\" id=\"imgLabel\"><\/div>\n      <div class=\"imgBox\">\n        <div class=\"imgPreviewWrap\">\n          <img id=\"imgPreview\" alt=\"\">\n          <div id=\"imgEmpty\" class=\"imgEmpty\"><\/div>\n        <\/div>\n        <div class=\"imgControls\">\n          <button type=\"button\" id=\"imgPrev\" class=\"imgNav\" title=\"\">◀<\/button>\n          <span id=\"imgCount\" class=\"imgCount\"><\/span>\n          <button type=\"button\" id=\"imgNext\" class=\"imgNav\" title=\"\">▶<\/button>\n          <button type=\"button\" id=\"imgPick\" class=\"imgBtn\"><\/button>\n          <button type=\"button\" id=\"imgClear\" class=\"imgBtn ghost\"><\/button>\n          <input type=\"file\" id=\"imgFile\" accept=\"image/*\" style=\"display:none\">\n        <\/div>\n        <div id=\"imgHint\" class=\"imgHint\"><\/div>\n        <label class=\"imgIncludeRow\"><input type=\"checkbox\" id=\"imgInclude\"><span id=\"imgIncludeLabel\"><\/span><\/label>\n      <\/div>\n    <\/div>\n    <label id=\"pdfRow\" class=\"pdfRow\"><input type=\"checkbox\" id=\"fetchPdf\"><span id=\"fetchPdfLabel\"><\/span><\/label>\n    <button id=\"save\"><\/button>\n    <p id=\"note\"><\/p>\n  <\/div>\n  <div id=\"paneFind\" class=\"pane\" style=\"display:none\">\n    <p id=\"findHint\" class=\"findHint\"><\/p>\n    <input type=\"text\" id=\"findJournal\" class=\"findInput\" list=\"findJournalList\" autocomplete=\"off\">\n    <datalist id=\"findJournalList\"><\/datalist>\n    <div class=\"findGrid\">\n      <input type=\"text\" id=\"findYear\" inputmode=\"numeric\">\n      <input type=\"text\" id=\"findVolume\">\n      <input type=\"text\" id=\"findPage\">\n    <\/div>\n    <input type=\"text\" id=\"findExtra\" class=\"findInput\">\n    <button type=\"button\" id=\"findGo\" class=\"addBtn\"><\/button>\n    <div id=\"findStatus\" class=\"findStatus\"><\/div>\n    <div id=\"findResults\" class=\"findResults\"><\/div>\n  <\/div>\n<\/div>\n<script src=\"popup.js\"><\/script>\n<\/body>\n<\/html>\n"},
+  "popup.js": {text: "// Popup: extracts the paper on the active tab, shows saved/queued status and\n// the collection tree for the chosen destination library, and queues the save.\n\n// Small self-contained icon set (no external font/CDN — extension pages can't\n// fetch remote resources). Stroke-only so currentColor picks up each button's\n// own text color in both light and dark.\nfunction svgIcon(inner) {\n  return `<svg class=\"btnIcon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\">${inner}<\/svg>`;\n}\nconst ICON = {\n  plus: svgIcon('<line x1=\"12\" y1=\"5\" x2=\"12\" y2=\"19\"/><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/>'),\n  check: svgIcon('<polyline points=\"20 6 9 17 4 12\"/>'),\n  search: svgIcon('<circle cx=\"11\" cy=\"11\" r=\"7\"/><line x1=\"21\" y1=\"21\" x2=\"16.65\" y2=\"16.65\"/>'),\n  bookmark: svgIcon('<path d=\"M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z\"/>'),\n  chevronsDown: svgIcon('<polyline points=\"7 13 12 18 17 13\"/><polyline points=\"7 6 12 11 17 6\"/>'),\n  chevronsUp: svgIcon('<polyline points=\"17 11 12 6 7 11\"/><polyline points=\"17 18 12 13 7 18\"/>'),\n  externalLink: svgIcon('<path d=\"M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6\"/><polyline points=\"15 3 21 3 21 9\"/><line x1=\"10\" y1=\"14\" x2=\"21\" y2=\"3\"/>'),\n  // same path data as the main app's ICONS.folder / ICONS.tag, for visual parity\n  folder: svgIcon('<path d=\"M4 19.5A1.5 1.5 0 0 1 2.5 18V6A1.5 1.5 0 0 1 4 4.5h4.3a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h6.6A1.5 1.5 0 0 1 21 8.5V18a1.5 1.5 0 0 1-1.5 1.5z\"/>'),\n  tag: svgIcon('<path d=\"M4 4.5h6l9.5 9.5a1.8 1.8 0 0 1 0 2.5l-3.5 3.5a1.8 1.8 0 0 1-2.5 0L4 10.5z\"/><path d=\"M7.5 8h.01\"/>'),\n};\nfunction withIcon(icon, text) { return icon + `<span>${esc(text)}<\/span>`; }\n\nconst JA = (navigator.language || '').toLowerCase().startsWith('ja');\nconst T = JA ? {\n  saved: '✓ ライブラリに保存済み',\n  queued: '… 取り込み待ち',\n  notSaved: '未登録',\n  noPaper: 'このページから論文情報を見つけられませんでした。DOI 付きの論文ページで試してください。',\n  savedIn: (names) => `所属コレクション: ${names}`,\n  savedNoFolder: '所属コレクション: なし（未分類）',\n  destLib: '保存先ライブラリ',\n  folders: '入れるコレクション（複数選択可）',\n  noFolders: 'コレクションはまだありません（未分類として保存されます）',\n  tags: '付けるタグ（複数選択可）',\n  noTags: 'タグはまだありません',\n  searchColl: 'コレクションを検索', searchTag: 'タグを検索', newColl: '＋新規', newTag: '＋新規',\n  collName: '新しいコレクション名', tagName: '新しいタグ名', parentTop: 'トップ（親なし）', addBtn: '追加',\n  expandAll: 'すべて開く', collapseAll: 'すべて閉じる', noMatch: '一致するものがありません', newBadge: '新規',\n  tabAdd: '論文を追加する', tabFind: '論文を探す',\n  findHint: '雑誌・年・巻・ページなどから論文を検索します。見つかった論文は「登録」でライブラリに追加、「開く」でそのページを開きます。',\n  findRegister: '登録', findOpen: '開く',\n  findJournalPh: '雑誌名（略称可）', findYearPh: '年', findVolumePh: '巻', findPagePh: 'ページ',\n  findExtraPh: '著者・タイトル・DOI（任意）', findGo: '検索',\n  findSearching: '検索中…', findNone: '該当する文献が見つかりませんでした', findNeedInput: '雑誌・年・巻・ページ・著者などを入力してください',\n  findError: '検索に失敗しました', findExact: '巻・ページ一致', findPicked: '文献を読み込みました。コレクション／タグを選んで保存してください。',\n  imgLabel: '取り込む画像（グラフィカルアブストラクト）',\n  imgInclude: 'この画像を取り込む',\n  imgPick: 'ファイルから選択',\n  imgClear: '画像なし',\n  imgPrevTitle: '前の候補',\n  imgNextTitle: '次の候補',\n  imgLoading: '読み込み中…',\n  imgNone: 'このページから画像を検出できませんでした。「ファイルから選択」で指定できます。',\n  imgCount: (i, n) => `候補 ${i}/${n}`,\n  imgManualLabel: '選択したファイル',\n  imgFetchFail: 'この画像は自動取得できませんでした。プレビューは表示されますが、確実に取り込むには「ファイルから選択」で保存し直してください。',\n  fetchPdf: 'オープンアクセスの PDF も自動取得する',\n  saveRoot: 'コレクションに入れずに保存（未分類）',\n  saveTo: (names) => `「${names}」に保存`,\n  addTo: (names) => `「${names}」に追加`,\n  uncat: '未分類',\n  openApp: 'Paper Library を開いて取り込む',\n  // after a save\n  doneOpen: (dest) => `保存しました → ${dest}。開いている Paper Library に取り込まれます。`,\n  doneClosed: (dest) => `保存しました → ${dest}。下のボタンを押すか、次に Paper Library を開くと取り込まれます。`,\n  doneNoUrl: (dest) => `保存しました → ${dest}。次に Paper Library を開くと取り込まれます。`,\n  // when the paper is already queued (popup reopened)\n  pendingOpen: 'この論文は取り込み待ちです。開いている Paper Library に取り込まれます。',\n  pendingClosed: 'この論文は取り込み待ちです。下のボタンを押すか、次に Paper Library を開くと取り込まれます。',\n  pendingNoUrl: 'この論文は取り込み待ちです。次に Paper Library を開くと取り込まれます。',\n  needSync: 'まだライブラリと同期していません。Paper Library をライブラリフォルダを開いた状態で一度表示すると、保存先ライブラリ・コレクション一覧・保存済み判定が使えるようになります（保存自体は今でも可能です）。',\n  restricted: 'このページでは拡張機能が動作できません。',\n} : {\n  saved: '✓ In your library',\n  queued: '… Pending import',\n  notSaved: 'Not in library',\n  noPaper: 'Could not find paper metadata on this page. Try a paper page with a DOI.',\n  savedIn: (names) => `In collections: ${names}`,\n  savedNoFolder: 'In collections: none (uncategorized)',\n  destLib: 'Destination library',\n  folders: 'Put in collections (multi-select)',\n  noFolders: 'No collections yet (saved as uncategorized)',\n  tags: 'Add tags (multi-select)',\n  noTags: 'No tags yet',\n  searchColl: 'Search collections', searchTag: 'Search tags', newColl: '+ New', newTag: '+ New',\n  collName: 'New collection name', tagName: 'New tag name', parentTop: 'Top level', addBtn: 'Add',\n  expandAll: 'Expand all', collapseAll: 'Collapse all', noMatch: 'No matches', newBadge: 'new',\n  tabAdd: 'Add paper', tabFind: 'Find paper',\n  findHint: 'Search for a paper by journal, year, volume, page, etc. Register a match to your library, or just open its page.',\n  findRegister: 'Register', findOpen: 'Open',\n  findJournalPh: 'Journal (abbrev. ok)', findYearPh: 'Year', findVolumePh: 'Vol.', findPagePh: 'Page',\n  findExtraPh: 'Author, title, or DOI (optional)', findGo: 'Search',\n  findSearching: 'Searching…', findNone: 'No matching papers found', findNeedInput: 'Enter a journal, year, volume, page, author, etc.',\n  findError: 'Search failed', findExact: 'vol/page match', findPicked: 'Paper loaded. Pick collections/tags and save.',\n  imgLabel: 'Image to import (graphical abstract)',\n  imgInclude: 'Import this image',\n  imgPick: 'Choose file',\n  imgClear: 'No image',\n  imgPrevTitle: 'Previous candidate',\n  imgNextTitle: 'Next candidate',\n  imgLoading: 'Loading…',\n  imgNone: 'No image detected on this page. Use “Choose file” to add one.',\n  imgCount: (i, n) => `Candidate ${i}/${n}`,\n  imgManualLabel: 'Chosen file',\n  imgFetchFail: 'This image could not be fetched automatically. It previews here, but to import it reliably, re-add it with “Choose file”.',\n  fetchPdf: 'Also fetch the open-access PDF automatically',\n  saveRoot: 'Save without a collection (uncategorized)',\n  saveTo: (names) => `Save to “${names}”`,\n  addTo: (names) => `Add to “${names}”`,\n  uncat: 'uncategorized',\n  openApp: 'Open Paper Library to import',\n  doneOpen: (dest) => `Saved → ${dest}. Importing into the open Paper Library.`,\n  doneClosed: (dest) => `Saved → ${dest}. Press the button below, or it imports next time you open Paper Library.`,\n  doneNoUrl: (dest) => `Saved → ${dest}. It imports next time you open Paper Library.`,\n  pendingOpen: 'This paper is pending import. It will be imported into the open Paper Library.',\n  pendingClosed: 'This paper is pending import. Press the button below, or it imports next time you open Paper Library.',\n  pendingNoUrl: 'This paper is pending import. It imports next time you open Paper Library.',\n  needSync: 'Not synced with your library yet. Open Paper Library once (with your library folder open) to enable the destination-library picker, collection list, and saved-state checks. Saving still works now.',\n  restricted: 'The extension cannot run on this page.',\n};\n\nconst DOI_RE = /10\\.\\d{4,9}\\/[^\\s\"'<>&]+/;\n\n// A few common journals for an instant, offline abbreviation; anything else is\n// refined from CrossRef's short-container-title once it responds.\nconst ABBREV = {\n  'journal of the american chemical society': 'J. Am. Chem. Soc.',\n  'angewandte chemie international edition': 'Angew. Chem. Int. Ed.',\n  'angewandte chemie': 'Angew. Chem.',\n  'chemical science': 'Chem. Sci.',\n  'chemical communications': 'Chem. Commun.',\n  'chemical reviews': 'Chem. Rev.',\n  'chemistry - a european journal': 'Chem. Eur. J.',\n  'chemistry a european journal': 'Chem. Eur. J.',\n  'nature': 'Nature',\n  'nature chemistry': 'Nat. Chem.',\n  'nature communications': 'Nat. Commun.',\n  'nature materials': 'Nat. Mater.',\n  'science': 'Science',\n  'journal of organic chemistry': 'J. Org. Chem.',\n  'organic letters': 'Org. Lett.',\n  'organometallics': 'Organometallics',\n  'inorganic chemistry': 'Inorg. Chem.',\n  'dalton transactions': 'Dalton Trans.',\n  'journal of physical chemistry a': 'J. Phys. Chem. A',\n  'journal of physical chemistry b': 'J. Phys. Chem. B',\n  'journal of physical chemistry c': 'J. Phys. Chem. C',\n  'journal of physical chemistry letters': 'J. Phys. Chem. Lett.',\n  'journal of chemical physics': 'J. Chem. Phys.',\n  'physical review letters': 'Phys. Rev. Lett.',\n  'physical review b': 'Phys. Rev. B',\n  'proceedings of the national academy of sciences': 'Proc. Natl. Acad. Sci. U. S. A.',\n  'advanced materials': 'Adv. Mater.',\n  'acs nano': 'ACS Nano',\n  'journal of the chemical society': 'J. Chem. Soc.',\n};\nfunction abbreviate(journal, journalAbbr) {\n  if (journalAbbr) return journalAbbr;\n  const key = String(journal || '').toLowerCase().replace(/^the\\s+/, '').replace(/[.:]/g, '').replace(/\\s+/g, ' ').trim();\n  return ABBREV[key] || '';\n}\nasync function fetchCrossrefAbbrev(doi) {\n  try {\n    const r = await fetch('https://api.crossref.org/works/' + encodeURIComponent(doi) + '?select=short-container-title');\n    if (!r.ok) return '';\n    const m = (await r.json()).message || {};\n    return (m['short-container-title'] && m['short-container-title'][0]) || '';\n  } catch (e) { return ''; }\n}\n\n// --- \"find a paper by citation\" (journal / year / volume / page / author…) ---\n// The popup can't touch the library folder, so a found paper flows through the\n// same save queue as a page save. CrossRef is CORS-enabled, so no host\n// permission is needed.\nconst CR_SELECT = 'DOI,title,container-title,short-container-title,issued,author,volume,issue,page,type,URL,abstract';\nfunction crossrefToMeta(m) {\n  if (!m) return null;\n  const authors = (m.author || []).map(a => {\n    const fam = String(a.family || '').trim(), giv = String(a.given || '').trim();\n    return fam ? (giv ? fam + ', ' + giv : fam) : String(a.name || '').trim();\n  }).filter(Boolean);\n  const dp = m.issued && m.issued['date-parts'] && m.issued['date-parts'][0];\n  const year = (dp && dp[0]) || '';\n  const abbr = (m['short-container-title'] && m['short-container-title'][0]) || '';\n  const full = (m['container-title'] && m['container-title'][0]) || '';\n  return {\n    url: m.URL || '', doi: String(m.DOI || '').toLowerCase(), arxiv: '',\n    title: (m.title && m.title[0]) || '', authors,\n    journal: full || abbr, journalAbbr: abbr,\n    year: String(year || ''), abstract: String(m.abstract || '').replace(/<[^>]+>/g, '').trim(),\n    image: '', volume: String(m.volume || ''), page: String(m.page || ''),\n  };\n}\nasync function crossrefByDoi(doi) {\n  const r = await fetch('https://api.crossref.org/works/' + encodeURIComponent(doi) + '?select=' + encodeURIComponent(CR_SELECT));\n  if (!r.ok) return null;\n  return crossrefToMeta(((await r.json()) || {}).message);\n}\nconst firstPageOf = (p) => String(p || '').split(/[-–—]/)[0].trim();\nasync function crossrefFindByFields(f) {\n  const parts = [f.journal, f.year, f.volume, f.page, f.extra].map(s => String(s || '').trim()).filter(Boolean);\n  if (!parts.length) return [];\n  const url = 'https://api.crossref.org/works?rows=10&select=' + encodeURIComponent(CR_SELECT) +\n    '&query.bibliographic=' + encodeURIComponent(parts.join(' '));\n  const r = await fetch(url);\n  if (!r.ok) throw new Error('CrossRef HTTP ' + r.status);\n  const items = (((await r.json()).message) || {}).items || [];\n  const cands = items.map(crossrefToMeta).filter(Boolean);\n  // Mark (and float up) exact volume + first-page hits, mirroring the app's\n  // ACS-URL resolver, so a fully specified citation lands on the right paper.\n  const vol = String(f.volume || '').trim(), pg = firstPageOf(f.page);\n  cands.forEach(c => { c._exact = !!(vol && pg && String(c.volume) === vol && firstPageOf(c.page) === pg); });\n  cands.sort((a, b) => (b._exact ? 1 : 0) - (a._exact ? 1 : 0));\n  return cands;\n}\n\n// ACS-style author list: \"Family, F. M.\" joined by \"; \" (matches the app).\nfunction acsAuthors(authors) {\n  return (authors || []).map(a => {\n    const s = String(a).trim();\n    if (!s) return '';\n    let family, given;\n    if (s.includes(',')) { const p = s.split(','); family = p[0].trim(); given = p.slice(1).join(',').trim(); }\n    else { const p = s.split(/\\s+/); family = p.pop() || ''; given = p.join(' '); }\n    const ini = given.split(/[\\s.\\-]+/).filter(Boolean).map(w => w[0].toUpperCase() + '.').join(' ');\n    return ini ? `${family}, ${ini}` : family;\n  }).filter(Boolean);\n}\n// ACS-style meta line: \"Doe, J.; Smith, A. B. Chem. Sci. 2026\" (no DOI).\nfunction acsMetaLine(authors, venue, year, cap) {\n  const names = acsAuthors(authors);\n  let auth = '';\n  if (names.length) {\n    const many = cap && names.length > cap;\n    auth = (many ? names.slice(0, cap) : names).join('; ');\n    if (many) auth += ' et al.';\n    if (!/\\.$/.test(auth)) auth += '.'; // period before the venue\n  }\n  return [auth, venue, year].filter(Boolean).join(' ');\n}\n\n// Injected into the page — must be self-contained.\nfunction extractPageMetadata() {\n  const doiRe = /10\\.\\d{4,9}\\/[^\\s\"'<>&]+/;\n  const one = (n) => {\n    const el = document.querySelector(`meta[name=\"${n}\" i], meta[property=\"${n}\" i]`);\n    return el && el.content ? el.content.trim() : '';\n  };\n  const all = (n) => Array.from(document.querySelectorAll(`meta[name=\"${n}\" i]`))\n    .map(e => (e.content || '').trim()).filter(Boolean);\n  let doi = '';\n  for (const n of ['citation_doi', 'dc.identifier', 'dc.identifier.doi', 'prism.doi', 'doi']) {\n    const m = one(n).match(doiRe);\n    if (m) { doi = m[0]; break; }\n  }\n  if (!doi) {\n    try {\n      const m = decodeURIComponent(location.href).match(doiRe);\n      if (m) doi = m[0].replace(/[.,;)\\]]+$/, '');\n    } catch (e) { /* malformed escape */ }\n  }\n  if (!doi) {\n    const a = document.querySelector('a[href*=\"doi.org/10.\"]');\n    if (a) {\n      const m = decodeURIComponent(a.href).match(doiRe);\n      if (m) doi = m[0];\n    }\n  }\n  let arxiv = one('citation_arxiv_id');\n  if (!arxiv) {\n    const m = location.href.match(/arxiv\\.org\\/(?:abs|pdf)\\/([a-z\\-]+(?:\\.[A-Z]{2})?\\/\\d{7}|\\d{4}\\.\\d{4,5})/i);\n    if (m) arxiv = m[1];\n  }\n  if (!arxiv && doi) {\n    const m = doi.match(/^10\\.48550\\/arxiv\\.(.+)$/i);\n    if (m) { arxiv = m[1]; doi = ''; }\n  }\n  const yr = (one('citation_publication_date') || one('citation_date') ||\n    one('citation_online_date') || one('prism.publicationdate')).match(/\\d{4}/);\n  return {\n    url: location.href.replace(/#.*$/, ''),\n    doi, arxiv,\n    title: one('citation_title') || one('og:title') || document.title || '',\n    authors: all('citation_author'),\n    journal: one('citation_journal_title') || one('og:site_name') || '',\n    journalAbbr: one('citation_journal_abbrev') || '',\n    year: yr ? yr[0] : '',\n    abstract: one('citation_abstract') || one('dcterms.abstract') || one('dc.description') || '',\n    // graphical abstract / TOC image — chemistry publishers expose it as og:image\n    image: one('og:image') || one('citation_image') || one('twitter:image') || '',\n  };\n}\n\n// Injected into the page to fetch the graphical-abstract image from the page's own\n// origin (activeTab grants this on the user's save click). Returns a data URL so the\n// bytes travel through chrome.storage to Paper Library, which writes them to disk.\nasync function fetchImageAsDataUrl(url) {\n  try {\n    const r = await fetch(url);\n    if (!r.ok) return null;\n    const b = await r.blob();\n    if (!/^image\\//.test(b.type || '') || b.size > 8 * 1024 * 1024) return null;\n    return await new Promise((res) => {\n      const fr = new FileReader();\n      fr.onload = () => res({ dataUrl: fr.result, type: b.type });\n      fr.onerror = () => res(null);\n      fr.readAsDataURL(b);\n    });\n  } catch (e) { return null; }\n}\n\n// Injected into the page: collect likely graphical-abstract / TOC image URLs,\n// ranked best-first. Publisher og:image is unreliable (ACS sometimes serves a\n// challenge page; Nature's is often a social card), so we also scan the DOM for\n// real figures and rank by publisher-specific hints and rendered size. The popup\n// then previews each so the user can pick the right one before importing.\nfunction collectImageCandidates() {\n  const abs = (u) => { try { return new URL(u, location.href).href; } catch (e) { return ''; } };\n  const out = [];\n  const seen = new Set();\n  const push = (url, score) => {\n    const u = abs(url);\n    if (!u || !/^https?:/i.test(u) || seen.has(u)) return;\n    seen.add(u); out.push({ url: u, score });\n  };\n  const metaC = (n) => {\n    const el = document.querySelector(`meta[name=\"${n}\" i], meta[property=\"${n}\" i]`);\n    return el && el.content ? el.content.trim() : '';\n  };\n  // DOM figures — most reliable for the actual graphical abstract.\n  Array.from(document.images || []).forEach((img) => {\n    const src = img.currentSrc || img.src || img.getAttribute('data-src') || '';\n    if (!src) return;\n    const w = img.naturalWidth || 0, h = img.naturalHeight || 0;\n    const container = img.closest('figure, .figure, [class*=\"abstract\" i], [class*=\"graphic\" i]');\n    const clsOf = (el) => { const c = el && el.className; return typeof c === 'string' ? c : (c && c.baseVal) || ''; };\n    const hay = (src + ' ' + (img.alt || '') + ' ' + (img.id || '') + ' ' + clsOf(img) + ' ' + clsOf(container) + ' ' + (container ? container.id : '')).toLowerCase();\n    let score = 0;\n    if (/abstract|graphical|\\btoc\\b|scheme|\\bga\\b|synopsis/.test(hay)) score += 1000;\n    if (/\\/asset\\/images\\/|_abstract|mediumimage|largeimage|\\/cms\\/.*asset/.test(hay)) score += 500; // ACS\n    if (/springernature|springer-static|media\\.nature|\\/lw\\d{3}|\\/full\\//.test(hay)) score += 400;    // Nature/Springer\n    if (/wiley|onlinelibrary|\\/asset\\/.*\\.(png|jpe?g|gif)/.test(hay)) score += 250;                    // Wiley\n    if (/logo|icon|sprite|avatar|orcid|badge|button/.test(hay)) score -= 900;\n    if (w && h) {\n      if (w < 80 || h < 80) return;              // decorative / icon-sized\n      score += Math.min((w * h) / 1500, 600);    // bigger rendered image = better\n    }\n    // Keep only images that either loaded at a usable size or match a strong hint.\n    if ((w >= 80 && h >= 80) || score >= 400) push(src, score);\n  });\n  // Meta fallbacks (lower priority than a well-scored DOM figure).\n  push(metaC('citation_image'), 300);\n  push(metaC('og:image'), 260);\n  push(metaC('og:image:secure_url'), 255);\n  push(metaC('twitter:image'), 200);\n  push(metaC('twitter:image:src'), 195);\n  out.sort((a, b) => b.score - a.score);\n  return out.slice(0, 10).map((o) => o.url);\n}\n\n// Fallback when scripting is blocked (PDF viewer, chrome:// pages…).\nfunction metaFromUrl(url, title) {\n  const out = { url: String(url || ''), doi: '', arxiv: '', title: String(title || ''), authors: [], journal: '', journalAbbr: '', year: '', abstract: '' };\n  try {\n    const dec = decodeURIComponent(out.url);\n    const a = dec.match(/arxiv\\.org\\/(?:abs|pdf)\\/([a-z\\-]+(?:\\.[A-Z]{2})?\\/\\d{7}|\\d{4}\\.\\d{4,5})/i);\n    if (a) out.arxiv = a[1];\n    else {\n      const m = dec.match(DOI_RE);\n      if (m) out.doi = m[0].replace(/[.,;)\\]]+$/, '');\n    }\n  } catch (e) { /* ignore */ }\n  return out;\n}\n\nfunction normKeys(meta) {\n  return {\n    doiKey: meta.doi ? 'doi:' + meta.doi.toLowerCase() : '',\n    arxivKey: meta.arxiv ? 'arxiv:' + String(meta.arxiv).toLowerCase().replace(/v\\d+$/, '') : '',\n  };\n}\n\nfunction folderTree(collections) {\n  const byParent = new Map();\n  (collections || []).forEach(c => {\n    const k = c.parent || '';\n    if (!byParent.has(k)) byParent.set(k, []);\n    byParent.get(k).push(c);\n  });\n  for (const arr of byParent.values()) arr.sort((a, b) => a.name.localeCompare(b.name, JA ? 'ja' : 'en'));\n  const out = [];\n  (function walk(parent, depth) {\n    (byParent.get(parent) || []).forEach(c => {\n      out.push({ id: c.id, name: c.name, depth });\n      walk(c.id, depth + 1);\n    });\n  })('', 0);\n  return out;\n}\n\nconst $ = (s) => document.querySelector(s);\nfunction esc(s) {\n  return String(s).replace(/[&<>\"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', \"'\": '&#39;' }[c]));\n}\n\nasync function init() {\n  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });\n  let meta = null;\n  if (tab && /^(https?|file):/.test(tab.url || '')) {\n    try {\n      const res = await chrome.scripting.executeScript({ target: { tabId: tab.id }, func: extractPageMetadata });\n      meta = res && res[0] && res[0].result;\n    } catch (e) { /* injection blocked (PDF viewer etc.) */ }\n  }\n  if (!meta) meta = metaFromUrl(tab && tab.url, tab && tab.title);\n\n  // The \"active paper\" (what Save will queue) is normally the current tab's page,\n  // but the citation search below can replace it with a looked-up paper. These\n  // are recomputed by refreshPaper() whenever the active paper changes.\n  let doiKey = '', arxivKey = '', identifiable = false, activeFromTab = true;\n\n  // ---- graphical-abstract image picker (candidates + preview + manual file) ----\n  // imgCands: URLs found on the page (best first). imgCache: url → dataUrl (or\n  // null once a fetch failed). imgManual: a data URL the user chose from a file.\n  // imgIdx: index into imgCands, or -1 when showing the manual file.\n  let imgCands = [], imgIdx = -1, imgManual = '', imgManualType = '';\n  const imgCache = new Map();\n\n  // Fetch the bytes for a candidate URL as a data URL. Same-origin images (ACS\n  // graphical abstracts, Wiley) resolve through a page-context fetch; CORS-enabled\n  // CDNs (many Nature/Springer images) resolve by drawing into a canvas.\n  async function candidateDataUrl(url) {\n    if (imgCache.has(url)) return imgCache.get(url);\n    let dataUrl = null;\n    if (activeFromTab && tab && tab.id != null && /^https?:/.test(tab.url || '')) {\n      try {\n        const res = await chrome.scripting.executeScript({ target: { tabId: tab.id }, func: fetchImageAsDataUrl, args: [url] });\n        const got = res && res[0] && res[0].result;\n        if (got && got.dataUrl) dataUrl = got.dataUrl;\n      } catch (e) { /* injection blocked / CORS → try canvas */ }\n    }\n    if (!dataUrl) {\n      try {\n        dataUrl = await new Promise((resolve, reject) => {\n          const im = new Image();\n          im.crossOrigin = 'anonymous';\n          im.onload = () => {\n            try {\n              const c = document.createElement('canvas');\n              c.width = im.naturalWidth; c.height = im.naturalHeight;\n              c.getContext('2d').drawImage(im, 0, 0);\n              resolve(c.toDataURL('image/png'));\n            } catch (err) { reject(err); }\n          };\n          im.onerror = reject;\n          im.src = url;\n        });\n      } catch (e) { dataUrl = null; }\n    }\n    imgCache.set(url, dataUrl);\n    return dataUrl;\n  }\n\n  // The data URL that Save will queue (candidate bytes, or the manual file), or ''.\n  function selectedImageData() {\n    if (imgIdx === -1) return imgManual || '';\n    const url = imgCands[imgIdx];\n    return (url && imgCache.get(url)) || '';\n  }\n\n  function renderImgControls() {\n    const total = imgCands.length + (imgManual ? 1 : 0);\n    const onManual = imgIdx === -1 && imgManual;\n    const pos = onManual ? total : (imgIdx >= 0 ? imgIdx + 1 : 0);\n    $('#imgCount').textContent = total ? (onManual ? T.imgManualLabel : T.imgCount(pos, imgCands.length)) : '';\n    const hasNav = imgCands.length > 1 || (imgManual && imgCands.length >= 1);\n    $('#imgPrev').disabled = !hasNav;\n    $('#imgNext').disabled = !hasNav;\n    $('#imgClear').style.display = (imgManual || imgCands.length) ? 'inline-flex' : 'none';\n  }\n\n  async function showImgAt() {\n    const prev = $('#imgPreview'), empty = $('#imgEmpty'), hint = $('#imgHint');\n    hint.style.display = 'none';\n    renderImgControls();\n    if (imgIdx === -1) {\n      // manual file (already a data URL) or nothing\n      if (imgManual) { prev.src = imgManual; prev.style.display = 'block'; empty.style.display = 'none'; }\n      else { prev.style.display = 'none'; empty.style.display = 'block'; empty.textContent = T.imgNone; }\n      $('#imgInclude').checked = !!imgManual;\n      return;\n    }\n    const url = imgCands[imgIdx];\n    empty.style.display = 'none';\n    prev.style.display = 'none';\n    $('#imgEmpty').textContent = T.imgLoading; $('#imgEmpty').style.display = 'block';\n    const dataUrl = await candidateDataUrl(url);\n    // The active candidate may have changed while we awaited; re-check.\n    if (imgIdx < 0 || imgCands[imgIdx] !== url) return;\n    empty.style.display = 'none';\n    // Preview from bytes when we have them, else straight from the URL so the user\n    // can still see (and decide about) images we could not fetch.\n    prev.src = dataUrl || url;\n    prev.style.display = 'block';\n    $('#imgInclude').checked = true;\n    if (!dataUrl) { hint.textContent = T.imgFetchFail; hint.style.display = 'block'; }\n  }\n\n  function imgStep(delta) {\n    // Order: candidates [0..n-1] then the manual file (index -1) if present.\n    const items = imgCands.map((_, i) => i).concat(imgManual ? [-1] : []);\n    if (!items.length) return;\n    const cur = items.indexOf(imgIdx);\n    const next = items[(cur + delta + items.length) % items.length];\n    imgIdx = next;\n    showImgAt();\n  }\n\n  // Detect candidates for the current tab's page and show the first one.\n  async function loadImageCandidates() {\n    imgCands = []; imgIdx = -1; imgManual = ''; imgManualType = ''; imgCache.clear();\n    if (activeFromTab && tab && tab.id != null && /^https?:/.test(tab.url || '')) {\n      try {\n        const res = await chrome.scripting.executeScript({ target: { tabId: tab.id }, func: collectImageCandidates });\n        imgCands = (res && res[0] && res[0].result) || [];\n      } catch (e) { imgCands = []; }\n    }\n    // Fold in the meta og:image the page extraction already found, if new.\n    if (meta.image && !imgCands.includes(meta.image)) imgCands.push(meta.image);\n    if (imgCands.length) imgIdx = 0;\n    else if (imgManual) imgIdx = -1;\n    showImgAt();\n  }\n\n  // ---- title + ACS-style meta line (authors, journal abbrev, year; no DOI) ----\n  function renderHeader() {\n    const venueOf = (journal) => journal || (meta.arxiv ? 'arXiv:' + meta.arxiv : '');\n    const renderMeta = (journal) => {\n      $('#paperMeta').textContent = acsMetaLine(meta.authors, venueOf(journal), meta.year, 10);\n    };\n    $('#paperTitle').textContent = meta.title || meta.doi || meta.arxiv || '';\n    const abbr = abbreviate(meta.journal, meta.journalAbbr);\n    renderMeta(abbr || meta.journal);\n    if (!abbr && meta.doi && meta.journal) {\n      fetchCrossrefAbbrev(meta.doi).then(a => { if (a) renderMeta(a); });\n    }\n  }\n\n  // ---- load libraries (with fallback from the old single-snapshot shape) ----\n  let { libraries = {}, activeLib, pending = [], appUrl = '' } =\n    await chrome.storage.local.get(['libraries', 'activeLib', 'pending', 'appUrl']);\n  if (!Object.keys(libraries).length) {\n    const { snapshot } = await chrome.storage.local.get('snapshot');\n    if (snapshot && snapshot.persistent) {\n      const id = snapshot.libraryId || snapshot.libraryName || 'default';\n      libraries = { [id]: { id, name: snapshot.libraryName || '', collections: snapshot.collections || [], tags: snapshot.tags || [], journals: snapshot.journals || [], saved: snapshot.saved || {} } };\n      if (!activeLib) activeLib = id;\n    }\n  }\n  const libIds = Object.keys(libraries);\n  if (!activeLib || !libraries[activeLib]) activeLib = libIds[0];\n  const currentLib = () => libraries[activeLib] || null;\n\n  // ---- \"open Paper Library to import\" helpers ----\n  // The library folder can only be written by the Paper Library page (browser\n  // security — an extension can't write to your chosen folder). So a save is\n  // captured here and flushed when the page is open; offer to open it.\n  async function appTabState() {\n    const url = (currentLib() && currentLib().url) || appUrl || '';\n    if (!url) return { url: '', open: false };\n    try {\n      const base = url.split('#')[0];\n      const tabs = await chrome.tabs.query({});\n      return { url, open: tabs.some(t => t.url && t.url.split('#')[0] === base) };\n    } catch (e) { return { url, open: false }; }\n  }\n  function setNote(text, url) {\n    $('#note').className = 'ok';\n    $('#note').textContent = text;\n    if (url) {\n      const b = document.createElement('button');\n      b.textContent = T.openApp;\n      b.addEventListener('click', () => { chrome.tabs.create({ url }); window.close(); });\n      $('#note').appendChild(document.createElement('br'));\n      $('#note').appendChild(b);\n    }\n  }\n  async function showImportHint(msgOpen, msgClosed, msgNoUrl) {\n    const { url, open } = await appTabState();\n    if (open) setNote(msgOpen, '');\n    else if (url) setNote(msgClosed, url);\n    else setNote(msgNoUrl, '');\n  }\n\n  if (!libIds.length) { $('#warn').style.display = 'block'; $('#warn').textContent = T.needSync; }\n\n  // ---- destination-library picker ----\n  // Always a real <select> — even with a single known library — so the\n  // destination is a control the user can change, not static text. It fills\n  // in with more options as the extension learns about more libraries (each\n  // Paper Library page you've opened posts its own snapshot).\n  const renderDestLib = () => {\n    if (!libIds.length) { $('#destLib').style.display = 'none'; return; }\n    $('#destLib').style.display = 'block';\n    const opts = libIds.map(id =>\n      `<option value=\"${esc(id)}\"${id === activeLib ? ' selected' : ''}>${esc(libraries[id].name || id)}<\/option>`).join('');\n    $('#destLib').innerHTML = `<div class=\"libRow\"><span>${esc(T.destLib)}:<\/span><select id=\"libSel\">${opts}<\/select><\/div>`;\n    $('#libSel').addEventListener('change', async (e) => {\n      activeLib = e.target.value;\n      await chrome.storage.local.set({ activeLib });\n      renderForLibrary(); // collections/saved-state differ per library\n    });\n  };\n\n  // ---- per-library section (status, collections, tags, save button) ----\n  const collName = (id) => {\n    const lib = currentLib();\n    const c = lib && (lib.collections || []).find(x => x.id === id);\n    return c ? c.name : '';\n  };\n  const btn = $('#save');\n\n  // Selection + UI state (source of truth across re-renders from expand/search/new).\n  let checkedColls = new Set();  // collection ids (existing) or 'new:*' (created here)\n  let checkedTags = new Set();   // tag names\n  let expanded = new Set();      // expanded parent collection ids\n  let newColls = [];             // [{id:'new:N', name, parent}] created in the popup\n  let newTags = [];              // new tag names created in the popup\n  let collSearch = '', tagSearch = '';\n  let newCollSeq = 0;\n\n  // existing collections (+ any created here) as flat {id,name,parent,isNew}\n  const collData = () => {\n    const lib = currentLib();\n    const base = ((lib && lib.collections) || []).map(c => ({ id: c.id, name: c.name, parent: c.parent || '', isNew: false }));\n    const all = base.concat(newColls.map(c => ({ id: c.id, name: c.name, parent: c.parent || '', isNew: true })));\n    const byId = new Map(all.map(c => [c.id, c]));\n    const byParent = new Map();\n    all.forEach(c => { const k = c.parent || ''; if (!byParent.has(k)) byParent.set(k, []); byParent.get(k).push(c); });\n    for (const arr of byParent.values()) arr.sort((a, b) => a.name.localeCompare(b.name, JA ? 'ja' : 'en'));\n    return { all, byId, byParent };\n  };\n  // \"/\"-joined name path (used to create a nested collection on the app side)\n  const collPath = (id, sep) => {\n    const { byId } = collData();\n    const names = []; const seen = new Set(); let cur = byId.get(id);\n    while (cur && !seen.has(cur.id)) { seen.add(cur.id); names.unshift(cur.name); cur = cur.parent ? byId.get(cur.parent) : null; }\n    return names.join(sep || '/');\n  };\n  const hasKids = (byParent, id) => (byParent.get(id) || []).length > 0;\n  const checkedCollNames = () => {\n    const { byId } = collData();\n    return Array.from(checkedColls).map(id => { const c = byId.get(id); return c ? c.name : ''; }).filter(Boolean);\n  };\n\n  function renderFolders() {\n    const { all, byId, byParent } = collData();\n    const box = $('#folders');\n    if (!all.length) { box.innerHTML = `<div class=\"none\">${esc(T.noFolders)}<\/div>`; return; }\n    const q = collSearch.trim().toLowerCase();\n    let show = null, auto = null;\n    if (q) {\n      show = new Set(); auto = new Set();\n      all.forEach(c => {\n        if (!c.name.toLowerCase().includes(q)) return;\n        show.add(c.id);\n        let p = c.parent;\n        while (p) { show.add(p); auto.add(p); const pc = byId.get(p); p = pc ? pc.parent : ''; }\n      });\n    }\n    const rows = [];\n    (function walk(parent, depth) {\n      (byParent.get(parent) || []).forEach(c => {\n        if (q && !show.has(c.id)) return;\n        const kids = hasKids(byParent, c.id);\n        const open = q ? auto.has(c.id) : expanded.has(c.id);\n        const twist = kids\n          ? `<span class=\"twist${open ? ' open' : ''}\" data-toggle=\"${esc(c.id)}\">▶<\/span>`\n          : `<span class=\"twist leaf\">▶<\/span>`;\n        const tag = c.isNew ? `<span class=\"newTag\">${esc(T.newBadge)}<\/span>` : '';\n        rows.push(\n          `<div class=\"collRow\" style=\"padding-left:${depth * 13}px\">${twist}` +\n          `<label><input type=\"checkbox\" value=\"${esc(c.id)}\"${checkedColls.has(c.id) ? ' checked' : ''}>` +\n          `<span class=\"cn\">${esc(c.name)}<\/span>${tag}<\/label><\/div>`);\n        if (open) walk(c.id, depth + 1);\n      });\n    })('', 0);\n    box.innerHTML = rows.length ? rows.join('') : `<div class=\"none\">${esc(T.noMatch)}<\/div>`;\n  }\n\n  function renderTags() {\n    const lib = currentLib();\n    const box = $('#tags');\n    const all = Array.from(new Set(((lib && lib.tags) || []).map(String).concat(newTags)))\n      .sort((a, b) => a.localeCompare(b, JA ? 'ja' : 'en'));\n    if (!all.length) { box.innerHTML = `<div class=\"none\">${esc(T.noTags)}<\/div>`; return; }\n    const q = tagSearch.trim().toLowerCase();\n    const shown = q ? all.filter(n => n.toLowerCase().includes(q)) : all;\n    box.innerHTML = shown.length\n      ? shown.map(name => `<label><input type=\"checkbox\" value=\"${esc(name)}\"${checkedTags.has(name) ? ' checked' : ''}>${esc(name)}<\/label>`).join('')\n      : `<div class=\"none\">${esc(T.noMatch)}<\/div>`;\n  }\n\n  // parent picker options for the \"new collection\" form (existing collections only)\n  function renderCollParentOptions() {\n    const { all } = collData();\n    const opts = [`<option value=\"\">${esc(T.parentTop)}<\/option>`].concat(\n      all.filter(c => !c.isNew)\n        .map(c => ({ id: c.id, label: collPath(c.id, ' / ') }))\n        .sort((a, b) => a.label.localeCompare(b.label, JA ? 'ja' : 'en'))\n        .map(c => `<option value=\"${esc(c.id)}\">${esc(c.label)}<\/option>`));\n    $('#collNewParent').innerHTML = opts.join('');\n  }\n\n  function updateExpandAllLabel() {\n    const { all, byParent } = collData();\n    const anyOpen = all.some(c => hasKids(byParent, c.id) && expanded.has(c.id));\n    $('#collExpandAll').innerHTML = anyOpen ? withIcon(ICON.chevronsUp, T.collapseAll) : withIcon(ICON.chevronsDown, T.expandAll);\n  }\n\n  function renderForLibrary() {\n    // fresh per-library selection / UI state\n    checkedColls = new Set(); checkedTags = new Set(); expanded = new Set();\n    newColls = []; newTags = []; collSearch = ''; tagSearch = '';\n    if ($('#collSearch')) $('#collSearch').value = '';\n    if ($('#tagSearch')) $('#tagSearch').value = '';\n    if ($('#collNewForm')) $('#collNewForm').style.display = 'none';\n    if ($('#tagNewForm')) $('#tagNewForm').style.display = 'none';\n\n    const lib = currentLib();\n    const saved = (lib && lib.saved) || {};\n    const savedColls = (doiKey && saved[doiKey]) || (arxivKey && saved[arxivKey]) || null;\n    const isQueued = pending.some(p => {\n      const k = normKeys(p);\n      return (doiKey && k.doiKey === doiKey) || (arxivKey && k.arxivKey === arxivKey);\n    });\n\n    // status chip\n    $('#savedFolders').textContent = '';\n    if (savedColls) {\n      $('#status').innerHTML = `<span class=\"chip saved\">${esc(T.saved)}<\/span>`;\n      const names = (savedColls || []).map(collName).filter(Boolean);\n      $('#savedFolders').textContent = names.length ? T.savedIn(names.join(', ')) : T.savedNoFolder;\n    } else if (isQueued) {\n      $('#status').innerHTML = `<span class=\"chip queued\">${esc(T.queued)}<\/span>`;\n    } else if (identifiable) {\n      $('#status').innerHTML = `<span class=\"chip new\">${esc(T.notSaved)}<\/span>`;\n    } else {\n      $('#status').innerHTML = '';\n    }\n\n    $('#foldersLabel').innerHTML = withIcon(ICON.folder, T.folders);\n    $('#tagsLabel').innerHTML = withIcon(ICON.tag, T.tags);\n    renderCollParentOptions();\n    renderFolders();\n    renderTags();\n    updateExpandAllLabel();\n    // journals already in this library, offered as suggestions in the \"find\" tab\n    const journalList = $('#findJournalList');\n    if (journalList) journalList.innerHTML = ((lib && lib.journals) || []).map(j => `<option value=\"${esc(j)}\"><\/option>`).join('');\n\n    btn.dataset.saved = savedColls ? '1' : '';\n    updateBtn();\n  }\n\n  const updateBtn = () => {\n    const names = checkedCollNames();\n    const label = !names.length ? T.saveRoot : (btn.dataset.saved ? T.addTo : T.saveTo)(names.join('・'));\n    btn.innerHTML = withIcon(ICON.bookmark, label);\n  };\n\n  // ---- wire the collection / tag controls (delegated; survive re-renders) ----\n  $('#collSearch').placeholder = T.searchColl;\n  $('#tagSearch').placeholder = T.searchTag;\n  $('#collNewBtn').innerHTML = withIcon(ICON.plus, T.newColl);\n  $('#tagNewBtn').innerHTML = withIcon(ICON.plus, T.newTag);\n  $('#collNewName').placeholder = T.collName;\n  $('#tagNewName').placeholder = T.tagName;\n  $('#collNewAdd').innerHTML = withIcon(ICON.check, T.addBtn);\n  $('#tagNewAdd').innerHTML = withIcon(ICON.check, T.addBtn);\n\n  $('#folders').addEventListener('click', (e) => {\n    const tw = e.target.closest('.twist');\n    if (!tw || tw.classList.contains('leaf')) return;\n    if (collSearch.trim()) return; // branches auto-expand while searching\n    const id = tw.dataset.toggle;\n    if (expanded.has(id)) expanded.delete(id); else expanded.add(id);\n    renderFolders();\n    updateExpandAllLabel();\n  });\n  $('#folders').addEventListener('change', (e) => {\n    const cb = e.target.closest('input[type=checkbox]');\n    if (!cb) return;\n    if (cb.checked) checkedColls.add(cb.value); else checkedColls.delete(cb.value);\n    updateBtn();\n  });\n  $('#tags').addEventListener('change', (e) => {\n    const cb = e.target.closest('input[type=checkbox]');\n    if (!cb) return;\n    if (cb.checked) checkedTags.add(cb.value); else checkedTags.delete(cb.value);\n  });\n  $('#collSearch').addEventListener('input', (e) => { collSearch = e.target.value; renderFolders(); });\n  $('#tagSearch').addEventListener('input', (e) => { tagSearch = e.target.value; renderTags(); });\n  $('#collExpandAll').addEventListener('click', () => {\n    const { all, byParent } = collData();\n    const anyOpen = all.some(c => hasKids(byParent, c.id) && expanded.has(c.id));\n    expanded = anyOpen ? new Set() : new Set(all.filter(c => hasKids(byParent, c.id)).map(c => c.id));\n    renderFolders();\n    updateExpandAllLabel();\n  });\n\n  const toggleForm = (formSel, focusSel, onOpen) => {\n    const f = $(formSel);\n    const opening = f.style.display === 'none';\n    f.style.display = opening ? 'flex' : 'none';\n    if (opening) { if (onOpen) onOpen(); $(focusSel).focus(); }\n  };\n  $('#collNewBtn').addEventListener('click', () => toggleForm('#collNewForm', '#collNewName', renderCollParentOptions));\n  $('#tagNewBtn').addEventListener('click', () => toggleForm('#tagNewForm', '#tagNewName'));\n\n  const addNewColl = () => {\n    const name = $('#collNewName').value.trim();\n    if (!name) { $('#collNewName').focus(); return; }\n    const parent = $('#collNewParent').value || '';\n    const id = 'new:' + (++newCollSeq);\n    newColls.push({ id, name, parent });\n    checkedColls.add(id);\n    if (parent) expanded.add(parent);\n    $('#collNewName').value = '';\n    collSearch = ''; $('#collSearch').value = '';\n    renderCollParentOptions();\n    renderFolders();\n    updateExpandAllLabel();\n    updateBtn();\n    $('#collNewName').focus();\n  };\n  $('#collNewAdd').addEventListener('click', addNewColl);\n  $('#collNewName').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addNewColl(); } });\n\n  const addNewTag = () => {\n    const name = $('#tagNewName').value.trim();\n    if (!name) { $('#tagNewName').focus(); return; }\n    if (!newTags.includes(name)) newTags.push(name);\n    checkedTags.add(name);\n    $('#tagNewName').value = '';\n    tagSearch = ''; $('#tagSearch').value = '';\n    renderTags();\n    $('#tagNewName').focus();\n  };\n  $('#tagNewAdd').addEventListener('click', addNewTag);\n  $('#tagNewName').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addNewTag(); } });\n\n  renderDestLib();\n\n  // ---- image picker labels + controls ----\n  $('#imgLabel').textContent = T.imgLabel;\n  $('#imgIncludeLabel').textContent = T.imgInclude;\n  $('#imgPick').textContent = T.imgPick;\n  $('#imgClear').textContent = T.imgClear;\n  $('#imgPrev').title = T.imgPrevTitle;\n  $('#imgNext').title = T.imgNextTitle;\n  $('#fetchPdfLabel').textContent = T.fetchPdf;\n  $('#imgPrev').addEventListener('click', () => imgStep(-1));\n  $('#imgNext').addEventListener('click', () => imgStep(1));\n  $('#imgPick').addEventListener('click', () => $('#imgFile').click());\n  $('#imgClear').addEventListener('click', () => {\n    // Drop the current selection; just untick \"import\" so nothing is queued.\n    $('#imgInclude').checked = false;\n    $('#imgPreview').style.display = 'none';\n    $('#imgHint').style.display = 'none';\n    $('#imgEmpty').textContent = T.imgNone; $('#imgEmpty').style.display = 'block';\n  });\n  $('#imgFile').addEventListener('change', (e) => {\n    const file = e.target.files && e.target.files[0];\n    if (!file) return;\n    if (!/^image\\//.test(file.type || '')) return;\n    const fr = new FileReader();\n    fr.onload = () => {\n      imgManual = fr.result; imgManualType = file.type || '';\n      imgIdx = -1;\n      showImgAt();\n    };\n    fr.readAsDataURL(file);\n    e.target.value = '';\n  });\n\n  btn.addEventListener('click', async () => {\n    btn.disabled = true;\n    // existing collection ids to file into, plus name-paths for any created here\n    const collIds = Array.from(checkedColls).filter(id => !String(id).startsWith('new:'));\n    const newCollections = Array.from(checkedColls)\n      .filter(id => String(id).startsWith('new:')).map(id => collPath(id)).filter(Boolean);\n    const tagNames = Array.from(checkedTags);\n    // Selected graphical-abstract image (candidate bytes or a chosen file), only\n    // when the user left \"Import this image\" checked.\n    let imageData = '', imageType = '';\n    if ($('#imgInclude') && $('#imgInclude').checked) {\n      imageData = selectedImageData();\n      if (imgIdx === -1) imageType = imgManualType || '';\n    }\n    const fetchPdf = !!($('#fetchPdf') && $('#fetchPdf').checked);\n    const item = {\n      id: (crypto.randomUUID && crypto.randomUUID()) || String(Date.now()) + Math.random().toString(36).slice(2),\n      doi: meta.doi || '', arxiv: meta.arxiv || '', url: meta.url || '',\n      title: meta.title || '', authors: meta.authors || [], journal: meta.journal || '',\n      year: meta.year || '', abstract: meta.abstract || '',\n      collections: collIds, newCollections, tags: tagNames, imageData, imageType, fetchPdf, targetLib: activeLib || '', savedAt: Date.now(),\n    };\n    const { pending: cur = [] } = await chrome.storage.local.get('pending');\n    cur.push(item);\n    await chrome.storage.local.set({ pending: cur });\n    const destColl = checkedCollNames().join('・') || T.uncat;\n    const libLabel = (currentLib() && currentLib().name) || '';\n    const dest = libLabel ? `${libLabel} / ${destColl}` : destColl;\n    $('#status').innerHTML = `<span class=\"chip queued\">${esc(T.queued)}<\/span>`;\n    await showImportHint(T.doneOpen(dest), T.doneClosed(dest), T.doneNoUrl(dest));\n  });\n\n  // Render header/status/note/save-enabled for the active paper — the current\n  // tab's page, or one picked from the citation search. Re-run when it changes.\n  function refreshPaper() {\n    ({ doiKey, arxivKey } = normKeys(meta));\n    identifiable = !!(meta.doi || meta.arxiv || meta.title);\n    renderHeader();\n    // Image picker: candidates come from the current tab's page; a manual file can\n    // be chosen for any paper (including ones picked from the citation search).\n    $('#imgSection').style.display = 'block';\n    loadImageCandidates();\n    renderForLibrary();\n    $('#note').className = ''; $('#note').textContent = '';\n    btn.disabled = !identifiable;\n    if (!identifiable) { $('#note').textContent = T.noPaper; return; }\n    // if already queued (popup reopened before importing), explain how it imports\n    const alreadyQueued = pending.some(p => {\n      const k = normKeys(p);\n      return (doiKey && k.doiKey === doiKey) || (arxivKey && k.arxivKey === arxivKey);\n    });\n    const saved = (currentLib() && currentLib().saved) || {};\n    const savedNow = (doiKey && saved[doiKey]) || (arxivKey && saved[arxivKey]) || null;\n    if (alreadyQueued && !savedNow) showImportHint(T.pendingOpen, T.pendingClosed, T.pendingNoUrl);\n  }\n\n  // ---- tabs: \"add the current page\" vs \"find a paper by citation\" ----\n  $('#tabAdd').innerHTML = withIcon(ICON.plus, T.tabAdd);\n  $('#tabFind').innerHTML = withIcon(ICON.search, T.tabFind);\n  function showTab(name) {\n    const add = name === 'add';\n    $('#paneAdd').style.display = add ? 'block' : 'none';\n    $('#paneFind').style.display = add ? 'none' : 'block';\n    $('#tabAdd').classList.toggle('active', add);\n    $('#tabFind').classList.toggle('active', !add);\n  }\n  $('#tabAdd').addEventListener('click', () => showTab('add'));\n  $('#tabFind').addEventListener('click', () => showTab('find'));\n\n  // ---- find a paper by citation (journal / year / volume / page / author…) ----\n  $('#findHint').textContent = T.findHint;\n  $('#findJournal').placeholder = T.findJournalPh;\n  $('#findYear').placeholder = T.findYearPh;\n  $('#findVolume').placeholder = T.findVolumePh;\n  $('#findPage').placeholder = T.findPagePh;\n  $('#findExtra').placeholder = T.findExtraPh;\n  $('#findGo').innerHTML = withIcon(ICON.search, T.findGo);\n  function renderFindResults(cands) {\n    const box = $('#findResults'); box.innerHTML = '';\n    cands.slice(0, 8).forEach(c => {\n      const card = document.createElement('div');\n      card.className = 'findCand';\n      const venue = [c.journalAbbr || c.journal, c.volume, c.year].filter(Boolean).join(' ');\n      const sub = acsMetaLine(c.authors, venue, '', 6) || venue;\n      const url = c.url || (c.doi ? 'https://doi.org/' + c.doi : '');\n      card.innerHTML = `<div class=\"ct\">${esc(c.title || c.doi || '')}${c._exact ? `<span class=\"exact\">${esc(T.findExact)}<\/span>` : ''}<\/div>` +\n        `<div class=\"cm\">${esc(sub)}<\/div>` +\n        `<div class=\"candBtns\"><button type=\"button\" class=\"candReg\">${withIcon(ICON.bookmark, T.findRegister)}<\/button>` +\n        `<button type=\"button\" class=\"candOpen\"${url ? '' : ' disabled'}>${withIcon(ICON.externalLink, T.findOpen)}<\/button><\/div>`;\n      // Register → load the paper into the \"Add\" tab so collections/tags can be\n      // chosen, then Save queues it exactly like a page save.\n      card.querySelector('.candReg').addEventListener('click', () => {\n        meta = c; activeFromTab = false;\n        refreshPaper();\n        showTab('add');\n        if (!$('#note').textContent) setNote(T.findPicked, '');\n      });\n      const openBtn = card.querySelector('.candOpen');\n      if (url) openBtn.addEventListener('click', () => { chrome.tabs.create({ url }); window.close(); });\n      box.appendChild(card);\n    });\n  }\n  async function runFind() {\n    const f = { journal: $('#findJournal').value, year: $('#findYear').value, volume: $('#findVolume').value, page: $('#findPage').value, extra: $('#findExtra').value };\n    if (!Object.values(f).some(v => String(v).trim())) { $('#findStatus').textContent = T.findNeedInput; return; }\n    $('#findResults').innerHTML = ''; $('#findStatus').textContent = T.findSearching; $('#findGo').disabled = true;\n    try {\n      let cands = [];\n      const doiM = String(f.extra).match(DOI_RE);\n      if (doiM) { const one = await crossrefByDoi(doiM[0].replace(/[.,;)\\]]+$/, '')); if (one) cands = [one]; }\n      if (!cands.length) cands = await crossrefFindByFields(f);\n      $('#findGo').disabled = false;\n      if (!cands.length) { $('#findStatus').textContent = T.findNone; return; }\n      $('#findStatus').textContent = ''; renderFindResults(cands);\n    } catch (e) { console.error(e); $('#findGo').disabled = false; $('#findStatus').textContent = T.findError; }\n  }\n  $('#findGo').addEventListener('click', runFind);\n  ['findJournal', 'findYear', 'findVolume', 'findPage', 'findExtra'].forEach(id => {\n    $('#' + id).addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); runFind(); } });\n  });\n\n  refreshPaper();\n  // Open on the tab that fits the page: a paper page → \"Add\"; anything else → \"Find\".\n  showTab(identifiable ? 'add' : 'find');\n}\n\ninit().catch(e => {\n  console.error(e);\n  $('#note').textContent = T.restricted;\n});\n"},
+  "sniffer.js": {text: "// Runs on every http(s) page: detects the paper's DOI / arXiv id and asks the\n// background worker to show an \"already in library\" badge for this tab.\n(function () {\n  if (document.querySelector('meta[name=\"refshelf-app\"]')) return; // the app itself\n\n  const DOI_RE = /10\\.\\d{4,9}\\/[^\\s\"'<>&]+/;\n\n  function meta(name) {\n    const el = document.querySelector(`meta[name=\"${name}\" i], meta[property=\"${name}\" i]`);\n    return el && el.content ? el.content.trim() : '';\n  }\n\n  function findIds() {\n    let doi = '';\n    for (const n of ['citation_doi', 'dc.identifier', 'dc.identifier.doi', 'prism.doi', 'doi']) {\n      const m = meta(n).match(DOI_RE);\n      if (m) { doi = m[0]; break; }\n    }\n    if (!doi) {\n      try {\n        const m = decodeURIComponent(location.href).match(DOI_RE);\n        if (m) doi = m[0].replace(/[.,;)\\]]+$/, '');\n      } catch (e) { /* malformed escape in URL */ }\n    }\n    if (!doi) {\n      const a = document.querySelector('a[href*=\"doi.org/10.\"]');\n      if (a) {\n        const m = decodeURIComponent(a.href).match(DOI_RE);\n        if (m) doi = m[0];\n      }\n    }\n    let arxiv = meta('citation_arxiv_id');\n    if (!arxiv) {\n      const m = location.href.match(/arxiv\\.org\\/(?:abs|pdf)\\/([a-z\\-]+(?:\\.[A-Z]{2})?\\/\\d{7}|\\d{4}\\.\\d{4,5})/i);\n      if (m) arxiv = m[1];\n    }\n    if (!arxiv && doi) {\n      const m = doi.match(/^10\\.48550\\/arxiv\\.(.+)$/i);\n      if (m) { arxiv = m[1]; doi = ''; }\n    }\n    return {\n      doi: doi.toLowerCase(),\n      arxiv: String(arxiv || '').toLowerCase().replace(/v\\d+$/, ''),\n    };\n  }\n\n  async function update() {\n    const { doi, arxiv } = findIds();\n    let text = '';\n    if (doi || arxiv) {\n      const { libraries = {}, activeLib, pending = [] } =\n        await chrome.storage.local.get(['libraries', 'activeLib', 'pending']);\n      // badge reflects the active (destination) library, matching the popup\n      const lib = libraries[activeLib] || Object.values(libraries)[0] || null;\n      const saved = (lib && lib.saved) || {};\n      const queued = pending.some(p =>\n        (doi && String(p.doi || '').toLowerCase() === doi) ||\n        (arxiv && String(p.arxiv || '').toLowerCase().replace(/v\\d+$/, '') === arxiv));\n      if ((doi && saved['doi:' + doi]) || (arxiv && saved['arxiv:' + arxiv])) text = '✓';\n      else if (queued) text = '…';\n      else text = '+'; // recognizable paper, not yet in the library → prompt to add\n    }\n    try { await chrome.runtime.sendMessage({ type: 'badge', text }); }\n    catch (e) { /* extension reloaded / worker unavailable */ }\n  }\n\n  chrome.storage.onChanged.addListener((ch, area) => {\n    if (area === 'local' && (ch.libraries || ch.activeLib || ch.pending)) update();\n  });\n  update();\n})();\n"},
 };
 /* === END CONNECTOR_FILES === */
 
@@ -13945,6 +14732,7 @@ function connectorSnapshot(){
     libraryName: (backend && backend.name) || '',
     collections: lib.collections.map(c => ({ id:c.id, name:c.name, parent:c.parent || '' })),
     tags: allKnownTags(),
+    journals: allKnownJournals(),
     saved,
   };
 }
@@ -13980,7 +14768,11 @@ async function connectorImportOne(p){
   if(!it.url && p.url) it.url = p.url;
   if(!it.abstract && p.abstract) it.abstract = p.abstract;
   const collIds = (p.collections || []).filter(id => lib.collections.some(c => c.id === id));
-  if(collIds.length) it.collections = collIds;
+  // collections created in the extension popup arrive as "/"-joined name paths;
+  // collectionIdByPath creates any missing level (reusing existing ones by name).
+  const newCollIds = (p.newCollections || []).map(path => collectionIdByPath(path)).filter(Boolean);
+  const allColls = Array.from(new Set([...collIds, ...newCollIds]));
+  if(allColls.length) it.collections = allColls;
   // tags chosen in the extension popup (tag names, not ids)
   const tags = (p.tags || []).map(s => String(s).trim()).filter(Boolean);
   if(tags.length){
@@ -13993,9 +14785,6 @@ async function connectorImportOne(p){
     catch(err){ console.warn('connector: TOC image save failed', err); }
   }
   return it;
-}
-function connectorResearcherResult(results){
-  if(results&&results.length) window.postMessage({source:'refshelf-app',action:'researcher-import-result',results},'*');
 }
 // Decode a data: URL to a Blob and store it as this item's figure image.
 function dataUrlToBlob(dataUrl){
@@ -14032,7 +14821,9 @@ window.addEventListener('message', async (e)=>{
       try{
         const it = await connectorImportOne(p);
         const res = addItems([it]);
-        if(res.added) newOnes.push(it);
+        // Only fetch the open-access PDF when the popup's opt-in was checked
+        // (default off). Legacy queued items without the flag never fetch.
+        if(res.added) newOnes.push({ it, fetchPdf: !!p.fetchPdf });
         results.push({ id:p.id, ok:true, added:res.added, skipped:res.skipped });
       }catch(err){
         console.error(err);
@@ -14043,18 +14834,10 @@ window.addEventListener('message', async (e)=>{
     window.postMessage({ source:'refshelf-app', action:'import-result', results }, '*');
     const n = results.filter(r=>r.ok).length;
     if(n) showToast(I18N[lang].connectorImported(n));
-    for(const it of newOnes){
+    for(const { it, fetchPdf } of newOnes){
+      if(!fetchPdf) continue;
       try{ await tryAutoAttachPdf(it); }catch(err){ console.warn(err); }
     }
-  }
-  if(d.action==='researcher-import' && Array.isArray(d.items)){
-    const candidates=d.items.map(item=>({
-      displayName:String(item.displayName||item.name||'').trim(), familyName:String(item.familyName||'').trim(), givenName:String(item.givenName||'').trim(),
-      aliases:Array.isArray(item.aliases)?item.aliases:[], identifiers:item.identifiers||{}, currentInstitutions:Array.isArray(item.currentInstitutions)?item.currentInstitutions:(item.affiliation?[item.affiliation]:[]),
-      website:String(item.website||item.url||'').trim(), source:'chrome-extension', sourceUrl:String(item.url||item.website||'').trim(), extensionId:item.id
-    })).filter(item=>researcherCandidateName(item)||Object.values(item.identifiers||{}).some(Boolean)||item.website);
-    if(candidates.length) showResearcherReview(candidates,{title:t('researcherIntakeReview'),hint:lang==='ja'?'Chrome拡張から受信した候補':'Candidates received from the Chrome extension',extension:true});
-    else connectorResearcherResult(d.items.map(item=>({id:item.id,ok:false,error:'Invalid researcher candidate'})));
   }
 });
 
@@ -14112,17 +14895,17 @@ function researcherExportText(value){
   return Array.isArray(value) ? value.filter(Boolean).join('; ') : String(value||'');
 }
 function researcherExportRecordsToCsv(records){
-  const headers=['Name','Registered','Family name','Given name','Middle name','Aliases','Current institutions','Past institutions','Affiliation history','Birth date','PhD year','PhD institution','PhD degree','PhD advisor','Homepage','Image URL','ORCID','OpenAlex','researchmap','Google Scholar','ResearchGate','LinkedIn','Wikipedia','Scopus','ResearcherID','DBLP','CiNii','Total citations','h-index','i10-index','Profile publications','Research fields','Related researchers','Positions','Education','Awards','Reference count','Reference IDs','Last modified'];
+  const headers=['Name','Registered','Family name','Given name','Middle name','Aliases','Current institutions','Past institutions','Affiliation history','Birth date','PhD year','PhD institution','PhD degree','PhD advisor','Homepage','Image URL','ORCID','OpenAlex','researchmap','Google Scholar','ResearchGate','LinkedIn','X','Bluesky','Wikipedia','Scopus','ResearcherID','DBLP','CiNii','Total citations','h-index','i10-index','Profile publications','Research fields','Related researchers','Positions','Education','Awards','Reference count','Reference IDs','Last modified'];
   const rows=records.map(r=>{
     const p=r.profile||{}, ids=p.identifiers||{}, positions=researcherPositions(p), education=researcherEducation(p), affiliations=researcherAffiliations(p), awards=researcherAwards(p);
     return [
       r.name, r.registered?'yes':'no', p.familyName, p.givenName, p.middleName,
       researcherExportText(r.aliases), researcherExportText(researcherCurrentInstitutions(p)), researcherExportText(researcherPastInstitutions(p)),
-      affiliations.map(a=>[a.name,a.start,a.end||'present'].filter(Boolean).join(' / ')).join(' | '), p.birthDate, p.phdYear, p.phdInstitution, p.phdDegree, p.phdAdvisor,
-      p.website, (String(p.imageUrl||'').startsWith('http://')||String(p.imageUrl||'').startsWith('https://'))?p.imageUrl:'', ids.orcid, ids.openalex, ids.researchmap, ids.googleScholar, ids.researchGate, ids.linkedin, ids.wikipedia, ids.scopus, ids.researcherId, ids.dblp, ids.cinii,
+      affiliations.map(a=>[a.name,a.start,a.end||'present'].filter(Boolean).join(' / ')).join(' | '), p.birthDate, p.phdYear, p.phdInstitution, p.phdDegree, researcherAdvisors(p).join(' | '),
+      p.website, (String(p.imageUrl||'').startsWith('http://')||String(p.imageUrl||'').startsWith('https://'))?p.imageUrl:'', ids.orcid, ids.openalex, ids.researchmap, ids.googleScholar, ids.researchGate, ids.linkedin, ids.x, ids.bluesky, ids.wikipedia, ids.scopus, ids.researcherId, ids.dblp, ids.cinii,
       p.totalCitations, p.hIndex, p.i10Index, p.worksCount, researcherExportText(p.researchFields), researcherExportText(p.relatedResearchers),
-      positions.map(x=>[x.institution,x.organization,x.title,x.start,x.end].filter(Boolean).join(' / ')).join(' | '),
-      education.map(x=>[x.institution,x.program,x.degree,x.start,x.end].filter(Boolean).join(' / ')).join(' | '),
+      positions.map(x=>[x.institution,x.organization,x.title,x.start,x.end,researcherLines(x.related).length?`related: ${researcherLines(x.related).join(', ')}`:''].filter(Boolean).join(' / ')).join(' | '),
+      education.map(x=>[x.institution,x.program,x.degree,x.start,x.end,researcherLines(x.related).length?`related: ${researcherLines(x.related).join(', ')}`:''].filter(Boolean).join(' / ')).join(' | '),
       awards.map(x=>[x.year,x.name,x.organization].filter(Boolean).join(' / ')).join(' | '), r.paperCount, researcherExportText(r.paperIds), p.dateModified,
     ];
   });
