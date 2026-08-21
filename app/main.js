@@ -31,6 +31,7 @@ const ICONS = {
   tag:'<path d="M4 4.5h6l9.5 9.5a1.8 1.8 0 0 1 0 2.5l-3.5 3.5a1.8 1.8 0 0 1-2.5 0L4 10.5z"/><path d="M7.5 8h.01"/>',
   search:'<circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l4.5 4.5"/>',
   funnel:'<path d="M3.5 5h17l-6.5 8v6l-4-2v-4z"/>',
+  sort:'<path d="M8 5v14M8 5 5 8M8 5l3 3M16 19V5M16 19l-3-3M16 19l3-3"/>',
   sliders:'<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>',
   wrap:'<path d="M4 6.5h16M4 12h11.5a3 3 0 0 1 0 6H13m0 0 2-2m-2 2 2 2M4 17.5h5"/>',
   rows:'<path d="M4 6.5h16M4 12h16M4 17.5h16"/>',
@@ -48,6 +49,10 @@ const ICONS = {
   users:'<circle cx="9" cy="8" r="3"/><path d="M3.8 19a5.2 5.2 0 0 1 10.4 0"/><circle cx="17" cy="9.5" r="2.3"/><path d="M14.8 15.5a4.2 4.2 0 0 1 5.4 3.5"/>',
   user:'<circle cx="12" cy="8" r="3.6"/><path d="M5.5 19.5a6.5 6.5 0 0 1 13 0"/>',
   graph:'<circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="17" r="2.2"/><circle cx="19" cy="16" r="2.2"/><circle cx="12" cy="12.5" r="1.6"/><path d="M12 7.2v3.7M10.6 13.6 6.4 15.6M13.5 13.3 17.4 15M6.8 15.5 10.6 6.6M17.2 14.9 13 6.7"/>',
+  // genealogy: one root branching down into two children
+  tree:'<rect x="9" y="2.8" width="6" height="4.2" rx="1.2"/><rect x="2.5" y="16.9" width="6" height="4.2" rx="1.2"/><rect x="15.5" y="16.9" width="6" height="4.2" rx="1.2"/><path d="M12 7v3.6M5.5 16.9v-3.3h13v3.3M12 10.6v3"/>',
+  // ranking: a winners' podium (2nd, 1st, 3rd)
+  ranking:'<path d="M3 20.7h18"/><rect x="9.5" y="5.6" width="5" height="15.1" rx="1"/><rect x="3.1" y="10.8" width="5" height="9.9" rx="1"/><rect x="15.9" y="13.8" width="5" height="6.9" rx="1"/>',
   gear:'<circle cx="12" cy="12" r="3.2"/><circle cx="12" cy="12" r="7.2"/><path d="M12 2.8v2M12 19.2v2M2.8 12h2M19.2 12h2M5.5 5.5 6.9 6.9M17.1 17.1l1.4 1.4M18.5 5.5l-1.4 1.4M6.9 17.1l-1.4 1.4"/>',
   check:'<path d="M5 12.5 10 17.5 19.5 6.5"/>',
   arrowDownLeft:'<path d="M17 7 7 17M7 17h7M7 17v-7"/>',
@@ -118,6 +123,66 @@ function renderIcons(root){
 
 const APP_VERSION = '2.1';
 const CHANGELOG = [
+  { v:'2.5', date:'2026-08-19',
+    ja:[
+      '研究者台帳に「ツリー」表示（アカデミックツリー）を追加しました',
+      'PhD指導教員を親子関係として、選択した研究者を中心に上（指導した側）と下（指導された側）へ広がる系譜を表示します。向きは「上下」と「左右」を切り替えられます',
+      '指導教員が複数いる場合も主・副を区別せず等価に扱うため、1人の研究者が複数の指導教員につながります。名前だけ判明していて未登録の指導教員は、点線枠のノードとして表示します',
+      '「所属・PIも含む」に切り替えると、職歴・学歴の各期間に登録した研究室主宰者（PI）も破線で表示します。ノードや線にカーソルを合わせると、関係の種類と期間が分かります',
+      '中心研究者からたどる深さを「深度」スライダーで変更でき、研究者マップのノードからも「アカデミックツリーで見る」で開けます',
+    ],
+    en:[
+      'Added a Tree view (academic tree) to the researcher directory',
+      'It treats PhD advisors as parent links and shows the genealogy spreading up (advisors) and down (advisees) from the selected researcher. The orientation can be switched between vertical and horizontal',
+      'Co-advisors are treated as equals rather than primary/secondary, so a researcher can link to several advisors. Advisors that are only known by name are drawn as dashed, unregistered nodes',
+      'Switching to “Include lab / PI” also draws, as dashed lines, the lab head recorded on each career or education period. Hovering a researcher or a line reveals the kind of relation and its period',
+      'A depth slider controls how far the genealogy is followed from the center researcher, and researcher-map nodes can open it via “View in academic tree”',
+    ],
+  },
+  { v:'2.4', date:'2026-08-18',
+    ja:[
+      '研究者と研究機関の分布を世界地図で表示する「地図」表示を追加しました',
+      '研究者台帳に「地図」表示を追加し、所属機関の位置に研究者をプロットします。拡大すると顔写真になり、重なった円をクリックすると研究者一覧を表示します',
+      '「研究機関をプロット」に切り替えると、研究者に代えて機関ごとの分布を表示できます。内蔵辞書に無い所属は「地図で指定」で位置をクリックするか緯度・経度を入力して配置でき、未配置の所属は通知から確認・修正できます',
+      '地図の中心（アジア／ヨーロッパ）、経緯線グリッド、ホイール感度、ピンや顔写真の大きさ・表示ズームを調整できるようにしました',
+      '所属名は候補から選ぶ方式にして表記ゆれを防ぎ、長い機関名を短く表示する「所属の略記辞書」を追加しました',
+    ],
+    en:[
+      'Added a Map view that shows the geographic distribution of researchers and institutions',
+      'The researcher directory now has a Map view that plots researchers at their institution locations. Zoom in to reveal photos, and click an overlapping circle to see its researchers',
+      'Switch to “Plot institutions” to show the distribution by institution instead of by researcher. Affiliations missing from the built-in dictionary can be placed by clicking the map or entering coordinates, and unplaced affiliations can be reviewed and fixed from the alerts',
+      'Added controls for the map centre (Asia / Europe), latitude-longitude grid, wheel sensitivity, and pin/photo size and zoom threshold',
+      'Affiliations are now chosen from suggestions to prevent name variants, and a new affiliation-abbreviation dictionary shortens long institution names on display',
+    ],
+  },
+  { v:'2.3', date:'2026-08-18',
+    ja:[
+      '研究者プロフィールを大幅に拡充しました',
+      '経歴（職歴・学歴・PhD取得）、受賞歴、現・過去の所属、研究分野、h-index・i10-index・総引用数などを記録できるようにしました',
+      'OpenAlex ID または ORCID から研究者情報を取得し、反映する項目を選んで更新できるようにしました（生年月日・画像などアプリ固有の項目は上書きしません）',
+      '「関係のある研究者」を登録でき、逆方向の関係も表示できるようにしました',
+      '一覧に「リスト」「プロフィール」表示と、基準を選べる「ランキング」表示を追加しました',
+    ],
+    en:[
+      'Greatly expanded researcher profiles',
+      'You can now record career history (positions, education, PhD), awards, current and past institutions, research fields, and h-index / i10-index / total citations',
+      'Researcher information can be fetched from an OpenAlex ID or ORCID, choosing which fields to apply (app-specific fields such as date of birth and image are left untouched)',
+      'Added related-researcher links, with an option to show reverse relationships',
+      'Added List and Profile views, plus a Ranking view with a selectable ranking metric, to the researcher directory',
+    ],
+  },
+  { v:'2.2', date:'2026-08-18',
+    ja:[
+      '論文相関図に、表示する論文を絞り込む機能を追加しました',
+      '登録状態（登録済み／未登録）、出版年、被引用数、雑誌、著者、タグ、コレクションで論文ノードを絞り込めるようにしました',
+      '条件に合わない論文は非表示にするか薄く表示するかを選べ、登録済みの論文にはマークを表示するようにしました',
+    ],
+    en:[
+      'Added filtering to the related-papers graph',
+      'Paper nodes can now be filtered by registration status (in library / not), publication year, citation count, journal, author, tag, and collection',
+      'Choose whether papers that do not match are hidden or dimmed, and papers already in the library now show a badge',
+    ],
+  },
   { v:'2.0', date:'2026-08-10',
     ja:[
       '責任著者どうしの共同研究を可視化する「研究者マップ」を追加しました',
@@ -221,11 +286,11 @@ const I18N = {
     add:'追加', addByIdMenu:'DOI / arXiv / URL・タイトルから（ダイアログ）',
     addById:'DOI / arXiv', addManual:'手動追加', import:'インポート', importKeywordsAsTags:'keywords をタグとして読み込む', export:'エクスポート',
     referenceExport:'文献情報をエクスポート', expBibShown:'表示中の文献情報 → BibTeX', expRisShown:'表示中の文献情報 → RIS', expCsvShown:'表示中の文献情報 → CSV', expJsonShown:'表示中の文献情報 → JSON', expJson:'ライブラリ全体（文献・研究者・コレクション等） → JSON', researcherExport:'研究者情報をエクスポート', researcherExpJsonShown:'表示中の研究者情報 → JSON', researcherExpCsvShown:'表示中の研究者情報 → CSV', researcherExpJson:'全研究者情報 → JSON', researcherExpCsv:'全研究者情報 → CSV', researcherExportEmpty:'エクスポートできる研究者がいません。', researcherExported:(n)=>`${n} 名の研究者をエクスポートしました`,
-    searchPh:'検索ワードを入力', advancedSearch:'詳細検索', quickAddTitle:'この DOI / URL を取得して追加', addBoxPh:'URL を入力して Enter', addMoreTitle:'手動追加・インポート', library:'ライブラリ', collections:'コレクション', tags:'タグ',
+    shortcuts:'キーボードショートカット', shortcutsHint:'? キーでいつでも表示', searchPh:'検索ワードを入力', advancedSearch:'詳細検索', quickAddTitle:'この DOI / URL を取得して追加', addBoxPh:'URL を入力して Enter', addMoreTitle:'手動追加・インポート', library:'ライブラリ', collections:'コレクション', tags:'タグ',
     newCollection:'新規コレクション', searchCollTip:'コレクションを検索', collapseAllCollections:'すべてのフォルダを閉じる', expandAllCollections:'すべてのフォルダを開く', searchCollPh:'コレクション名で絞り込み', searchCollEmpty:'一致するコレクションはありません',
     searchTagTip:'タグを検索', newTag:'新規タグ', searchTagPh:'タグ名で絞り込み', searchTagEmpty:'一致するタグはありません', renameTag:'タグ名を変更', deleteTag:'タグを削除', confirmDeleteTag:(n)=>`タグ「${n}」を削除しますか？（文献自体は削除されません）`, promptTagName:'タグ名：', tagEditorPh:'タグを検索・追加（既存から選択／新規入力）', tagEditorNoMatch:'一致するタグはありません', tagEditorAddNew:(n)=>`新規タグ「${n}」を追加`, tagEditorEmpty:'タグはまだありません',
     collEditorPh:'コレクションを検索・追加（既存から選択／新規作成）', collEditorNoMatch:'一致するコレクションはありません', collEditorEmpty:'コレクションはまだありません', collEditorAddNew:(n)=>`新規コレクション「${n}」を作成`, collRemove:'コレクションから外す', allItems:'すべての文献', researchers:'研究者', researcherSearchPh:'研究者を検索', newResearcher:'研究者を登録', researcherProfile:'研究者プロフィール', researcherName:'表示名', researcherFamilyName:'姓（英字・論文照合用）', researcherGivenName:'名（英字・論文照合用）', researcherMiddleName:'ミドルネーム（英字・任意）', researcherAliases:'別言語・別文字表記（1行に1つ）', researcherNameHelp:'論文との照合には、姓・名・ミドルネームを使います。表記順を変えた名前は別表記に入れません。', researcherAwards:'受賞歴', researcherAwardName:'賞名', researcherAwardOrganization:'授与機関', researcherPhdAdvisor:'PhD指導教員', affiliation:'所属', researcherWebsite:'Webサイト', researcherIds:'外部プロフィール', researcherPapers:'責任著者の文献', researcherCorrespondingPapers:'責任著者の文献', researcherNoPapers:'関連文献はありません。', researcherOpen:'研究者を開く', researcherRegister:'この研究者を登録', researcherUnregistered:'未登録', researcherManual:'手動登録', researcherDelete:'研究者を削除', researcherDeleteConfirm:'この研究者プロフィールを削除しますか？ 文献は削除されません。', researcherOpenAlex:'OpenAlex 候補を検索', researcherOpenAlexUpdate:'OpenAlex から研究者情報を更新', researcherOpenAlexHelp:'検索時に、氏名と別表記が OpenAlex に送信されます。候補は自動では確定されません。', researcherOpenAlexUpdateHelp:'OpenAlex ID または ORCID を使って取得します。反映する項目は次に選べます。', openAlexApiKey:'OpenAlex API キー', openAlexApiKeyHelp:'このキーはこのブラウザだけに保存され、library.json には保存されません。', openAlexKeyMissing:'OpenAlex API キーを入力してください。', openAlexSearchFailed:'OpenAlex の候補を取得できませんでした。', openAlexCandidate:'この候補の情報を確認', openAlexConfirmed:'OpenAlex で確認済み', researcherSaved:'研究者プロフィールを保存しました', researcherNoCandidates:'候補が見つかりませんでした。', researcherEnrichmentPreview:'取得内容を確認', researcherEnrichmentHelp:'選択した項目だけを反映します。OpenAlex にない生年月日・画像・Google Scholar・ResearchGate・PhD取得年は変更しません。', researcherEnrichmentApply:'選択した項目を反映', researcherEnrichmentCancel:'取り消す', researcherEnrichmentCurrent:'現在', researcherEnrichmentNew:'取得値', researcherEnrichmentNoChanges:'反映できる新しい情報はありません。', researcherEnrichmentFailed:'研究者情報を取得できませんでした。', researcherEnrichmentUpdated:'OpenAlex の研究者情報を反映しました。', researcherEnrichmentSource:'OpenAlex 取得', researcherEnrichmentRelatedNote:'上位25件の文献から推定した共著者', researcherSourceCount:(n)=>`${n} 件の文献`, researcherCorrCount:(n)=>`責任著者 ${n} 件`, researcherColName:'研究者', researcherColProfiles:'外部プロフィール', researcherColPapers:'文献数', researcherColCorresponding:'責任著者', researcherColStatus:'確認状況', researcherInstitutions:'研究機関', researcherCurrentInstitutions:'現所属（1行に1つ）', researcherPastInstitutions:'過去の所属（1行に1つ）', researcherBirthDate:'生年月日', researcherPhdYear:'PhD取得年', researcherHomepage:'Homepage', researcherGoogleScholar:'Google Scholar', researcherResearchGate:'ResearchGate', researcherResearchMap:'researchmap', researcherTotalCitations:'総引用数', researcherImage:'画像', researcherImageUrl:'画像URL', researcherFields:'研究分野', researcherRelated:'関係のある研究者（1行に1つ）',
-    viewGrid:'グリッド', viewProfileCards:'プロフィール', viewLargeList:'リスト', viewMap:'地図', viewLeaderboard:'ランキング',
+    viewGrid:'グリッド', viewProfileCards:'プロフィール', viewLargeList:'リスト', viewMap:'地図', viewLeaderboard:'ランキング', viewTree:'ツリー',
     researcherAvgCitations:'平均引用',
     researcherAffiliationsLabel:'所属', affNamePh:'機関名を選択／入力', affCurrent:'現所属', affPast:'過去', affStart:'開始年', affEnd:'終了年', affPresent:'現在',
     affRemove:'削除', affNone:'所属は未登録です', affAddCurrent:'現所属を追加', affAddPast:'過去の所属を追加',
@@ -313,7 +378,7 @@ const I18N = {
     wrapToggle:'折り返し', newSubCollection:'サブフォルダを作成', collColor:'色を変更',
     collColorCustom:'カスタム：', collColorDefault:'既定',
     filterContains:'…を含む', filterFrom:'から', filterTo:'まで', filterClear:'クリア',
-    filters:'フィルタ', viewMenu:'表示', viewStyle:'表示スタイル', cardCols:(n)=>`${n}列`, filterOptions:'候補', filterNoOptions:'候補がありません', themeDark:'Dark', themeLight:'Light',
+    filters:'フィルタ', viewMenu:'表示', viewStyle:'表示スタイル', cardCols:(n)=>`${n}列`, filterOptions:'候補', filterNoOptions:'候補がありません', iconOnlyToggle:'ボタンをアイコンのみ表示', themeDark:'Dark', themeLight:'Light',
     authorDisplay:'著者表示', authorNameStyle:'名前形式', authorLimit:'表示人数', authorSeparator:'区切り', columnTextStyle:'文字の表示', textBold:'太字', textItalic:'斜体', researcherNameDisplay:'研究者名の表示', researcherNameInitialFamily:'T. Yamada', researcherNameGivenFamily:'Takashi Yamada', researcherNameFamilyGiven:'Yamada Takashi', researcherNameGiven:'Takashi', researcherNameFamily:'Yamada', researcherNameFamilyCommaGiven:'Yamada, Takashi', researcherNameFamilyCommaInitial:'Yamada, T.', researcherImageSelect:'ファイルから選択', researcherImagePaste:'クリップボードから貼り付け', researcherImagePasteHint:'画像をコピーして ⌘/Ctrl+V でも貼り付けできます（許可ダイアログなし）。', researcherImageTooLarge:'画像は 2 MB 以下にしてください。', researcherImageUnavailable:'クリップボードに画像がありません。',
     authorMarkCorresponding:'責任著者に * を表示',
     authorFamily:'姓のみ', authorInitial:'姓 + イニシャル', authorFull:'フルネーム',
@@ -412,6 +477,27 @@ const I18N = {
     graphNearest:'近い論文', graphStats:(n,e)=>`${n} 論文 / ${e} 関係`,
     graphCached:(d)=>`キャッシュ表示（${d} 取得・API 呼び出しなし）`,
     graphPartial:(n)=>`関連論文 ${n} 件を取得できませんでした（表示が不完全な可能性があります）`,
+    researcherTree:'アカデミックツリー', researcherTreeAria:'PhD指導関係による研究者の系譜',
+    researcherTreeHint:'研究者または関係の線にカーソルを合わせると詳細を表示します',
+    researcherTreeSource:'研究者プロフィールの指導教員・経歴から作成',
+    researcherTreeOrientation:'向き', researcherTreeOrientationLabel:'系譜を並べる向き',
+    researcherTreeOrientV:'上下', researcherTreeOrientH:'左右',
+    researcherTreeScope:'関係', researcherTreeScopeLabel:'ツリーに含める関係の範囲',
+    researcherTreeScopePhd:'PhD指導のみ', researcherTreeScopeAll:'所属・PIも含む',
+    researcherTreeDepth:'深度', researcherTreeDepthLabel:'中心研究者からたどる関係の深さ',
+    researcherTreeKindPhd:'PhD指導教員', researcherTreeKindPhdDown:'PhD指導した',
+    researcherTreeKindPosition:'所属研究室のPI', researcherTreeKindPositionDown:'研究室に受け入れた',
+    researcherTreeKindEducation:'在学時の指導者', researcherTreeKindEducationDown:'在学中に指導した',
+    researcherTreeUp:'上の世代', researcherTreeDown:'下の世代',
+    researcherTreeUnregistered:'未登録', researcherTreeNoRelations:'登録された関係はありません',
+    researcherTreeNoSelection:'研究者を選ぶと、その系譜を表示します。',
+    researcherTreeEmpty:'選択中の範囲では、この研究者に登録された関係がありません。PhD指導教員は研究者プロフィールの「学歴」で登録できます。',
+    researcherTreeStats:(n,e)=>`${n} 研究者 / ${e} 関係`,
+    researcherTreeLegendEgo:'中心研究者', researcherTreeLegendKnown:'登録済み研究者', researcherTreeLegendGhost:'未登録（名前のみ）',
+    researcherTreeLegendPhd:'PhD指導', researcherTreeLegendOther:'所属研究室のPI・在学時の指導者',
+    researcherTreeOpen:'アカデミックツリーで見る',
+    researcherTreePickPh:'研究者を選択（ツリーの中心にする）',
+    researcherTreePickNoMatch:'一致する研究者はいません',
     researcherMap:'研究者マップ', researcherMapAria:'責任著者の共同研究ネットワーク',
     researcherMapHint:'研究者または共同研究の線にカーソルを合わせると詳細を表示します',
     researcherMapSource:'ライブラリ内の責任著者情報から作成',
@@ -482,11 +568,11 @@ const I18N = {
     add:'Add', addByIdMenu:'From DOI / arXiv / URL / title (dialog)',
     addById:'DOI / arXiv', addManual:'Add manually', import:'Import', importKeywordsAsTags:'Import keywords as tags', export:'Export',
     referenceExport:'Export reference information', expBibShown:'Shown reference information → BibTeX', expRisShown:'Shown reference information → RIS', expCsvShown:'Shown reference information → CSV', expJsonShown:'Shown reference information → JSON', expJson:'Entire library (references, researchers, collections, etc.) → JSON', researcherExport:'Export researcher information', researcherExpJsonShown:'Shown researcher information → JSON', researcherExpCsvShown:'Shown researcher information → CSV', researcherExpJson:'All researcher information → JSON', researcherExpCsv:'All researcher information → CSV', researcherExportEmpty:'There are no researchers to export.', researcherExported:(n)=>`Exported ${n} researcher${n===1?'':'s'}`,
-    searchPh:'Search keywords', advancedSearch:'Advanced search', quickAddTitle:'Fetch and add this DOI / URL', addBoxPh:'Enter URL and press Enter', addMoreTitle:'Manual add / import', library:'Library', collections:'Collections', tags:'Tags',
+    shortcuts:'Keyboard shortcuts', shortcutsHint:'Press ? anytime to show', searchPh:'Search keywords', advancedSearch:'Advanced search', quickAddTitle:'Fetch and add this DOI / URL', addBoxPh:'Enter URL and press Enter', addMoreTitle:'Manual add / import', library:'Library', collections:'Collections', tags:'Tags',
     newCollection:'New collection', searchCollTip:'Search collections', collapseAllCollections:'Collapse all folders', expandAllCollections:'Expand all folders', searchCollPh:'Filter by name', searchCollEmpty:'No matching collections',
     searchTagTip:'Search tags', newTag:'New tag', searchTagPh:'Filter by name', searchTagEmpty:'No matching tags', renameTag:'Rename tag', deleteTag:'Delete tag', confirmDeleteTag:(n)=>`Delete tag “${n}”? (References themselves are kept.)`, promptTagName:'Tag name:', tagEditorPh:'Search or add a tag (pick an existing one or type a new one)', tagEditorNoMatch:'No matching tags', tagEditorAddNew:(n)=>`Add new tag “${n}”`, tagEditorEmpty:'No tags yet',
     collEditorPh:'Search or add a collection (pick an existing one or create a new one)', collEditorNoMatch:'No matching collections', collEditorEmpty:'No collections yet', collEditorAddNew:(n)=>`Create new collection “${n}”`, collRemove:'Remove from collection', allItems:'All items', researchers:'Researchers', researcherSearchPh:'Search researchers', newResearcher:'Add researcher', researcherProfile:'Researcher profile', researcherName:'Display name', researcherFamilyName:'Family name (Latin script, for matching)', researcherGivenName:'Given name (Latin script, for matching)', researcherMiddleName:'Middle name (Latin script, optional)', researcherAliases:'Other-language / other-script names (one per line)', researcherNameHelp:'Paper matching uses the family, given, and middle names. Do not add a reordered name as an alias.', researcherAwards:'Awards', researcherAwardName:'Award', researcherAwardOrganization:'Granting organization', researcherPhdAdvisor:'PhD advisor', affiliation:'Affiliation', researcherWebsite:'Website', researcherIds:'External profiles', researcherPapers:'Corresponding-author references', researcherCorrespondingPapers:'Corresponding-author references', researcherNoPapers:'No related references.', researcherOpen:'Open researcher', researcherRegister:'Register this researcher', researcherUnregistered:'Unregistered', researcherManual:'Manually added', researcherDelete:'Delete researcher', researcherDeleteConfirm:'Delete this researcher profile? References will not be deleted.', researcherOpenAlex:'Search OpenAlex candidates', researcherOpenAlexHelp:'Your name and aliases are sent to OpenAlex when you search. Candidates are never selected automatically.', openAlexApiKey:'OpenAlex API key', openAlexApiKeyHelp:'This key stays in this browser and is never saved in library.json.', openAlexKeyMissing:'Enter an OpenAlex API key first.', openAlexSearchFailed:'Could not retrieve OpenAlex candidates.', openAlexCandidate:'Confirm this candidate', openAlexConfirmed:'Confirmed with OpenAlex', researcherSaved:'Researcher profile saved', researcherNoCandidates:'No candidates found.', researcherSourceCount:(n)=>`${n} reference${n===1?'':'s'}`, researcherCorrCount:(n)=>`${n} corresponding-author reference${n===1?'':'s'}`, researcherColName:'Researcher', researcherColProfiles:'External profiles', researcherColPapers:'References', researcherColCorresponding:'Corresponding', researcherColStatus:'Status', researcherInstitutions:'Institutions', researcherCurrentInstitutions:'Current institutions (one per line)', researcherPastInstitutions:'Past institutions (one per line)', researcherBirthDate:'Date of birth', researcherPhdYear:'PhD year', researcherHomepage:'Homepage', researcherGoogleScholar:'Google Scholar', researcherResearchGate:'ResearchGate', researcherResearchMap:'researchmap', researcherTotalCitations:'Total citations', researcherImage:'Image', researcherImageUrl:'Image URL', researcherFields:'Research fields', researcherRelated:'Related researchers (one per line)',
-    viewGrid:'Grid', viewProfileCards:'Profiles', viewLargeList:'List', viewMap:'Map', viewLeaderboard:'Ranking',
+    viewGrid:'Grid', viewProfileCards:'Profiles', viewLargeList:'List', viewMap:'Map', viewLeaderboard:'Ranking', viewTree:'Tree',
     researcherAvgCitations:'Avg. citations',
     researcherAffiliationsLabel:'Affiliations', affNamePh:'Select / type an institution', affCurrent:'Current', affPast:'Past', affStart:'From', affEnd:'To', affPresent:'present',
     affRemove:'Remove', affNone:'No affiliations yet', affAddCurrent:'Add current', affAddPast:'Add past',
@@ -574,7 +660,7 @@ const I18N = {
     wrapToggle:'Wrap', newSubCollection:'New subfolder', collColor:'Change color',
     collColorCustom:'Custom:', collColorDefault:'Default',
     filterContains:'Contains…', filterFrom:'From', filterTo:'To', filterClear:'Clear',
-    filters:'Filters', viewMenu:'View', viewStyle:'View style', cardCols:(n)=>`${n} column${n===1?'':'s'}`, filterOptions:'Options', filterNoOptions:'No options', themeDark:'Dark', themeLight:'Light',
+    filters:'Filters', viewMenu:'View', viewStyle:'View style', cardCols:(n)=>`${n} column${n===1?'':'s'}`, filterOptions:'Options', filterNoOptions:'No options', iconOnlyToggle:'Icons only', themeDark:'Dark', themeLight:'Light',
     authorDisplay:'Author display', authorNameStyle:'Name style', authorLimit:'Authors shown', authorSeparator:'Separator', columnTextStyle:'Text style', textBold:'Bold', textItalic:'Italic', researcherNameDisplay:'Researcher name display', researcherNameInitialFamily:'T. Yamada', researcherNameGivenFamily:'Takashi Yamada', researcherNameFamilyGiven:'Yamada Takashi', researcherNameGiven:'Takashi', researcherNameFamily:'Yamada', researcherNameFamilyCommaGiven:'Yamada, Takashi', researcherNameFamilyCommaInitial:'Yamada, T.', researcherImageSelect:'Choose file', researcherImagePaste:'Paste from clipboard', researcherImagePasteHint:'You can also copy an image and press ⌘/Ctrl+V — no permission dialog.', researcherImageTooLarge:'Please use an image smaller than 2 MB.', researcherImageUnavailable:'No image was found on the clipboard.',
     authorMarkCorresponding:'Show * for corresponding authors',
     authorFamily:'Family only', authorInitial:'Family + initials', authorFull:'Full name',
@@ -673,6 +759,27 @@ const I18N = {
     graphNearest:'Closest papers', graphStats:(n,e)=>`${n} papers / ${e} links`,
     graphCached:(d)=>`Cached (fetched ${d}, no API calls)`,
     graphPartial:(n)=>`Failed to fetch ${n} related papers (the map may be incomplete)`,
+    researcherTree:'Academic Tree', researcherTreeAria:'Researcher genealogy built from PhD advising',
+    researcherTreeHint:'Hover a researcher or a relation line to see details',
+    researcherTreeSource:'Built from advisors and career history in researcher profiles',
+    researcherTreeOrientation:'Orientation', researcherTreeOrientationLabel:'Direction the genealogy runs in',
+    researcherTreeOrientV:'Vertical', researcherTreeOrientH:'Horizontal',
+    researcherTreeScope:'Relations', researcherTreeScopeLabel:'Which relations the tree includes',
+    researcherTreeScopePhd:'PhD advising only', researcherTreeScopeAll:'Include lab / PI',
+    researcherTreeDepth:'Depth', researcherTreeDepthLabel:'How far to follow relations from the center researcher',
+    researcherTreeKindPhd:'PhD advisor', researcherTreeKindPhdDown:'PhD advised',
+    researcherTreeKindPosition:'PI of the host lab', researcherTreeKindPositionDown:'hosted in the lab',
+    researcherTreeKindEducation:'Supervisor during studies', researcherTreeKindEducationDown:'supervised during studies',
+    researcherTreeUp:'Earlier generation', researcherTreeDown:'Later generation',
+    researcherTreeUnregistered:'Unregistered', researcherTreeNoRelations:'No relations recorded',
+    researcherTreeNoSelection:'Select a researcher to show their genealogy.',
+    researcherTreeEmpty:'No relations are recorded for this researcher in the selected scope. PhD advisors can be entered under Education in the researcher profile.',
+    researcherTreeStats:(n,e)=>`${n} researchers / ${e} relations`,
+    researcherTreeLegendEgo:'Center researcher', researcherTreeLegendKnown:'Registered researcher', researcherTreeLegendGhost:'Unregistered (name only)',
+    researcherTreeLegendPhd:'PhD advising', researcherTreeLegendOther:'Lab PI / supervisor during studies',
+    researcherTreeOpen:'View in academic tree',
+    researcherTreePickPh:'Pick a researcher to centre the tree on',
+    researcherTreePickNoMatch:'No matching researcher',
     researcherMap:'Researcher Map', researcherMapAria:'Corresponding-author collaboration network',
     researcherMapHint:'Hover over a researcher or collaboration line to see details',
     researcherMapSource:'Built from corresponding-author data in this library',
@@ -1877,7 +1984,9 @@ referenceDetailPrefs.visible = Object.assign(Object.fromEntries(REFERENCE_DETAIL
 referenceDetailPrefs.imageBorder = referenceDetailPrefs.imageBorder===true;
 // Corresponding-author "*" mark on the authors block; on by default.
 referenceDetailPrefs.authorCorrMark = referenceDetailPrefs.authorCorrMark!==false;
-function saveReferenceDetailPrefs(){ try{ localStorage.setItem('refshelf.referenceDetailPrefs',JSON.stringify({order:referenceDetailPrefs.order,visible:referenceDetailPrefs.visible,imageBorder:referenceDetailPrefs.imageBorder,authorCorrMark:referenceDetailPrefs.authorCorrMark})); }catch(_e){} }
+// Collapse the action bar (編集/リンクを開く/引用関係/…) to icons only; off by default.
+referenceDetailPrefs.iconOnly = referenceDetailPrefs.iconOnly===true;
+function saveReferenceDetailPrefs(){ try{ localStorage.setItem('refshelf.referenceDetailPrefs',JSON.stringify({order:referenceDetailPrefs.order,visible:referenceDetailPrefs.visible,imageBorder:referenceDetailPrefs.imageBorder,authorCorrMark:referenceDetailPrefs.authorCorrMark,iconOnly:referenceDetailPrefs.iconOnly})); }catch(_e){} }
 let researcherInstitutionDisplayPrefs;
 try{ researcherInstitutionDisplayPrefs=JSON.parse(localStorage.getItem('refshelf.researcherInstitutionDisplay')||'{}'); }catch(_e){ researcherInstitutionDisplayPrefs={}; }
 researcherInstitutionDisplayPrefs=Object.assign({past:false},researcherInstitutionDisplayPrefs||{});
@@ -1921,6 +2030,15 @@ let changeVersion = 0, savedVersion = 0;
 let saveQueue = Promise.resolve(true);
 const pendingAttachmentDeletes = new Set();
 let undoStack = []; // stores recent undoable operations for Cmd/Ctrl+Z
+// Navigation history for the unified Cmd/Ctrl+Z. Snapshots of "where am I"
+// (view / collection / tag filter / selection) are pushed onto undoStack so that
+// undo steps back through screen switches and item clicks too. Search text is
+// intentionally excluded (would make undo go one keystroke at a time; the input
+// keeps its own native text undo instead).
+let redoStack = [];          // reverse entries for Cmd/Ctrl+Shift+Z (redo)
+let navSnapshot = null;      // last committed navigation state
+let undoInProgress = false;  // true while undo/redo is applying an entry
+let dataOpPending = false;   // true within the tick a non-nav undo entry was pushed
 
 // "pick mode": lets the user click specific rows/cards to build a set of items
 // to refresh (cited-by or corresponding authors), instead of always acting on
@@ -2143,6 +2261,33 @@ function colFilterOptions(k){
   const vals = new Set();
   lib.items.forEach(it=>colFilterValues(it, k).forEach(v=>{ if(String(v).trim()) vals.add(String(v).trim()); }));
   return Array.from(vals).sort((a,b)=>a.localeCompare(b));
+}
+// Autocomplete candidates for the free-text filter columns (title / authors /
+// corresponding / doi / added). Each candidate is a substring of the value that
+// passesColFilters() matches against, so clicking one always narrows to real
+// hits. Authors use the same "family given" order as colFilterText('authors').
+function textFilterOptions(k){
+  const vals = new Set();
+  const add = v=>{ const s=String(v||'').trim(); if(s) vals.add(s); };
+  lib.items.forEach(it=>{
+    switch(k){
+      case 'authors': (it.authors||[]).forEach(a=>add(((a.family||'')+' '+(a.given||'')).trim())); break;
+      case 'corresponding': String(it.correspondingAuthors||'').split(/[;,、，]/).forEach(add); break;
+      case 'title': add(it.title); break;
+      case 'doi': add(it.doi); break;
+      case 'added': add((it.dateAdded||'').slice(0,10)); break;
+      default: add(colFilterText(it, k));
+    }
+  });
+  return Array.from(vals).sort((a,b)=>a.localeCompare(b));
+}
+// Render the candidate buttons for a free-text filter, narrowed by the typed
+// query. Capped so a huge library stays responsive.
+function textOptsHtml(opts, q){
+  const list = (q ? opts.filter(o=>o.toLowerCase().includes(q)) : opts).slice(0, 80);
+  return list.length
+    ? list.map(o=>`<button type="button" class="pickOpt" data-cftext="${esc(o)}">${esc(o)}</button>`).join('')
+    : `<div class="hint">${esc(t('filterNoOptions'))}</div>`;
 }
 function colFilterText(it, k){
   switch(k){
@@ -3666,7 +3811,61 @@ function pushUndoEntry(entry){
   if(!entry || !entry.type) return;
   entry.at = new Date().toISOString();
   undoStack.push(entry);
-  if(undoStack.length > 50) undoStack.shift();
+  if(undoStack.length > 200) undoStack.shift();
+  // A genuinely new action invalidates the redo history (unless we're mid
+  // undo/redo, where reverse entries are pushed directly, not through here).
+  if(!undoInProgress) redoStack.length = 0;
+  if(entry.type !== 'nav'){
+    // A data-changing operation just recorded its own undo entry; suppress the
+    // separate navigation snapshot its re-render would otherwise push this tick,
+    // so one Cmd/Ctrl+Z reverts the data change (not just the selection move).
+    dataOpPending = true;
+    Promise.resolve().then(()=>{ dataOpPending = false; });
+  }
+}
+function currentNavState(){
+  return {
+    view: currentView,
+    coll: filter.coll,
+    tags: Array.from(filter.tags || []),
+    selectedId,
+    researcherId: selectedResearcherId,
+    researcherKey: selectedResearcherKey,
+  };
+}
+function navStatesEqual(a, b){
+  if(!a || !b) return false;
+  if(a.view!==b.view || a.coll!==b.coll || a.selectedId!==b.selectedId
+     || a.researcherId!==b.researcherId || a.researcherKey!==b.researcherKey) return false;
+  if(a.tags.length!==b.tags.length) return false;
+  for(const tg of a.tags){ if(!b.tags.includes(tg)) return false; }
+  return true;
+}
+// Called at the top of the navigation-affecting render functions. Records the
+// PREVIOUS navigation state onto the undo stack whenever it has changed.
+function commitNavState(){
+  if(undoInProgress) return; // don't record navigation caused by an undo
+  const cur = currentNavState();
+  if(navSnapshot===null){ navSnapshot = cur; return; }
+  if(navStatesEqual(navSnapshot, cur)) return;
+  if(!dataOpPending) pushUndoEntry({ type:'nav', state: navSnapshot });
+  navSnapshot = cur;
+}
+// Each apply* function performs one history step: it captures the CURRENT state
+// as a reverse entry (so the opposite stack can replay it), applies the stored
+// entry, and returns { reverse, count }. Returns null if nothing could be applied.
+function applyNav(entry){
+  const s = entry.state;
+  if(!s) return null;
+  const reverse = { type:'nav', state: currentNavState() };
+  currentView = s.view;
+  if(validFilterCollectionId(s.coll)) filter.coll = s.coll;
+  filter.tags = new Set(s.tags || []);
+  selectedResearcherId = s.researcherId;
+  selectedResearcherKey = s.researcherKey;
+  selectedId = (s.selectedId && lib.items.find(x=>x.id===s.selectedId)) ? s.selectedId : null;
+  renderAll();
+  return { reverse, count: 0 };
 }
 function pushTrashUndo(records){
   records = (records || []).filter(Boolean);
@@ -3699,20 +3898,21 @@ function pushItemTagsUndo(records){
   records = (records || []).filter(Boolean);
   if(records.length) pushUndoEntry({type:'item-tags', records});
 }
-function undoItemTagsChange(entry){
+function applyItemTags(entry){
+  const reverseRecords = [];
   const restoredIds = [];
   (entry.records || []).forEach(rec=>{
     const it = lib.items.find(x=>x.id===rec.id);
     if(!it) return;
+    reverseRecords.push(makeItemTagsUndoRecord(it));
     it.tags = Array.isArray(rec.tags) ? rec.tags.slice() : [];
     it.dateModified = rec.dateModified || new Date().toISOString();
     restoredIds.push(it.id);
   });
-  if(!restoredIds.length) return false;
+  if(!restoredIds.length) return null;
   touch();
   renderAll();
-  showToast(lang==='ja' ? `タグの変更を取り消しました（${restoredIds.length}件）` : `Undid tag change (${restoredIds.length})`);
-  return true;
+  return { reverse:{ type:'item-tags', records: reverseRecords }, count: restoredIds.length };
 }
 function makeCollectionMoveUndoRecord(c){
   if(!c) return null;
@@ -3733,49 +3933,60 @@ function validFilterCollectionId(id){
   if(['all','uncat','starred','myPublication','trash'].includes(id)) return true;
   return !!lib.collections.find(c=>c.id===id);
 }
-function undoTrashMove(entry){
+function applyTrash(entry){
+  const reverseRecords = [];
   const restored = [];
   (entry.records || []).forEach(rec=>{
     const it = lib.items.find(x=>x.id===rec.id);
     if(!it) return;
+    reverseRecords.push({ id: it.id, trashed: !!it.trashed, trashedAt: it.trashedAt || '', dateModified: it.dateModified || '' });
     it.trashed = !!rec.trashed;
     it.trashedAt = rec.trashedAt || '';
     it.dateModified = rec.dateModified || new Date().toISOString();
     restored.push(it);
   });
-  if(!restored.length) return false;
+  if(!restored.length) return null;
   selectedId = restored[0].id;
   touch();
   renderAll();
-  showToast(lang==='ja' ? `ゴミ箱への移動を取り消しました（${restored.length}件）` : `Undid move to trash (${restored.length})`);
-  return true;
+  return { reverse:{ type:'trash', records: reverseRecords }, count: restored.length };
 }
-function undoCollectionMove(entry){
+function applyCollectionMove(entry){
+  const reverseRecords = [];
   const restoredIds = [];
   (entry.records || []).forEach(rec=>{
     const c = lib.collections.find(x=>x.id===rec.id);
     if(!c) return;
     const oldParent = rec.parent || '';
     if(oldParent && (!lib.collections.find(x=>x.id===oldParent) || isCollectionDescendant(c.id, oldParent))) return;
+    reverseRecords.push({ id: c.id, parent: c.parent || '' });
     c.parent = oldParent;
     restoredIds.push(c.id);
   });
-  if(!restoredIds.length) return false;
+  if(!restoredIds.length) return null;
+  const reverse = {
+    type:'collection-move',
+    records: reverseRecords,
+    filterColl: filter.coll,
+    selectedCollectionIds: Array.from(selectedCollectionIds || []),
+    collectionSelectAnchorId: collectionSelectAnchorId || ''
+  };
   restoredIds.forEach(openCollectionAncestors);
   selectedCollectionIds = new Set(restoredIds);
   collectionSelectAnchorId = restoredIds[0] || null;
   if(entry.filterColl && validFilterCollectionId(entry.filterColl)) filter.coll = entry.filterColl;
   touch();
   renderAll();
-  showToast(lang==='ja' ? `フォルダ移動を取り消しました（${restoredIds.length}件）` : `Undid folder move (${restoredIds.length})`);
-  return true;
+  return { reverse, count: restoredIds.length };
 }
-function undoItemCollectionMove(entry){
+function applyItemCollection(entry){
+  const reverseRecords = [];
   const restoredIds = [];
   let refreshAlerts = false;
   (entry.records || []).forEach(rec=>{
     const it = lib.items.find(x=>x.id===rec.id);
     if(!it) return;
+    reverseRecords.push(makeItemCollectionUndoRecord(it));
     if(isItemTrashed(it)!==!!rec.trashed) refreshAlerts = true;
     it.collections = Array.isArray(rec.collections) ? rec.collections.slice() : [];
     it.trashed = !!rec.trashed;
@@ -3783,23 +3994,61 @@ function undoItemCollectionMove(entry){
     it.dateModified = rec.dateModified || new Date().toISOString();
     restoredIds.push(it.id);
   });
-  if(!restoredIds.length) return false;
+  if(!restoredIds.length) return null;
   touch();
   renderAfterCollectionDrop(restoredIds, {refreshAlerts});
-  showToast(lang==='ja' ? `コレクションへの移動を取り消しました（${restoredIds.length}件）` : `Undid collection move (${restoredIds.length})`);
-  return true;
+  return { reverse:{ type:'item-collection', records: reverseRecords }, count: restoredIds.length };
 }
-function undoLastAction(){
-  while(undoStack.length){
-    const entry = undoStack.pop();
-    if(entry.type==='trash' && undoTrashMove(entry)) return true;
-    if(entry.type==='collection-move' && undoCollectionMove(entry)) return true;
-    if(entry.type==='item-collection' && undoItemCollectionMove(entry)) return true;
-    if(entry.type==='item-tags' && undoItemTagsChange(entry)) return true;
+const HISTORY_NOUNS = {
+  'trash':           { ja:'ゴミ箱への移動',     en:'move to trash' },
+  'collection-move': { ja:'フォルダ移動',       en:'folder move' },
+  'item-collection': { ja:'コレクションへの移動', en:'collection move' },
+  'item-tags':       { ja:'タグの変更',         en:'tag change' },
+};
+function applyHistoryEntry(entry){
+  switch(entry.type){
+    case 'trash':           return applyTrash(entry);
+    case 'collection-move': return applyCollectionMove(entry);
+    case 'item-collection': return applyItemCollection(entry);
+    case 'item-tags':       return applyItemTags(entry);
+    case 'nav':             return applyNav(entry);
   }
-  showToast(lang==='ja' ? '取り消せる操作はありません' : 'No action to undo');
-  return false;
+  return null;
 }
+function historyToast(type, count, dir){
+  if(type==='nav'){
+    showToast(dir==='undo'
+      ? (lang==='ja' ? '画面を戻しました' : 'Went back to the previous view')
+      : (lang==='ja' ? '画面を進めました' : 'Went forward to the next view'));
+    return;
+  }
+  const noun = HISTORY_NOUNS[type] || { ja:'操作', en:'action' };
+  if(lang==='ja') showToast(`${noun.ja}を${dir==='undo'?'取り消しました':'やり直しました'}（${count}件）`);
+  else showToast(`${dir==='undo'?'Undid':'Redid'} ${noun.en} (${count})`);
+}
+function stepHistory(fromStack, toStack, dir){
+  undoInProgress = true;
+  try{
+    while(fromStack.length){
+      const entry = fromStack.pop();
+      const res = applyHistoryEntry(entry);
+      if(res){
+        toStack.push(res.reverse);
+        historyToast(entry.type, res.count, dir);
+        return true;
+      }
+    }
+    showToast(dir==='undo'
+      ? (lang==='ja' ? '取り消せる操作はありません' : 'No action to undo')
+      : (lang==='ja' ? 'やり直せる操作はありません' : 'No action to redo'));
+    return false;
+  } finally {
+    undoInProgress = false;
+    navSnapshot = currentNavState();
+  }
+}
+function undoLastAction(){ return stepHistory(undoStack, redoStack, 'undo'); }
+function redoLastAction(){ return stepHistory(redoStack, undoStack, 'redo'); }
 function undoLastTrashMove(){
   return undoLastAction();
 }
@@ -4072,6 +4321,7 @@ function researcherExternalUrl(profile, type){
   return '';
 }
 function renderWorkspace(){
+  commitNavState();
   const research=currentView==='researchers';
   $('#listPane').hidden=research;
   $('#researcherPane').hidden=!research;
@@ -4290,7 +4540,8 @@ function researcherCellHtml(e,key){
   return `<span class="researcherMeta">${esc(researcherStatusText(p))}</span>`;
 }
 /* ---- researcher display views (grid / profile / list / map / leaderboard) ---- */
-const RESEARCHER_VIEWS=['table','grid','profile','list','map','leaderboard'];
+const RESEARCHER_VIEWS=['table','grid','profile','list','map','tree','leaderboard'];
+const RESEARCHER_VIEW_ICONS={table:'table',grid:'grid',profile:'note',list:'rows',map:'globe',tree:'tree',leaderboard:'ranking'};
 // Built-in coordinates for major universities / institutes worldwide. Names are
 // matched case/diacritic-insensitively; users can add or override via the map view.
 const INSTITUTION_COORDS=[
@@ -4687,6 +4938,349 @@ function researcherAvatarHTML(e,cls){
   const c=avatarColor(e.name||name);
   return `<span class="rAvatar rAvatarInit ${cls||''}" style="background:linear-gradient(135deg,${c},${c}cc)">${esc(researcherInitials(name))}</span>`;
 }
+/* ---------------- academic tree (advisor genealogy) ----------------------------
+   The tree is built from what the user recorded in researcher profiles: phdAdvisor
+   plus, optionally, the `related` person on each career / education record (the PI
+   of the lab for that period). Multiple advisors are all equal, so the genealogy is
+   a DAG, not a tree: a researcher can have several parents. Layout therefore assigns
+   a generation (layer) to every node and orders nodes inside each layer, rather than
+   walking a parent-per-child tree.                                                */
+const RESEARCHER_TREE_PREFS_KEY='refshelf.researcherTree';
+const RESEARCHER_TREE_KINDS={
+  phd:      {label:'researcherTreeKindPhd',       down:'researcherTreeKindPhdDown',       soft:false},
+  position: {label:'researcherTreeKindPosition',  down:'researcherTreeKindPositionDown',  soft:true},
+  education:{label:'researcherTreeKindEducation', down:'researcherTreeKindEducationDown', soft:true},
+};
+let researcherTreeOrientation='v', researcherTreeScope='phd', researcherTreeDepth=3;
+let researcherTreeState=null; // {g, egoId, layout}
+(function loadResearcherTreePrefs(){
+  try{
+    const p=JSON.parse(localStorage.getItem(RESEARCHER_TREE_PREFS_KEY)||'{}');
+    if(p.orientation==='v'||p.orientation==='h') researcherTreeOrientation=p.orientation;
+    if(p.scope==='phd'||p.scope==='all') researcherTreeScope=p.scope;
+    if(Number.isFinite(+p.depth)) researcherTreeDepth=Math.max(1,Math.min(8,Math.round(+p.depth)));
+  }catch(e){}
+})();
+function saveResearcherTreePrefs(){
+  try{ localStorage.setItem(RESEARCHER_TREE_PREFS_KEY,JSON.stringify({orientation:researcherTreeOrientation,scope:researcherTreeScope,depth:researcherTreeDepth})); }catch(e){}
+}
+// "2015-2018 · Kyoto University · Assistant Professor"
+function researcherTreeRecordDetail(x){
+  const dash='–';
+  const period = x.start&&x.end ? `${x.start}${dash}${x.end}` : x.start ? `${x.start}${dash}` : x.end ? `${dash}${x.end}` : '';
+  return [period, x.institution, x.organization||x.program, x.title||x.degree].filter(Boolean).join(' · ');
+}
+// Build the full relation graph over the directory. Advisors named in a profile but
+// not registered themselves become "ghost" nodes so the lineage is not cut short.
+function researcherTreeGraph(){
+  const entries=researcherDirectoryEntries();
+  const nodes=new Map(), keyIndex=new Map();
+  entries.forEach(e=>{
+    nodes.set(e.key,{id:e.key,name:formatResearcherName(e),entry:e,ghost:false});
+    [e.name,...Array.from(e.aliases||[])].forEach(n=>researcherNameKeys(n).forEach(k=>{ if(!keyIndex.has(k)) keyIndex.set(k,e.key); }));
+    if(e.profile) researcherProfileKeys(e.profile).forEach(k=>{ if(!keyIndex.has(k)) keyIndex.set(k,e.key); });
+  });
+  const resolve=(name)=>{
+    for(const k of researcherNameKeys(name)) if(keyIndex.has(k)) return keyIndex.get(k);
+    const hit=entries.find(e=>e.profile&&researcherMatchesName(e.profile,name));
+    if(hit) return hit.key;
+    const id='ghost:'+researcherKey(name);
+    if(!nodes.has(id)) nodes.set(id,{id,name:String(name||'').trim(),entry:null,ghost:true});
+    return id;
+  };
+  // One line per pair; a pair evidenced several ways keeps every reason for the tooltip.
+  const pairs=new Map();
+  const add=(supName, subId, kind, detail)=>{
+    const supId=resolve(supName);
+    if(!supId||supId===subId) return;
+    const sig=supId+' '+subId;
+    const rel=pairs.get(sig)||{sup:supId,sub:subId,kinds:[]};
+    if(!rel.kinds.some(k=>k.kind===kind&&k.detail===(detail||''))) rel.kinds.push({kind,detail:detail||''});
+    pairs.set(sig,rel);
+  };
+  entries.forEach(e=>{
+    const p=e.profile; if(!p) return;
+    researcherAdvisors(p).forEach(name=>add(name,e.key,'phd',''));
+    if(researcherTreeScope!=='all') return;
+    researcherPositions(p).forEach(x=>researcherLines(x.related).forEach(name=>add(name,e.key,'position',researcherTreeRecordDetail(x))));
+    researcherEducation(p).forEach(x=>researcherLines(x.related).forEach(name=>add(name,e.key,'education',researcherTreeRecordDetail(x))));
+  });
+  const rels=Array.from(pairs.values()).map(r=>{
+    const primary=r.kinds.find(k=>k.kind==='phd')||r.kinds[0];
+    return Object.assign({},r,{kind:primary.kind, soft:RESEARCHER_TREE_KINDS[primary.kind].soft});
+  });
+  return {nodes,rels};
+}
+// Which researcher the tree is centred on: the current selection, else the best
+// connected node, so opening the view never lands on an empty canvas.
+function researcherTreeEgoId(g){
+  const entries=researcherDirectoryEntries();
+  if(selectedResearcherId){
+    const e=entries.find(x=>x.profile&&x.profile.id===selectedResearcherId);
+    if(e&&g.nodes.has(e.key)) return e.key;
+  }
+  if(selectedResearcherKey&&g.nodes.has(selectedResearcherKey)) return selectedResearcherKey;
+  const degree=new Map();
+  g.rels.forEach(r=>[r.sup,r.sub].forEach(id=>degree.set(id,(degree.get(id)||0)+1)));
+  let best=null, bestN=0;
+  degree.forEach((n,id)=>{ const node=g.nodes.get(id); if(node&&!node.ghost&&n>bestN){ best=id; bestN=n; } });
+  return best || (entries[0]&&entries[0].key) || null;
+}
+const RESEARCHER_TREE_NW=184, RESEARCHER_TREE_NH=40;
+// Layered DAG layout: depth-limited component -> generation per node -> order inside
+// each layer (barycentre sweeps) -> coordinates relaxed toward neighbours.
+function researcherTreeLayout(g, egoId){
+  const parents={}, children={};
+  g.rels.forEach(r=>{ (parents[r.sub]=parents[r.sub]||[]).push(r.sup); (children[r.sup]=children[r.sup]||[]).push(r.sub); });
+  // Strictly the centre researcher's own line: ancestors by following advisor links
+  // upward, descendants by following them downward, never sideways. Walking down
+  // from an ancestor would drag in siblings and cousins (and walking up from a
+  // descendant their co-advisors), which is what made the graph unreadable.
+  const keep=new Set([egoId]);
+  const walk=(step)=>{
+    let frontier=[egoId];
+    for(let d=1; d<=researcherTreeDepth && frontier.length; d++){
+      const next=[];
+      frontier.forEach(id=>(step[id]||[]).forEach(n=>{ if(!keep.has(n)){ keep.add(n); next.push(n); } }));
+      frontier=next;
+    }
+  };
+  walk(parents); walk(children);
+  const rels=g.rels.filter(r=>keep.has(r.sup)&&keep.has(r.sub));
+  const layer={[egoId]:0};
+  for(let pass=0, moved=true; moved && pass<200; pass++){
+    moved=false;
+    rels.forEach(r=>{
+      if(layer[r.sup]!=null && layer[r.sub]==null){ layer[r.sub]=layer[r.sup]+1; moved=true; }
+      else if(layer[r.sub]!=null && layer[r.sup]==null){ layer[r.sup]=layer[r.sub]-1; moved=true; }
+    });
+  }
+  const ids=Object.keys(layer).filter(id=>g.nodes.has(id));
+  const up={}, down={};
+  rels.forEach(r=>{ (down[r.sup]=down[r.sup]||[]).push(r.sub); (up[r.sub]=up[r.sub]||[]).push(r.sup); });
+  const nums=[...new Set(ids.map(i=>layer[i]))].sort((a,b)=>a-b);
+  const order=[...ids].sort((a,b)=>String(g.nodes.get(a).name).localeCompare(String(g.nodes.get(b).name),lang==='ja'?'ja':'en'));
+  const rows=new Map(nums.map(n=>[n, order.filter(i=>layer[i]===n)]));
+  const at=id=>{ const row=rows.get(layer[id]); return row?row.indexOf(id):0; };
+  for(let s=0;s<12;s++){
+    const seq = s%2 ? [...nums].reverse() : nums;
+    seq.forEach(n=>{
+      const row=rows.get(n), keep=new Map(row.map((id,i)=>[id,i]));
+      const bary=id=>{
+        const nb=(s%2 ? (down[id]||[]) : (up[id]||[])).filter(x=>layer[x]!=null);
+        return nb.length ? nb.reduce((a,x)=>a+at(x),0)/nb.length : keep.get(id);
+      };
+      row.sort((a,b)=>bary(a)-bary(b) || keep.get(a)-keep.get(b));
+    });
+  }
+  const vertical=researcherTreeOrientation==='v';
+  const crossGap = vertical ? RESEARCHER_TREE_NW+26 : RESEARCHER_TREE_NH+16;
+  const layerGap = vertical ? RESEARCHER_TREE_NH+62 : RESEARCHER_TREE_NW+86;
+  const co={};
+  rows.forEach(row=>row.forEach((id,i)=>co[id]=i*crossGap));
+  for(let s=0;s<48;s++){
+    nums.forEach(n=>{
+      const row=rows.get(n);
+      row.forEach(id=>{
+        const nb=[...(up[id]||[]),...(down[id]||[])].filter(x=>layer[x]!=null);
+        if(nb.length) co[id]=co[id]*0.45+(nb.reduce((a,x)=>a+co[x],0)/nb.length)*0.55;
+      });
+      for(let i=1;i<row.length;i++) co[row[i]]=Math.max(co[row[i]], co[row[i-1]]+crossGap);
+      for(let i=row.length-2;i>=0;i--) co[row[i]]=Math.min(co[row[i]], co[row[i+1]]-crossGap);
+    });
+  }
+  const pos={};
+  ids.forEach(id=>{ const main=layer[id]*layerGap;
+    pos[id]= vertical ? {x:co[id], y:main} : {x:main, y:co[id]}; });
+  const pad=Math.max(RESEARCHER_TREE_NW,RESEARCHER_TREE_NH)/2+22;
+  const xs=ids.map(i=>pos[i].x), ys=ids.map(i=>pos[i].y);
+  const ox=pad-Math.min(...xs), oy=pad-Math.min(...ys);
+  ids.forEach(i=>{ pos[i].x+=ox; pos[i].y+=oy; });
+  return {ids, rels, pos, layer,
+    W:Math.max(...xs)-Math.min(...xs)+pad*2, H:Math.max(...ys)-Math.min(...ys)+pad*2};
+}
+function researcherTreeEdgePath(a,b){
+  const NW=RESEARCHER_TREE_NW, NH=RESEARCHER_TREE_NH;
+  if(researcherTreeOrientation==='v'){
+    const y1=a.y+NH/2, y2=b.y-NH/2, m=(y1+y2)/2;
+    return `M${a.x},${y1} C${a.x},${m} ${b.x},${m} ${b.x},${y2}`;
+  }
+  const x1=a.x+NW/2, x2=b.x-NW/2, m=(x1+x2)/2;
+  return `M${x1},${a.y} C${m},${a.y} ${m},${b.y} ${x2},${b.y}`;
+}
+function researcherTreeNodeHtml(node, p, egoId){
+  const cls=['rTreeNode']; if(node.id===egoId) cls.push('ego'); if(node.ghost) cls.push('ghost');
+  const avatar = node.ghost
+    ? `<span class="rAvatar rAvatarInit rAvS rTreeGhostAv">?</span>`
+    : researcherAvatarHTML(node.entry,'rAvS');
+  const sub = node.ghost ? `<span class="rTreeSub">${esc(t('researcherTreeUnregistered'))}</span>` : '';
+  return `<div class="${cls.join(' ')}" style="left:${Math.round(p.x-RESEARCHER_TREE_NW/2)}px; top:${Math.round(p.y-RESEARCHER_TREE_NH/2)}px" data-tree-node="${esc(node.id)}">
+    ${avatar}<span class="rTreeLabel"><span class="rTreeName">${esc(node.name)}</span>${sub}</span></div>`;
+}
+function researcherTreeRelationLines(id, dir){
+  const st=researcherTreeState; if(!st) return [];
+  return (st.layout.rels||[])
+    .filter(r=>dir==='up'?r.sub===id:r.sup===id)
+    .map(r=>{
+      const other=st.g.nodes.get(dir==='up'?r.sup:r.sub);
+      const reasons=r.kinds.map(k=>{
+        const label=esc(t(RESEARCHER_TREE_KINDS[k.kind][dir==='up'?'label':'down']));
+        return k.detail?`${label}<span class="rTreeTipNote">${esc(k.detail)}</span>`:label;
+      });
+      return `<div class="rTreeTipRow"><b>${esc(other?other.name:'')}</b> — ${reasons.join(' / ')}</div>`;
+    });
+}
+function researcherTreeNodeTipHtml(id){
+  const st=researcherTreeState; if(!st) return '';
+  const node=st.g.nodes.get(id); if(!node) return '';
+  const ups=researcherTreeRelationLines(id,'up'), downs=researcherTreeRelationLines(id,'down');
+  let h=`<div class="rTreeTipTitle">${esc(node.name)}${node.ghost?` <span class="rTreeTipGhost">${esc(t('researcherTreeUnregistered'))}</span>`:''}</div>`;
+  if(ups.length) h+=`<div class="rTreeTipHead">${esc(t('researcherTreeUp'))}</div>${ups.join('')}`;
+  if(downs.length) h+=`<div class="rTreeTipHead">${esc(t('researcherTreeDown'))}</div>${downs.join('')}`;
+  if(!ups.length&&!downs.length) h+=`<div class="rTreeTipHead">${esc(t('researcherTreeNoRelations'))}</div>`;
+  return h;
+}
+function researcherTreeEdgeTipHtml(rel){
+  const st=researcherTreeState; if(!st||!rel) return '';
+  const A=st.g.nodes.get(rel.sup), B=st.g.nodes.get(rel.sub);
+  const reasons=rel.kinds.map(k=>`<div class="rTreeTipRow">${esc(t(RESEARCHER_TREE_KINDS[k.kind].label))}${k.detail?`<span class="rTreeTipNote">${esc(k.detail)}</span>`:''}</div>`).join('');
+  return `<div class="rTreeTipTitle">${esc(A?A.name:'')} → ${esc(B?B.name:'')}</div>${reasons}`;
+}
+function researcherTreeLegendHtml(){
+  return `<div class="rTreeLegend">
+    <span class="rTreeLegendItem"><i class="rTreeDot ego"></i>${esc(t('researcherTreeLegendEgo'))}</span>
+    <span class="rTreeLegendItem"><i class="rTreeDot"></i>${esc(t('researcherTreeLegendKnown'))}</span>
+    <span class="rTreeLegendItem"><i class="rTreeDot ghost"></i>${esc(t('researcherTreeLegendGhost'))}</span>
+    <span class="rTreeLegendItem"><i class="rTreeLine"></i>${esc(t('researcherTreeLegendPhd'))}</span>
+    <span class="rTreeLegendItem"><i class="rTreeLine soft"></i>${esc(t('researcherTreeLegendOther'))}</span>
+    <span class="rTreeLegendHint">${esc(t('researcherTreeHint'))}</span>
+  </div>`;
+}
+function researcherTreeHtml(){
+  const g=researcherTreeGraph();
+  const egoId=researcherTreeEgoId(g);
+  researcherTreeState=null;
+  if(!egoId||!g.nodes.size) return `<div class="researcherEmpty">${esc(t('researcherTreeNoSelection'))}</div>`;
+  const layout=researcherTreeLayout(g,egoId);
+  researcherTreeState={g,egoId,layout};
+  if(!layout.rels.length){
+    const node=g.nodes.get(egoId);
+    return `${researcherTreeLegendHtml()}<div class="rTreeWrap"><div class="rTreeEmpty"><b>${esc(node?node.name:'')}</b><span>${esc(t('researcherTreeEmpty'))}</span></div></div>`;
+  }
+  const edges=layout.rels.map((r,i)=>{
+    const a=layout.pos[r.sup], b=layout.pos[r.sub];
+    if(!a||!b) return '';
+    const d=researcherTreeEdgePath(a,b);
+    return `<path class="rTreeEdge${r.soft?' soft':''}" data-tree-edge="${i}" d="${d}"/><path class="rTreeHit" data-tree-hit="${i}" d="${d}"/>`;
+  }).join('');
+  const nodes=layout.ids.map(id=>researcherTreeNodeHtml(g.nodes.get(id),layout.pos[id],egoId)).join('');
+  return `${researcherTreeLegendHtml()}<div class="rTreeWrap" id="rTreeWrap">
+    <div class="rTreeCanvas" style="width:${Math.round(layout.W)}px; height:${Math.round(layout.H)}px">
+      <svg class="rTreeEdges" width="${Math.round(layout.W)}" height="${Math.round(layout.H)}" role="img" aria-label="${esc(t('researcherTreeAria'))}">${edges}</svg>
+      ${nodes}
+      <div class="rTreeTip" id="rTreeTip" hidden></div>
+    </div>
+  </div>`;
+}
+function wireResearcherTree(){
+  const wrap=$('#rTreeWrap'); if(!wrap) return;
+  const tip=$('#rTreeTip'), canvas=wrap.querySelector('.rTreeCanvas');
+  const clear=()=>{
+    if(tip) tip.hidden=true;
+    wrap.querySelectorAll('.rTreeEdge.hot').forEach(el=>el.classList.remove('hot'));
+    wrap.querySelectorAll('.rTreeNode.dim').forEach(el=>el.classList.remove('dim'));
+  };
+  const place=(html,e)=>{
+    if(!tip||!canvas) return;
+    tip.innerHTML=html; tip.hidden=false;
+    const r=canvas.getBoundingClientRect();
+    let x=e.clientX-r.left+16, y=e.clientY-r.top+16;
+    if(x+tip.offsetWidth>canvas.offsetWidth) x=Math.max(0,e.clientX-r.left-tip.offsetWidth-16);
+    if(y+tip.offsetHeight>canvas.offsetHeight) y=Math.max(0,e.clientY-r.top-tip.offsetHeight-16);
+    tip.style.left=x+'px'; tip.style.top=y+'px';
+  };
+  wrap.addEventListener('mousemove', e=>{
+    const st=researcherTreeState; if(!st) return;
+    const hit=e.target.closest('[data-tree-hit]'), node=e.target.closest('[data-tree-node]');
+    if(hit){
+      const i=+hit.dataset.treeHit, rel=st.layout.rels[i]; if(!rel) return;
+      clear(); place(researcherTreeEdgeTipHtml(rel),e);
+      const edge=wrap.querySelector(`[data-tree-edge="${i}"]`); if(edge) edge.classList.add('hot');
+      wrap.querySelectorAll('[data-tree-node]').forEach(el=>{
+        if(el.dataset.treeNode!==rel.sup&&el.dataset.treeNode!==rel.sub) el.classList.add('dim'); });
+    }else if(node){
+      const id=node.dataset.treeNode;
+      clear(); place(researcherTreeNodeTipHtml(id),e);
+      const near=new Set([id]);
+      st.layout.rels.forEach((r,i)=>{
+        if(r.sup!==id&&r.sub!==id) return;
+        near.add(r.sup); near.add(r.sub);
+        const edge=wrap.querySelector(`[data-tree-edge="${i}"]`); if(edge) edge.classList.add('hot');
+      });
+      wrap.querySelectorAll('[data-tree-node]').forEach(el=>{ if(!near.has(el.dataset.treeNode)) el.classList.add('dim'); });
+    }else clear();
+  });
+  wrap.addEventListener('mouseleave', clear);
+  // open scrolled to the centre researcher rather than to the corner of the canvas
+  const st=researcherTreeState, ego=st&&st.layout.pos[st.egoId];
+  if(ego){
+    wrap.scrollLeft=Math.max(0, ego.x-wrap.clientWidth/2);
+    wrap.scrollTop=Math.max(0, ego.y-wrap.clientHeight/2);
+  }
+  // clicking a registered researcher re-centres the tree on them (and selects them
+  // everywhere else, matching how the other directory views behave)
+  wrap.addEventListener('click', e=>{
+    const el=e.target.closest('[data-tree-node]'); if(!el) return;
+    const st=researcherTreeState; if(!st) return;
+    const node=st.g.nodes.get(el.dataset.treeNode);
+    if(!node||node.ghost||!node.entry) return;
+    clear(); centreResearcherTreeOn(node.entry);
+  });
+}
+// Centre the tree on an entry and keep every other view in step (the detail pane
+// in particular, which used to keep showing the previously selected researcher).
+function centreResearcherTreeOn(entry){
+  if(!entry) return;
+  selectedResearcherKey=entry.key;
+  selectedResearcherId=entry.profile?entry.profile.id:null;
+  researcherCandidates=[]; researcherEnrichmentPreview=null;
+  renderResearcherList(); renderResearcherDetail();
+}
+// In tree view the search box turns into a researcher picker (type or choose from
+// the list); elsewhere it stays the plain keyword filter.
+function updateResearcherTreePicker(view){
+  const box=$('#searchBox'), list=$('#researcherTreePickList'), wrap=$('#searchWrap');
+  if(!box) return;
+  const on = currentView==='researchers' && view==='tree';
+  if(list) list.innerHTML = on ? researcherDirectoryEntries().map(e=>`<option value="${esc(formatResearcherName(e))}"></option>`).join('') : '';
+  if(on) box.setAttribute('list','researcherTreePickList'); else box.removeAttribute('list');
+  box.placeholder = on ? t('researcherTreePickPh') : t('searchPh');
+  if(wrap) wrap.dataset.placeholder=box.placeholder;
+}
+// Resolve what the user typed (or picked) to a directory entry: exact name first,
+// then a unique prefix/substring match so Enter works on a partial name.
+function researcherTreePickEntry(text){
+  const q=String(text||'').trim(); if(!q) return null;
+  const entries=researcherDirectoryEntries(), key=researcherKey(q);
+  const exact=entries.find(e=>researcherKey(formatResearcherName(e))===key || researcherNameKeys(e.name).includes(key));
+  if(exact) return exact;
+  const lower=q.toLocaleLowerCase();
+  return entries.find(e=>formatResearcherName(e).toLocaleLowerCase().startsWith(lower))
+      || entries.find(e=>formatResearcherName(e).toLocaleLowerCase().includes(lower)) || null;
+}
+function researcherTreeStatusHtml(){
+  const d=researcherTreeDepth, fill=((d-1)/7)*100;
+  const seg=(attr,value,current,label)=>`<button type="button" class="lsbtn rTreeSegBtn${value===current?' on':''}" data-${attr}="${value}" aria-pressed="${value===current}">${esc(label)}</button>`;
+  return `<span id="researcherTreeControls" class="researcherTreeControls">
+    <span class="rTreeSeg" role="group" title="${esc(t('researcherTreeOrientationLabel'))}">${seg('tree-orient','v',researcherTreeOrientation,t('researcherTreeOrientV'))}${seg('tree-orient','h',researcherTreeOrientation,t('researcherTreeOrientH'))}</span>
+    <span class="rTreeSeg" role="group" title="${esc(t('researcherTreeScopeLabel'))}">${seg('tree-scope','phd',researcherTreeScope,t('researcherTreeScopePhd'))}${seg('tree-scope','all',researcherTreeScope,t('researcherTreeScopeAll'))}</span>
+    <label class="rTreeDepthControl" title="${esc(t('researcherTreeDepthLabel'))}">
+      <span>${esc(t('researcherTreeDepth'))}</span>
+      <input id="researcherTreeDepthRange" class="uiSlider" type="range" min="1" max="8" step="1" value="${d}" style="--rm-fill:${fill}%">
+      <output id="researcherTreeDepthValue">${d}</output>
+    </label>
+  </span>`;
+}
 function renderResearcherList(){
   const allEntries=researcherDirectoryEntries();
   const entries=researcherEntriesForDisplay(), shown=entries.slice(0,researcherRenderLimit), keys=researcherVisibleColumns();
@@ -4694,7 +5288,10 @@ function renderResearcherList(){
   RESEARCHER_VIEWS.forEach(v=>list.classList.toggle('rv-'+v, v===view));
   list.classList.toggle('researcherCards', false);
   const more=shown.length<entries.length ? `<div id="researcherMore"><button class="tbtn" data-researcher-more>${esc(I18N[lang].showMoreItems(shown.length,entries.length))}</button></div>` : '';
-  if(!entries.length){
+  if(view==='tree'){
+    // the tree always shows the whole genealogy; the search box is a picker here
+    list.innerHTML=researcherTreeHtml(); renderIcons(list); wireResearcherTree();
+  }else if(!entries.length){
     list.innerHTML=`<div class="researcherEmpty">${esc(t('researcherNoPapers'))}</div>`;
   }else if(view==='table'){
     list.innerHTML=researcherTableHtml(shown,keys)+more;
@@ -4714,7 +5311,13 @@ function renderResearcherList(){
   if(mapSlot){ mapSlot.innerHTML = view==='map' ? researcherMapStatusHtml() : ''; renderIcons(mapSlot); }
   const leaderboardSlot=$('#researcherLeaderboardControlsSlot');
   if(leaderboardSlot){ leaderboardSlot.innerHTML=view==='leaderboard'?researcherLeaderboardStatusHtml():''; renderIcons(leaderboardSlot); }
-  if(view==='map' && mapPlotMode()==='institutions'){
+  const treeSlot=$('#researcherTreeControlsSlot');
+  if(treeSlot){ treeSlot.innerHTML=view==='tree'?researcherTreeStatusHtml():''; renderIcons(treeSlot); }
+  updateResearcherTreePicker(view);
+  if(view==='tree'){
+    const st=researcherTreeState;
+    $('#researcherListCount').textContent = st ? I18N[lang].researcherTreeStats(st.layout.ids.length, st.layout.rels.length) : '';
+  }else if(view==='map' && mapPlotMode()==='institutions'){
     // institution mode: every registered institution, and how many have researchers here
     const total=(mapPlaced||[]).length, withPeople=(mapPlaced||[]).filter(c=>c.people>0).length;
     $('#researcherListCount').textContent=I18N[lang].mapInstRegisteredCount(total, withPeople);
@@ -5558,9 +6161,14 @@ function openMapCoordPop(inst, anchorEl){
   $('#mcLat').focus();
 }
 function updateResearcherViewButton(){
-  const lbl={table:'viewTable',grid:'viewGrid',profile:'viewProfileCards',list:'viewLargeList',map:'viewMap',leaderboard:'viewLeaderboard'};
+  const lbl={table:'viewTable',grid:'viewGrid',profile:'viewProfileCards',list:'viewLargeList',map:'viewMap',tree:'viewTree',leaderboard:'viewLeaderboard'};
   const v=RESEARCHER_VIEWS.includes(researcherListView)?researcherListView:'table';
-  const btn=$('#btnResearcherViewMenu'); if(btn){ const l=$('#researcherViewMenuLabel'); if(l) l.textContent=t(lbl[v]); }
+  const btn=$('#btnResearcherViewMenu');
+  if(btn){
+    const l=$('#researcherViewMenuLabel'); if(l) l.textContent=t(lbl[v]);
+    const icon=btn.querySelector('.ic');
+    if(icon && icon.dataset.ic!==RESEARCHER_VIEW_ICONS[v]){ icon.dataset.ic=RESEARCHER_VIEW_ICONS[v]; icon.removeAttribute('data-ic-done'); renderIcons(btn); }
+  }
   document.querySelectorAll('#researcherViewMenu [data-researcher-view]').forEach(el=>el.classList.toggle('viewActive', el.dataset.researcherView===v));
   // the column menu only applies to the table view
   const colWrap=$('#btnResearcherColMenu'); if(colWrap) colWrap.closest('.menuwrap').style.display = v==='table' ? '' : 'none';
@@ -6724,6 +7332,7 @@ function researcherCareerHtml(profile){
   return `<section class="researcherDetailSection researcherCareerSection"><div class="researcherDetailLabel">${esc(t('researcherCareer'))}<span class="researcherDetailCount">${shown.length}</span></div><div class="researcherCareerTimeline">${shown.map(entry=>`<div class="researcherCareerEntry ${esc(entry.kind)}${entry.hidden?' researcherCareerHidden':''}"><time>${esc(researcherCareerPeriod(entry))}</time><div><strong>${instDisp(entry.institution)}${institutionFlagHtml(entry.institution)}${entry.hidden?`<span class="researcherCareerHiddenBadge">${ic('eyeOff')}${esc(t('researcherCareerHiddenBadge'))}</span>`:''}</strong>${entry.detail?`<small class="researcherDetailSubline">${esc(entry.detail)}</small>`:''}${researcherDetailPrefs.careerTypes?`<span class="researcherCareerType ${esc(entry.kind)}">${esc(researcherCareerTypeLabel(entry.kind))}</span>`:''}${researcherEntryRelatedHtml(entry.related)}${researcherDetailSourceLinksHtml(entry.sourceUrls)}</div></div>`).join('')}</div></section>`;
 }
 function renderResearcherDetail(){
+  commitNavState();
   const pane=$('#detail'), entry=researcherEntryForDetail(), p=entry&&entry.profile;
   if(!entry){ pane.innerHTML=`<div class="noselect"><span class="ic" data-ic="users"></span>${esc(t('noSelect'))}</div>`; renderIcons(pane); return; }
   const papers=Array.from(entry.paperIds).map(id=>lib.items.find(it=>it.id===id)).filter(Boolean), name=formatResearcherName(entry);
@@ -7165,6 +7774,7 @@ const LIST_RENDER_CHUNK = 250;
 let listRenderLimit = LIST_RENDER_CHUNK;
 let lastVisibleListItems = [];
 function renderList(opts){
+  commitNavState();
   const items = visibleItems();
   const keys = tableColumnKeys();
   if(!opts || !opts.keepLimit) listRenderLimit = LIST_RENDER_CHUNK;
@@ -7862,6 +8472,7 @@ function detailCollectionsDisplay(it){
 // button, which controls which read-view blocks appear and in what order — a
 // global preference stored in referenceDetailPrefs.
 function renderDetail(){
+  commitNavState();
   const pane = $('#detail');
   const it = lib.items.find(x=>x.id===selectedId);
   if(!it){ pane.innerHTML = `<div class="noselect">${esc(t('noSelect'))}</div>`; return; }
@@ -7879,26 +8490,32 @@ function renderDetail(){
   if(it.image && it.image.name){ const im = pane.querySelector('[data-fig-img]'); if(im) loadItemImagePreview(im, it.image.name); }
   updateCitePreview();
 }
-// Shared action bar (both read and edit modes).
+// Shared action bar (both read and edit modes). When referenceDetailPrefs.iconOnly
+// is on, labels are hidden via CSS (.dActions.compactIcons) and every button's
+// title carries its name so the icon still identifies itself on hover.
 function detailActionsHtml(it){
-  return `<div class="dActions">
-      <button class="tbtn detailEditBtn${detailEditMode?' active':''}" data-act="toggleEdit" title="${esc(t('detailEditHint'))}" aria-pressed="${detailEditMode}">${ic('note')}${esc(t('detailEdit'))}</button>
-      ${it.url||it.doi ? `<button class="tbtn" data-act="openlink">${ic('link')}${esc(t('openLink'))}</button>` : ''}
-      <button class="tbtn" data-act="citations">${ic('citations')}${esc(t('citations'))}</button>
-      <button class="tbtn" data-act="graph">${ic('graph')}${esc(t('graphView'))}</button>
-      <button class="tbtn" data-act="researcherMap">${ic('users')}${esc(t('researcherMap'))}</button>
-      <button class="tbtn" data-act="updateThis" title="${esc(t('updateThisItemHint'))}">${ic('retry')}${esc(t('updateThisItem'))}</button>
-      <button class="tbtn detailSettingsBtn${referenceDetailSettingsOpen?' active':''}" data-act="detailSettings" title="${esc(t('detailDisplaySettingsHint'))}" aria-expanded="${referenceDetailSettingsOpen}">${ic('sliders')}${esc(t('detailDisplaySettings'))}</button>
+  const compact = referenceDetailPrefs.iconOnly ? ' compactIcons' : '';
+  return `<div class="dActions${compact}">
+      <button class="tbtn detailEditBtn${detailEditMode?' active':''}" data-act="toggleEdit" title="${esc(t('detailEditHint'))}" aria-pressed="${detailEditMode}">${ic('note')}<span class="tbtnLabel">${esc(t('detailEdit'))}</span></button>
+      ${it.url||it.doi ? `<button class="tbtn" data-act="openlink" title="${esc(t('openLink'))}">${ic('link')}<span class="tbtnLabel">${esc(t('openLink'))}</span></button>` : ''}
+      <button class="tbtn" data-act="citations" title="${esc(t('citations'))}">${ic('citations')}<span class="tbtnLabel">${esc(t('citations'))}</span></button>
+      <button class="tbtn" data-act="graph" title="${esc(t('graphView'))}">${ic('graph')}<span class="tbtnLabel">${esc(t('graphView'))}</span></button>
+      <button class="tbtn" data-act="researcherMap" title="${esc(t('researcherMap'))}">${ic('users')}<span class="tbtnLabel">${esc(t('researcherMap'))}</span></button>
+      <button class="tbtn" data-act="updateThis" title="${esc(t('updateThisItemHint'))}">${ic('retry')}<span class="tbtnLabel">${esc(t('updateThisItem'))}</span></button>
+      <button class="tbtn detailSettingsBtn${referenceDetailSettingsOpen?' active':''}" data-act="detailSettings" title="${esc(t('detailDisplaySettingsHint'))}" aria-expanded="${referenceDetailSettingsOpen}">${ic('sliders')}<span class="tbtnLabel">${esc(t('detailDisplaySettings'))}</span></button>
     </div>`;
 }
 // Citation preview card, shared by the read-view 'cite' block and the edit form.
+// Its two action buttons follow the same font/size and icon-only behavior as the
+// action bar (detailActionsHtml) so the panel reads as one consistent toolbar.
 function detailCitePreviewHtml(extraClass, dataBlock){
-  return `<div class="citePreview${extraClass?' '+extraClass:''}" id="citePreview"${dataBlock?` data-block="${dataBlock}"`:''} title="${esc(t('citePreviewHint'))}">
+  const compact = referenceDetailPrefs.iconOnly ? ' compactIcons' : '';
+  return `<div class="citePreview${extraClass?' '+extraClass:''}${compact}" id="citePreview"${dataBlock?` data-block="${dataBlock}"`:''} title="${esc(t('citePreviewHint'))}">
       <div class="cpHead">
         <span>${esc(t('citePreview'))}</span>
         <span class="cpActions">
-          <span class="cpCopy" data-act="copycite">${ic('copy')}${esc(t('copy'))}</span>
-          <button class="cpIconBtn" data-act="citeprefs" title="${esc(t('citationSettings'))}" aria-label="${esc(t('citationSettings'))}">${ic('gear')}</button>
+          <span class="cpCopy" data-act="copycite" title="${esc(t('copy'))}">${ic('copy')}<span class="tbtnLabel">${esc(t('copy'))}</span></span>
+          <button class="cpIconBtn" data-act="citeprefs" title="${esc(t('citationSettings'))}" aria-label="${esc(t('citationSettings'))}">${ic('gear')}<span class="tbtnLabel">${esc(t('citationSettings'))}</span></button>
         </span>
       </div>
       <div class="cpText" id="citePreviewText"></div>
@@ -8006,7 +8623,8 @@ function referenceDetailSettingsPanelHtml(it){
   }).join('');
   return `<div class="refSettingsPanel" role="group" aria-label="${esc(t('detailDisplaySettings'))}"><p class="refSettingsHint">${esc(t('detailSettingsHint'))}</p><ul class="refSettingsList" id="refSettingsList">${rows}</ul>`+
     `<label class="refSettingsOpt"><input type="checkbox" data-detail-pref="imageBorder"${referenceDetailPrefs.imageBorder?' checked':''}><span>${esc(t('imageBorderToggle'))}</span></label>`+
-    `<label class="refSettingsOpt"><input type="checkbox" data-detail-pref="authorCorrMark"${referenceDetailPrefs.authorCorrMark?' checked':''}><span>${esc(t('authorMarkCorresponding'))}</span></label></div>`;
+    `<label class="refSettingsOpt"><input type="checkbox" data-detail-pref="authorCorrMark"${referenceDetailPrefs.authorCorrMark?' checked':''}><span>${esc(t('authorMarkCorresponding'))}</span></label>`+
+    `<label class="refSettingsOpt"><input type="checkbox" data-detail-pref="iconOnly"${referenceDetailPrefs.iconOnly?' checked':''}><span>${esc(t('iconOnlyToggle'))}</span></label></div>`;
 }
 // The classic editable form (unchanged fields), minus the shared action bar.
 function detailEditBodyHtml(it){
@@ -8388,7 +9006,7 @@ async function restoreItem(id){
   return restoreItemsByIds([id]);
 }
 // Restore one or more items out of the trash. Pushes a trash-undo entry so
-// Cmd+Z re-trashes them (undoTrashMove replays the captured trashed state).
+// Cmd+Z re-trashes them (applyTrash replays the captured trashed state).
 function restoreItemsByIds(ids){
   const idSet = new Set(ids || []);
   const targets = lib.items.filter(it=>idSet.has(it.id) && isItemTrashed(it));
@@ -10322,11 +10940,23 @@ $('#searchBox').addEventListener('input', ()=>{
   const addable = isAddable(v);
   updateSearchAddUI(addable);
   filter.query = addable ? '' : v; // don't filter the list by a URL/DOI being added
+  // In tree view the box is a researcher picker: choosing an entry from the list
+  // (which fires `input` with the full name) re-centres the genealogy on them.
+  if(currentView==='researchers' && researcherListView==='tree'){
+    const picked=researcherTreePickEntry(v);
+    if(picked && researcherKey(formatResearcherName(picked))===researcherKey(v)){ centreResearcherTreeOn(picked); return; }
+  }
   if(currentView==='researchers'){ researcherRenderLimit=RESEARCHER_RENDER_CHUNK; renderResearcherList(); }
   else renderList({skipBadges:true});
 });
 $('#searchBox').addEventListener('keydown', (e)=>{
-  if(e.key==='Enter' && isAddable($('#searchBox').value.trim())){ e.preventDefault(); quickAddFromSearch(); }
+  if(e.key!=='Enter') return;
+  // Enter accepts the best partial match while the tree picker is active
+  if(currentView==='researchers' && researcherListView==='tree'){
+    const picked=researcherTreePickEntry($('#searchBox').value);
+    if(picked){ e.preventDefault(); $('#searchBox').value=formatResearcherName(picked); filter.query=''; centreResearcherTreeOn(picked); return; }
+  }
+  if(isAddable($('#searchBox').value.trim())){ e.preventDefault(); quickAddFromSearch(); }
 });
 $('#btnSearchAdd').addEventListener('click', quickAddFromSearch);
 $('#btnAdvancedSearch').addEventListener('click', ()=>{
@@ -10358,14 +10988,90 @@ $('#btnAdvClear').addEventListener('click', ()=>{
   $('#dlgAdvancedSearch').close();
   renderList();
 });
+// Move the item-list selection by delta (+1 down / -1 up), keeping the row
+// visible. Used by the Up/Down and j/k shortcuts.
+function moveListSelection(delta){
+  if(currentView!=='items') return;
+  const items = visibleItems();
+  if(!items.length) return;
+  let idx = items.findIndex(it=>it.id===selectedId);
+  if(idx<0) idx = delta>0 ? -1 : items.length; // first press picks first/last row
+  const next = Math.max(0, Math.min(items.length-1, idx + delta));
+  const target = items[next];
+  if(!target) return;
+  selectItem(target.id);
+  const el = document.querySelector(dataIdSelector(target.id));
+  if(el && el.scrollIntoView) el.scrollIntoView({block:'nearest'});
+}
+// The ? cheat sheet. Rows are [modifier+key label, description] pairs.
+function openShortcutsHelp(){
+  const isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent || '');
+  const cmd = isMac ? '⌘' : 'Ctrl';
+  const rows = lang==='ja' ? [
+    [`${cmd} F  /  /`, '検索ボックスにフォーカス'],
+    [`${cmd} Z`, '取り消す（クリック・画面切り替え・データ変更）'],
+    [`${cmd} ⇧ Z  /  ${cmd} Y`, 'やり直す'],
+    ['↑ ↓  /  J K', '文献リストの選択を上下に移動'],
+    [`${cmd} N`, '追加バーにフォーカス（※ブラウザが横取りする場合あり）'],
+    ['Esc', 'ポップアップ・選択の解除'],
+    ['?', 'このショートカット一覧を表示'],
+  ] : [
+    [`${cmd} F  /  /`, 'Focus the search box'],
+    [`${cmd} Z`, 'Undo (clicks, view switches, data changes)'],
+    [`${cmd} ⇧ Z  /  ${cmd} Y`, 'Redo'],
+    ['↑ ↓  /  J K', 'Move selection through the item list'],
+    [`${cmd} N`, 'Focus the add bar (may be intercepted by the browser)'],
+    ['Esc', 'Dismiss popups / clear selection'],
+    ['?', 'Show this shortcut list'],
+  ];
+  const body = $('#shortcutsBody');
+  if(body){
+    body.innerHTML = `<table class="shortcutList">${rows.map(([k,d])=>
+      `<tr><td><kbd>${esc(k)}</kbd></td><td>${esc(d)}</td></tr>`).join('')}</table>`;
+  }
+  const dlg = $('#dlgShortcuts');
+  if(dlg && !dlg.open) dlg.showModal();
+}
 document.addEventListener('keydown', (e)=>{
-  if((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key.toLowerCase()==='z' && !e.target.matches('input,textarea,select') && !document.querySelector('dialog[open]')){
+  const inField = e.target.matches('input,textarea,select') || e.target.isContentEditable;
+  const dlgOpen = !!document.querySelector('dialog[open]');
+  const mod = e.metaKey || e.ctrlKey;
+  // Cmd/Ctrl+Shift+Z (or Cmd/Ctrl+Y): redo. In a field, leave native redo alone.
+  if(mod && ((e.shiftKey && e.key.toLowerCase()==='z') || (!e.shiftKey && e.key.toLowerCase()==='y')) && !inField && !dlgOpen){
+    e.preventDefault();
+    redoLastAction();
+    return;
+  }
+  // Cmd/Ctrl+Z: undo. In a field, leave native text undo alone.
+  if(mod && !e.shiftKey && e.key.toLowerCase()==='z' && !inField && !dlgOpen){
     e.preventDefault();
     undoLastAction();
     return;
   }
-  if(e.key==='/' && !e.target.matches('input,textarea,select') && !document.querySelector('dialog[open]')){
+  if(e.key==='/' && !inField && !dlgOpen){
     e.preventDefault(); $('#searchBox').focus();
+  }
+  // Cmd/Ctrl+F: jump to the search box (overrides the browser's page find).
+  if(mod && !e.shiftKey && !e.altKey && e.key.toLowerCase()==='f' && !dlgOpen){
+    const box = $('#searchBox');
+    if(box){ e.preventDefault(); box.focus(); box.select(); }
+    return;
+  }
+  // Cmd/Ctrl+N: focus the add bar. Note: most browsers reserve Cmd/Ctrl+N for a
+  // new window and swallow it before it reaches the page, so this is best-effort.
+  if(mod && !e.shiftKey && !e.altKey && e.key.toLowerCase()==='n' && !dlgOpen){
+    const box = $('#addBox');
+    if(box){ e.preventDefault(); box.focus(); box.select(); }
+    return;
+  }
+  // ? : show the keyboard-shortcut cheat sheet.
+  if(e.key==='?' && !inField && !dlgOpen){
+    e.preventDefault(); openShortcutsHelp(); return;
+  }
+  // Up/Down or j/k: move the selection through the current item list.
+  if(!inField && !dlgOpen && !mod && !e.altKey && currentView==='items'){
+    if(e.key==='ArrowDown' || e.key==='j'){ e.preventDefault(); moveListSelection(1); return; }
+    if(e.key==='ArrowUp' || e.key==='k'){ e.preventDefault(); moveListSelection(-1); return; }
   }
   if(e.key==='Escape'){
     const openPop=document.querySelector('.miniPop.open');
@@ -10908,6 +11614,8 @@ let galleryCols = localStorage.getItem('refshelf.galleryCols') || '4';
 if(!['2','3','4'].includes(galleryCols)) galleryCols = '4';
 let galleryFit = localStorage.getItem('refshelf.galleryFit') || 'crop';
 if(!['crop','contain'].includes(galleryFit)) galleryFit = 'crop';
+// collapse the right-panel toolbar buttons to icons only (labels hidden)
+let iconOnlyToolbar = localStorage.getItem('refshelf.iconOnlyToolbar') === '1';
 if(listView==='compact') listView = 'gallery'; // "画像リスト" view removed → fall back to gallery
 if(!['table','cards','shelves','kanban','gallery','magazine'].includes(listView)) listView = 'table';
 if(cardCols!=='2') cardCols = '1';
@@ -10931,11 +11639,12 @@ function updateListViewButton(){
   $('#listStatus').classList.toggle('kanbanMode', isKanban);
   const wrapBtn = $('#btnWrap');
   if(wrapBtn) wrapBtn.style.display = 'none';
+  // "フィルター" — independent button, shown for card-style (non-table) views;
+  // in the table view filtering is done via the column-header funnel icons.
   const filterBtn = $('#btnCardFilters');
   if(filterBtn){
     const filterWrap = filterBtn.closest('.menuwrap');
-    if(filterWrap) filterWrap.style.display = 'none';
-    filterBtn.style.display = '';
+    if(filterWrap) filterWrap.style.display = listView==='table' ? 'none' : '';
     filterBtn.style.color = anyColFilterActive() ? 'var(--accent)' : '';
   }
   const colsBtn = $('#btnCardCols');
@@ -10951,7 +11660,8 @@ function updateListViewButton(){
     viewMenu.closest('.menuwrap').style.display = '';
     const viewIcon=isShelves?'book':isKanban?'kanban':GALLERY_VIEWS.includes(listView)?'image':isCards?'rows':'table';
     viewMenu.innerHTML=`${ic(viewIcon)}<span data-i18n="viewStyle">${esc(t('viewStyle'))}</span>${ic('chevron')}`;
-    viewMenu.style.color=(isShelves||isKanban||GALLERY_VIEWS.includes(listView))?'var(--accent)':'';
+    // The leading icon already reflects the active view, so no accent tint here.
+    viewMenu.style.color='';
   }
   const colsMenu = $('#btnColMenu');
   if(colsMenu) colsMenu.closest('.menuwrap').style.display = listView==='table' ? '' : 'none';
@@ -10967,16 +11677,21 @@ function updateListViewButton(){
   if(wrapItem) wrapItem.style.display=(isShelves||isKanban||isGallery)?'none':''; // wrap: table / cards
   const colsItem = $('#cardViewColsMenuItem');
   if(colsItem) colsItem.style.display = isCards ? '' : 'none';               // card columns: cards
-  const filtersItem = $('#cardViewFiltersMenuItem');
-  if(filtersItem) filtersItem.style.display = listView==='table' ? 'none' : ''; // filters: non-table
   const gallerySettings=$('#gallerySettingsSection');
   if(gallerySettings) gallerySettings.style.display=isGallery?'':'none';     // grid columns + image fit: gallery / magazine
-  // sort: available for every card-style view rendered into #itemCards
-  // (cards / gallery / magazine), which — unlike the table — has no column
-  // headers to click for sorting.
-  const sortSection=$('#gallerySortSection');
-  if(sortSection) sortSection.style.display=(isCards||isGallery)?'':'none';
-  document.querySelectorAll('#gallerySortSection [data-gallery-sort]').forEach(el=>{
+  // "並び替え" — independent button, available for every card-style view rendered
+  // into #itemCards (cards / gallery / magazine), which — unlike the table —
+  // has no column headers to click for sorting.
+  const sortWrap=$('#cardSortWrap');
+  if(sortWrap) sortWrap.style.display=(isCards||isGallery)?'':'none';
+  const sortBtn=$('#btnCardSort');
+  if(sortBtn){
+    // 'added' / default 'dateAdded' descending is the neutral order — tint the
+    // button only when a different sort is in effect.
+    const sortNeutral=(sortKey==='added'||sortKey==='dateAdded')&&!sortAsc;
+    sortBtn.style.color=sortNeutral?'':'var(--accent)';
+  }
+  document.querySelectorAll('#cardSortMenu [data-gallery-sort]').forEach(el=>{
     // 'added' and the default 'dateAdded' are the same order
     const k=el.dataset.gallerySort;
     el.classList.toggle('viewActive', k===sortKey || (k==='added' && sortKey==='dateAdded'));
@@ -10998,6 +11713,25 @@ function updateListViewButton(){
   }
   const corrStar = $('#cardViewCorrStar');
   if(corrStar) corrStar.checked = !!authorDisplayPrefs.markCorresponding;
+  applyIconOnly();
+}
+// Collapse the right-panel toolbar buttons to icons only (labels hidden), toggled
+// from the 表示設定 menu. Titles are populated so each icon still has a tooltip.
+function applyIconOnly(){
+  const bar = $('#listStatus');
+  if(!bar) return;
+  bar.classList.toggle('iconOnly', iconOnlyToolbar);
+  bar.querySelectorAll('.lsbtn').forEach(btn=>{
+    if(btn.hasAttribute('data-i18n-title')) return; // keeps its own localized title
+    if(iconOnlyToolbar){
+      const lbl = btn.querySelector('span[data-i18n], #viewStyleLabel, #cardColsLabel, .colMenuLabel');
+      btn.title = lbl ? lbl.textContent.trim() : '';
+    }else{
+      btn.removeAttribute('title');
+    }
+  });
+  const cb = $('#cardViewIconOnly');
+  if(cb) cb.checked = iconOnlyToolbar;
 }
 function applyListView(){
   $('#listScroller').classList.toggle('cardView', listView === 'cards');
@@ -11056,6 +11790,36 @@ $('#btnGalleryCols').addEventListener('click', (e)=>{
     positionFloatingMenu(btn, m);
   }
 });
+$('#btnCardSort').addEventListener('click', (e)=>{
+  e.stopPropagation();
+  const btn = $('#btnCardSort');
+  const m = $('#cardSortMenu'), was = m.classList.contains('open');
+  closeMenus();
+  if(!was){
+    m.classList.add('open');
+    positionFloatingMenu(btn, m);
+  }
+});
+// sort key / direction for card-style views. Drives the shared sortKey/sortAsc
+// used by visibleItems(), so the table stays in sync too. Keep the menu open.
+$('#cardSortMenu').addEventListener('click', (e)=>{
+  e.stopPropagation();
+  const dir = e.target.closest('#gallerySortDir');
+  if(dir){
+    sortAsc = !sortAsc;
+    updateListViewButton();
+    renderList({skipBadges:true});
+    return;
+  }
+  const sortBtn = e.target.closest('[data-gallery-sort]');
+  if(sortBtn){
+    const key = sortBtn.dataset.gallerySort;
+    if(sortKey===key) sortAsc = !sortAsc;
+    else { sortKey = key; sortAsc = (key==='citedBy' || key==='starred') ? false : (key==='added' ? false : true); }
+    updateListViewButton();
+    renderList({skipBadges:true});
+  }
+});
 $('#galleryColsMenu').addEventListener('click', (e)=>{
   e.stopPropagation();
   const b = e.target.closest('[data-gallery-cols]');
@@ -11072,31 +11836,11 @@ $('#galleryColsMenu').addEventListener('click', (e)=>{
     applyListView(); // pure CSS fit change — no re-render of cards needed; keep menu open
     return;
   }
-  // sort direction toggle (asc / desc) for card-style views
-  const dir = e.target.closest('#gallerySortDir');
-  if(dir){
-    sortAsc = !sortAsc;
-    updateListViewButton();
-    renderList({skipBadges:true});
-    return;
-  }
-  // pick a sort key for card-style views; drives the shared sortKey/sortAsc used
-  // by visibleItems(), so the table stays in sync too. Keep the menu open.
-  const sortBtn = e.target.closest('[data-gallery-sort]');
-  if(sortBtn){
-    const key = sortBtn.dataset.gallerySort;
-    if(sortKey===key) sortAsc = !sortAsc;
-    else { sortKey = key; sortAsc = (key==='citedBy' || key==='starred') ? false : (key==='added' ? false : true); }
-    updateListViewButton();
-    renderList({skipBadges:true});
-    return;
-  }
-  // 折り返し / 列数 / フィルタ moved here from the old 表示 menu
+  // 折り返し / 列数 for the card / gallery views
   const act = e.target.closest('[data-card-view-act]');
   if(!act) return;
   if(act.dataset.cardViewAct==='wrap'){ $('#btnWrap').click(); updateListViewButton(); return; }
   if(act.dataset.cardViewAct==='cols'){ $('#btnCardCols').click(); return; } // btnCardCols → applyListView → updateListViewButton
-  if(act.dataset.cardViewAct==='filters'){ closeMenus(); setTimeout(()=>openCardFilterMenu($('#btnGalleryCols')), 0); }
 });
 $('#galleryColsMenu').addEventListener('change', (e)=>{
   if(e.target && e.target.id === 'cardViewCorrStar'){
@@ -11104,6 +11848,10 @@ $('#galleryColsMenu').addEventListener('change', (e)=>{
     localStorage.setItem('refshelf.authorDisplay', JSON.stringify(authorDisplayPrefs));
     renderList();
     updateListViewButton();
+  }else if(e.target && e.target.id === 'cardViewIconOnly'){
+    iconOnlyToolbar = !!e.target.checked;
+    localStorage.setItem('refshelf.iconOnlyToolbar', iconOnlyToolbar ? '1' : '0');
+    applyIconOnly();
   }
 });
 $('#cardViewMenu').addEventListener('click', (e)=>{
@@ -11159,7 +11907,7 @@ $('#cardFilterMenu').addEventListener('click', (e)=>{
   if(!btn) return;
   const key = btn.dataset.cardFilter;
   closeMenus();
-  setTimeout(()=>openColFilterPop(key, listView === 'table' ? $('#btnCardFilters') : $('#btnCardViewMenu')), 0);
+  setTimeout(()=>openColFilterPop(key, $('#btnCardFilters')), 0);
 });
 
 // list
@@ -11395,6 +12143,7 @@ function openColFilterPop(key, anchorEl){
   const pop = $('#colFilterPop');
   const label = t(COLUMN_DEFS[key].i18n);
   const cur = (filter.cols||{})[key];
+  let textOpts = null; // set for free-text columns → drives the candidate list
   if(NUMERIC_FILTER_COLS.includes(key)){
     const from = cur && cur.from!=null ? cur.from : '';
     const to = cur && cur.to!=null ? cur.to : '';
@@ -11413,8 +12162,12 @@ function openColFilterPop(key, anchorEl){
       ).join('') : `<div class="hint">${esc(t('filterNoOptions'))}</div>`) + `</div></div>
       <div class="popActions"><button id="cfClear">${esc(t('filterClear'))}</button></div>`;
   }else{
+    textOpts = textFilterOptions(key);
+    const initQ = String(cur||'').trim().toLowerCase();
     pop.innerHTML = `<div class="fRow"><label>${esc(I18N[lang].filterTitle(label))}</label>
-      <input type="text" id="cfText" value="${esc(cur||'')}" placeholder="${esc(t('filterContains'))}"></div>
+      <input type="text" id="cfText" value="${esc(cur||'')}" placeholder="${esc(t('filterContains'))}">`
+      + (textOpts.length ? `<div class="hint">${esc(t('filterOptions'))}</div><div class="pickList" id="cfOpts">${textOptsHtml(textOpts, initQ)}</div>` : '')
+      + `</div>
       <div class="popActions"><button id="cfClear">${esc(t('filterClear'))}</button></div>`;
   }
   let r = anchorEl.getBoundingClientRect();
@@ -11443,6 +12196,20 @@ function openColFilterPop(key, anchorEl){
     inp.addEventListener('input', apply);
     inp.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key==='Escape') pop.classList.remove('open'); });
   });
+  // free-text columns: live candidate list — typing narrows it, clicking a
+  // candidate fills the field and applies the filter.
+  const optsEl = pop.querySelector('#cfOpts');
+  if(optsEl && textOpts){
+    const cfText = $('#cfText');
+    cfText.addEventListener('input', ()=>{ optsEl.innerHTML = textOptsHtml(textOpts, cfText.value.trim().toLowerCase()); });
+    optsEl.addEventListener('click', (e)=>{
+      const b = e.target.closest('[data-cftext]');
+      if(!b) return;
+      cfText.value = b.dataset.cftext;
+      apply();
+      optsEl.innerHTML = textOptsHtml(textOpts, cfText.value.trim().toLowerCase());
+    });
+  }
   $('#cfClear').addEventListener('click', ()=>{
     delete filter.cols[key];
     pop.classList.remove('open');
@@ -12258,8 +13025,8 @@ $('#detail').addEventListener('click', async (e)=>{
     case 'copycite': {
       await copyCitation(it, citationPrefs); showToast(t('copied'));
       const cp=btn.closest('.cpCopy');
-      if(cp){ cp.classList.add('copied'); cp.innerHTML=`${ic('check')}${esc(t('copy'))}`;
-        setTimeout(()=>{ if(cp.isConnected){ cp.classList.remove('copied'); cp.innerHTML=`${ic('copy')}${esc(t('copy'))}`; } }, 1400); }
+      if(cp){ cp.classList.add('copied'); cp.innerHTML=`${ic('check')}<span class="tbtnLabel">${esc(t('copy'))}</span>`;
+        setTimeout(()=>{ if(cp.isConnected){ cp.classList.remove('copied'); cp.innerHTML=`${ic('copy')}<span class="tbtnLabel">${esc(t('copy'))}</span>`; } }, 1400); }
       break;
     }
     case 'copybib': await navigator.clipboard.writeText(itemToBibTeX(it)); showToast(t('copied')); break;
@@ -12463,6 +13230,34 @@ $('#researcherLeaderboardControlsSlot').addEventListener('click', e=>{
   e.stopPropagation(); const menu=$('#researcherLeaderboardMetricMenu'), was=menu.classList.contains('open'); closeMenus();
   if(!was){ menu.classList.add('open'); positionFloatingMenu(button,menu); }
 });
+/* ---- academic-tree controls (bottom status bar) ---- */
+$('#researcherTreeControlsSlot').addEventListener('click', e=>{
+  const orient=e.target.closest('[data-tree-orient]');
+  if(orient){ researcherTreeOrientation=orient.dataset.treeOrient; saveResearcherTreePrefs(); renderResearcherList(); return; }
+  const scope=e.target.closest('[data-tree-scope]');
+  if(scope){ researcherTreeScope=scope.dataset.treeScope; saveResearcherTreePrefs(); renderResearcherList(); return; }
+});
+$('#researcherTreeControlsSlot').addEventListener('input', e=>{
+  if(!e.target.closest('#researcherTreeDepthRange')) return;
+  researcherTreeDepth=Math.max(1,Math.min(8,Math.round(+e.target.value||3)));
+  const out=$('#researcherTreeDepthValue'); if(out) out.textContent=researcherTreeDepth;
+  saveResearcherTreePrefs(); renderResearcherList();
+});
+// Jump from a node in the researcher map to that researcher's academic tree.
+function openResearcherTreeFor(profile, name){
+  const entries=researcherDirectoryEntries();
+  const entry=(profile&&entries.find(x=>x.profile&&x.profile.id===profile.id))
+    || entries.find(x=>researcherNameKeys(name||'').includes(x.key))
+    || (name?entries.find(x=>x.profile&&researcherMatchesName(x.profile,name)):null);
+  const dlg=$('#dlgResearcherMap'); if(dlg&&dlg.open) dlg.close();
+  currentView='researchers';
+  researcherListView='tree';
+  localStorage.setItem('refshelf.researcherListView','tree');
+  selectedResearcherId=profile?profile.id:(entry&&entry.profile?entry.profile.id:null);
+  selectedResearcherKey=entry?entry.key:(researcherNameKeys(name||'')[0]||null);
+  researcherCandidates=[]; researcherEnrichmentPreview=null;
+  renderSidebar(); renderWorkspace();
+}
 $('#researcherList').addEventListener('pointerdown',e=>{
   const handle=e.target.closest('[data-researcher-resize]'); if(!handle) return;
   e.preventDefault(); e.stopPropagation(); const th=handle.closest('th');
@@ -13169,7 +13964,14 @@ function renderResearcherMapSide(){
     const e=g.edges[active.index];
     if(!e) return;
     const A=g.nodes[e.a], B=g.nodes[e.b];
-    side.innerHTML=`<div class="rmSideKicker">${esc(t('researcherMapCollaboration'))}</div><div class="rmSideTitle">${esc(A.fullName)}<br>× ${esc(B.fullName)}</div><div class="rmSideMeta">${esc(I18N[lang].researcherMapJointCount(e.count))}</div><div class="rmSection"><div class="rmSectionHead">${esc(t('researcherMapPapers'))}</div>${researcherMapSortedPapers(e.papers).map(researcherMapPaperHtml).join('')}</div>`;
+    // the tree jump is offered for both ends of the collaboration, so it is
+    // reachable without first having to select a single researcher node
+    const treeBtn=(n)=>{
+      const p=findResearcherProfileByNames([n.fullName,researcherMapAuthorText(n.name),...Array.from(n.aliases)]);
+      return p ? `<button class="tbtn" data-rm-tree-id="${esc(p.id)}">${ic('tree')}${esc(n.fullName)}</button>`
+               : `<button class="tbtn" data-rm-tree-name="${esc(n.fullName)}">${ic('tree')}${esc(n.fullName)}</button>`;
+    };
+    side.innerHTML=`<div class="rmSideKicker">${esc(t('researcherMapCollaboration'))}</div><div class="rmSideTitle">${esc(A.fullName)}<br>× ${esc(B.fullName)}</div><div class="rmSideMeta">${esc(I18N[lang].researcherMapJointCount(e.count))}</div><div class="rmSideTreeLabel">${esc(t('researcherTreeOpen'))}</div><div class="dActions">${treeBtn(A)}${treeBtn(B)}</div><div class="rmSection"><div class="rmSectionHead">${esc(t('researcherMapPapers'))}</div>${researcherMapSortedPapers(e.papers).map(researcherMapPaperHtml).join('')}</div>`;
     return;
   }
   const n=g.nodes[active.index];
@@ -13178,9 +13980,12 @@ function renderResearcherMapSide(){
   const aliases=Array.from(n.aliases).filter(x=>normalizeAuthorToken(x)!==normalizeAuthorToken(researcherMapAuthorText(n.name)));
   const pathMeta=n.seed?'':` · ${I18N[lang].researcherMapDistance(n.depth)}`;
   const profile=findResearcherProfileByNames([n.fullName,researcherMapAuthorText(n.name),...Array.from(n.aliases)]);
-  const profileButton=profile
+  const profileButton=(profile
     ? `<button class="tbtn" data-rm-profile-id="${esc(profile.id)}">${ic('users')}${esc(t('researcherOpen'))}</button>`
-    : `<button class="tbtn" data-rm-profile-name="${esc(n.fullName)}">${ic('users')}${esc(t('researcherOpen'))}</button>`;
+    : `<button class="tbtn" data-rm-profile-name="${esc(n.fullName)}">${ic('users')}${esc(t('researcherOpen'))}</button>`)
+    + (profile
+      ? `<button class="tbtn" data-rm-tree-id="${esc(profile.id)}">${ic('tree')}${esc(t('researcherTreeOpen'))}</button>`
+      : `<button class="tbtn" data-rm-tree-name="${esc(n.fullName)}">${ic('tree')}${esc(t('researcherTreeOpen'))}</button>`);
   side.innerHTML=`<div class="rmSideKicker">${esc(t('correspondingAuthors'))}</div><div class="rmSideTitle">${esc(n.fullName)}</div><div class="rmSideMeta">${esc(I18N[lang].researcherMapPaperCount(n.papers.length)+pathMeta)}</div><div class="dActions">${profileButton}</div>${collaborators.length?`<div class="rmSection"><div class="rmSectionHead">${esc(t('researcherMapCollaborators'))}</div><div class="rmCollaborators">${collaborators.map(c=>`<button class="rmCollaborator" data-rm-select-node="${c.index}">${esc(g.nodes[c.index].fullName)} · ${c.count}</button>`).join('')}</div></div>`:''}<div class="rmSection"><div class="rmSectionHead">${esc(t('researcherMapPapers'))}</div>${researcherMapSortedPapers(n.papers).map(researcherMapPaperHtml).join('')}</div>${aliases.length?`<div class="rmAliases"><b>${esc(t('researcherMapAliases'))}:</b> ${esc(aliases.join('; '))}</div>`:''}`;
 }
 function updateResearcherMapControls(){
@@ -13290,6 +14095,12 @@ $('#btnResearcherMapRelayout').addEventListener('click',()=>{
 });
 $('#btnResearcherMapFit').addEventListener('click',()=>{ if(researcherMapState){ researcherMapState.userView=false; fitResearcherMapView(true); } });
 $('#researcherMapSide').addEventListener('click',e=>{
+  const treeBtn=e.target.closest('[data-rm-tree-id],[data-rm-tree-name]');
+  if(treeBtn){
+    const p=(lib.researchers||[]).find(x=>x.id===treeBtn.dataset.rmTreeId);
+    openResearcherTreeFor(p||null, treeBtn.dataset.rmTreeName || (p&&p.displayName) || '');
+    return;
+  }
   const profileBtn=e.target.closest('[data-rm-profile-id],[data-rm-profile-name]');
   if(profileBtn){
     const p=(lib.researchers||[]).find(x=>x.id===profileBtn.dataset.rmProfileId);

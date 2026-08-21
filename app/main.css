@@ -39,7 +39,8 @@
   .sideItem > .ic{color:var(--text2)}
   .sideItem.active > .ic{color:var(--accent)}
   .col-pin .ic{color:var(--accent)}
-  .dActions .ic{color:var(--accent)}
+  /* detail-pane action bar: neutral by default, accent only while active (see .dActions .tbtn.active below) */
+  .dActions .ic{color:var(--text2)}
   .danger .ic{color:var(--danger)}
   .ver .ic, .rowbtns .ic{width:auto}
 
@@ -1413,6 +1414,13 @@
   .pickItem input{margin:0}
   .pickLabel{display:inline-flex; align-items:center; gap:4px; min-width:0}
   .pickLabel .ic{font-size:12px}
+  /* free-text filter candidates: clickable rows that fill the search field */
+  .pickList .pickOpt{
+    display:block; width:100%; text-align:left; border:none; background:none;
+    padding:3px 6px; border-radius:4px; font-size:12.5px; color:var(--text);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer;
+  }
+  .pickList .pickOpt:hover{background:var(--bg)}
   /* collection color swatches */
   .swatches{display:grid; grid-template-columns:repeat(5,24px); gap:6px; margin-bottom:8px}
   .swatch{
@@ -1656,6 +1664,11 @@
   #listStatus .lsbtn .ic{width:auto}
   #listStatus.cardMode .statusCompact span[data-i18n]{display:none}
   #listStatus.cardMode .statusCompact{padding:0 7px}
+  /* icon-only toolbar (toggled from 表示設定): hide text labels and the trailing
+     dropdown chevrons, but keep each button's leading icon and the 通知 badge */
+  #listStatus.iconOnly .lsbtn > span:not(.ic):not(.logBadge){display:none}
+  #listStatus.iconOnly .lsbtn:not(.lsbtnCaret) > .ic[data-ic="chevron"]{display:none}
+  #listStatus.iconOnly .lsbtn{padding:0 6px}
   #btnCardViewMenu{display:inline-flex}
   .logBadge{
     display:inline-flex; align-items:center; justify-content:center; min-width:16px; height:16px;
@@ -1869,6 +1882,9 @@
   }
   .dActions{display:flex; flex-wrap:wrap; gap:6px; margin:5px 0 4px}
   .dActions .tbtn{font-size:12.5px; min-height:28px; padding:0 9px}
+  /* icon-only mode (from 表示設定 → ボタンをアイコンのみ表示): hide labels, keep titles as tooltips */
+  .dActions.compactIcons .tbtnLabel{display:none}
+  .dActions.compactIcons .tbtn{padding:0 7px}
   .attRow{
     display:flex; align-items:center; gap:6px; padding:5px 8px; margin-bottom:4px;
     background:var(--bg); border:1px solid var(--border2); border-radius:6px; font-size:12.5px; line-height:1.2;
@@ -1925,6 +1941,7 @@
 
   /* ---- reference detail: read-only view + display settings ---- */
   .detailEditBtn.active,.detailSettingsBtn.active{border-color:var(--accent-border); background:var(--accent-soft); color:var(--accent)}
+  .dActions .tbtn.active .ic{color:var(--accent)}
   .refDetailTitle{font-size:16px; font-weight:700; line-height:1.34; overflow-wrap:anywhere; margin:10px 0 14px}
   #refBody>.refBlock{margin-top:14px}
   #refBody>.refBlock:first-child{margin-top:0}
@@ -2012,26 +2029,28 @@
     font-size:10.5px; font-weight:700; color:var(--text3); letter-spacing:.04em; margin-bottom:4px;
   }
   .citePreview .cpActions{display:inline-flex; align-items:center; gap:6px; letter-spacing:0}
-  /* neutral secondary button: panel bg + border, accent-coloured icon */
-  .citePreview .cpCopy{
-    display:inline-flex; align-items:center; gap:5px; cursor:pointer; color:var(--text2);
-    font-weight:600; font-size:11.5px; border-radius:7px; padding:4px 10px;
-    background:var(--panel); border:1px solid var(--border);
+  /* neutral secondary buttons — same font/size/padding as the action bar above
+     (.dActions .tbtn), gray icon by default, accent only for the "copied" state */
+  .citePreview .cpCopy, .citePreview .cpIconBtn{
+    display:inline-flex; align-items:center; gap:5px; cursor:pointer;
+    /* .cpHead sets color:var(--text3) for its label — break that inheritance so
+       these buttons read the same dark text as .dActions .tbtn (which has no
+       such ancestor and falls through to body's var(--text)). */
+    color:var(--text);
+    font-size:12.5px; font-weight:400; min-height:28px; padding:0 9px;
+    background:var(--panel); border:1px solid var(--border); border-radius:6px;
     transition:border-color .12s, color .12s, background .12s, transform .06s;
   }
-  .citePreview .cpCopy .ic{color:var(--accent); display:inline-flex}
-  .citePreview .cpCopy .ic svg{width:14px;height:14px}
-  .citePreview .cpCopy:hover{border-color:var(--text3); color:var(--text)}
+  /* only the icon is gray */
+  .citePreview .cpCopy .ic, .citePreview .cpIconBtn .ic{color:var(--text2); display:inline-flex}
+  .citePreview .cpCopy .ic svg, .citePreview .cpIconBtn .ic svg{width:14px;height:14px}
+  .citePreview .cpCopy:hover, .citePreview .cpIconBtn:hover{background:var(--bg); border-color:var(--text3); color:var(--text)}
   .citePreview .cpCopy:active{transform:translateY(.5px)}
   .citePreview .cpCopy.copied{color:var(--green,#16a34a); border-color:transparent; background:var(--green-soft,#e6f4ea)}
   .citePreview .cpCopy.copied .ic{color:var(--green,#16a34a)}
-  .citePreview .cpIconBtn{
-    display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px;
-    border:1px solid var(--border2); background:var(--panel); border-radius:7px; color:var(--text2); padding:0;
-    transition:border-color .12s, color .12s;
-  }
-  .citePreview .cpIconBtn:hover{border-color:var(--border); color:var(--text)}
-  .citePreview .cpIconBtn .ic svg{width:14px;height:14px}
+  /* icon-only mode (from 表示設定 → ボタンをアイコンのみ表示): mirrors .dActions.compactIcons */
+  .citePreview.compactIcons .cpCopy .tbtnLabel, .citePreview.compactIcons .cpIconBtn .tbtnLabel{display:none}
+  .citePreview.compactIcons .cpCopy, .citePreview.compactIcons .cpIconBtn{padding:0 7px}
   .citePreview .cpText{font-size:12px; line-height:1.55; color:var(--text); word-break:break-word}
   .citePreview .cpText:empty::after{content:'—'; color:var(--text3)}
   #dlgCitationPrefs{max-width:460px; width:min(460px,92vw)}
@@ -3942,3 +3961,74 @@
     animation:none !important;
     text-indent:0 !important;
   }
+
+  /* keyboard-shortcut cheat sheet (dlgShortcuts) */
+  table.shortcutList{border-collapse:collapse; width:100%}
+  table.shortcutList td{padding:7px 10px; vertical-align:middle; border-bottom:1px solid var(--border2)}
+  table.shortcutList tr:last-child td{border-bottom:none}
+  table.shortcutList td:first-child{white-space:nowrap; width:1%}
+  table.shortcutList td:last-child{color:var(--text2)}
+  table.shortcutList kbd{
+    display:inline-block; font:600 12px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    color:var(--text); background:var(--panel); border:1px solid var(--border);
+    border-radius:6px; padding:2px 8px; box-shadow:0 1px 0 var(--border);
+  }
+
+  /* ---- academic tree view (researcher directory) ------------------------------
+     Edges are one SVG layer; nodes are absolutely positioned HTML so they can reuse
+     the directory avatars (photo or initials) as-is. */
+  #researcherList.rv-tree{display:flex; flex-direction:column; overflow:hidden; padding:0}
+  .rTreeLegend{display:flex; flex-wrap:wrap; align-items:center; gap:14px; padding:9px 14px;
+    border-bottom:1px solid var(--border); background:var(--panel); font-size:11.5px; color:var(--text2); flex:0 0 auto}
+  .rTreeLegendItem{display:inline-flex; align-items:center; gap:6px; white-space:nowrap}
+  .rTreeLegendHint{color:var(--text3); margin-left:auto; white-space:nowrap}
+  .rTreeDot{width:11px; height:11px; border-radius:50%; background:var(--accent); flex:0 0 auto}
+  .rTreeDot.ego{background:var(--green)}
+  .rTreeDot.ghost{background:transparent; border:1.5px dashed var(--text3)}
+  .rTreeLine{width:20px; height:0; border-top:2px solid var(--text3); flex:0 0 auto}
+  .rTreeLine.soft{border-top-style:dashed}
+  .rTreeWrap{flex:1 1 auto; overflow:auto; background:
+    radial-gradient(circle at 50% 26%, color-mix(in srgb, var(--accent-soft) 42%, var(--bg)), var(--bg) 74%)}
+  .rTreeCanvas{position:relative; margin:0 auto}
+  .rTreeEdges{position:absolute; left:0; top:0; overflow:visible}
+  .rTreeEdge{fill:none; stroke:color-mix(in srgb, var(--text3) 72%, transparent); stroke-width:1.7}
+  .rTreeEdge.soft{stroke-dasharray:5 4; stroke:color-mix(in srgb, var(--text3) 48%, transparent)}
+  .rTreeEdge.hot{stroke:var(--accent); stroke-width:2.6}
+  .rTreeHit{fill:none; stroke:transparent; stroke-width:16; cursor:pointer}
+  .rTreeNode{position:absolute; width:184px; height:40px; display:flex; align-items:center; gap:9px;
+    padding:0 11px; border:1.4px solid var(--border); border-radius:9px; background:var(--panel);
+    cursor:pointer; box-shadow:0 1px 3px rgba(15,23,42,.06); transition:opacity .12s, border-color .12s}
+  .rTreeNode:hover{border-color:var(--accent); border-width:2px; padding:0 10.4px}
+  .rTreeNode.ego{border-color:var(--green); border-width:2px; padding:0 10.4px; background:var(--green-soft)}
+  .rTreeNode.ghost{border-style:dashed; background:transparent; cursor:default}
+  .rTreeNode.dim{opacity:.28}
+  .rTreeNode .rAvatar{flex:0 0 auto}
+  .rTreeGhostAv{background:var(--chip) !important; color:var(--text3) !important}
+  .rTreeLabel{min-width:0; display:flex; flex-direction:column; line-height:1.25}
+  .rTreeName{font-size:12.5px; font-weight:600; color:var(--text);
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .rTreeNode.ghost .rTreeName{color:var(--text2); font-style:italic}
+  .rTreeSub{font-size:10px; color:var(--text3)}
+  .rTreeTip{position:absolute; z-index:6; max-width:300px; pointer-events:none;
+    background:var(--panel); border:1px solid var(--border); border-radius:9px; padding:8px 11px;
+    font-size:12px; line-height:1.5; color:var(--text); box-shadow:0 8px 26px rgba(15,23,42,.18)}
+  .rTreeTipTitle{font-size:12.5px; font-weight:700; margin-bottom:2px}
+  .rTreeTipGhost{font-weight:400; color:var(--text3); font-size:11px}
+  .rTreeTipHead{color:var(--text3); font-size:10.5px; margin-top:6px}
+  .rTreeTipRow{color:var(--text2)}
+  .rTreeTipRow b{color:var(--text); font-weight:600}
+  .rTreeTipNote{display:block; color:var(--text3); font-size:11px; padding-left:1em}
+  .rTreeEmpty{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+    height:100%; min-height:220px; padding:32px; text-align:center; color:var(--text3); font-size:12.5px}
+  .rTreeEmpty b{font-size:14px; color:var(--text2)}
+  /* status-bar controls */
+  .researcherTreeControls{display:inline-flex; align-items:center; gap:8px}
+  .rTreeSeg{display:inline-flex; border:1px solid var(--border); border-radius:7px; overflow:hidden}
+  .rTreeSeg .rTreeSegBtn{border:0; border-radius:0; border-right:1px solid var(--border); box-shadow:none; white-space:nowrap}
+  .rTreeSeg .rTreeSegBtn:last-child{border-right:0}
+  .rTreeSeg .rTreeSegBtn.on{background:var(--accent-soft); color:var(--accent); font-weight:700}
+  .rTreeDepthControl{display:inline-flex; align-items:center; gap:6px; height:28px; padding:0 9px; white-space:nowrap;
+    border:1px solid var(--border); border-radius:7px; background:var(--panel); font-size:11.5px; color:var(--text2)}
+  .rTreeDepthControl .uiSlider{width:64px}
+  #researcherTreeDepthValue{min-width:10px; color:var(--text); font-variant-numeric:tabular-nums}
+  .rmSideTreeLabel{margin:10px 0 4px; font-size:11px; color:var(--text3)}
