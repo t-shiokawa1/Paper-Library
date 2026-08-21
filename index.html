@@ -48,7 +48,8 @@
   </div>
   <div class="searchWrap" id="searchWrap" data-placeholder="検索ワードを入力して Enter">
     <span class="ic searchBoxIcon" data-ic="search"></span>
-    <input id="searchBox" type="search" data-i18n-ph="searchPh" placeholder="検索ワードを入力して Enter">
+    <input id="searchBox" type="search" data-i18n-ph="searchPh" placeholder="検索ワードを入力して Enter" autocomplete="off">
+    <datalist id="researcherTreePickList"></datalist>
     <button class="searchAddBtn" id="btnSearchAdd" style="display:none" data-i18n-title="quickAddTitle" title="この DOI / URL を取得して追加"><span class="ic" data-ic="plus"></span><span data-i18n="add">追加</span></button>
     <button class="searchAdvBtn" id="btnAdvancedSearch" data-i18n-title="advancedSearch" title="詳細検索"><span class="ic" data-ic="search"></span><span data-i18n="advancedSearch">詳細検索</span></button>
   </div>
@@ -162,6 +163,28 @@
       <button class="lsbtn" id="btnWrap" style="display:none"><span class="ic" data-ic="wrap"></span><span data-i18n="wrapToggle">折り返し</span></button>
       <button class="lsbtn" id="btnViewStyle" style="display:none"><span class="ic" data-ic="rows"></span><span id="viewStyleLabel" data-i18n="viewCards">カード表示</span></button>
       <button class="lsbtn" id="btnCardCols" style="display:none"><span class="ic" data-ic="table"></span><span id="cardColsLabel">2列</span></button>
+      <!-- フィルター: independent button (between 通知 and 表示スタイル) -->
+      <div class="menuwrap" id="cardFiltersWrap">
+        <button class="lsbtn" id="btnCardFilters"><span class="ic" data-ic="funnel"></span><span data-i18n="filters">フィルタ</span><span class="ic" data-ic="chevron"></span></button>
+      </div>
+      <div class="menu" id="cardFilterMenu" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto"></div>
+      <!-- 並び替え: independent button -->
+      <div class="menuwrap" id="cardSortWrap">
+        <button class="lsbtn" id="btnCardSort"><span class="ic" data-ic="sort"></span><span data-i18n="gallerySortLabel">並び替え</span><span class="ic" data-ic="chevron"></span></button>
+        <div class="menu" id="cardSortMenu" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto">
+          <div class="menuLabel gallerySortHead">
+            <span data-i18n="gallerySortLabel">並び替え</span>
+            <button id="gallerySortDir" class="gallerySortDirBtn" type="button"><span class="ic" data-ic="chevron"></span><span id="gallerySortDirLabel" data-i18n="sortDirDesc">降順</span></button>
+          </div>
+          <button data-gallery-sort="added"><span data-i18n="sortByAdded">追加日</span></button>
+          <button data-gallery-sort="title"><span data-i18n="colTitle">タイトル</span></button>
+          <button data-gallery-sort="authors"><span data-i18n="colAuthors">著者</span></button>
+          <button data-gallery-sort="year"><span data-i18n="colYear">年</span></button>
+          <button data-gallery-sort="journal"><span data-i18n="colJournal">出版物</span></button>
+          <button data-gallery-sort="citedBy"><span data-i18n="colCitedBy">被引用数</span></button>
+          <button data-gallery-sort="starred"><span data-i18n="colStar">スター</span></button>
+        </div>
+      </div>
       <!-- 表示スタイル: switches the list view style only -->
       <div class="menuwrap">
         <button class="lsbtn" id="btnCardViewMenu"><span class="ic" data-ic="rows"></span><span data-i18n="viewStyle">表示スタイル</span><span class="ic" data-ic="chevron"></span></button>
@@ -174,27 +197,12 @@
           <button data-list-view="magazine"><span class="ic" data-ic="image"></span><span data-i18n="viewMagazine">マガジン</span></button>
         </div>
       </div>
-      <!-- 表示設定: folding / filters / column count / image fit / corresponding-author mark -->
+      <!-- 表示設定: folding / column count / image fit / corresponding-author mark / icon-only -->
       <div class="menuwrap" id="galleryColsWrap">
         <button class="lsbtn" id="btnGalleryCols"><span class="ic" data-ic="sliders"></span><span data-i18n="displaySettings">表示設定</span><span class="ic" data-ic="chevron"></span></button>
         <div class="menu" id="galleryColsMenu" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto">
           <button id="cardViewWrapItem" data-card-view-act="wrap"><span class="ic" data-ic="wrap"></span><span data-i18n="wrapToggle">折り返し</span></button>
           <button id="cardViewColsMenuItem" data-card-view-act="cols"><span class="ic" data-ic="rows"></span><span id="cardViewColsMenuLabel">1列</span></button>
-          <button id="cardViewFiltersMenuItem" data-card-view-act="filters"><span class="ic" data-ic="funnel"></span><span data-i18n="filters">フィルタ</span></button>
-          <div id="gallerySortSection">
-            <hr>
-            <div class="menuLabel gallerySortHead">
-              <span data-i18n="gallerySortLabel">並び替え</span>
-              <button id="gallerySortDir" class="gallerySortDirBtn" type="button"><span class="ic" data-ic="chevron"></span><span id="gallerySortDirLabel" data-i18n="sortDirDesc">降順</span></button>
-            </div>
-            <button data-gallery-sort="added"><span data-i18n="sortByAdded">追加日</span></button>
-            <button data-gallery-sort="title"><span data-i18n="colTitle">タイトル</span></button>
-            <button data-gallery-sort="authors"><span data-i18n="colAuthors">著者</span></button>
-            <button data-gallery-sort="year"><span data-i18n="colYear">年</span></button>
-            <button data-gallery-sort="journal"><span data-i18n="colJournal">出版物</span></button>
-            <button data-gallery-sort="citedBy"><span data-i18n="colCitedBy">被引用数</span></button>
-            <button data-gallery-sort="starred"><span data-i18n="colStar">スター</span></button>
-          </div>
           <div id="gallerySettingsSection">
             <hr>
             <div class="menuLabel" data-i18n="columnsLabel">列数</div>
@@ -210,12 +218,10 @@
             <hr>
             <label class="menuCheck"><input type="checkbox" id="cardViewCorrStar"><span data-i18n="authorMarkCorresponding">責任著者に * を表示</span></label>
           </div>
+          <hr>
+          <label class="menuCheck"><input type="checkbox" id="cardViewIconOnly"><span data-i18n="iconOnlyToggle">ボタンをアイコンのみ表示</span></label>
         </div>
       </div>
-      <div class="menuwrap">
-        <button class="lsbtn" id="btnCardFilters"><span class="ic" data-ic="funnel"></span><span data-i18n="filters">フィルタ</span><span class="ic" data-ic="chevron"></span></button>
-      </div>
-      <div class="menu" id="cardFilterMenu" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto"></div>
       <div class="splitWrap menuwrap">
         <button class="lsbtn lsbtnMain" id="btnRefreshAll"><span class="ic" data-ic="retry"></span><span data-i18n="refreshAll">更新</span></button>
         <button class="lsbtn lsbtnCaret" id="btnRefreshAllCaret" aria-label="menu"><span class="ic" data-ic="chevron"></span></button>
@@ -249,6 +255,7 @@
         <button class="lsbtn" id="btnResearcherSortMenu"><span class="ic" data-ic="sliders"></span><span data-i18n="researcherSortLabel">並び替え</span><span class="ic" data-ic="chevron"></span></button>
         <div class="menu" id="researcherSortMenu" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto"></div>
       </div>
+      <span id="researcherTreeControlsSlot"></span>
       <span id="researcherLeaderboardControlsSlot"></span>
       <div class="menuwrap">
         <button class="lsbtn" id="btnResearcherViewMenu"><span class="ic" data-ic="globe"></span><span id="researcherViewMenuLabel" data-i18n="viewTable">表表示</span><span class="ic" data-ic="chevron"></span></button>
@@ -259,7 +266,8 @@
           <button data-researcher-view="profile"><span class="ic" data-ic="note"></span><span data-i18n="viewProfileCards">プロフィール</span></button>
           <button data-researcher-view="list"><span class="ic" data-ic="rows"></span><span data-i18n="viewLargeList">リスト</span></button>
           <button data-researcher-view="map"><span class="ic" data-ic="globe"></span><span data-i18n="viewMap">地図</span></button>
-          <button data-researcher-view="leaderboard"><span class="ic" data-ic="graph"></span><span data-i18n="viewLeaderboard">ランキング</span></button>
+          <button data-researcher-view="tree"><span class="ic" data-ic="tree"></span><span data-i18n="viewTree">ツリー</span></button>
+          <button data-researcher-view="leaderboard"><span class="ic" data-ic="ranking"></span><span data-i18n="viewLeaderboard">ランキング</span></button>
         </div>
       </div>
       <div class="menuwrap">
@@ -293,6 +301,12 @@
 <dialog id="dlgChangelog">
   <div class="dlgHead"><span data-i18n="changelog">更新履歴</span><button data-close><span class="ic" data-ic="x"></span></button></div>
   <div class="dlgBody" id="changelogBody"></div>
+  <div class="dlgFoot"><button class="tbtn primary" data-close data-i18n="close">閉じる</button></div>
+</dialog>
+
+<dialog id="dlgShortcuts">
+  <div class="dlgHead"><span data-i18n="shortcuts">キーボードショートカット</span><button data-close><span class="ic" data-ic="x"></span></button></div>
+  <div class="dlgBody" id="shortcutsBody"></div>
   <div class="dlgFoot"><button class="tbtn primary" data-close data-i18n="close">閉じる</button></div>
 </dialog>
 
