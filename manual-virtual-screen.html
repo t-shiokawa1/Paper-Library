@@ -1,0 +1,1055 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Paper Library — マニュアル画面プロトタイプ</title>
+  <style>
+    :root{
+      --desk:#dfe5ee; --browser-chrome-h:134px;
+      --bg:#f5f6f8; --panel:#fff; --border:#dcdfe4; --border2:#eceef1; --chip:#eceff3;
+      --text:#1f2328; --text2:#59636e; --text3:#8b949e;
+      --accent:#2563eb; --accent-soft:#eaf1fe; --accent-border:#bcd3f7;
+      --green:#1a7f37; --green-soft:#e6f4ea; --shadow:0 14px 40px rgba(29,39,55,.18);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif;color:var(--text);background:radial-gradient(circle at 50% 0,#f8fafc 0,var(--desk) 60%);overflow:hidden}
+    button,input{font:inherit;color:inherit}
+    button{cursor:pointer}
+
+    /* A small browser + macOS window frame. This is intentionally part of the mock. */
+    .browser-window{position:relative;width:min(1240px,calc(100vw - 42px));height:min(820px,calc(100vh - 42px));margin:21px auto 0;border:1px solid #c0c8d3;border-radius:13px;overflow:hidden;background:var(--panel);box-shadow:var(--shadow);transition:width .25s,height .25s,margin .25s,border-radius .25s}
+    .browser-window.expanded{width:100vw;height:100vh;margin:0;border-radius:0}
+    .browser-window.minimized{height:46px}
+    .browser-window.minimized .browser-content{display:none}
+    .browser-window.closed{display:none}
+    .browser-top{height:var(--browser-chrome-h);background:#303030;border-bottom:1px solid #202124;color:#e8eaed}
+    .macbar{height:46px;display:flex;align-items:center;padding:0 13px;gap:12px;background:#303030}
+    .traffic{display:flex;gap:8px;width:54px}
+    .traffic button{width:13px;height:13px;border:0;border-radius:50%;padding:0;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+    .traffic button.red{background:#ff5f57}.traffic button.yellow{background:#febc2e}.traffic button.green{background:#28c840}
+    .traffic button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+    .tab-menu{display:grid;place-items:center;width:22px;height:22px;flex:0 0 22px;color:#d9dce1}.tab-menu svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}.chrome-tabs{display:flex;align-items:center;gap:7px;min-width:0;flex:0 1 auto;height:100%;overflow:hidden}
+    .chrome-tab{height:34px;min-width:0;width:220px;padding:0 11px;display:flex;align-items:center;gap:7px;border:0;box-shadow:none;border-radius:10px;background:#383838;color:#fff;font-size:11px;font-weight:600;white-space:nowrap}.chrome-tab .paper-logo{width:19px;height:19px}.chrome-tab span:nth-child(2){overflow:hidden;text-overflow:ellipsis}.tab-favicon{display:inline-grid;place-items:center;flex:0 0 auto;width:19px;height:19px;border-radius:4px;background:#4c8bf5;color:#fff;font-size:11px;font-weight:800}.tab-close{margin-left:auto;color:#bbc0c8;font-size:14px;font-weight:400}
+    .new-tab{width:30px;height:30px;flex:0 0 auto;border:0;border-radius:50%;background:#1f1f1f;color:#e8eaed;font-size:21px;line-height:1}.new-tab:hover{background:#4a4a4a}
+    .browser-controls{height:56px;display:flex;align-items:center;gap:5px;padding:0 13px;background:#303030}
+    .browser-controls button{display:grid;place-items:center;width:31px;height:31px;border:0;border-radius:50%;background:transparent;color:#d9dce1;font-size:22px;line-height:1}.browser-controls button svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}.browser-controls #reload svg{width:18px;height:18px}
+    .browser-controls button:hover:not(:disabled){background:#4a4a4a;color:#fff}
+    .browser-controls button:disabled{opacity:.35;cursor:default}
+    .address{height:39px;display:flex;align-items:center;gap:8px;flex:1;min-width:0;margin:0 10px;padding:0 12px;border:0;border-radius:20px;background:#4a4a4a;color:#f1f3f4;font-size:12px}
+    .file-chip{display:inline-flex;align-items:center;gap:4px;flex:0 0 auto;padding:4px 8px;border-radius:13px;background:#3b3b3b;font-size:11px;font-weight:700;color:#f1f3f4}.site-mark{display:grid;place-items:center;flex:0 0 auto;width:20px;height:20px;color:#e5e8ec}.site-mark svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.address-path{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.address-star{margin-left:auto;color:#4285f4;font-size:20px;line-height:1}
+    .chrome-actions{display:flex;align-items:center;gap:4px;flex:0 0 auto}.connector-button,.extension-menu{display:grid;place-items:center;width:32px;height:32px;padding:0;border:0;border-radius:7px;background:transparent;color:#fff}.connector-button:hover,.extension-menu:hover{background:#4a4a4a}.connector-button .paper-logo{width:22px;height:22px}.connector-logo-img{width:22px;height:22px;display:block}.extension-menu svg{width:22px;height:22px;transform:scale(1);fill:none;stroke:currentColor;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}.actions-divider{width:1px;height:24px;margin:0 6px;background:#151515}.profile-button{display:grid;place-items:center;width:32px;height:32px;padding:0;border:0;border-radius:50%;background:#a9826d;color:#251d1a;overflow:hidden}.profile-button svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.more{font-size:20px;color:#ddd;padding:0 4px}.bookmarkbar{height:32px;display:flex;align-items:center;padding:0 17px;border-top:1px solid #3b3b3b;background:#303030;color:#e7eaee;font-size:11px}.bookmark-single{display:flex;align-items:center;gap:8px}.bookmark-single .paper-logo{width:20px;height:20px}
+
+    .browser-content{position:relative;height:calc(100% - var(--browser-chrome-h));background:var(--bg);display:flex;flex-direction:column;min-height:0}
+    .app-toolbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--panel);border-bottom:1px solid var(--border);flex:0 0 auto}
+    .appname{display:flex;align-items:center;gap:7px;margin-right:2px;font-size:15px;font-weight:800;white-space:nowrap;padding:3px 2px;background:transparent;border:0;color:var(--text)}
+    .paper-logo{display:block;flex:0 0 auto}.app-logo{width:25px;height:25px;filter:drop-shadow(0 2px 3px rgba(37,99,235,.2))}
+    .addbox,.searchbox{height:31px;display:flex;align-items:center;border:1px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text3);font-size:11px;padding:0 9px;gap:7px}.addbox{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1 1 auto;min-width:0}
+    .searchbox{width:min(260px,22vw);min-width:96px}
+    .addbox-group{display:flex;align-items:center;width:min(260px,22vw);min-width:96px}.addbox-group .addbox{border-radius:7px 0 0 7px;border-right:0}
+    .addbox-caret{width:22px;height:31px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:0 7px 7px 0;background:var(--bg);color:var(--text3);font-size:11px}.field-icon{width:15px;height:15px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.searchbox input{border:0;outline:0;background:transparent;min-width:0;width:100%;font-size:11px}.spacer{flex:1}.library-status{height:29px;display:flex;align-items:center;gap:6px;padding:0 9px;border:1px solid var(--border);border-radius:6px;background:var(--panel);color:var(--text2);font-size:10px;white-space:nowrap}.library-status .saved-dot{width:8px;height:8px;border-radius:50%;background:var(--green)}.library-status svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.appbtn{height:29px;padding:0 9px;border:1px solid var(--border);border-radius:6px;background:var(--panel);font-size:11px;white-space:nowrap}.appbtn:hover{background:var(--bg)}.appbtn.primary{color:#fff;background:var(--accent);border-color:var(--accent)}.appbtn.active{color:var(--accent);background:var(--accent-soft);border-color:var(--accent-border);font-weight:700}.button-icon,.bottom-icon{width:14px;height:14px;margin-right:3px;vertical-align:-2px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.bottom-icon{width:12px;height:12px;margin-right:2px;stroke-width:1.8}
+
+    .app-main{display:flex;flex:1;min-height:0}.sidebar{width:218px;flex:0 0 218px;padding:12px 9px;background:var(--panel);border-right:1px solid var(--border);overflow:hidden}.side-head{display:flex;justify-content:space-between;align-items:center;padding:6px 8px;color:var(--text2);font-size:11px;font-weight:700}.side-head button{border:0;background:transparent;color:var(--text3);padding:2px}.side-item{display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:7px;font-size:12px;color:var(--text2)}.side-item.active{color:var(--accent);background:var(--accent-soft);font-weight:700}.side-item .count{margin-left:auto;color:var(--text3);font-size:10px}.side-icon{width:16px;height:16px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.side-rule{height:1px;background:var(--border2);margin:12px 8px}.list-pane{flex:1;min-width:0;display:flex;flex-direction:column;background:#fff}.list-head{height:49px;display:flex;align-items:center;gap:7px;padding:0 15px;border-bottom:1px solid var(--border);background:var(--panel)}.list-title{font-size:15px;font-weight:700}.list-sub{font-size:11px;color:var(--text3)}.list-actions{margin-left:auto;display:flex;gap:5px}.table-wrap{flex:1;overflow:auto;padding:12px 14px 20px;background:#fff}.gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.gallery-card{overflow:hidden;border:1px solid var(--border2);border-radius:10px;background:var(--panel);cursor:pointer;transition:border-color .12s,background .12s}.gallery-card:hover{border-color:var(--border);background:var(--bg);box-shadow:none;transform:none}.gallery-card.selected{border-color:var(--accent-border);background:#f8fbff;box-shadow:none;transform:none}.gallery-figure{--toc-label:'TOC GRAPHICAL ABSTRACT';position:relative;height:118px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:linear-gradient(135deg,#fff,#f8fafc);background-size:300% 200%;background-repeat:no-repeat;border-bottom:1px solid var(--border2)}.gallery-figure::before{content:var(--toc-label);position:absolute;z-index:2;left:7px;top:6px;padding:2px 5px;border-radius:3px;background:rgba(255,255,255,.78);color:#64748b;font:700 6px/1.2 -apple-system,BlinkMacSystemFont,sans-serif;letter-spacing:.08em}.gallery-figure::after{content:'';position:absolute;z-index:1;right:-22px;bottom:-28px;width:85px;height:85px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.12),transparent 68%)}.gallery-figure svg{position:relative;z-index:1;width:100%;height:100%}.gallery-card:nth-child(2) .gallery-figure{--toc-label:'COF MATERIALS';background:linear-gradient(135deg,#f8fffb,#f4f8ff);background-size:300% 200%;background-repeat:no-repeat}.gallery-card:nth-child(3) .gallery-figure{--toc-label:'CATALYSIS';background:linear-gradient(135deg,#fff9f8,#f6fbff);background-size:300% 200%;background-repeat:no-repeat}.gallery-card:nth-child(4) .gallery-figure{--toc-label:'MOLECULAR SWITCH';background:linear-gradient(135deg,#fffdf5,#f8fbff);background-size:300% 200%;background-repeat:no-repeat}.gallery-card:nth-child(5) .gallery-figure{--toc-label:'POROUS NETWORK';background:linear-gradient(135deg,#fffaff,#f8fbff);background-size:300% 200%;background-repeat:no-repeat}.gallery-card:nth-child(6) .gallery-figure{--toc-label:'MOLECULAR ASSEMBLY';background:linear-gradient(135deg,#f8fbff,#fffdf7);background-size:300% 200%;background-repeat:no-repeat}.gallery-info{padding:7px 10px 8px}.gallery-title{font-size:12px;font-weight:750;line-height:1.28;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.gallery-authors{margin-top:4px;font-size:10px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.gallery-meta{display:flex;gap:5px;justify-content:space-between;margin-top:5px;color:var(--accent);font-size:10px;font-style:italic}.gallery-meta time{color:var(--text3);font-style:normal;font-weight:650}.chip{display:inline-block;padding:2px 6px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:10px}.list-status{height:44px;display:flex;align-items:center;gap:7px;padding:0 15px;border-top:1px solid var(--border);background:var(--panel);color:var(--text3);font-size:10px}.bottom-control{height:28px;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:var(--panel);color:var(--text2);font-size:10px;white-space:nowrap}.bottom-control:hover{background:var(--bg);color:var(--text)}.bottom-badge{display:inline-grid;place-items:center;min-width:16px;height:16px;margin-left:3px;border-radius:8px;background:var(--chip);font-size:9px;color:var(--text2);font-weight:700}.detail{width:272px;flex:0 0 272px;border-left:1px solid var(--border);background:var(--panel);padding:14px;overflow:auto}.detail h2{font-size:14px;line-height:1.45;margin:0 0 6px}.detail .muted{color:var(--text3);font-size:11px;line-height:1.45}.detail-empty{height:100%;display:flex;align-items:flex-start;justify-content:center;padding-top:48px;color:var(--text3);font-size:13px}.detail-section{border-top:1px solid var(--border2);margin-top:14px;padding-top:12px}.detail-section h3{font-size:11px;margin:0 0 7px;color:var(--text2)}.detail-section p{font-size:11px;line-height:1.55;margin:0;color:var(--text2)}
+    /* Detail read view — mirrors the app (app/main.js renderDetail): icon action bar, title, hero figure, author chips, cite preview, 要旨, 整理 */
+    .detail-actions{display:flex;flex-wrap:nowrap;gap:3px;margin:2px 0 12px}
+    .detail-actions .tbtn{display:inline-flex;align-items:center;justify-content:center;flex:1 1 0;min-width:0;height:26px;padding:0;border:1px solid var(--border);border-radius:6px;background:var(--panel);color:var(--text2)}
+    .detail-actions .tbtn:hover{background:var(--bg)}
+    .detail-actions .tbtn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+    .detail-title{font-size:15px;font-weight:700;line-height:1.34;margin:0 0 14px;overflow-wrap:anywhere;color:var(--text)}
+    .detail-block{margin-top:14px}
+    .detail-block:first-of-type{margin-top:0}
+    /* Same square-inner-element technique as .fig-photo (see comment above
+       .gallery-figure): .ref-fig is a wide letterbox box, .ref-photo is the
+       square (height:100%, aspect-ratio:1/1) element that actually carries
+       the undistorted sprite tile, centered with blank margin on the sides. */
+    .ref-fig{width:100%;height:200px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border2);border-radius:9px;background:var(--bg);overflow:hidden}
+    .ref-photo{height:100%;aspect-ratio:1/1;background-repeat:no-repeat;background-size:300% 200%;border-radius:6px}
+    .ref-label{display:flex;align-items:center;gap:5px;margin:0 0 8px;color:var(--text3);font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+    .ref-count{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:17px;padding:0 5px;border-radius:999px;background:var(--chip);color:var(--text3);font-size:9px;letter-spacing:0}
+    .ref-authors{display:flex;flex-wrap:wrap;gap:6px}
+    .ref-author{display:inline-flex;align-items:center;gap:4px;max-width:100%;padding:3px 9px;border-radius:999px;font-size:12.5px;line-height:1.3;background:var(--chip);color:var(--text)}
+    .ref-author.linked{color:var(--accent)}
+    .ref-author-corr{font-weight:700;line-height:1;margin-left:-2px}
+    .ref-prose{font-size:13px;line-height:1.6;color:var(--text);overflow-wrap:anywhere}
+    .ref-chips{display:flex;flex-wrap:wrap;gap:6px}
+    .ref-chips+.ref-chips{margin-top:8px}
+    .ref-chip{display:inline-flex;align-items:center;gap:5px;max-width:100%;padding:2px 8px;border-radius:999px;font-size:12px;background:var(--chip);color:var(--text)}
+    .ref-chip svg{width:12px;height:12px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+    .ref-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .cite-preview{margin-top:14px;padding:8px 10px;background:var(--bg);border:1px solid var(--border2);border-radius:7px}
+    .cite-head{display:flex;align-items:center;justify-content:space-between;font-size:10.5px;font-weight:700;color:var(--text3);letter-spacing:.04em;margin-bottom:6px}
+    .cite-actions{display:inline-flex;align-items:center;gap:6px;letter-spacing:0}
+    .cite-actions button{display:inline-flex;align-items:center;gap:5px;color:var(--text);font-size:12.5px;font-weight:400;min-height:28px;padding:0 9px;background:var(--panel);border:1px solid var(--border);border-radius:6px}
+    .cite-actions button svg{width:14px;height:14px;fill:none;stroke:var(--text2);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+    .cite-text{font-size:12px;line-height:1.55;color:var(--text);word-break:break-word}
+
+    /* Compact Chrome: make the three Chrome rows 32px each. */
+    :root{--browser-chrome-h:96px}
+    .macbar{height:32px}
+    .chrome-tabs,.chrome-tab{height:32px}
+    .browser-controls{height:32px}
+    .browser-controls button{width:26px;height:26px}
+    .address{height:32px}
+    .connector-button,.extension-menu,.profile-button{width:28px;height:28px}
+
+    /* Reference-matched details for the browser and gallery. */
+    .bookmarkbar{gap:10px}
+    .bookmark-apps{display:grid;grid-template-columns:repeat(2,6px);grid-template-rows:repeat(2,6px);gap:3px;width:15px;height:15px;flex:0 0 auto}
+    .bookmark-apps i{display:block;width:6px;height:6px;border:1px solid #d4d9e1;border-radius:1px}
+    .bookmark-divider{width:1px;height:24px;background:#63666b;opacity:.9}
+    .update-control{height:26px;padding:0 7px;font-size:9.5px}
+    .side-head{padding-top:7px;padding-bottom:7px;font-weight:400}
+    .side-title,.side-tools{display:inline-flex;align-items:center;gap:6px}
+    .side-title{color:var(--text);font-weight:400}
+    .side-tools{gap:8px;color:var(--text3);font-size:14px;font-weight:500}
+    .side-tools .side-icon{width:15px;height:15px}
+    .side-head .side-icon{width:16px;height:16px}
+    /* .gallery-figure is a 16:10 landscape box (not square), but each sprite
+       tile in manual-demo-cover-sheet.png is a 512x512 SQUARE. Sizing the
+       photo to the box directly (background-size:%,% on a non-square box)
+       stretches it. Instead .fig-photo is a square inner element (height:100%,
+       aspect-ratio:1/1) centered in the box — the sprite scales uniformly on
+       it with no distortion, and the box's extra width shows as blank margin. */
+    .gallery-figure{height:auto;aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .gallery-figure::before,.gallery-figure::after,.gallery-figure svg{display:none}
+    .fig-photo{height:100%;aspect-ratio:1/1;background-image:url('assets/manual-demo-cover-sheet.png');background-repeat:no-repeat;background-size:300% 200%}
+    .gallery-card:nth-child(1) .fig-photo{background-position:0 0}
+    .gallery-card:nth-child(2) .fig-photo{background-position:50% 0}
+    .gallery-card:nth-child(3) .fig-photo{background-position:100% 0}
+    .gallery-card:nth-child(4) .fig-photo{background-position:0 100%}
+    .gallery-card:nth-child(5) .fig-photo{background-position:50% 100%}
+    .gallery-card:nth-child(6) .fig-photo{background-position:100% 100%}
+    /* The two trash-only cards sit last (nth-child 7-8); give them their own
+       tiles so they never fall back to 0 0 and duplicate another card. */
+    .gallery-card:nth-child(7) .fig-photo{background-position:0 0}
+    .gallery-card:nth-child(8) .fig-photo{background-position:50% 0}
+    .gallery-card:nth-child(7) .gallery-figure{--toc-label:'TADF POLYMER';background:linear-gradient(135deg,#f7fbff,#fff9f8);background-size:300% 200%;background-repeat:no-repeat}
+    .gallery-card:nth-child(8) .gallery-figure{--toc-label:'PENTALENE';background:linear-gradient(135deg,#fffdf7,#f6fbff);background-size:300% 200%;background-repeat:no-repeat}
+
+    /* "はじめに" walkthrough — home screen, OS folder picker, and browser
+       permission popup, staged via [data-stage] on .browser-content (#app).
+       Default (no data-stage) is the normal loaded app view, unchanged.
+       The picker/permission stages sit ON TOP OF the home screen (a folder
+       picker and a permission prompt are OS/browser chrome shown over
+       whatever page was open — here, still the home screen, no library
+       loaded yet), never over the populated test-data view. */
+    .home-view{display:none;position:absolute;inset:0;z-index:4;align-items:center;justify-content:center;background:#fff}
+    [data-stage="home"] .home-view,[data-stage="home-resume"] .home-view,
+    [data-stage="picker"] .home-view,[data-stage="picker-select"] .home-view,
+    [data-stage="permission"] .home-view{display:flex}
+    [data-stage="home"] .app-toolbar,[data-stage="home"] .app-main,
+    [data-stage="home-resume"] .app-toolbar,[data-stage="home-resume"] .app-main,
+    [data-stage="picker"] .app-toolbar,[data-stage="picker"] .app-main,
+    [data-stage="picker-select"] .app-toolbar,[data-stage="picker-select"] .app-main,
+    [data-stage="permission"] .app-toolbar,[data-stage="permission"] .app-main{visibility:hidden}
+    .home-card{width:min(420px,86%);padding:34px 30px;border:1px solid var(--border2);border-radius:16px;background:#fff;box-shadow:0 18px 44px rgba(20,35,60,.12);text-align:center}
+    .home-card-logo{display:flex;align-items:center;justify-content:center;gap:10px;font-size:21px;font-weight:700;color:var(--text)}
+    .home-card-logo svg{width:32px;height:32px}
+    .home-card-sub{margin:6px 0 22px;color:var(--text3);font-size:13px}
+    .home-open-btn,.home-resume-btn{display:flex;align-items:center;gap:12px;width:100%;padding:13px 15px;margin-top:10px;border:1px solid var(--border);border-radius:11px;background:var(--panel);text-align:left;font:inherit}
+    .home-open-btn[hidden],.home-resume-btn[hidden]{display:none}
+    .home-open-icon{display:grid;place-items:center;flex:0 0 auto;width:30px;height:30px;color:var(--accent)}
+    .home-open-icon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+    .home-open-text strong{display:block;font-size:13.5px;color:var(--text);font-weight:650}
+    .home-open-text small{display:block;margin-top:3px;font-size:11px;line-height:1.5;color:var(--text3)}
+
+    /* macOS-style Open panel. Icon set mirrors Finder: blue folder glyphs,
+       a monitor for Desktop, a house for the home directory, a cloud for
+       iCloud, a computer glyph for Locations — matching the reference
+       screenshot rather than generic emoji. */
+    .folder-picker-overlay{display:none;position:absolute;inset:0;z-index:6;align-items:center;justify-content:center;background:rgba(15,20,30,.42)}
+    [data-stage="picker"] .folder-picker-overlay,[data-stage="picker-select"] .folder-picker-overlay{display:flex}
+    .picker-dialog{width:min(600px,88%);border-radius:10px;overflow:hidden;background:#2c2c31;color:#e7e9ee;font-size:12px;box-shadow:0 24px 60px rgba(0,0,0,.45);border:1px solid #3d3d44}
+    .picker-titlebar{padding:13px 16px;text-align:center;font-size:12.5px;font-weight:600;background:#323238;border-bottom:1px solid #3d3d44}
+    .picker-toolbar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid #3d3d44;background:#2c2c31}
+    .picker-nav{display:flex;gap:2px}
+    .picker-nav button{width:22px;height:22px;display:grid;place-items:center;border:0;border-radius:5px;background:transparent;color:#77797f}
+    .picker-nav button svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .picker-view-toggle{display:flex;gap:1px;padding:2px;border-radius:6px;background:#232327}
+    .picker-view-toggle span{display:grid;place-items:center;width:22px;height:20px;border-radius:4px;color:#9a9ca3}
+    .picker-view-toggle span.active{background:#45454e;color:#e7e9ee}
+    .picker-view-toggle svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .picker-breadcrumb{display:flex;align-items:center;gap:5px;height:23px;padding:0 9px;border-radius:6px;background:#232327;color:#e7e9ee;font-size:11.5px}
+    .picker-breadcrumb svg{width:13px;height:13px;flex:0 0 auto;fill:none;stroke:#7fa6ff;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+    .picker-breadcrumb .chev{width:9px;height:9px;stroke:#77797f;margin-left:2px}
+    .picker-toolbar .spacer{flex:1}
+    .picker-search{display:flex;align-items:center;gap:5px;height:23px;padding:0 9px;border-radius:6px;background:#232327;color:#77797f;font-size:11px;width:110px}
+    .picker-search svg{width:12px;height:12px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .picker-body{display:flex;height:210px}
+    .picker-sidebar{flex:0 0 132px;padding:9px 7px;border-right:1px solid #3d3d44;font-size:11.5px;overflow:hidden}
+    .picker-sidebar-label{padding:5px 7px 4px;color:#75777d;font-size:10px;font-weight:700;letter-spacing:.04em}
+    .picker-sidebar-item{display:flex;align-items:center;gap:7px;padding:4px 7px;border-radius:5px;color:#c7c9d1}
+    .picker-sidebar-item svg{width:14px;height:14px;flex:0 0 auto}
+    .picker-sidebar-item.active{background:#3a5fd9;color:#fff}
+    .picker-main{flex:1;padding:9px;overflow:hidden;display:flex;flex-direction:column;gap:1px}
+    .picker-item{padding:5px 8px;border-radius:5px;color:#c7c9d1;display:flex;align-items:center;gap:7px}
+    .picker-item svg{width:15px;height:15px;flex:0 0 auto}
+    #pickerFolderItem{display:none;transition:background .15s,color .15s}
+    [data-stage="picker-select"] #pickerFolderItem{display:flex;background:#3a5fd9;color:#fff;font-weight:600}
+    .picker-footer{display:flex;align-items:center;gap:8px;padding:10px 14px;border-top:1px solid #3d3d44;background:#2c2c31}
+    .picker-footer .spacer{flex:1}
+    .picker-footer button{height:26px;padding:0 13px;border:0;border-radius:6px;font-size:11.5px;font:inherit;background:#45454e;color:#e7e9ee}
+    #pickerSelectBtn{background:#3a5fd9;color:#fff;font-weight:600}
+
+    /* Browser permission prompt — anchored near the top like Chrome's own
+       page-permission dropdown, not centered like a modal dialog. */
+    .perm-popup-overlay{display:none;position:absolute;inset:0;z-index:6;align-items:flex-start;justify-content:center;padding-top:54px;background:rgba(15,20,30,.32)}
+    [data-stage="permission"] .perm-popup-overlay{display:flex}
+    .perm-popup{width:min(430px,86%);padding:20px 22px;border-radius:12px;background:#1c1c22;color:#f1f2f5;box-shadow:0 16px 40px rgba(0,0,0,.4)}
+    .perm-popup-title{margin:0 0 8px;font-size:15px;font-weight:700}
+    .perm-popup-sub{margin:0 0 18px;font-size:12.5px;line-height:1.6;color:#c3c5cc}
+    .perm-popup-sub strong{color:#fff}
+    .perm-popup-actions{display:flex;justify-content:flex-end;gap:10px}
+    .perm-popup-actions button{height:32px;padding:0 15px;border:0;border-radius:8px;font-size:12.5px;font-weight:600;font:inherit;background:#2f2f38;color:#e7e9ee}
+    #permAllowBtn{background:#5b8dfb;color:#fff}
+
+    .empty-gallery-msg{display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;height:100%;color:var(--text3);font-size:13px}
+    .empty-gallery-msg svg{width:38px;height:38px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;opacity:.55}
+    [data-stage="empty"] .table-wrap{display:none}
+    [data-stage="empty"] .empty-gallery-msg{display:flex}
+    [data-stage="empty"] .side-item .count{visibility:hidden}
+    [data-stage="empty"] [data-lib-item]{display:none}
+
+    /* Trash stage: sidebar shows "ゴミ箱" selected, the gallery swaps to a
+       couple of trashed-looking cards, and a restore/delete-forever banner
+       (matching the real app's wording) sits above the list. */
+    .trash-banner{display:none;align-items:center;gap:8px;padding:9px 14px;margin:0 0 10px;border:1px solid color-mix(in srgb, #e5484d 35%, var(--border));border-radius:8px;background:color-mix(in srgb, #e5484d 10%, var(--panel));color:#e5484d;font-size:11px}
+    .trash-banner-icon{width:16px;height:16px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .trash-banner-note{color:var(--text2)}
+    .trash-banner-btn{height:26px;padding:0 10px;border:1px solid var(--border);border-radius:6px;background:var(--panel);color:var(--text2);font-size:11px;white-space:nowrap}
+    .trash-banner-btn.danger{background:#e5484d;border-color:#e5484d;color:#fff}
+    [data-stage="trash"] .trash-banner{display:flex}
+    .gallery-card.trash-only{display:none}
+    [data-stage="trash"] .gallery-card:not(.trash-only){display:none}
+    [data-stage="trash"] .gallery-card.trash-only{display:block}
+
+    /* The guide shown inside the prototype. */
+    .guide-layer{position:absolute;inset:var(--browser-chrome-h) 0 0;z-index:8;pointer-events:none}
+    .guide-backdrop,.guide-card{display:none!important}
+    /* The outer manual owns the explanation.  The virtual screen keeps only a
+       quiet spotlight: the target stays untouched while its surroundings dim.
+       No blue outline is used. */
+    .spotlight{display:none;position:absolute;z-index:1;border-radius:9px;background:rgba(255,255,255,.018);box-shadow:0 0 0 9999px rgba(30,41,59,.25),0 9px 24px rgba(15,23,42,.13);transition:left .18s ease,top .18s ease,width .18s ease,height .18s ease}
+    .guide-layer.active .spotlight{display:block}.spotlight[hidden]{display:none!important}
+    .guide-card{position:absolute;left:18px;top:18px;right:auto;width:min(338px,calc(100% - 36px));padding:15px 16px 16px;border:1px solid #bfd1f2;border-top:3px solid var(--accent);border-radius:12px;background:rgba(255,255,255,.98);box-shadow:0 14px 34px rgba(15,38,75,.20);pointer-events:auto}.guide-layer:not(.active) .guide-card{display:none}.guide-card:before{display:none}.guide-kicker{font-size:10px;color:var(--accent);font-weight:800;letter-spacing:.04em}.guide-card h2{font-size:16px;margin:5px 0 8px}.guide-card p{font-size:12px;line-height:1.65;color:var(--text2);margin:0 0 13px}.guide-progress{display:flex;gap:4px;margin:0 0 14px}.guide-progress i{height:4px;flex:1;border-radius:99px;background:#e4eaf3}.guide-progress i.on{background:var(--accent)}.guide-actions{display:flex;align-items:center;gap:6px}.guide-actions .step-count{margin-right:auto;color:var(--text3);font-size:10px}.guide-actions button{height:29px;padding:0 10px;border:1px solid var(--border);border-radius:6px;background:#fff;font-size:11px}.guide-actions button.primary{background:var(--accent);border-color:var(--accent);color:#fff}.guide-close{position:absolute;right:8px;top:8px;width:24px;height:24px;padding:0;border:0;background:transparent;color:var(--text3);font-size:18px}.guide-close:hover{color:var(--text)}
+    .scenario-panel{display:none;position:absolute;z-index:6;top:45px;left:248px;width:290px;padding:11px;border:1px solid #b9c8dd;border-radius:9px;background:rgba(255,255,255,.98);box-shadow:0 12px 28px rgba(20,35,60,.24);font-size:11px;color:var(--text2)}.scenario-panel.show{display:block}.scenario-panel strong{display:block;margin-bottom:7px;color:var(--text);font-size:12px}.scenario-panel div{padding:5px 7px;margin-top:4px;border-radius:5px;background:var(--bg);border:1px solid var(--border2)}.scenario-panel div:last-child{margin-top:8px;background:var(--accent);border-color:var(--accent);color:#fff;text-align:center}
+    /* "plain" panels mimic a real dropdown menu (one item per row, no fake
+       primary-action highlight on the last row, no extra title bar the real
+       menu doesn't have) instead of the callout style above, which is meant
+       for a single confirm/submit action. */
+    .scenario-panel.plain strong{display:none}
+    .scenario-panel.plain div:last-child{margin-top:0;background:transparent;border:0;color:var(--text2);text-align:left}
+    .scenario-panel .panel-row{display:flex;align-items:center;gap:7px}
+    .scenario-panel.plain .panel-row{padding:6px 7px;margin-top:0;border-radius:6px;background:transparent;border:0}
+    .scenario-panel .panel-row svg{width:13px;height:13px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;color:var(--text2)}
+    .scenario-panel .panel-header{margin-top:9px;padding:2px 7px 1px;background:transparent;border:0;font-size:9.5px;font-weight:700;color:var(--text3);letter-spacing:.04em}
+    .scenario-panel .panel-header:first-child{margin-top:0}
+    .scenario-panel .panel-divider{height:1px;padding:0;margin:6px 2px;background:var(--border2);border:0}
+    /* "fields" panels mimic the real app's small bordered text inputs (see
+       .fRow/.fGrid in app/main.css) — a stack of placeholder-labelled boxes,
+       optionally two per row, used for dialogs built around a form rather
+       than a menu or a single confirm action. */
+    .scenario-panel .field-hint{font-size:10.5px;line-height:1.55;color:var(--text2);margin:0 0 8px}
+    .scenario-panel .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:0}
+    .scenario-panel .field-box{padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text3);font-size:10.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .scenario-panel .field-box.full{grid-column:1/-1;margin-bottom:6px}
+    .scenario-panel .field-submit{margin-top:8px;padding:6px 7px;border-radius:6px;background:var(--accent);border-color:var(--accent);color:#fff;text-align:center;font-weight:700}
+    /* Real dialogs (search-by-reference-info, duplicate check) are centred
+       modals with a dimmed backdrop — not a small anchored callout. This
+       mirrors that: same overlay treatment as .perm-popup-overlay. */
+    .scenario-modal-overlay{display:none;position:absolute;inset:0;z-index:7;align-items:center;justify-content:center;background:rgba(15,20,30,.32)}
+    .scenario-modal-overlay.show{display:flex}
+    .scenario-modal{width:min(400px,88%);max-height:80%;overflow:auto;border-radius:12px;background:#fff;box-shadow:0 20px 50px rgba(15,23,42,.32);font-size:11.5px;color:var(--text2)}
+    .scenario-modal-head{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;border-bottom:1px solid var(--border2);font-size:13px;font-weight:700;color:var(--text)}
+    .scenario-modal-head button{border:0;background:transparent;color:var(--text3);font-size:16px;line-height:1;padding:2px}
+    .scenario-modal-body{padding:13px 15px}
+    .scenario-modal-hint{font-size:10.5px;line-height:1.6;color:var(--text2);margin:0 0 10px}
+    .scenario-modal .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:0}
+    .scenario-modal .field-box{padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text3);font-size:10.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .scenario-modal .field-box.full{grid-column:1/-1;margin-bottom:6px}
+    .scenario-modal-foot{display:flex;justify-content:flex-end;gap:8px;padding:11px 15px;border-top:1px solid var(--border2)}
+    .scenario-modal-foot button{height:27px;padding:0 12px;border:1px solid var(--border);border-radius:6px;background:#fff;font-size:10.5px;color:var(--text2)}
+    .scenario-modal-foot button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+    .scenario-candidate{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 9px;margin-top:9px;border:1px solid var(--border2);border-radius:8px;background:var(--bg)}
+    .scenario-candidate .cand-title{font-size:11.5px;font-weight:700;color:var(--text)}
+    .scenario-candidate .cand-meta{font-size:10px;color:var(--text3);margin-top:2px}
+    .scenario-candidate .cand-add{flex:0 0 auto;color:var(--accent);font-size:10.5px;font-weight:700;white-space:nowrap}
+    .scenario-dup-banner{padding:6px 9px;margin-bottom:10px;border-radius:6px;background:#fef3e2;color:#9a5b00;font-size:10px;font-weight:700}
+    .scenario-dup-cards{display:flex;gap:8px;margin-bottom:2px}
+    .scenario-dup-card{flex:1;min-width:0;padding:8px;border:1px solid var(--border2);border-radius:8px;background:var(--bg)}
+    .scenario-dup-card .dup-label{font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-bottom:4px}
+    .scenario-dup-card .dup-title{font-size:10.5px;font-weight:700;color:var(--text);line-height:1.4}
+    .scenario-dup-card .dup-meta{font-size:9.5px;color:var(--text3);margin-top:3px}
+
+    .closed-card{display:none;position:fixed;inset:0;align-items:center;justify-content:center;z-index:30;background:rgba(223,229,238,.76);backdrop-filter:blur(5px)}.closed-card.show{display:flex}.closed-card div{padding:22px 26px;border:1px solid #c4ccd8;border-radius:12px;background:#fff;box-shadow:var(--shadow);text-align:center}.closed-card p{margin:0 0 13px;color:var(--text2);font-size:12px}.closed-card button{height:30px;padding:0 14px;border:1px solid var(--accent);border-radius:7px;background:var(--accent);color:#fff;font-size:12px}
+    @media(max-width:900px){.detail{display:none}.sidebar{width:190px;flex-basis:190px}.addbox{width:155px}.app-toolbar{gap:5px}.appbtn{padding:0 6px}.guide-card{top:12px;right:12px}}
+    @media(max-width:650px){body{overflow:auto}.browser-window{width:100vw;height:100vh;margin:0;border-radius:0}.macbar{height:42px}.chrome-tab{width:180px}.browser-controls{height:60px;padding:0 8px}.address{margin:0 3px;font-size:10px}.chrome-actions{gap:3px}.sidebar{width:170px;flex-basis:170px}.addbox{display:none}.searchbox{width:150px}.appbtn span{display:none}.guide-card{left:12px;right:12px;width:auto;top:12px}}
+  </style>
+</head>
+<body>
+
+  <section class="browser-window" id="window" aria-label="ブラウザ風の確認用ウィンドウ">
+    <header class="browser-top">
+      <div class="macbar">
+        <div class="traffic" aria-label="ウィンドウ操作">
+          <button class="red" id="closeWindow" aria-label="閉じる" title="閉じる"></button>
+          <button class="yellow" id="minimizeWindow" aria-label="最小化" title="最小化"></button>
+          <button class="green" id="expandWindow" aria-label="拡大／元に戻す" title="拡大／元に戻す"></button>
+        </div>
+        <span class="tab-menu" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m6 9 6 7 6-7"/></svg></span>
+        <div class="chrome-tabs" aria-label="ブラウザタブ">
+          <div class="chrome-tab"><svg class="paper-logo chrome-paper-logo" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 8.6C13.1 6.1 8.6 5.8 4.7 7v16.4c3.9-1.2 8.4-.9 11.3 1.6z" fill="#1e40af"/><path d="M16 8.6C18.9 6.1 23.4 5.8 27.3 7v16.4c-3.9-1.2-8.4-.9-11.3 1.6z" fill="#3b82f6"/><path d="M16 8.6v16.6" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><rect x="3" y="24.5" width="26" height="3" rx="1.5" fill="#93b4f0"/></svg><span>Paper Library</span><span class="tab-close">×</span></div>
+        </div>
+        <button class="new-tab" aria-label="新しいタブ">＋</button>
+      </div>
+      <div class="browser-controls">
+        <button id="browserBack" aria-label="戻る" title="戻る"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+        <button id="browserForward" aria-label="進む" title="進む"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <button id="reload" aria-label="再読み込み" title="再読み込み"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 10.5a7 7 0 1 0 1.6 4.5M18 5v5.5h-5.5"/></svg></button>
+        <div class="address"><span class="site-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h12M20 18h0"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></span><span class="address-path" id="addressText">t-shiokawa1.github.io/Paper-Library/</span><span class="address-star" aria-label="ブックマーク済み">★</span></div>
+        <div class="chrome-actions" aria-label="拡張機能とブラウザメニュー"><button class="connector-button" aria-label="このアプリの拡張機能: Paper Library Connector" title="Paper Library Connector"><img class="connector-logo-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAADKElEQVR42u3dP2sTYRzA8b6DvAMzOfcFOKSbY1a3Gx2zuxQEcRDNIAhFJG9AqNAOHYSITuJwDgVxym6HFNQqIjzeEx61JE2T6vV6l3y+8KMlpH+S3yd3bZbb2JAkSZIkSZIkSZIkSZIkSZIkSSq5a1u77WI6xWwX0y9mWMw4fezU7fe9cfekU8ywmHH62C9mO93ettH5i94sppsWvZsWHJaYeL92DRa/mRYelph4v90Eoxu/dp0WHV/NWVp0XN5oyUUvmsFVQIiv6mIGSy5+0YwSjggji0eNph+2e1OH7VDBVAKh5MUvmtOnk16tTydp8aEGEyG0Gr74RdMB4PwZp1NNq4TFt9KheVyT5QNQBYSaLh6AMiGEENpxGrR4AP5z4n8eWVr+MPxtmJaf1XzxAJQx93cOx2GqJy9/NGHxAJQxjwYfpvcfnr36EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYA0B5Oky9P10+ddBjQEM0mVn++my7zkAy13O9fSCu+l7tc75WZvpa+oCIC57c97vm65H3CmmOwVktA4Afi94kBacpfu2S/qZwysEMCxjGcX3aCcgWQIyWACklgDaZS/4siCUAGBY5RLOANLe0FwIo0sEkNfy1acZCNl5EP4BQDwUZ57ZFYFwAQAWv0IQxhcAYPHL9Hj/uFdMXkyo+zx4fhRu3cnD9Zt7cwFs3fsabj/9HB6+qP/jSROf+95VLL7VlMWfBWHvzdEMgIP335u0+LMgtKoEkDf0iZrM24/fZgDE25r8mOJOqjzsN/rJen14MgMg3tb0x1XJ6aDpr/44OwfH4dPxzz/Lj5/H21YAQF4FgFV4oiYL33/3ZTIrsvzJALDm4xSw3pP7I3C9p+ffQK9+bwSt4/IrfSOoiW8Fr/Diq38rWJIkSZIkSZIkSZIkSVJN+wWzouI99lKbwgAAAABJRU5ErkJggg==" alt="" aria-hidden="true"></button><button class="extension-menu" aria-label="拡張機能の設定" title="拡張機能の設定"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 5.2h5.2v2.4a2.3 2.3 0 1 0 4.6 0V5.2h2.7c.9 0 1.6.7 1.6 1.6v3.1h-2.3a2.3 2.3 0 1 0 0 4.6h2.3v3.1c0 .9-.7 1.6-1.6 1.6H6.8c-.9 0-1.6-.7-1.6-1.6V14.5h2.4a2.3 2.3 0 1 0 0-4.6H5.2V6.8c0-.9.1-1.6.3-1.6z"/></svg></button><span class="actions-divider" aria-hidden="true"></span><button class="profile-button" aria-label="ログインしているアカウント" title="ログインしているアカウント"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.3"/><path d="M5.5 20c.7-3.5 3-5.4 6.5-5.4s5.8 1.9 6.5 5.4"/></svg></button><span class="more">⋮</span></div>
+      </div>
+      <nav class="bookmarkbar" aria-label="ブックマークバー"><span class="bookmark-apps" aria-label="アプリ"><i></i><i></i><i></i><i></i></span><span class="bookmark-divider" aria-hidden="true"></span><span class="bookmark-single"><svg class="paper-logo chrome-paper-logo" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 8.6C13.1 6.1 8.6 5.8 4.7 7v16.4c3.9-1.2 8.4-.9 11.3 1.6z" fill="#1e40af"/><path d="M16 8.6C18.9 6.1 23.4 5.8 27.3 7v16.4c-3.9-1.2-8.4-.9-11.3 1.6z" fill="#3b82f6"/><path d="M16 8.6v16.6" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><rect x="3" y="24.5" width="26" height="3" rx="1.5" fill="#93b4f0"/></svg>Paper Library</span></nav>
+    </header>
+
+    <main class="browser-content" id="app">
+      <div class="app-toolbar">
+        <div class="appname"><svg class="paper-logo app-logo" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 8.6C13.1 6.1 8.6 5.8 4.7 7v16.4c3.9-1.2 8.4-.9 11.3 1.6z" fill="#1e40af"/><path d="M16 8.6C18.9 6.1 23.4 5.8 27.3 7v16.4c-3.9-1.2-8.4-.9-11.3 1.6z" fill="#3b82f6"/><path d="M16 8.6v16.6" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><rect x="3" y="24.5" width="26" height="3" rx="1.5" fill="#93b4f0"/></svg><span>Paper Library</span></div>
+        <div class="addbox-group"><div class="addbox" id="addBoxDemo">＋　URL を入力して Enter</div><button class="addbox-caret" id="addMenuCaret" aria-label="menu" type="button">⌄</button></div>
+        <label class="searchbox"><svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.5"/><path d="m15 15 4.5 4.5"/></svg><input id="searchInput" data-i18n-ph="searchPh" placeholder="検索ワードを入力" aria-label="検索"></label>
+        <span class="spacer"></span>
+        <div class="library-status" aria-label="保存先"><span class="saved-dot" aria-hidden="true"></span><span data-i18n="savedStatus">保存済み</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A1.5 1.5 0 0 1 2.5 18V6A1.5 1.5 0 0 1 4 4.5h4.3a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h6.6A1.5 1.5 0 0 1 21 8.5V18a1.5 1.5 0 0 1-1.5 1.5z"/></svg><span>Paper-Library</span></div>
+        <button class="appbtn" id="exportButton"><svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7.5 7.5 12 3l4.5 4.5M5 15.5v4h14v-4"/></svg><span data-i18n="exportBtn">エクスポート</span></button>
+        <button class="appbtn active" id="manualButton"><svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5c3.1-1.1 6.1-.8 8 1.1 1.9-1.9 4.9-2.2 8-1.1v13c-3.1-1.1-6.1-.8-8 1.1-1.9-1.9-4.9-2.2-8-1.1z"/><path d="M12 6.6v13"/></svg><span data-i18n="manualBtn">マニュアル</span></button>
+        <button class="appbtn" id="themeButton"><svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.4A8 8 0 0 1 8.6 4 8 8 0 1 0 20 15.4z"/></svg><span data-i18n="themeBtn">ダーク</span></button>
+        <button class="appbtn" data-i18n="langBtn">EN</button>
+      </div>
+      <div class="scenario-panel" id="scenarioPanel" aria-live="polite"></div>
+      <div class="scenario-modal-overlay" id="scenarioModal" aria-live="polite"><div class="scenario-modal" id="scenarioModalBox"></div></div>
+
+      <div class="home-view" id="homeView">
+        <div class="home-card">
+          <div class="home-card-logo"><svg class="paper-logo" viewBox="0 0 32 32" aria-hidden="true"></svg><span>Paper Library</span></div>
+          <p class="home-card-sub" data-i18n="homeSub">文献管理ツール</p>
+          <button class="home-open-btn" id="homeOpenBtn" type="button">
+            <span class="home-open-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5 6.4 12a1.5 1.5 0 0 1 1.45-1.1H21a1 1 0 0 1 .96 1.26l-1.6 6a1.5 1.5 0 0 1-1.45 1.1z"/><path d="M4.5 19.5A1.5 1.5 0 0 1 3 18V6a1.5 1.5 0 0 1 1.5-1.5h3.8a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h5.6A1.5 1.5 0 0 1 19.8 9v1.9"/></svg></span>
+            <span class="home-open-text"><strong data-i18n="homeOpenTitle">ライブラリフォルダを開く / 作成</strong><small data-i18n="homeOpenSub">フォルダを選択します。library.json があれば読み込み、なければ新規作成します。</small></span>
+          </button>
+          <button class="home-resume-btn" id="homeResumeBtn" type="button" hidden>
+            <span class="home-open-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11.5a8.5 8.5 0 1 0 3-6.5"/><path d="M3.5 4.5v4h4"/><path d="M12 8v4.5l3 1.8"/></svg></span>
+            <span class="home-open-text"><strong data-i18n="homeResumeTitle">前回のライブラリを開く</strong><small>Paper-Library フォルダ</small></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="folder-picker-overlay" id="folderPickerOverlay">
+        <div class="picker-dialog">
+          <div class="picker-titlebar">Select where this site can save changes</div>
+          <div class="picker-toolbar">
+            <div class="picker-nav">
+              <button type="button" aria-label="戻る"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+              <button type="button" aria-label="進む"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+            </div>
+            <div class="picker-view-toggle" aria-hidden="true">
+              <span><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="3"/><rect x="4" y="10.5" width="16" height="3"/><rect x="4" y="16" width="16" height="3"/></svg></span>
+              <span class="active"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/></svg></span>
+            </div>
+            <div class="picker-breadcrumb"><svg viewBox="0 0 24 24" aria-hidden="true" fill="#7fa6ff"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.7l1.6 1.8H19.5A1.5 1.5 0 0 1 21 8.3v9.2A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z"/></svg>Documents<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9.5 12 15l6-5.5"/></svg></div>
+            <span class="spacer"></span>
+            <label class="picker-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l4.5 4.5"/></svg>Search</label>
+          </div>
+          <div class="picker-body">
+            <div class="picker-sidebar">
+              <div class="picker-sidebar-label">Favorites</div>
+              <div class="picker-sidebar-item"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#9a9ca3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="11" rx="1.5"/><path d="M9 20h6M12 16v4"/></svg>Desktop</div>
+              <div class="picker-sidebar-item active"><svg viewBox="0 0 24 24" aria-hidden="true" fill="#fff"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.7l1.6 1.8H19.5A1.5 1.5 0 0 1 21 8.3v9.2A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z"/></svg>Documents</div>
+              <div class="picker-sidebar-item"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#9a9ca3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10m0 0 4-4m-4 4-4-4"/><path d="M5 18.5h14"/></svg>Downloads</div>
+            </div>
+            <div class="picker-main">
+              <div class="picker-item"><svg viewBox="0 0 24 24" aria-hidden="true" fill="#5b9bf5"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.7l1.6 1.8H19.5A1.5 1.5 0 0 1 21 8.3v9.2A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z"/></svg>Applications</div>
+              <div class="picker-item" id="pickerFolderItem"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.7l1.6 1.8H19.5A1.5 1.5 0 0 1 21 8.3v9.2A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z"/></svg>PaperLibrary</div>
+              <div class="picker-item"><svg viewBox="0 0 24 24" aria-hidden="true" fill="#5b9bf5"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.7l1.6 1.8H19.5A1.5 1.5 0 0 1 21 8.3v9.2A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z"/></svg>Pictures</div>
+              <div class="picker-item"><svg viewBox="0 0 24 24" aria-hidden="true" fill="#5b9bf5"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.7l1.6 1.8H19.5A1.5 1.5 0 0 1 21 8.3v9.2A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z"/></svg>Zotero</div>
+            </div>
+          </div>
+          <div class="picker-footer">
+            <button id="pickerNewFolderBtn" type="button">New Folder</button>
+            <span class="spacer"></span>
+            <button type="button">Cancel</button>
+            <button id="pickerSelectBtn" type="button">Select</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="perm-popup-overlay" id="permPopupOverlay">
+        <div class="perm-popup">
+          <p class="perm-popup-title">Allow this site to edit files?</p>
+          <p class="perm-popup-sub">t-shiokawa1.github.io will be able to edit files in <strong>PaperLibrary</strong></p>
+          <div class="perm-popup-actions">
+            <button type="button">Don't Allow</button>
+            <button id="permAllowBtn" type="button">Allow</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-main">
+        <aside class="sidebar" id="sidebar">
+          <div class="side-item active" id="allSideItem" data-demo="collection"><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h6l2 2h8v12H4z"/><path d="M12 7.5v12"/></svg><span data-i18n="navAll">すべての文献</span><span class="count">24</span></div>
+          <div class="side-item" data-demo="collection"><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3.8 19c.6-3 2.5-4.7 5.2-4.7s4.6 1.7 5.2 4.7M14 18.5c.4-2.1 1.6-3.4 3.6-3.4 1.5 0 2.5.7 3.1 2"/></svg><span data-i18n="navResearchers">研究者</span><span class="count">8</span></div>
+          <div class="side-item" data-demo="collection"><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><span data-i18n="navStarred">スター</span><span class="count">6</span></div>
+          <div class="side-item" data-demo="collection"><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12 5 5L20 6"/></svg><span data-i18n="navMyPub">自分の論文</span><span class="count">1</span></div>
+          <div class="side-item" data-demo="collection" id="trashSideItem"><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v5M14 11v5"/></svg><span data-i18n="navTrash">ゴミ箱</span><span class="count" id="trashCount">1</span></div>
+          <div class="side-head" id="collectionsHeading"><span class="side-title"><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A1.5 1.5 0 0 1 2.5 18V6A1.5 1.5 0 0 1 4 4.5h4.3a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h6.6A1.5 1.5 0 0 1 21 8.5V18a1.5 1.5 0 0 1-1.5 1.5z"/></svg><span data-i18n="navCollections">コレクション</span></span><span class="side-tools"><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5 6.4 12a1.5 1.5 0 0 1 1.45-1.1H21a1 1 0 0 1 .96 1.26l-1.6 6a1.5 1.5 0 0 1-1.45 1.1z"/><path d="M4.5 19.5A1.5 1.5 0 0 1 3 18V6a1.5 1.5 0 0 1 1.5-1.5h3.8a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h5.6A1.5 1.5 0 0 1 19.8 9v1.9"/></svg><span>⌕</span><span>＋</span></span></div>
+          <div class="side-item" data-demo="collection" data-lib-item><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A1.5 1.5 0 0 1 2.5 18V6A1.5 1.5 0 0 1 4 4.5h4.3a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h6.6A1.5 1.5 0 0 1 21 8.5V18a1.5 1.5 0 0 1-1.5 1.5z"/></svg><span data-i18n="collPhotochem">光化学</span><span class="count">12</span></div>
+          <div class="side-item" data-demo="collection" data-lib-item><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A1.5 1.5 0 0 1 2.5 18V6A1.5 1.5 0 0 1 4 4.5h4.3a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h6.6A1.5 1.5 0 0 1 21 8.5V18a1.5 1.5 0 0 1-1.5 1.5z"/></svg><span data-i18n="collOrgSynth">有機合成</span><span class="count">9</span></div>
+          <div class="side-item" data-demo="collection" data-lib-item><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A1.5 1.5 0 0 1 2.5 18V6A1.5 1.5 0 0 1 4 4.5h4.3a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h6.6A1.5 1.5 0 0 1 21 8.5V18a1.5 1.5 0 0 1-1.5 1.5z"/></svg><span data-i18n="collReviews">レビュー</span><span class="count">3</span></div>
+          <div class="side-head" id="tagsHeading"><span class="side-title"><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5h6l9.5 9.5a1.8 1.8 0 0 1 0 2.5l-3.5 3.5a1.8 1.8 0 0 1-2.5 0L4 10.5z"/><path d="M7.5 8h.01"/></svg><span data-i18n="navTags">タグ</span></span><span class="side-tools"><span>⌕</span><span>＋</span></span></div>
+          <div class="side-item" data-demo="collection" data-lib-item><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5h6l9.5 9.5a1.8 1.8 0 0 1 0 2.5l-3.5 3.5a1.8 1.8 0 0 1-2.5 0L4 10.5z"/><path d="M7.5 8h.01"/></svg><span>catalysis</span><span class="count">7</span></div>
+          <div class="side-item" data-demo="collection" data-lib-item><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5h6l9.5 9.5a1.8 1.8 0 0 1 0 2.5l-3.5 3.5a1.8 1.8 0 0 1-2.5 0L4 10.5z"/><path d="M7.5 8h.01"/></svg><span>photoredox</span><span class="count">4</span></div>
+          <div class="side-item" data-demo="collection" data-lib-item><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 11H4z"/><path d="M8 8V5h8v3"/></svg><span data-i18n="navUncat">未分類</span><span class="count">4</span></div>
+        </aside>
+        <section class="list-pane">
+          <div class="trash-banner" id="trashBanner"><svg class="trash-banner-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v5M14 11v5"/></svg><strong data-i18n="trashBannerCount">ゴミ箱内の文献：2件</strong><span class="trash-banner-note" data-i18n="trashBannerNote">完全削除すると元に戻せません。</span><span class="spacer"></span><button class="trash-banner-btn" data-i18n="trashRestoreAll">すべて復元</button><button class="trash-banner-btn danger" data-i18n="trashEmptyBtn">完全に削除する</button></div>
+          <div class="table-wrap"><div class="gallery" aria-label="文献ギャラリー">
+            <article class="gallery-card" data-demo="reference"><div class="gallery-figure"><div class="fig-photo"></div></div><div class="gallery-info"><div class="gallery-title">Visible-light photoredox catalysis for organic synthesis</div><div class="gallery-authors">Smith, J.; Tanaka, K.</div><div class="gallery-meta"><span>Nat. Commun.</span><time>2024</time></div></div></article>
+            <article class="gallery-card" data-demo="reference"><div class="gallery-figure"><div class="fig-photo"></div></div><div class="gallery-info"><div class="gallery-title">Designed synthesis of a three-dimensional covalent framework</div><div class="gallery-authors">Lee, M.; Garcia, R.</div><div class="gallery-meta"><span>Science</span><time>2023</time></div></div></article>
+            <article class="gallery-card" data-demo="reference"><div class="gallery-figure"><div class="fig-photo"></div></div><div class="gallery-info"><div class="gallery-title">Moving beyond boron: new linkage chemistry</div><div class="gallery-authors">DeBase, A.; Dichtel, W.</div><div class="gallery-meta"><span>Macromolecules</span><time>2022</time></div></div></article>
+            <article class="gallery-card" data-demo="reference"><div class="gallery-figure"><div class="fig-photo"></div></div><div class="gallery-info"><div class="gallery-title">Molecular switching in a zwitterionic framework</div><div class="gallery-authors">He, L.; Xu, Y.; Gohar, M.</div><div class="gallery-meta"><span>J. Am. Chem. Soc.</span><time>2021</time></div></div></article>
+            <article class="gallery-card" data-demo="reference"><div class="gallery-figure"><div class="fig-photo"></div></div><div class="gallery-info"><div class="gallery-title">Porous framework with an antiaromatic nanocorridor</div><div class="gallery-authors">Nakajo, U.; Tanabe, H.</div><div class="gallery-meta"><span>J. Am. Chem. Soc.</span><time>2020</time></div></div></article>
+            <article class="gallery-card" data-demo="reference"><div class="gallery-figure"><div class="fig-photo"></div></div><div class="gallery-info"><div class="gallery-title">Organophosphinidene in a T-shaped environment</div><div class="gallery-authors">Bourque, K.; Zhou, C.</div><div class="gallery-meta"><span>J. Am. Chem. Soc.</span><time>2019</time></div></div></article>
+            <article class="gallery-card trash-only" data-demo="reference"><div class="gallery-figure"><div class="fig-photo"></div></div><div class="gallery-info"><div class="gallery-title">Thermally activated delayed fluorescence polymers</div><div class="gallery-authors">Li, H.; Kang, Y.</div><div class="gallery-meta"><span>J. Mater. Chem. C</span><time>2026</time></div></div></article>
+            <article class="gallery-card trash-only" data-demo="reference"><div class="gallery-figure"><div class="fig-photo"></div></div><div class="gallery-info"><div class="gallery-title">1,3,5-Tri-tert-butyl-pentalene</div><div class="gallery-authors">Hafner, K.; Süss, H.</div><div class="gallery-meta"><span>Angew. Chem. Int. Ed.</span><time>1973</time></div></div></article>
+          </div></div>
+          <div class="empty-gallery-msg" id="emptyGalleryMsg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5 6.4 12a1.5 1.5 0 0 1 1.45-1.1H21a1 1 0 0 1 .96 1.26l-1.6 6a1.5 1.5 0 0 1-1.45 1.1z"/><path d="M4.5 19.5A1.5 1.5 0 0 1 3 18V6a1.5 1.5 0 0 1 1.5-1.5h3.8a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h5.6A1.5 1.5 0 0 1 19.8 9v1.9"/></svg><p data-i18n="emptyGallery">文献はまだ登録されていません</p></div>
+          <div class="list-status"><span id="listStatusCount">24 / 24 件を表示</span><span class="spacer"></span><button class="bottom-control"><svg class="bottom-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 17H3zM12 9v4M12 17h.01"/></svg><span data-i18n="alertsBtn">通知</span> <span class="bottom-badge">3</span>⌄</button><button class="bottom-control"><svg class="bottom-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="1.5"/><circle cx="8" cy="9" r="1.2"/><path d="m5.5 17 4.3-4 3.2 2.8 2.1-2 3.4 3.2"/></svg><span data-i18n="viewStyleBtn">表示スタイル</span>⌄</button><button class="bottom-control"><svg class="bottom-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg><span data-i18n="displaySettingsBtn">表示設定</span>⌄</button><button class="bottom-control update-control"><svg class="bottom-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0 2 5.3M20 4v7h-7"/></svg><span data-i18n="updateBtn">更新</span></button></div>
+        </section>
+        <aside class="detail" id="detailPane"><div class="detail-empty" data-i18n="detailEmpty">文献を選択してください</div></aside>
+      </div>
+    </main>
+
+    <div class="guide-layer active" id="guideLayer" aria-live="polite">
+      <div class="guide-backdrop"></div>
+      <div class="spotlight" id="spotlight"></div>
+      <section class="guide-card" id="guideCard">
+        <button class="guide-close" id="closeGuide" aria-label="ガイドを閉じる">×</button>
+        <div class="guide-kicker" id="guideKicker">PAPER LIBRARY の使い方</div>
+        <h2 id="guideTitle"></h2>
+        <p id="guideText"></p>
+        <div class="guide-progress" id="guideProgress"></div>
+        <div class="guide-actions"><span class="step-count" id="stepCount"></span><button id="dismissGuide" data-i18n="closeBtn">閉じる</button><button id="prevStep" data-i18n="backBtn">戻る</button><button class="primary" id="nextStep">次へ</button></div>
+      </section>
+    </div>
+  </section>
+
+  <div class="closed-card" id="closedCard"><div><p data-i18n="closedMsg">ウィンドウを閉じた状態です。</p><button id="reopenWindow" data-i18n="reopenBtn">プロトタイプを再表示</button></div></div>
+
+  <script>
+    (() => {
+      const win = document.getElementById('window');
+      const layer = document.getElementById('guideLayer');
+      const spotlight = document.getElementById('spotlight');
+      const guideTitle = document.getElementById('guideTitle');
+      const guideText = document.getElementById('guideText');
+      const guideProgress = document.getElementById('guideProgress');
+      const stepCount = document.getElementById('stepCount');
+      const prev = document.getElementById('prevStep');
+      const next = document.getElementById('nextStep');
+      const address = document.getElementById('addressText');
+      const closed = document.getElementById('closedCard');
+      const scenarioPanel = document.getElementById('scenarioPanel');
+      const guideCard = document.getElementById('guideCard');
+      const app = document.getElementById('app');
+      const listStatusCount = document.getElementById('listStatusCount');
+      let step = 0;
+      const chromeBookSvg = '<path d="M16 8.6C13.1 6.1 8.6 5.8 4.7 7v16.4c3.9-1.2 8.4-.9 11.3 1.6z" fill="#1e40af"/><path d="M16 8.6C18.9 6.1 23.4 5.8 27.3 7v16.4c-3.9-1.2-8.4-.9-11.3 1.6z" fill="#3b82f6"/><path d="M16 8.6v16.6" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><rect x="3" y="24.5" width="26" height="3" rx="1.5" fill="#93b4f0"/>';
+      const chromeExtensionSvg = '<path d="M6.3 5.2h3.3V4.6a2.4 2.4 0 0 1 4.8 0v.6h3.3c1 0 1.8.8 1.8 1.8v3.3h.6a2.4 2.4 0 0 1 0 4.8h-.6v3.3c0 1-.8 1.8-1.8 1.8H6.3c-1 0-1.8-.8-1.8-1.8v-3.3h.6a2.4 2.4 0 0 0 0-4.8h-.6V7c0-1 .8-1.8 1.8-1.8z"/>';
+      document.querySelectorAll('.paper-logo').forEach(svg => { svg.innerHTML = chromeBookSvg; });
+      document.querySelectorAll('.extension-menu svg').forEach(svg => { svg.innerHTML = chromeExtensionSvg; });
+      // Same paths as ICONS.download / ICONS.upload / ICONS.search / ICONS.plus
+      // in app/main.js, so the import/export panel rows below match the real
+      // dropdown menus' icons.
+      const PANEL_ICONS = {
+        download: '<path d="M12 4v10m0 0 4-4m-4 4-4-4"/><path d="M5 18.5h14"/>',
+        upload: '<path d="M12 15V5m0 0 4 4m-4-4-4 4"/><path d="M5 18.5h14"/>',
+        search: '<circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l4.5 4.5"/>',
+        plus: '<path d="M12 5v14M5 12h14"/>',
+      };
+
+      // Language: the outer manual passes ?lang=ja|en so this virtual screen
+      // (guide narration + the mock UI chrome itself) matches whichever
+      // language the app is actually shown in.
+      const lang = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'ja';
+      const isEN = lang === 'en';
+      document.documentElement.lang = lang;
+      // L(ja, en) picks the string for the current language — used both for
+      // one-off strings built in JS and, via UI below, for the static markup.
+      const L = (ja, en) => (isEN ? en : ja);
+      const UI = {
+        searchPh: L('検索ワードを入力', 'Search keywords'),
+        savedStatus: L('保存済み', 'Saved'),
+        exportBtn: L('エクスポート', 'Export'),
+        manualBtn: L('マニュアル', 'Manual'),
+        themeBtn: L('ダーク', 'Dark'),
+        langBtn: L('EN', '日本語'),
+        navAll: L('すべての文献', 'All items'),
+        navResearchers: L('研究者', 'Researchers'),
+        navStarred: L('スター', 'Starred'),
+        navMyPub: L('自分の論文', 'My publications'),
+        navTrash: L('ゴミ箱', 'Trash'),
+        navCollections: L('コレクション', 'Collections'),
+        navTags: L('タグ', 'Tags'),
+        navUncat: L('未分類', 'Uncategorized'),
+        collPhotochem: L('光化学', 'Photochemistry'),
+        collOrgSynth: L('有機合成', 'Org. synthesis'),
+        collReviews: L('レビュー', 'Reviews'),
+        emptyGallery: L('文献はまだ登録されていません', 'No references yet'),
+        alertsBtn: L('通知', 'Alerts'),
+        viewStyleBtn: L('表示スタイル', 'View style'),
+        displaySettingsBtn: L('表示設定', 'Display'),
+        updateBtn: L('更新', 'Update'),
+        detailEmpty: L('文献を選択してください', 'Select a reference'),
+        trashBannerCount: L('ゴミ箱内の文献：2件', '2 references in Trash'),
+        trashBannerNote: L('完全削除すると元に戻せません。', 'This cannot be undone.'),
+        trashRestoreAll: L('すべて復元', 'Restore all'),
+        trashEmptyBtn: L('完全に削除する', 'Delete forever'),
+        homeSub: L('文献管理ツール', 'A reference manager'),
+        homeOpenTitle: L('ライブラリフォルダを開く / 作成', 'Open / create a library folder'),
+        homeOpenSub: L('フォルダを選択します。library.json があれば読み込み、なければ新規作成します。', 'Pick a folder. If it contains library.json it is loaded; otherwise a new library is created.'),
+        homeResumeTitle: L('前回のライブラリを開く', 'Open the last library'),
+        closedMsg: L('ウィンドウを閉じた状態です。', 'The window is closed.'),
+        reopenBtn: L('プロトタイプを再表示', 'Show the prototype again'),
+        closeBtn: L('閉じる', 'Close'),
+        backBtn: L('戻る', 'Back'),
+        nextBtn: L('次へ', 'Next'),
+        doneBtn: L('完了', 'Done'),
+        kicker: L('PAPER LIBRARY の使い方', 'How to use Paper Library'),
+      };
+      document.querySelectorAll('[data-i18n]').forEach(el => { const v = UI[el.dataset.i18n]; if (v != null) el.textContent = v; });
+      document.querySelectorAll('[data-i18n-ph]').forEach(el => { const v = UI[el.dataset.i18nPh]; if (v != null) el.placeholder = v; });
+
+      const S = (title, text, target, panel, effect, modal) => ({title, text, target, panel, effect, modal});
+      const SCENARIOS = {
+        ja: {
+          overview: {label:'はじめに', steps:[
+            S('最初に開く画面','初めて Paper Library を開いたときは、このホーム画面が表示されます。まだどこにもライブラリは保存されていません。','#homeView',null,'showHome'),
+            S('「ライブラリフォルダを開く / 作成」を押す','このボタンを押すと、フォルダを選ぶ画面が開きます。','#homeOpenBtn',null,'showHome'),
+            S('フォルダ選択ダイアログが開く','OS標準のフォルダ選択画面が開きます。ここで文献データの保存先を選びます。','#folderPickerOverlay',null,'showPicker'),
+            S('（例）「PaperLibrary」フォルダを作る','「ドキュメント」の中など、消えにくい場所に新しいフォルダを作ります。「New Folder」から作成できます。','#pickerNewFolderBtn',null,'showPicker'),
+            S('「PaperLibrary」フォルダを選択する','作成したフォルダをクリックして選び、「Select」を押します。','#pickerFolderItem',null,'showPickerSelect'),
+            S('ポップアップで「Allow」を押す','ブラウザが「ファイルの変更を許可しますか？」と確認します。自動保存に必要なので「Allow（許可）」を選びます。','#permAllowBtn',null,'showPermission'),
+            S('「保存済み／PaperLibrary」が表示される','右上に保存先フォルダ名が表示されれば準備完了です。この時点ではまだ文献は1件も登録されていません。','.library-status',null,'showEmpty'),
+            S('すでに文献が登録されている場合','一度ライブラリを作ったあと、同じフォルダをもう一度開くとどうなるかを説明します。','#homeView',null,'showHomeResume'),
+            S('前回のフォルダを自動で開く','2回目以降はホーム画面に「前回のライブラリを開く」ボタンが表示され、フォルダ選択と許可ポップアップを省略してすぐに開けます。','#homeResumeBtn',null,'showHomeResume'),
+            S('画面の4つの領域','上部は追加・検索、左は分類、中央は文献一覧、右は選択した文献の詳細です。ここからはテスト用のデータを使って説明します。','.browser-content',null,'showLoaded'),
+            S('テスト用データで試す','この仮想画面にはテスト文献が入っています。以降のマニュアルでも、このテストデータを使って説明します。','.gallery',null,'showLoaded')
+          ]},
+          add: {label:'文献の追加・削除', steps:[
+            S('DOIやURLを入力する','左上の「URL を入力して Enter」欄に、DOI・arXiv ID・論文ページのURLを直接貼り付けます。タイトルや著者名を入力してもかまいません。','#addBoxDemo',null,'addExample'),
+            S('メニューから選ぶこともできる','欄の右にある▾を押すと、「文献情報を入力して検索」「手動追加」やインポート形式を選べるメニューが開きます。','#addMenuCaret',{title:'文献を追加',plain:true,items:[
+              {header:'文献を追加'},
+              {icon:'search',text:'文献情報を入力して検索'},
+              {icon:'plus',text:'手動追加'},
+              {divider:true},
+              {header:'文献をインポート'},
+              {icon:'download',text:'BibTeX (.bib)'},
+              {icon:'download',text:'RIS (.ris)'},
+              {icon:'download',text:'CSV (.csv)'},
+              {icon:'download',text:'JSON (.json)'},
+              {icon:'download',text:'Zotero RDF (.rdf)'},
+            ],anchor:'#addMenuCaret'}),
+            S('Enterを押すと検索ダイアログが開く','「文献情報を入力して検索」をクリックすると、雑誌名・年・巻・ページを分かる範囲で入力して検索することもできます。',undefined,null,null,{title:'文献情報を入力して検索',hint:'DOI・arXiv ID・論文ページの URL を貼り付けると自動で取得します。分からない場合は、雑誌名・年・巻・ページやタイトルを入力して検索してください。',fields:['10.1038/example.2024.12345',['雑誌名（略称可）','年'],['巻','ページ']],buttons:['キャンセル','検索']}),
+            S('検索結果を確認して追加する','検索すると、同じダイアログの中にタイトル・著者・年などが自動入力された候補が表示されます。クリックすると追加されます。',undefined,null,null,{title:'文献情報を入力して検索',fields:['10.1038/example.2024.12345',['雑誌名（略称可）','年'],['巻','ページ']],candidate:{title:'Visible-light photoredox catalysis',meta:'Smith, J.; Tanaka, K. · Nat. Commun. · 2024'},buttons:['キャンセル','検索']}),
+            S('重複していないか確認する','同じ DOI の文献がすでにある場合は追加されず、既存のものを開く・置き換える・削除するかを選べます。',undefined,null,null,{title:'重複候補の確認',duplicate:{banner:'同じ DOI のため追加されませんでした・一致度 100%',existingLabel:'既存',existing:{title:'Visible-light photoredox catalysis',meta:'Smith, J.; Tanaka, K. · Nat. Commun. · 2024'},addedLabel:'追加しようとした文献',added:{title:'Visible-light photoredox catalysis',meta:'Smith, J.; Tanaka, K. · Nat. Commun. · 2024'}},buttons:['既存を開く','既存を置き換え','既存を削除','閉じる']}),
+            S('一覧に追加されたことを確認する','追加後は中央のギャラリーにカードが現れます。必要に応じてコレクションやタグを設定します。','.gallery'),
+            S('文献をゴミ箱へ移動する','削除したい文献を選び、左パネルの「ゴミ箱」へドラッグします。確認が表示されるので、内容を確認してから移動します。','#trashSideItem',{title:'確認',items:['1 件の文献をゴミ箱に移動しますか？','ゴミ箱に移動'],anchor:'#trashSideItem'}),
+            S('ゴミ箱から復元・完全削除する','ゴミ箱を開くと移動した文献を確認でき、「すべて復元」で元に戻すか「完全に削除する」で消せます。完全に削除すると元に戻せません。','.trash-banner',null,'showTrash')
+          ]},
+          import: {label:'文献の取込・出力', steps:[
+            S('追加メニューを開く','追加欄のメニューを開きます。','#addBoxDemo'),
+            S('移行元に合う形式を選ぶ','「文献をインポート」から、移行元ソフトが書き出した形式を選びます。','#scenarioPanel',{title:'文献を追加',plain:true,items:[
+              {header:'文献を追加'},
+              {icon:'search',text:'文献情報を入力して検索'},
+              {icon:'plus',text:'手動追加'},
+              {divider:true},
+              {header:'文献をインポート'},
+              {icon:'download',text:'BibTeX (.bib)'},
+              {icon:'download',text:'RIS (.ris)'},
+              {icon:'download',text:'CSV (.csv)'},
+              {icon:'download',text:'JSON (.json)'},
+              {icon:'download',text:'Zotero RDF (.rdf)'},
+            ],anchor:'#addBoxDemo'}),
+            S('エクスポートを開く','上部の「エクスポート」を押します。','#exportButton'),
+            S('対象と形式を選ぶ','表示中の文献またはライブラリ全体を選び、用途に合う形式を選びます。','#scenarioPanel',{title:'エクスポート',plain:true,items:[
+              {header:'表示中の文献'},
+              {icon:'upload',text:'BibTeX (.bib)'},
+              {icon:'upload',text:'RIS (.ris)'},
+              {icon:'upload',text:'CSV (.csv)'},
+              {icon:'upload',text:'JSON (.json)'},
+              {header:'ライブラリ全体'},
+              {icon:'upload',text:'JSON (.json)'},
+            ],anchor:'#exportButton'}),
+            S('バックアップを保管する','文献データが入っている作業フォルダを変更できます。このフォルダを複製すればバックアップになります。','.library-status')
+          ]},
+          connector: {label:'Chrome拡張機能', steps:[
+            S('論文ページで本アイコンを押す','Chromeで論文ページを開き、右上のPaper Library Connectorの本アイコンを押します。','.connector-button'),
+            S('取得内容を確認する','タイトル・DOI・PDF候補を確認し、必要ならコレクションとタグを選んで保存します。','#scenarioPanel',{title:'Paper Library Connector',items:['書誌情報を取得しました','コレクション：光化学','Paper Library に保存'],anchor:'.connector-button'}),
+            S('保存結果を確認する','Paper Libraryへ戻り、中央の一覧に追加されたカードを確認します。','.gallery')
+          ]},
+          organize: {label:'文献の整理・編集', steps:[
+            S('コレクションを作る','左側の「コレクション」見出し右端の＋から新しい分類を作ります。','#collectionsHeading'),
+            S('文献を分類する','文献カードを選び、保存先のコレクションを指定します。複数のコレクションに入れることもできます。','.gallery'),
+            S('タグで横断的に整理する','「タグ」見出し右端の＋でタグを作成します。タグを選ぶとコレクションをまたいで絞り込めます。','#tagsHeading'),
+            S('文献カードを選ぶ','中央の文献カードをクリックすると、右側に詳細パネルが開きます。','.gallery-card:first-child',null,'selectFirst'),
+            S('詳細情報を確認・編集する','右パネルにタイトル、著者、雑誌、タグ、要旨などが表示され、その場で編集できます。編集内容は自動保存されます。','#detailPane',null,'selectFirst'),
+            S('PDFや引用を操作する','詳細パネル上部からPDFを開く、引用をコピーする、元ページを開くなどの操作を行います。','#detailPane',{title:'文献の操作',items:['引用をコピー','PDFを開く','論文ページを開く'],anchor:'#detailPane'},'selectFirst')
+          ]},
+          search: {label:'文献の検索・並べ替え', steps:[
+            S('キーワードで検索する','上部の検索欄にタイトル、著者、DOI、タグなどを入力します。入力に合わせて一覧が絞り込まれます。','.searchbox'),
+            S('表示方法を切り替える','下部の「表示スタイル」からギャラリー表示や一覧表示を切り替えます.','.bottom-control:nth-of-type(2)'),
+            S('表示項目を調整する','「表示設定」で表示する列や情報量を調整します。','.bottom-control:nth-of-type(3)')
+          ]},
+          graph: {label:'文献を見つける', steps:[
+            S('基準にする文献を選ぶ','相関図の中心に置きたい文献カードを選びます。','.gallery-card:first-child',null,'selectFirst'),
+            S('相関図を開く','詳細パネルの相関図アイコンから関連論文マップを開きます。','#detailPane',{title:'詳細パネルの操作',items:['引用','リンク','論文相関図を開く'],anchor:'#detailPane'},'selectFirst'),
+            S('ノードを選んで確認する','中心文献の周囲に関連文献が表示されます。ノードを選ぶと文献情報と関係を確認できます。','#scenarioPanel',{title:'関連論文マップ',items:['● 中心文献　○ 引用関係','○ 共通キーワード','ノードを選択して詳細表示'],anchor:'.gallery'})
+          ]},
+          maintenance: {label:'情報の更新', steps:[
+            S('通知を確認する','下部の「通知」には重複候補や情報不足など、確認が必要な項目が表示されます。','.bottom-control:first-of-type'),
+            S('書誌情報を更新する','対象文献を選び「更新」を押すと、公開データベースから書誌情報を再取得します。','.update-control'),
+            S('候補を確認して確定する','現在値と取得値を比較し、必要な項目だけ反映します。','#scenarioPanel',{title:'更新候補',items:['現在：2023　取得：2024','タイトル・著者は変更なし','選択した変更を反映'],anchor:'.update-control'})
+          ]},
+          word: {label:'Wordアドイン', steps:[
+            S('マニュアルから導入する','「Wordアドイン」項目にあるmanifest.xmlのダウンロードボタンを押し、Wordへサイドロードします。','#manualButton'),
+            S('Word側でライブラリを読み込む','WordのPaper Libraryパネルを開き、本体から書き出したlibrary.jsonを読み込みます。','#scenarioPanel',{title:'Word — Paper Library',items:['library.json を読み込む','引用スタイルを選択','文献を検索'],anchor:'#manualButton'}),
+            S('引用を挿入する','文献を選んで引用を挿入します。本文中の番号と末尾の文献リストは連動して更新されます。','#scenarioPanel',{title:'引用を挿入',items:['[1] を本文に挿入','文献リストを更新','ACS / Nature / Science など'],anchor:'#manualButton'})
+          ]},
+        },
+        en: {
+          overview: {label:'Getting started', steps:[
+            S('The first screen you see','The first time you open Paper Library, this home screen appears. No library has been saved anywhere yet.','#homeView',null,'showHome'),
+            S('Press “Open / create a library folder”','This button opens a folder-picker screen.','#homeOpenBtn',null,'showHome'),
+            S('The folder picker opens','The OS’s standard folder picker opens. Choose where your reference data will live.','#folderPickerOverlay',null,'showPicker'),
+            S('(Example) create a “PaperLibrary” folder','Create a new folder somewhere unlikely to be deleted, such as inside Documents. Use “New Folder” to create it.','#pickerNewFolderBtn',null,'showPicker'),
+            S('Select the “PaperLibrary” folder','Click the folder you created to select it, then press “Select”.','#pickerFolderItem',null,'showPickerSelect'),
+            S('Press “Allow” on the popup','The browser asks to confirm editing files. Choose “Allow” — it’s needed for automatic saving.','#permAllowBtn',null,'showPermission'),
+            S('“Saved / PaperLibrary” appears','Once the folder name appears at the top right, you’re ready. No references are registered yet at this point.','.library-status',null,'showEmpty'),
+            S('When a library already exists','Here’s what happens when you open the same folder again after already creating a library.','#homeView',null,'showHomeResume'),
+            S('The last folder opens automatically','From the second time on, the home screen shows an “Open the last library” button, skipping the folder picker and permission prompt.','#homeResumeBtn',null,'showHomeResume'),
+            S('The four areas of the screen','The top is for adding/searching, the left for organizing, the centre is the reference list, and the right shows the selected reference’s details. From here on, test data is used.','.browser-content',null,'showLoaded'),
+            S('Try it with test data','This virtual screen contains test references. The rest of the manual uses this same test data too.','.gallery',null,'showLoaded')
+          ]},
+          add: {label:'Add & delete references', steps:[
+            S('Enter a DOI or URL','Paste a DOI, an arXiv ID, or a paper page URL directly into the “Enter URL and press Enter” box at the top left. A title or author name works too.','#addBoxDemo',null,'addExample'),
+            S('You can also open a menu','Press the ▾ to its right to open a menu with “Search by reference info”, “Add manually”, and import formats.','#addMenuCaret',{title:'Add a reference',plain:true,items:[
+              {header:'Add a reference'},
+              {icon:'search',text:'Search by reference info'},
+              {icon:'plus',text:'Add manually'},
+              {divider:true},
+              {header:'Import references'},
+              {icon:'download',text:'BibTeX (.bib)'},
+              {icon:'download',text:'RIS (.ris)'},
+              {icon:'download',text:'CSV (.csv)'},
+              {icon:'download',text:'JSON (.json)'},
+              {icon:'download',text:'Zotero RDF (.rdf)'},
+            ],anchor:'#addMenuCaret'}),
+            S('Pressing Enter opens the search dialog','Click “Search by reference info” to search using whatever you know of journal, year, volume, and page.',undefined,null,null,{title:'Search by reference info',hint:'Paste a DOI, an arXiv ID, or a paper page URL to fetch it automatically. If you don’t have one, search instead by journal, year, volume, page, or title.',fields:['10.1038/example.2024.12345',['Journal (abbrev. ok)','Year'],['Vol.','Page']],buttons:['Cancel','Search']}),
+            S('Review and add the result','Searching shows a candidate — with title, authors, year, and more already filled in — inside that same dialog. Click it to add it.',undefined,null,null,{title:'Search by reference info',fields:['10.1038/example.2024.12345',['Journal (abbrev. ok)','Year'],['Vol.','Page']],candidate:{title:'Visible-light photoredox catalysis',meta:'Smith, J.; Tanaka, K. · Nat. Commun. · 2024'},buttons:['Cancel','Search']}),
+            S('Check for duplicates','If a reference with the same DOI already exists, it isn’t added — you can open, replace, or delete the existing one instead.',undefined,null,null,{title:'Check possible duplicates',duplicate:{banner:'Not added — same DOI · 100% match',existingLabel:'Existing',existing:{title:'Visible-light photoredox catalysis',meta:'Smith, J.; Tanaka, K. · Nat. Commun. · 2024'},addedLabel:'What you tried to add',added:{title:'Visible-light photoredox catalysis',meta:'Smith, J.; Tanaka, K. · Nat. Commun. · 2024'}},buttons:['Open existing','Replace existing','Delete existing','Close']}),
+            S('Confirm it appears in the list','Once added, a card appears in the gallery. Set its collections and tags as needed.','.gallery'),
+            S('Move a reference to Trash','Select the reference you want to remove and drag it onto “Trash” in the left panel. A confirmation appears — review it before moving.','#trashSideItem',{title:'Confirm',items:['Move 1 reference to Trash?','Move to trash'],anchor:'#trashSideItem'}),
+            S('Restore or delete forever from Trash','Open Trash to see what’s in it. “Restore all” brings everything back; “Delete forever” removes it for good and cannot be undone.','.trash-banner',null,'showTrash')
+          ]},
+          import: {label:'Import & export', steps:[
+            S('Open the Add menu','Open the menu on the add box.','#addBoxDemo'),
+            S('Pick the format your source uses','Under “Import references”, choose the format your previous software exported.','#scenarioPanel',{title:'Add a reference',plain:true,items:[
+              {header:'Add a reference'},
+              {icon:'search',text:'Search by reference info'},
+              {icon:'plus',text:'Add manually'},
+              {divider:true},
+              {header:'Import references'},
+              {icon:'download',text:'BibTeX (.bib)'},
+              {icon:'download',text:'RIS (.ris)'},
+              {icon:'download',text:'CSV (.csv)'},
+              {icon:'download',text:'JSON (.json)'},
+              {icon:'download',text:'Zotero RDF (.rdf)'},
+            ],anchor:'#addBoxDemo'}),
+            S('Open Export','Press “Export” at the top.','#exportButton'),
+            S('Choose scope and format','Choose shown references or the whole library, then a format that fits your purpose.','#scenarioPanel',{title:'Export',plain:true,items:[
+              {header:'Shown references'},
+              {icon:'upload',text:'BibTeX (.bib)'},
+              {icon:'upload',text:'RIS (.ris)'},
+              {icon:'upload',text:'CSV (.csv)'},
+              {icon:'upload',text:'JSON (.json)'},
+              {header:'Whole library'},
+              {icon:'upload',text:'JSON (.json)'},
+            ],anchor:'#exportButton'}),
+            S('Keep a backup','You can change the working folder your reference data lives in. Duplicating that folder makes a backup.','.library-status')
+          ]},
+          connector: {label:'Chrome extension', steps:[
+            S('Click the book icon on a paper page','Open a paper page in Chrome and click the Paper Library Connector book icon at the top right.','.connector-button'),
+            S('Review what it found','Check the title, DOI, and PDF candidates, choose a collection and tags if needed, then save.','#scenarioPanel',{title:'Paper Library Connector',items:['Fetched the bibliographic info','Collection: Photochemistry','Saved to Paper Library'],anchor:'.connector-button'}),
+            S('Confirm it was saved','Back in Paper Library, check that a new card appeared in the list.','.gallery')
+          ]},
+          organize: {label:'Organize & edit', steps:[
+            S('Create a collection','Use the “+” at the right of the “Collections” heading on the left.','#collectionsHeading'),
+            S('File a reference into it','Select a reference card and assign it to a collection. It can belong to more than one.','.gallery'),
+            S('Organize across collections with tags','Create tags with the “+” next to the “Tags” heading. Selecting a tag filters across collections.','#tagsHeading'),
+            S('Select a reference card','Click a reference card in the centre to open the detail pane on the right.','.gallery-card:first-child',null,'selectFirst'),
+            S('Review and edit its details','The right pane shows the title, authors, journal, tags, abstract, and more, and you can edit them in place. Edits are saved automatically.','#detailPane',null,'selectFirst'),
+            S('Work with the PDF and citation','From the top of the detail pane you can open the PDF, copy a citation, or open the original page.','#detailPane',{title:'Reference actions',items:['Copy citation','Open PDF','Open paper page'],anchor:'#detailPane'},'selectFirst')
+          ]},
+          search: {label:'Search & sort', steps:[
+            S('Search by keyword','Type a title, author, DOI, tag, and more into the search box at the top. The list filters as you type.','.searchbox'),
+            S('Switch how references are shown','Use “View style” at the bottom to switch between gallery and table views.','.bottom-control:nth-of-type(2)'),
+            S('Adjust what’s shown','Use “Display” to choose which columns or how much detail to show.','.bottom-control:nth-of-type(3)')
+          ]},
+          graph: {label:'Find references', steps:[
+            S('Pick the reference to centre on','Select the reference card you want at the centre of the graph.','.gallery-card:first-child',null,'selectFirst'),
+            S('Open the graph','Open the related-papers map from the graph icon in the detail pane.','#detailPane',{title:'Detail pane actions',items:['Citations','Links','Open paper graph'],anchor:'#detailPane'},'selectFirst'),
+            S('Select a node to inspect it','Related references appear around the centre reference. Select a node to see its info and relation.','#scenarioPanel',{title:'Related-papers map',items:['● Centre reference   ○ Citation link','○ Shared keyword','Select a node for details'],anchor:'.gallery'})
+          ]},
+          maintenance: {label:'Updating info', steps:[
+            S('Check Alerts','“Alerts” at the bottom lists things worth reviewing, like duplicate candidates or missing info.','.bottom-control:first-of-type'),
+            S('Update bibliographic info','Select the target references and press “Update” to refetch bibliographic info from public databases.','.update-control'),
+            S('Review candidates and confirm','Compare current values against fetched ones and apply only the fields you want.','#scenarioPanel',{title:'Update candidates',items:['Current: 2023   Fetched: 2024','Title & authors unchanged','Apply selected changes'],anchor:'.update-control'})
+          ]},
+          word: {label:'Word add-in', steps:[
+            S('Install it from the manual','Press the manifest.xml download button on the “Word add-in” page, then sideload it into Word.','#manualButton'),
+            S('Load your library in Word','Open the Paper Library panel in Word and load the library.json you exported from the app.','#scenarioPanel',{title:'Word — Paper Library',items:['Load library.json','Choose a citation style','Search for a reference'],anchor:'#manualButton'}),
+            S('Insert a citation','Select a reference to insert its citation. The number in the text and the reference list at the end stay in sync.','#scenarioPanel',{title:'Insert citation',items:['Insert [1] into the text','Update the reference list','ACS / Nature / Science, etc.'],anchor:'#manualButton'})
+          ]},
+        }
+      };
+      const scenarios = SCENARIOS[lang];
+      let topic = location.hash.slice(1);
+      if(!scenarios[topic]) topic = 'overview';
+      let steps = scenarios[topic].steps;
+
+      function positionGuideCard(targetRect) {
+        const layerRect = layer.getBoundingClientRect();
+        const margin = 18;
+        const cardWidth = Math.min(guideCard.offsetWidth || 338, layerRect.width - margin * 2);
+        const cardHeight = guideCard.offsetHeight || 190;
+        const relativeTop = targetRect ? targetRect.top - layerRect.top : margin;
+        const relativeBottom = targetRect ? targetRect.bottom - layerRect.top : margin;
+        const targetCenter = targetRect ? targetRect.left - layerRect.left + targetRect.width / 2 : layerRect.width / 2;
+        const isBroadTarget = targetRect && targetRect.width > layerRect.width * .72 && targetRect.height > layerRect.height * .55;
+        let left = targetCenter < layerRect.width / 2 ? layerRect.width - cardWidth - margin : margin;
+        let top = relativeTop < layerRect.height / 2 ? relativeBottom + 16 : relativeTop - cardHeight - 16;
+        if (isBroadTarget) {
+          left = layerRect.width - cardWidth - margin;
+          top = layerRect.height - cardHeight - margin;
+        }
+        top = Math.max(margin, Math.min(top, layerRect.height - cardHeight - margin));
+        guideCard.style.left = `${Math.round(left)}px`;
+        guideCard.style.top = `${Math.round(top)}px`;
+      }
+
+      function publishGuide() {
+        if (window.parent === window) return;
+        const item = steps[step];
+        window.parent.postMessage({
+          type: 'paper-library-manual-guide',
+          guide: {
+            topic,
+            label: scenarios[topic].label,
+            title: item.title,
+            text: item.text,
+            step: step + 1,
+            total: steps.length,
+            canGoBack: step > 0,
+            isLast: step === steps.length - 1
+          }
+        }, '*');
+      }
+
+      function renderStep() {
+        const item = steps[step];
+        guideTitle.textContent = item.title;
+        guideText.textContent = item.text;
+        document.getElementById('guideKicker').textContent = `${UI.kicker}${L('：',' – ')}${scenarios[topic].label}`;
+        stepCount.textContent = `${step + 1} / ${steps.length}`;
+        guideProgress.innerHTML = steps.map((_, i) => `<i class="${i <= step ? 'on' : ''}"></i>`).join('');
+        prev.disabled = step === 0;
+        next.textContent = step === steps.length - 1 ? UI.doneBtn : UI.nextBtn;
+        address.textContent = 't-shiokawa1.github.io/Paper-Library/';
+        scenarioPanel.classList.remove('show');
+        scenarioPanel.replaceChildren();
+        document.getElementById('scenarioModal').classList.remove('show');
+        document.getElementById('scenarioModalBox').replaceChildren();
+        if(item.effect === 'selectFirst') document.querySelector('.gallery-card')?.click();
+        if(item.effect === 'addExample') document.getElementById('addBoxDemo').textContent = '＋　10.1038/example.2024.12345';
+        else document.getElementById('addBoxDemo').textContent = `＋　${L('URL を入力して Enter','Enter URL and press Enter')}`;
+        // "はじめに" walkthrough stages: home screen → OS folder picker →
+        // permission popup → saved-but-empty library → returning-user resume
+        // → back to the normal (loaded, test-data) view every other scenario uses.
+        const stageMap = {showHome:'home', showPicker:'picker', showPickerSelect:'picker-select', showPermission:'permission', showEmpty:'empty', showHomeResume:'home-resume', showTrash:'trash', showLoaded:''};
+        const stage = stageMap[item.effect] || '';
+        if(stage) app.dataset.stage = stage; else delete app.dataset.stage;
+        document.getElementById('homeResumeBtn').hidden = stage !== 'home-resume';
+        if(listStatusCount) listStatusCount.textContent = stage === 'empty' ? L('0 / 0 件を表示','0 / 0 shown') : stage === 'trash' ? L('2 / 2 件を表示','2 / 2 shown') : L('24 / 24 件を表示','24 / 24 shown');
+        document.querySelectorAll('.side-item').forEach(x => x.classList.toggle('active', x.id === (stage === 'trash' ? 'trashSideItem' : 'allSideItem')));
+        // Every walkthrough step (home → picker → permission → empty →
+        // resume) tells a "no papers registered yet" story — never leave a
+        // previously-selected test card showing in the detail pane here,
+        // even if the user clicked one earlier (e.g. testing the final
+        // loaded step) and then stepped back with "戻る".
+        if(item.effect in stageMap){
+          document.querySelectorAll('.gallery-card.selected').forEach(x => x.classList.remove('selected'));
+          const dp = document.getElementById('detailPane');
+          if(dp) dp.innerHTML = `<div class="detail-empty">${UI.detailEmpty}</div>`;
+        }
+        scenarioPanel.classList.toggle('plain', !!(item.panel && item.panel.plain));
+        if(item.panel){
+          const heading = document.createElement('strong');
+          heading.textContent = item.panel.title;
+          scenarioPanel.appendChild(heading);
+          if(item.panel.fields){
+            item.panel.fields.forEach(f => {
+              if(Array.isArray(f)){
+                const row = document.createElement('div');
+                row.className = 'field-grid';
+                f.forEach(label => {
+                  const box = document.createElement('div');
+                  box.className = 'field-box';
+                  box.textContent = label;
+                  row.appendChild(box);
+                });
+                scenarioPanel.appendChild(row);
+              }else{
+                const box = document.createElement('div');
+                box.className = 'field-box full';
+                box.textContent = f;
+                scenarioPanel.appendChild(box);
+              }
+            });
+          }
+          (item.panel.items || []).forEach(value => {
+            // Plain string rows use the original callout look (boxed, last
+            // row highlighted as the primary action). Object rows opt into
+            // the dropdown-menu look: {header} for a group label, {divider}
+            // for a thin rule, or {icon, text} for an icon + label row
+            // matching the real menu.
+            if(typeof value === 'string'){
+              const row = document.createElement('div');
+              row.textContent = value;
+              scenarioPanel.appendChild(row);
+              return;
+            }
+            if(value.divider){
+              const rule = document.createElement('div');
+              rule.className = 'panel-divider';
+              scenarioPanel.appendChild(rule);
+              return;
+            }
+            const row = document.createElement('div');
+            if(value.header){
+              row.className = 'panel-header';
+              row.textContent = value.header;
+            }else{
+              row.className = 'panel-row';
+              if(value.icon){
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('viewBox', '0 0 24 24');
+                svg.innerHTML = PANEL_ICONS[value.icon] || '';
+                row.appendChild(svg);
+              }
+              const label = document.createElement('span');
+              label.textContent = value.text;
+              row.appendChild(label);
+            }
+            scenarioPanel.appendChild(row);
+          });
+          const anchor = document.querySelector(item.panel.anchor || '.app-toolbar');
+          const anchorRect = anchor?.getBoundingClientRect();
+          const contentRect = document.querySelector('.browser-content').getBoundingClientRect();
+          if(anchorRect){
+            scenarioPanel.style.left = `${Math.max(12, Math.min(anchorRect.left - contentRect.left, contentRect.width - 306))}px`;
+            scenarioPanel.style.top = `${Math.max(45, anchorRect.bottom - contentRect.top + 7)}px`;
+          }
+          scenarioPanel.classList.add('show');
+        }
+        // "modal" steps depict a real centred, backdrop-dimmed dialog (the
+        // search-by-reference-info dialog, the duplicate-check dialog) —
+        // visually distinct from the small anchored .scenario-panel used for
+        // dropdown menus and lightweight callouts.
+        if(item.modal){
+          const m = item.modal;
+          const box = document.getElementById('scenarioModalBox');
+          let html = `<div class="scenario-modal-head"><span>${m.title}</span><button type="button" aria-label="${L('閉じる','Close')}">×</button></div><div class="scenario-modal-body">`;
+          if(m.hint) html += `<div class="scenario-modal-hint">${m.hint}</div>`;
+          if(m.fields){
+            m.fields.forEach(f => {
+              if(Array.isArray(f)) html += `<div class="field-grid">${f.map(l => `<div class="field-box">${l}</div>`).join('')}</div>`;
+              else html += `<div class="field-box full">${f}</div>`;
+            });
+          }
+          if(m.candidate){
+            html += `<div class="scenario-candidate"><div><div class="cand-title">${m.candidate.title}</div><div class="cand-meta">${m.candidate.meta}</div></div><div class="cand-add">+ ${L('追加','Add')}</div></div>`;
+          }
+          if(m.duplicate){
+            const d = m.duplicate;
+            html += `<div class="scenario-dup-banner">${d.banner}</div><div class="scenario-dup-cards">`+
+              `<div class="scenario-dup-card"><div class="dup-label">${d.existingLabel}</div><div class="dup-title">${d.existing.title}</div><div class="dup-meta">${d.existing.meta}</div></div>`+
+              `<div class="scenario-dup-card"><div class="dup-label">${d.addedLabel}</div><div class="dup-title">${d.added.title}</div><div class="dup-meta">${d.added.meta}</div></div>`+
+            `</div>`;
+          }
+          html += `</div>`;
+          if(m.buttons) html += `<div class="scenario-modal-foot">${m.buttons.map((b,i) => `<button type="button"${i === m.buttons.length - 1 && m.primary !== false ? ' class="primary"' : ''}>${b}</button>`).join('')}</div>`;
+          box.innerHTML = html;
+          document.getElementById('scenarioModal').classList.add('show');
+        }
+        // querySelector('') throws (an empty string isn't a valid selector),
+        // so steps with no target (the modal steps) must skip the call
+        // entirely rather than falling back to an empty-string selector —
+        // otherwise the exception aborts renderStep() before publishGuide()
+        // runs, and the outer guide rail's message stops updating even
+        // though the mock screen behind it has already changed.
+        const target = item.target ? document.querySelector(item.target) : null;
+        if (target) {
+          const targetRect = target.getBoundingClientRect();
+          // The spotlight lives inside .guide-layer (which starts below the
+          // browser chrome), so position it relative to that layer—not the
+          // outer window. Using the outer window shifted every highlight down
+          // by the height of the faux browser chrome.
+          const layerRect = layer.getBoundingClientRect();
+          spotlight.style.left = `${targetRect.left - layerRect.left - 4}px`;
+          spotlight.style.top = `${targetRect.top - layerRect.top - 4}px`;
+          spotlight.style.width = `${targetRect.width + 8}px`;
+          spotlight.style.height = `${targetRect.height + 8}px`;
+          spotlight.hidden = false;
+          positionGuideCard(targetRect);
+        } else {
+          spotlight.hidden = true;
+          positionGuideCard(null);
+        }
+        publishGuide();
+      }
+
+      function setStep(nextStep) {
+        step = Math.max(0, Math.min(steps.length - 1, nextStep));
+        layer.classList.add('active');
+        renderStep();
+      }
+
+      document.getElementById('nextStep').addEventListener('click', () => {
+        if (step === steps.length - 1) layer.classList.remove('active');
+        else setStep(step + 1);
+      });
+      prev.addEventListener('click', () => setStep(step - 1));
+      document.getElementById('closeGuide').addEventListener('click', () => layer.classList.remove('active'));
+      document.getElementById('dismissGuide').addEventListener('click', () => layer.classList.remove('active'));
+      document.getElementById('manualButton').addEventListener('click', () => { layer.classList.add('active'); setStep(0); });
+      document.getElementById('browserBack').addEventListener('click', () => setStep(step - 1));
+      document.getElementById('browserForward').addEventListener('click', () => setStep(step + 1));
+      document.getElementById('reload').addEventListener('click', () => renderStep());
+      window.addEventListener('message', event => {
+        const message = event.data;
+        if (!message || message.type !== 'paper-library-manual-command') return;
+        if (message.command === 'next') {
+          if (step < steps.length - 1) setStep(step + 1);
+          return;
+        }
+        if (message.command === 'previous') {
+          setStep(step - 1);
+          return;
+        }
+        if (message.command === 'restart') {
+          setStep(0);
+        }
+      });
+      window.addEventListener('hashchange', () => {
+        const requested = location.hash.slice(1);
+        topic = scenarios[requested] ? requested : 'overview';
+        steps = scenarios[topic].steps;
+        step = 0;
+        layer.classList.add('active');
+        renderStep();
+      });
+      window.addEventListener('keydown', event => {
+        if (event.key !== 'Escape') return;
+        layer.classList.remove('active');
+        // The walkthrough is served from the same app origin, so Esc keeps the
+        // native manual-dialog behavior even while focus is inside this frame.
+        try {
+          const manualDialog = window.parent.document.getElementById('dlgManual');
+          if (manualDialog?.open) { manualDialog.close(); return; }
+        } catch (_) {}
+        window.parent.postMessage({type:'paper-library-manual-close'}, '*');
+      });
+
+      document.getElementById('closeWindow').addEventListener('click', () => { win.classList.add('closed'); closed.classList.add('show'); });
+      document.getElementById('reopenWindow').addEventListener('click', () => { win.classList.remove('closed'); closed.classList.remove('show'); });
+      document.getElementById('minimizeWindow').addEventListener('click', () => win.classList.toggle('minimized'));
+      document.getElementById('expandWindow').addEventListener('click', () => win.classList.toggle('expanded'));
+      document.getElementById('themeButton').addEventListener('click', event => {
+        const dark = document.body.dataset.theme === 'dark';
+        document.body.dataset.theme = dark ? '' : 'dark';
+        if (!dark) {
+          document.documentElement.style.setProperty('--bg','#111418'); document.documentElement.style.setProperty('--panel','#181c22'); document.documentElement.style.setProperty('--border','#303640'); document.documentElement.style.setProperty('--border2','#252b33'); document.documentElement.style.setProperty('--text','#e7eaf0'); document.documentElement.style.setProperty('--text2','#aab2bf'); document.documentElement.style.setProperty('--text3','#747d8c'); document.documentElement.style.setProperty('--accent','#60a5fa'); document.documentElement.style.setProperty('--accent-soft','#10233d'); document.documentElement.style.setProperty('--accent-border','#27527f'); const lbl = event.currentTarget.querySelector('[data-i18n="themeBtn"]'); if(lbl) lbl.textContent = L('☼ ライト','☀ Light'); else event.currentTarget.textContent = L('☼ ライト','☀ Light');
+        } else {
+          location.reload();
+        }
+      });
+      document.querySelectorAll('[data-demo="collection"]').forEach(el => el.addEventListener('click', () => { document.querySelectorAll('.side-item').forEach(x => x.classList.remove('active')); el.classList.add('active'); }));
+      // Detail read view — faithful to the app (app/main.js renderDetail):
+      // icon action bar → title → hero figure → 著者 chips → 引用プレビュー → 要旨 → 整理.
+      const DETAIL_IC = {
+        note:'<path d="M6 4.5h12A1.5 1.5 0 0 1 19.5 6v12A1.5 1.5 0 0 1 18 19.5H6A1.5 1.5 0 0 1 4.5 18V6A1.5 1.5 0 0 1 6 4.5z"/><path d="M8 8.5h8M8 12h8M8 15.5h5"/>',
+        link:'<path d="M10.5 13.5a3.5 3.5 0 0 0 5 0l3-3a3.5 3.5 0 0 0-5-5l-1.5 1.5"/><path d="M13.5 10.5a3.5 3.5 0 0 0-5 0l-3 3a3.5 3.5 0 0 0 5 5l1.5-1.5"/>',
+        citations:'<circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="9" r="2.4"/><circle cx="8.5" cy="18" r="2.4"/><path d="M8.3 7 15.6 8.6M7.7 15.7 6.6 8.3M10.2 16.6 16.1 10.9"/>',
+        graph:'<circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="17" r="2.2"/><circle cx="19" cy="16" r="2.2"/><circle cx="12" cy="12.5" r="1.6"/><path d="M12 7.2v3.7M10.6 13.6 6.4 15.6M13.5 13.3 17.4 15M6.8 15.5 10.6 6.6M17.2 14.9 13 6.7"/>',
+        users:'<circle cx="9" cy="8" r="3"/><path d="M3.8 19a5.2 5.2 0 0 1 10.4 0"/><circle cx="17" cy="9.5" r="2.3"/><path d="M14.8 15.5a4.2 4.2 0 0 1 5.4 3.5"/>',
+        retry:'<path d="M20 11a8 8 0 1 0-1.5 5.5"/><path d="M20 5v5h-5"/>',
+        sliders:'<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>',
+        copy:'<rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15.5 8.5V6A1.5 1.5 0 0 0 14 4.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/>',
+        gear:'<circle cx="12" cy="12" r="3.2"/><circle cx="12" cy="12" r="7.2"/><path d="M12 2.8v2M12 19.2v2M2.8 12h2M19.2 12h2M5.5 5.5 6.9 6.9M17.1 17.1l1.4 1.4M18.5 5.5l-1.4 1.4M6.9 17.1l-1.4 1.4"/>',
+        tag:'<path d="M4 4.5h6l9.5 9.5a1.8 1.8 0 0 1 0 2.5l-3.5 3.5a1.8 1.8 0 0 1-2.5 0L4 10.5z"/><path d="M7.5 8h.01"/>',
+        folder:'<path d="M4 19.5A1.5 1.5 0 0 1 2.5 18V6A1.5 1.5 0 0 1 4 4.5h4.3a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h6.6A1.5 1.5 0 0 1 21 8.5V18a1.5 1.5 0 0 1-1.5 1.5z"/>'
+      };
+      const dsvg = p => `<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
+      document.querySelectorAll('[data-demo="reference"]').forEach(el => el.addEventListener('click', () => {
+        document.querySelectorAll('.gallery-card').forEach(x => x.classList.remove('selected'));
+        el.classList.add('selected');
+        const title = el.querySelector('.gallery-title').textContent;
+        const authorList = el.querySelector('.gallery-authors').textContent.split(';').map(s => s.trim()).filter(Boolean);
+        const journal = el.querySelector('.gallery-meta span')?.textContent || '';
+        const year = el.querySelector('.gallery-meta time')?.textContent || '';
+        // Reuse the exact same sprite tile the gallery card shows (no line-art
+        // overlay — the app has no such overlay either). .fig-photo/.ref-photo
+        // are both square (height:100%, aspect-ratio:1/1), so copying the
+        // computed background-position percentage across works unscaled.
+        const photoEl = el.querySelector('.fig-photo');
+        let photoStyle = '';
+        if(photoEl){
+          const cs = getComputedStyle(photoEl);
+          photoStyle = `background-image:${cs.backgroundImage};background-position:${cs.backgroundPosition};`;
+        }
+        const actions = `<div class="detail-actions">`+
+          `<button class="tbtn" title="${L('編集','Edit')}">${dsvg(DETAIL_IC.note)}</button>`+
+          `<button class="tbtn" title="${L('リンクを開く','Open link')}">${dsvg(DETAIL_IC.link)}</button>`+
+          `<button class="tbtn" title="${L('引用','Citations')}">${dsvg(DETAIL_IC.citations)}</button>`+
+          `<button class="tbtn" title="${L('論文相関図','Paper graph')}">${dsvg(DETAIL_IC.graph)}</button>`+
+          `<button class="tbtn" title="${L('研究者マップ','Researcher Map')}">${dsvg(DETAIL_IC.users)}</button>`+
+          `<button class="tbtn" title="${L('更新','Refresh')}">${dsvg(DETAIL_IC.retry)}</button>`+
+          `<button class="tbtn" title="${L('表示設定','Display settings')}">${dsvg(DETAIL_IC.sliders)}</button>`+
+        `</div>`;
+        const hero = photoEl ? `<div class="detail-block"><div class="ref-fig"><div class="ref-photo" style='${photoStyle}'></div></div></div>` : '';
+        const authorChips = authorList.map((a, i) => {
+          const corr = (authorList.length > 1 && i === authorList.length - 1) ? '<span class="ref-author-corr">*</span>' : '';
+          return `<span class="ref-author${corr ? ' linked' : ''}">${a}${corr}</span>`;
+        }).join('');
+        const authorsBlock = `<section class="detail-block"><div class="ref-label">${L('著者','Authors')}<span class="ref-count">${authorList.length}</span></div><div class="ref-authors">${authorChips}</div></section>`;
+        const citeAuthors = authorList.length > 1 ? `${authorList[0]} et al.` : (authorList[0] || '');
+        const citeBlock = `<div class="cite-preview"><div class="cite-head"><span>${L('引用プレビュー','Citation preview')}</span><span class="cite-actions"><button title="${L('コピー','Copy')}">${dsvg(DETAIL_IC.copy)}${L('コピー','Copy')}</button><button title="${L('引用設定','Citation settings')}">${dsvg(DETAIL_IC.gear)}</button></span></div><div class="cite-text">${citeAuthors} <i>${journal}</i> <b>${year}</b>.</div></div>`;
+        const abstractBlock = `<section class="detail-block"><div class="ref-label">${L('要旨','Abstract')}</div><div class="ref-prose">${L('これはマニュアル用に用意したテスト文献です。カードを選択すると、右側の詳細パネルに書誌情報・要旨・整理（タグ／コレクション）などが表示されます。','This is a test reference prepared for the manual. Selecting a card shows bibliographic info, an abstract, and organizing info (tags/collections) in the detail pane on the right.')}</div></section>`;
+        const organizeBlock = `<section class="detail-block"><div class="ref-label">${L('整理','Organize')}</div><div class="ref-chips"><span class="ref-chip">${dsvg(DETAIL_IC.tag)}<span>photoredox</span></span><span class="ref-chip">${dsvg(DETAIL_IC.tag)}<span>${L('重要','important')}</span></span></div><div class="ref-chips"><span class="ref-chip">${dsvg(DETAIL_IC.folder)}<span>${UI.collPhotochem}</span></span></div></section>`;
+        document.getElementById('detailPane').innerHTML = actions + `<div class="detail-title">${title}</div>` + hero + authorsBlock + citeBlock + abstractBlock + organizeBlock;
+      }));
+      window.addEventListener('resize', renderStep);
+      renderStep();
+    })();
+  </script>
+</body>
+</html>
