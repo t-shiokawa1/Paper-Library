@@ -800,6 +800,8 @@
   .menu button:hover .ic{color:var(--accent)}
   .menu hr{border:none; border-top:1px solid var(--border2); margin:4px 2px}
   .menu .menuLabel{font-size:10.5px; font-weight:700; color:var(--text3); letter-spacing:.04em; padding:3px 10px 2px}
+  /* lighter sub-heading nested under a .menuLabel group (e.g. export scope within "Researchers") */
+  .menu .menuSubLabel{font-size:10px; font-weight:600; color:var(--text3); opacity:.8; padding:5px 10px 1px}
   .menu .menuCheck{
     display:flex; align-items:center; gap:7px; min-height:28px; padding:0 10px;
     font-size:12px; color:var(--text2); white-space:nowrap;
@@ -2076,6 +2078,12 @@
   #dlgDuplicates{max-width:760px; width:min(760px,94vw)}
   .dupSummary{font-size:12.5px; color:var(--text2); margin-bottom:10px}
 
+  /* import keywords-as-tags dialog */
+  #dlgImportKeywords{max-width:520px; width:min(520px,94vw)}
+  .dlgCheck{margin-bottom:10px}
+  .dlgCheck label{display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--text); cursor:pointer}
+  .importKeywordsList{font-size:12px; color:var(--text2); line-height:1.6; padding:8px 10px; background:var(--bg); border:1px solid var(--border2); border-radius:8px}
+
   /* journal name dictionary editor */
   #dlgJournalDict{width:680px; max-width:94vw}
   .dictIntro{font-size:12.5px; color:var(--text2); line-height:1.6; margin:0 0 12px}
@@ -2147,6 +2155,7 @@
   }
   .fixInlineTop{display:flex; align-items:flex-start; gap:8px}
   .fixInlineText{flex:1; min-width:0}
+  .fixInlineBtns{display:flex; gap:6px; flex:0 0 auto}
   .fixInline b{color:var(--text)}
   .fixInline .tbtn{font-size:12px; min-height:26px; padding:4px 8px}
   @media (max-width:720px){.dupCols{grid-template-columns:1fr}}

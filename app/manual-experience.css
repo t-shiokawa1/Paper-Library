@@ -1,0 +1,108 @@
+#dlgManual.manualScenarioMode{
+  max-width:1344px;
+  width:min(1344px,88vw);
+  max-height:90vh;
+}
+#dlgManual.manualScenarioMode #manualWrap{
+  /* The dialog footer is intentionally absent in walkthrough mode.  Its space
+     belongs to the manual and, in particular, to the virtual screen. */
+  height:min(780px,calc(90vh - 49px));
+}
+#dlgManual.manualScenarioMode #manualTabs{
+  flex:0 0 198px;
+  padding:9px 8px;
+}
+#dlgManual.manualScenarioMode #manualTabs button{
+  min-height:36px;
+}
+#dlgManual.manualScenarioMode #manualContent{
+  position:relative;
+  padding:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  background:#dfe7f2;
+}
+.manualScenarioShell{
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  height:auto;
+  min-height:0;
+}
+.manualScenarioActions{
+  display:none;
+  align-items:center;
+  gap:12px;
+  min-height:82px;
+  padding:10px 14px;
+  border-bottom:1px solid var(--border2);
+  background:var(--panel);
+}
+.manualScenarioActions.show{display:flex}
+.manualScenarioGuideCopy{min-width:0;flex:1}
+.manualScenarioGuideKicker{display:block;margin-bottom:2px;color:var(--accent);font-size:11px;font-weight:700}
+.manualScenarioGuideCopy strong{display:block;color:var(--text);font-size:15px;line-height:1.3}
+.manualScenarioGuideCopy p{margin:3px 0 0;color:var(--text2);font-size:12px;line-height:1.45}
+.manualScenarioGuideActions{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex:0 0 auto}
+.manualScenarioGuideActions .tbtn{height:32px}
+.manualScenarioFrame{
+  display:block;
+  width:100%;
+  height:min(600px,68vh);
+  min-height:0;
+  flex:0 0 auto;
+  border:0;
+  background:#dfe7f2;
+}
+.manualScenarioDetails{
+  flex:0 0 auto;
+  min-height:auto;
+  border-top:1px solid var(--border2);
+  background:var(--panel);
+  overflow:visible;
+}
+.manualScenarioDetailsHead{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  padding:12px 16px 10px;
+  border-bottom:1px solid var(--border2);
+  background:var(--panel2);
+}
+.manualScenarioDetailsHead>div{min-width:0}
+.manualScenarioDetailsHead p{margin:0 0 3px;font-size:14px;font-weight:750;color:var(--text)}
+.manualScenarioDetailsHead small{display:block;color:var(--text2);font-size:12px;line-height:1.45}
+.manualScenarioDetailsBody{
+  height:auto;
+  overflow:visible;
+  padding:14px 20px 24px;
+  color:var(--text);
+  line-height:1.7;
+}
+.manualScenarioDetailsBody h3{margin:0 0 10px;font-size:20px}
+.manualScenarioDetailsBody h4{margin:18px 0 6px;font-size:15px}
+.manualScenarioDetailsBody p{margin:8px 0}
+.manualScenarioDetailsBody ul{margin:7px 0 10px;padding-left:21px}
+.manualScenarioDetailsBody li+li{margin-top:5px}
+.manualScenarioDetailsBody .manual-fig{max-width:780px;margin:12px 0}
+.manualScenarioDetailsBody .manual-fig svg{max-width:100%;height:auto}
+.manualScenarioActions .tbtn{white-space:nowrap}
+.manualScenarioNumber{
+  display:inline-grid;
+  place-items:center;
+  flex:0 0 20px;
+  width:20px;
+  height:20px;
+  border:1px solid currentColor;
+  border-radius:6px;
+  font-size:9px;
+  font-weight:700;
+  opacity:.78;
+}
+@media(max-width:900px){
+  #dlgManual.manualScenarioMode{width:99vw}
+  #dlgManual.manualScenarioMode #manualTabs{flex-basis:174px}
+  #dlgManual.manualScenarioMode #manualTabs button{font-size:11px;padding:6px 7px}
+  .manualScenarioActions{align-items:flex-start;flex-direction:column}
+  .manualScenarioGuideActions{width:100%;justify-content:flex-start}
+}
