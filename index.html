@@ -7,6 +7,7 @@
 <title>Paper Library — 文献管理 / Reference Manager</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 8.6C13.1 6.1 8.6 5.8 4.7 7v16.4c3.9-1.2 8.4-.9 11.3 1.6z' fill='%231e40af'/%3E%3Cpath d='M16 8.6C18.9 6.1 23.4 5.8 27.3 7v16.4c-3.9-1.2-8.4-.9-11.3 1.6z' fill='%233b82f6'/%3E%3Cpath d='M16 8.6v16.6' stroke='%23fff' stroke-width='1.3' stroke-linecap='round'/%3E%3Crect x='3' y='24.5' width='26' height='3' rx='1.5' fill='%2393b4f0'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="app/main.css?v=20260816r3">
+<link rel="stylesheet" href="app/manual-experience.css?v=20260823r4">
 </head>
 <body class="brandStyle-81 advSearchStyle-07">
 
@@ -22,11 +23,10 @@
       <!-- reference add / import (shown outside the researcher view) -->
       <div id="menuAddReference">
         <div class="menuLabel" data-i18n="referenceAdd">文献を追加</div>
-        <button id="miAddId"><span class="ic" data-ic="search"></span><span data-i18n="addByIdMenu">DOI / arXiv / URL から（検索も可）</span></button>
+        <button id="miAddId"><span class="ic" data-ic="search"></span><span data-i18n="addByIdMenu">文献情報を入力して検索</span></button>
         <button id="miAddManual"><span class="ic" data-ic="plus"></span><span data-i18n="addManual">手動追加</span></button>
         <hr>
         <div class="menuLabel" data-i18n="referenceImport">文献をインポート</div>
-        <label class="menuCheck"><input type="checkbox" id="importKeywordsAsTags"> <span data-i18n="importKeywordsAsTags">keywords をタグとして読み込む</span></label>
         <button id="miImportBib"><span class="ic" data-ic="download"></span>BibTeX (.bib)</button>
         <button id="miImportRis"><span class="ic" data-ic="download"></span>RIS (.ris)</button>
         <button id="miImportCsv"><span class="ic" data-ic="download"></span>CSV (.csv)</button>
@@ -66,20 +66,23 @@
   <div class="menuwrap">
     <button class="tbtn" id="btnExport"><span class="ic" data-ic="upload"></span><span data-i18n="export">エクスポート</span><span class="ic" data-ic="chevron"></span></button>
     <div class="menu" id="menuExport">
-      <div class="menuLabel" data-i18n="referenceExport">文献情報をエクスポート</div>
-      <button id="miExportBib" data-i18n="expBibShown">表示中の文献 → BibTeX</button>
-      <button id="miExportRis" data-i18n="expRisShown">表示中の文献 → RIS</button>
-      <button id="miExportCsv" data-i18n="expCsvShown">表示中の文献 → CSV</button>
-      <button id="miExportShownJson" data-i18n="expJsonShown">表示中の文献 → JSON</button>
+      <div class="menuLabel" data-i18n="referenceExport">表示中の文献</div>
+      <button id="miExportBib"><span class="ic" data-ic="upload"></span><span data-i18n="expBibShown">BibTeX (.bib)</span></button>
+      <button id="miExportRis"><span class="ic" data-ic="upload"></span><span data-i18n="expRisShown">RIS (.ris)</span></button>
+      <button id="miExportCsv"><span class="ic" data-ic="upload"></span><span data-i18n="expCsvShown">CSV (.csv)</span></button>
+      <button id="miExportShownJson"><span class="ic" data-ic="upload"></span><span data-i18n="expJsonShown">JSON (.json)</span></button>
       <hr>
-      <button id="miExportJson" data-i18n="expJson">ライブラリ全体 → JSON</button>
+      <div class="menuLabel" data-i18n="libraryExportLabel">ライブラリ全体</div>
+      <button id="miExportJson"><span class="ic" data-ic="upload"></span><span data-i18n="expJson">JSON (.json)</span></button>
       <div id="researcherExportOptions" hidden>
         <hr>
-        <div class="menuLabel" data-i18n="researcherExport">研究者をエクスポート</div>
-        <button id="miExportResearchersShownJson" data-i18n="researcherExpJsonShown">表示中の研究者 → JSON</button>
-        <button id="miExportResearchersShownCsv" data-i18n="researcherExpCsvShown">表示中の研究者 → CSV</button>
-        <button id="miExportResearchersJson" data-i18n="researcherExpJson">全研究者 → JSON</button>
-        <button id="miExportResearchersCsv" data-i18n="researcherExpCsv">全研究者 → CSV</button>
+        <div class="menuLabel" data-i18n="researcherExport">研究者</div>
+        <div class="menuSubLabel" data-i18n="researcherExportShownLabel">表示中</div>
+        <button id="miExportResearchersShownJson"><span class="ic" data-ic="upload"></span><span data-i18n="researcherExpJsonShown">JSON (.json)</span></button>
+        <button id="miExportResearchersShownCsv"><span class="ic" data-ic="upload"></span><span data-i18n="researcherExpCsvShown">CSV (.csv)</span></button>
+        <div class="menuSubLabel" data-i18n="researcherExportAllLabel">すべて</div>
+        <button id="miExportResearchersJson"><span class="ic" data-ic="upload"></span><span data-i18n="researcherExpJson">JSON (.json)</span></button>
+        <button id="miExportResearchersCsv"><span class="ic" data-ic="upload"></span><span data-i18n="researcherExpCsv">CSV (.csv)</span></button>
       </div>
     </div>
   </div>
@@ -282,18 +285,24 @@
 
 <!-- ============ add-by-id dialog ============ -->
 <dialog id="dlgAddId">
-  <div class="dlgHead"><span data-i18n="addByIdTitle">DOI / arXiv ID から追加</span><button data-close><span class="ic" data-ic="x"></span></button></div>
+  <div class="dlgHead"><span data-i18n="addByIdTitle">文献情報を入力して検索</span><button data-close><span class="ic" data-ic="x"></span></button></div>
   <div class="dlgBody">
+    <div class="hint" data-i18n="addByIdHint">DOI・arXiv ID・論文ページの URL を貼り付けると自動で取得します。分からない場合は、雑誌名・年・巻・ページやタイトルを入力して検索してください。</div>
     <div class="fRow">
-      <input type="text" id="idInput" placeholder="10.1021/jacs.xxxxx / 2401.12345 / URL / タイトル / 書誌情報">
+      <input type="text" id="idInput" data-i18n-ph="addByIdInputPh" placeholder="DOI / arXiv ID / URL / タイトル">
     </div>
-    <div class="hint" data-i18n="addByIdHint">DOI・arXiv ID・それらを含む URL・論文タイトル / 出版社ページ URL・または書誌情報（例: Angew. Chem. Int. Ed. 2017, 56, 3270–3274.）を入力してください。ID が無い場合は CrossRef を検索します。</div>
+    <div class="fGrid idFieldGrid">
+      <div class="fRow"><input type="text" id="idJournal" data-i18n-ph="addByIdJournalPh" placeholder="雑誌名（略称可）"></div>
+      <div class="fRow"><input type="text" id="idYear" data-i18n-ph="addByIdYearPh" placeholder="年"></div>
+      <div class="fRow"><input type="text" id="idVolume" data-i18n-ph="addByIdVolumePh" placeholder="巻"></div>
+      <div class="fRow"><input type="text" id="idPage" data-i18n-ph="addByIdPagePh" placeholder="ページ"></div>
+    </div>
     <div class="errbox" id="idError"></div>
     <div id="idResults"></div>
   </div>
   <div class="dlgFoot">
     <button class="tbtn" data-close data-i18n="cancel">キャンセル</button>
-    <button class="tbtn primary" id="btnFetchId" data-i18n="fetchAdd">取得して追加</button>
+    <button class="tbtn primary" id="btnFetchId" data-i18n="fetchAdd">検索</button>
   </div>
 </dialog>
 
@@ -312,12 +321,11 @@
 
 <!-- ============ manual dialog ============ -->
 <dialog id="dlgManual">
-  <div class="dlgHead"><span data-i18n="manual">マニュアル</span><button data-close><span class="ic" data-ic="x"></span></button></div>
+  <div class="dlgHead"><span data-i18n="manual">マニュアル</span><button type="button" class="tbtn" data-close><span class="ic" data-ic="x"></span><span data-i18n="close">閉じる</span></button></div>
   <div id="manualWrap">
     <nav id="manualTabs"></nav>
     <div id="manualContent"></div>
   </div>
-  <div class="dlgFoot"><button class="tbtn primary" data-close data-i18n="close">閉じる</button></div>
 </dialog>
 
 <!-- ============ researcher profile editor ============ -->
@@ -364,6 +372,20 @@
   <div class="dlgHead"><span data-i18n="duplicateTitle">重複候補の確認</span><button data-close><span class="ic" data-ic="x"></span></button></div>
   <div class="dlgBody" id="duplicateBody"></div>
   <div class="dlgFoot"><button class="tbtn primary" data-close data-i18n="close">閉じる</button></div>
+</dialog>
+
+<!-- ============ import keywords-as-tags dialog (shown only when the imported file actually has keywords) ============ -->
+<dialog id="dlgImportKeywords">
+  <div class="dlgHead"><span data-i18n="importKeywordsTitle">キーワードの取り込み</span><button data-close><span class="ic" data-ic="x"></span></button></div>
+  <div class="dlgBody">
+    <div class="dupSummary" id="importKeywordsSummary"></div>
+    <div class="dlgCheck"><label><input type="checkbox" id="importKeywordsCheck"> <span data-i18n="importKeywordsAsTags">keywords をタグとして読み込む</span></label></div>
+    <div class="importKeywordsList" id="importKeywordsList"></div>
+  </div>
+  <div class="dlgFoot">
+    <button class="tbtn" data-close data-i18n="cancel">キャンセル</button>
+    <button class="tbtn primary" id="btnImportKeywordsConfirm" data-i18n="importKeywordsConfirm">取り込む</button>
+  </div>
 </dialog>
 
 <!-- ============ empty records dialog ============ -->
@@ -768,5 +790,6 @@
 
 <script src="app/worldmap.js?v=20260814r2"></script>
   <script src="app/main.js?v=20260816r5"></script>
+  <script src="app/manual-experience.js?v=20260823r9"></script>
 </body>
 </html>
