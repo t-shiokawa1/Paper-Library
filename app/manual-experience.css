@@ -39,6 +39,7 @@
   background:var(--panel);
 }
 .manualScenarioActions.show{display:flex}
+.manualScenarioShell--plain .manualScenarioFrame{display:none}
 .manualScenarioGuideCopy{min-width:0;flex:1}
 .manualScenarioGuideKicker{display:block;margin-bottom:2px;color:var(--accent);font-size:11px;font-weight:700}
 .manualScenarioGuideCopy strong{display:block;color:var(--text);font-size:15px;line-height:1.3}

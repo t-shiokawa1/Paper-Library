@@ -9,15 +9,13 @@
     {id:'add', ja:'文献を追加・削除する', en:'Add & delete references', icon:'plus'},
     {id:'connector', ja:'Chrome拡張機能', en:'Chrome Connector', icon:'book', action:'connector'},
     {id:'researchers', ja:'研究者', en:'Researchers', icon:'users'},
-    {id:'organize', ja:'整理する', en:'Organize', icon:'folder'},
+    {id:'organize', ja:'整理・編集する', en:'Organize & edit', icon:'folder'},
     {id:'search', ja:'探す・並べ替える', en:'Search and sort', icon:'search'},
-    {id:'detail', ja:'詳細パネルとPDF', en:'Details and PDFs', icon:'paperclip'},
     {id:'graph', ja:'論文相関図', en:'Related-paper map', icon:'graph'},
     {id:'maintenance', ja:'更新・メンテナンス', en:'Maintenance', icon:'retry'},
     {id:'word', ja:'Wordアドイン', en:'Word add-in', icon:'book', action:'word'},
-    {id:'settings', ja:'画面設定', en:'Display settings', icon:'gear'},
-    {id:'changelog', ja:'更新履歴', en:'Changelog', icon:'retry'},
-    {id:'contact', ja:'お問い合わせ', en:'Contact', icon:'message', action:'contact'}
+    {id:'changelog', ja:'更新履歴', en:'Changelog', icon:'retry', noGuide:true},
+    {id:'contact', ja:'お問い合わせ', en:'Contact', icon:'message', action:'contact', noGuide:true}
   ];
 
   openManual = function(initial){
@@ -112,15 +110,26 @@
     window.__paperLibraryManualGuideHandler = messageHandler;
     window.addEventListener('message', messageHandler);
 
+    const shell = content.querySelector('.manualScenarioShell');
     const show = index => {
       const topic = topics[index] || topics[0];
       tabs.querySelectorAll('button').forEach((button,i)=>button.classList.toggle('active',i===index));
       activeTopic = topic;
-      guide = {label:isJapanese ? topic.ja : topic.en, title:isJapanese ? '操作ガイドを読み込み中…' : 'Loading walkthrough…', text:isJapanese ? '仮想画面の操作手順を準備しています。' : 'Preparing the walkthrough.', step:0, total:0, canGoBack:false, isLast:false};
       renderDetails(topic);
-      renderGuideRail();
-      frame.onload = () => { content.scrollTop = 0; };
-      frame.src = 'manual-virtual-screen.html?v=20260823r6&lang='+language+'#'+topic.id;
+      shell.classList.toggle('manualScenarioShell--plain', !!topic.noGuide);
+      if(topic.noGuide){
+        // Some topics (Changelog, Contact) are plain reference text with
+        // nothing to click through — skip the walkthrough rail/iframe
+        // entirely rather than showing an empty or pointless guide.
+        actionBar.classList.remove('show');
+        actionBar.replaceChildren();
+        frame.removeAttribute('src');
+      }else{
+        guide = {label:isJapanese ? topic.ja : topic.en, title:isJapanese ? '操作ガイドを読み込み中…' : 'Loading walkthrough…', text:isJapanese ? '仮想画面の操作手順を準備しています。' : 'Preparing the walkthrough.', step:0, total:0, canGoBack:false, isLast:false};
+        renderGuideRail();
+        frame.onload = () => { content.scrollTop = 0; };
+        frame.src = 'manual-virtual-screen.html?v=20260823r7&lang='+language+'#'+topic.id;
+      }
       content.scrollTop = 0;
     };
 

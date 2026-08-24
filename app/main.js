@@ -123,6 +123,18 @@ function renderIcons(root){
 
 const APP_VERSION = '2.1';
 const CHANGELOG = [
+  { date:'2026-08-24',
+    ja:[
+      'マニュアルを刷新し、操作を実際の画面で体験できる「操作ガイド」を追加しました',
+      '各トピックに仮想画面のウォークスルーを用意し、「次へ」「戻る」で手順を1ステップずつ確認できるようにしました',
+      '操作ガイドの下には従来どおりの詳しい説明も併記し、ガイドと詳細リファレンスを1画面で見られるようにしました',
+    ],
+    en:[
+      'Revamped the manual with an interactive walkthrough that lets you follow each step on a real screen',
+      'Each topic now has a virtual-screen walkthrough you can step through one action at a time using “Next” and “Back”',
+      'The full detailed reference is kept alongside the walkthrough, so the guide and the reference are visible on a single screen',
+    ],
+  },
   { v:'2.5', date:'2026-08-19',
     ja:[
       '研究者台帳に「ツリー」表示（アカデミックツリー）を追加しました',
@@ -484,6 +496,11 @@ const I18N = {
     researcherTreeSource:'研究者プロフィールの指導教員・経歴から作成',
     researcherTreeOrientation:'向き', researcherTreeOrientationLabel:'系譜を並べる向き',
     researcherTreeOrientV:'上下', researcherTreeOrientH:'左右',
+    researcherTreeLayout:'配置', researcherTreeLayoutLabel:'研究者を並べる基準',
+    researcherTreeLayoutGeneration:'世代', researcherTreeLayoutPhdYear:'PhD取得年',
+    researcherTreeYearAxisHint:'PhD取得年を縦軸に表示。大きな年差は圧縮し、所属・PIの関係は破線で表示します',
+    researcherTreeYearUnknown:'PhD取得年不明', researcherTreeYearOrderIssue:'PhD取得年の順序を確認',
+    researcherTreeYearStats:(known,unknown)=>`PhD取得年あり ${known} / 不明 ${unknown}`,
     researcherTreeScope:'関係', researcherTreeScopeLabel:'ツリーに含める関係の範囲',
     researcherTreeScopePhd:'PhD指導のみ', researcherTreeScopeAll:'所属・PIも含む',
     researcherTreeDepth:'深度', researcherTreeDepthLabel:'中心研究者からたどる関係の深さ',
@@ -769,6 +786,11 @@ const I18N = {
     researcherTreeSource:'Built from advisors and career history in researcher profiles',
     researcherTreeOrientation:'Orientation', researcherTreeOrientationLabel:'Direction the genealogy runs in',
     researcherTreeOrientV:'Vertical', researcherTreeOrientH:'Horizontal',
+    researcherTreeLayout:'Layout', researcherTreeLayoutLabel:'How researchers are arranged',
+    researcherTreeLayoutGeneration:'Generation', researcherTreeLayoutPhdYear:'PhD year',
+    researcherTreeYearAxisHint:'Vertical axis shows PhD years; large gaps are compressed and lab / PI relations are dashed',
+    researcherTreeYearUnknown:'PhD year unknown', researcherTreeYearOrderIssue:'Check PhD-year order',
+    researcherTreeYearStats:(known,unknown)=>`PhD year known ${known} / unknown ${unknown}`,
     researcherTreeScope:'Relations', researcherTreeScopeLabel:'Which relations the tree includes',
     researcherTreeScopePhd:'PhD advising only', researcherTreeScopeAll:'Include lab / PI',
     researcherTreeDepth:'Depth', researcherTreeDepthLabel:'How far to follow relations from the center researcher',
@@ -4988,7 +5010,7 @@ const RESEARCHER_TREE_KINDS={
   position: {label:'researcherTreeKindPosition',  down:'researcherTreeKindPositionDown',  soft:true},
   education:{label:'researcherTreeKindEducation', down:'researcherTreeKindEducationDown', soft:true},
 };
-let researcherTreeOrientation='v', researcherTreeScope='phd', researcherTreeDepth=3;
+let researcherTreeOrientation='v', researcherTreeScope='phd', researcherTreeDepth=3, researcherTreeLayoutMode='generation';
 let researcherTreeState=null; // {g, egoId, layout}
 (function loadResearcherTreePrefs(){
   try{
@@ -4996,10 +5018,16 @@ let researcherTreeState=null; // {g, egoId, layout}
     if(p.orientation==='v'||p.orientation==='h') researcherTreeOrientation=p.orientation;
     if(p.scope==='phd'||p.scope==='all') researcherTreeScope=p.scope;
     if(Number.isFinite(+p.depth)) researcherTreeDepth=Math.max(1,Math.min(8,Math.round(+p.depth)));
+    if(p.layout==='generation'||p.layout==='phdYear') researcherTreeLayoutMode=p.layout;
   }catch(e){}
 })();
 function saveResearcherTreePrefs(){
-  try{ localStorage.setItem(RESEARCHER_TREE_PREFS_KEY,JSON.stringify({orientation:researcherTreeOrientation,scope:researcherTreeScope,depth:researcherTreeDepth})); }catch(e){}
+  try{ localStorage.setItem(RESEARCHER_TREE_PREFS_KEY,JSON.stringify({orientation:researcherTreeOrientation,scope:researcherTreeScope,depth:researcherTreeDepth,layout:researcherTreeLayoutMode})); }catch(e){}
+}
+function researcherTreePhdYear(node){
+  const value=node&&node.entry&&node.entry.profile&&node.entry.profile.phdYear;
+  const year=Number(String(value||'').match(/^\d{4}$/)?.[0]);
+  return year>=1800&&year<=new Date().getFullYear()?year:null;
 }
 // "2015-2018 · Kyoto University · Assistant Professor"
 function researcherTreeRecordDetail(x){
@@ -5007,23 +5035,22 @@ function researcherTreeRecordDetail(x){
   const period = x.start&&x.end ? `${x.start}${dash}${x.end}` : x.start ? `${x.start}${dash}` : x.end ? `${dash}${x.end}` : '';
   return [period, x.institution, x.organization||x.program, x.title||x.degree].filter(Boolean).join(' · ');
 }
-// Build the full relation graph over the directory. Advisors named in a profile but
-// not registered themselves become "ghost" nodes so the lineage is not cut short.
+// Build the relation graph over registered profiles only. Names without a registered
+// profile are intentionally omitted rather than shown as incomplete ghost nodes.
 function researcherTreeGraph(){
   const entries=researcherDirectoryEntries();
+  const registered=entries.filter(e=>e.profile);
   const nodes=new Map(), keyIndex=new Map();
-  entries.forEach(e=>{
+  registered.forEach(e=>{
     nodes.set(e.key,{id:e.key,name:formatResearcherName(e),entry:e,ghost:false});
     [e.name,...Array.from(e.aliases||[])].forEach(n=>researcherNameKeys(n).forEach(k=>{ if(!keyIndex.has(k)) keyIndex.set(k,e.key); }));
     if(e.profile) researcherProfileKeys(e.profile).forEach(k=>{ if(!keyIndex.has(k)) keyIndex.set(k,e.key); });
   });
   const resolve=(name)=>{
     for(const k of researcherNameKeys(name)) if(keyIndex.has(k)) return keyIndex.get(k);
-    const hit=entries.find(e=>e.profile&&researcherMatchesName(e.profile,name));
+    const hit=registered.find(e=>researcherMatchesName(e.profile,name));
     if(hit) return hit.key;
-    const id='ghost:'+researcherKey(name);
-    if(!nodes.has(id)) nodes.set(id,{id,name:String(name||'').trim(),entry:null,ghost:true});
-    return id;
+    return null;
   };
   // One line per pair; a pair evidenced several ways keeps every reason for the tooltip.
   const pairs=new Map();
@@ -5035,8 +5062,8 @@ function researcherTreeGraph(){
     if(!rel.kinds.some(k=>k.kind===kind&&k.detail===(detail||''))) rel.kinds.push({kind,detail:detail||''});
     pairs.set(sig,rel);
   };
-  entries.forEach(e=>{
-    const p=e.profile; if(!p) return;
+  registered.forEach(e=>{
+    const p=e.profile;
     researcherAdvisors(p).forEach(name=>add(name,e.key,'phd',''));
     if(researcherTreeScope!=='all') return;
     researcherPositions(p).forEach(x=>researcherLines(x.related).forEach(name=>add(name,e.key,'position',researcherTreeRecordDetail(x))));
@@ -5061,7 +5088,7 @@ function researcherTreeEgoId(g){
   g.rels.forEach(r=>[r.sup,r.sub].forEach(id=>degree.set(id,(degree.get(id)||0)+1)));
   let best=null, bestN=0;
   degree.forEach((n,id)=>{ const node=g.nodes.get(id); if(node&&!node.ghost&&n>bestN){ best=id; bestN=n; } });
-  return best || (entries[0]&&entries[0].key) || null;
+  return best || [...g.nodes.keys()][0] || null;
 }
 const RESEARCHER_TREE_NW=184, RESEARCHER_TREE_NH=40;
 // Layered DAG layout: depth-limited component -> generation per node -> order inside
@@ -5136,9 +5163,87 @@ function researcherTreeLayout(g, egoId){
   return {ids, rels, pos, layer,
     W:Math.max(...xs)-Math.min(...xs)+pad*2, H:Math.max(...ys)-Math.min(...ys)+pad*2};
 }
-function researcherTreeEdgePath(a,b){
+// Chronological alternative to the generation layout. Calendar order is preserved,
+// while each gap uses a bounded scale so a decades-long gap does not turn the canvas
+// into a mostly empty scroll area. Nodes with no documented year are deliberately
+// kept in a final lane; no year is inferred from an advisor relationship.
+function researcherTreePhdYearLayout(g, egoId){
+  const parents={}, children={};
+  g.rels.forEach(r=>{ (parents[r.sub]=parents[r.sub]||[]).push(r.sup); (children[r.sup]=children[r.sup]||[]).push(r.sub); });
+  const keep=new Set([egoId]);
+  const walk=(step)=>{
+    let frontier=[egoId];
+    for(let d=1; d<=researcherTreeDepth && frontier.length; d++){
+      const next=[];
+      frontier.forEach(id=>(step[id]||[]).forEach(n=>{ if(!keep.has(n)){ keep.add(n); next.push(n); } }));
+      frontier=next;
+    }
+  };
+  walk(parents); walk(children);
+  const rels=g.rels.filter(r=>keep.has(r.sup)&&keep.has(r.sub));
+  const ids=Array.from(keep).filter(id=>g.nodes.has(id));
+  const yearById={}; ids.forEach(id=>yearById[id]=researcherTreePhdYear(g.nodes.get(id)));
+  const years=[...new Set(ids.map(id=>yearById[id]).filter(Boolean))].sort((a,b)=>a-b);
+  const keys=years.map(String);
+  if(ids.some(id=>!yearById[id])) keys.push('unknown');
+  const keyFor=id=>yearById[id]?String(yearById[id]):'unknown';
+  const order=[...ids].sort((a,b)=>String(g.nodes.get(a).name).localeCompare(String(g.nodes.get(b).name),lang==='ja'?'ja':'en'));
+  const rows=new Map(keys.map(key=>[key,order.filter(id=>keyFor(id)===key)]));
+  const rank=Object.fromEntries(keys.map((key,i)=>[key,i]));
+  const up={}, down={};
+  rels.forEach(r=>{ (down[r.sup]=down[r.sup]||[]).push(r.sub); (up[r.sub]=up[r.sub]||[]).push(r.sup); });
+  const at=id=>{ const row=rows.get(keyFor(id)); return row?row.indexOf(id):0; };
+  for(let s=0;s<12;s++){
+    const seq=s%2?[...keys].reverse():keys;
+    seq.forEach(key=>{
+      const row=rows.get(key), initial=new Map(row.map((id,i)=>[id,i]));
+      const bary=id=>{
+        const neighbours=(s%2?(down[id]||[]):(up[id]||[])).filter(x=>rank[keyFor(x)]!=null);
+        return neighbours.length?neighbours.reduce((sum,x)=>sum+at(x),0)/neighbours.length:initial.get(id);
+      };
+      row.sort((a,b)=>bary(a)-bary(b)||initial.get(a)-initial.get(b));
+    });
+  }
+  const crossGap=RESEARCHER_TREE_NW+26, co={};
+  rows.forEach(row=>row.forEach((id,i)=>co[id]=i*crossGap));
+  for(let s=0;s<48;s++){
+    keys.forEach(key=>{
+      const row=rows.get(key);
+      row.forEach(id=>{
+        const neighbours=[...(up[id]||[]),...(down[id]||[])].filter(x=>rank[keyFor(x)]!=null);
+        if(neighbours.length) co[id]=co[id]*.45+(neighbours.reduce((sum,x)=>sum+co[x],0)/neighbours.length)*.55;
+      });
+      for(let i=1;i<row.length;i++) co[row[i]]=Math.max(co[row[i]],co[row[i-1]]+crossGap);
+      for(let i=row.length-2;i>=0;i--) co[row[i]]=Math.min(co[row[i]],co[row[i+1]]-crossGap);
+    });
+  }
+  const MIN_YEAR_GAP=52, YEAR_PX=7, MAX_YEAR_GAP=144;
+  const lastYear=years[years.length-1]||null;
+  const yByYear={};
+  years.forEach((year,i)=>{
+    if(!i){ yByYear[year]=0; return; }
+    const gap=Math.min(MAX_YEAR_GAP,Math.max(MIN_YEAR_GAP,(year-years[i-1])*YEAR_PX));
+    yByYear[year]=yByYear[years[i-1]]+gap;
+  });
+  const unknownMain=lastYear==null?0:yByYear[lastYear]+MIN_YEAR_GAP*2;
+  const raw={};
+  ids.forEach(id=>{
+    const main=yearById[id]?yByYear[yearById[id]]:unknownMain;
+    raw[id]={x:co[id],y:main};
+  });
+  const xs=ids.map(id=>raw[id].x), ys=ids.map(id=>raw[id].y);
+  const minX=Math.min(...xs), maxX=Math.max(...xs), minY=Math.min(...ys), maxY=Math.max(...ys);
+  const axisInset=48, xOffset=axisInset+RESEARCHER_TREE_NW/2+22-minX, yOffset=RESEARCHER_TREE_NH/2+28-minY;
+  const pos={}; ids.forEach(id=>pos[id]={x:raw[id].x+xOffset,y:raw[id].y+yOffset});
+  const timedRels=rels.map(r=>Object.assign({},r,{timeConflict:!!(yearById[r.sup]&&yearById[r.sub]&&yearById[r.sup]>yearById[r.sub])}));
+  return {ids, rels:timedRels, pos, layer:Object.fromEntries(ids.map(id=>[id,rank[keyFor(id)]||0])),
+    W:maxX-minX+axisInset+RESEARCHER_TREE_NW+44, H:maxY-minY+RESEARCHER_TREE_NH+56,
+    axis:{years:years.map(year=>({year,y:yByYear[year]+yOffset})),unknownY:ids.some(id=>!yearById[id])?unknownMain+yOffset:null},
+    knownYears:ids.filter(id=>yearById[id]).length, unknownYears:ids.filter(id=>!yearById[id]).length};
+}
+function researcherTreeEdgePath(a,b, chronological){
   const NW=RESEARCHER_TREE_NW, NH=RESEARCHER_TREE_NH;
-  if(researcherTreeOrientation==='v'){
+  if(chronological||researcherTreeOrientation==='v'){
     const y1=a.y+NH/2, y2=b.y-NH/2, m=(y1+y2)/2;
     return `M${a.x},${y1} C${a.x},${m} ${b.x},${m} ${b.x},${y2}`;
   }
@@ -5150,7 +5255,9 @@ function researcherTreeNodeHtml(node, p, egoId){
   const avatar = node.ghost
     ? `<span class="rAvatar rAvatarInit rAvS rTreeGhostAv">?</span>`
     : researcherAvatarHTML(node.entry,'rAvS');
-  const sub = node.ghost ? `<span class="rTreeSub">${esc(t('researcherTreeUnregistered'))}</span>` : '';
+  const year=researcherTreeLayoutMode==='phdYear'?researcherTreePhdYear(node):null;
+  const subText=node.ghost?t('researcherTreeUnregistered'):year?`PhD ${year}`:researcherTreeLayoutMode==='phdYear'?t('researcherTreeYearUnknown'):'';
+  const sub=subText?`<span class="rTreeSub">${esc(subText)}</span>`:'';
   return `<div class="${cls.join(' ')}" style="left:${Math.round(p.x-RESEARCHER_TREE_NW/2)}px; top:${Math.round(p.y-RESEARCHER_TREE_NH/2)}px" data-tree-node="${esc(node.id)}">
     ${avatar}<span class="rTreeLabel"><span class="rTreeName">${esc(node.name)}</span>${sub}</span></div>`;
 }
@@ -5171,7 +5278,9 @@ function researcherTreeNodeTipHtml(id){
   const st=researcherTreeState; if(!st) return '';
   const node=st.g.nodes.get(id); if(!node) return '';
   const ups=researcherTreeRelationLines(id,'up'), downs=researcherTreeRelationLines(id,'down');
+  const year=researcherTreeLayoutMode==='phdYear'?researcherTreePhdYear(node):null;
   let h=`<div class="rTreeTipTitle">${esc(node.name)}${node.ghost?` <span class="rTreeTipGhost">${esc(t('researcherTreeUnregistered'))}</span>`:''}</div>`;
+  if(researcherTreeLayoutMode==='phdYear') h+=`<div class="rTreeTipRow"><b>${esc(t('researcherPhdYear'))}</b> — ${esc(year||t('researcherTreeYearUnknown'))}</div>`;
   if(ups.length) h+=`<div class="rTreeTipHead">${esc(t('researcherTreeUp'))}</div>${ups.join('')}`;
   if(downs.length) h+=`<div class="rTreeTipHead">${esc(t('researcherTreeDown'))}</div>${downs.join('')}`;
   if(!ups.length&&!downs.length) h+=`<div class="rTreeTipHead">${esc(t('researcherTreeNoRelations'))}</div>`;
@@ -5181,24 +5290,31 @@ function researcherTreeEdgeTipHtml(rel){
   const st=researcherTreeState; if(!st||!rel) return '';
   const A=st.g.nodes.get(rel.sup), B=st.g.nodes.get(rel.sub);
   const reasons=rel.kinds.map(k=>`<div class="rTreeTipRow">${esc(t(RESEARCHER_TREE_KINDS[k.kind].label))}${k.detail?`<span class="rTreeTipNote">${esc(k.detail)}</span>`:''}</div>`).join('');
-  return `<div class="rTreeTipTitle">${esc(A?A.name:'')} → ${esc(B?B.name:'')}</div>${reasons}`;
+  const issue=rel.timeConflict?`<div class="rTreeTipNote rTreeTipWarn">${esc(t('researcherTreeYearOrderIssue'))}</div>`:'';
+  return `<div class="rTreeTipTitle">${esc(A?A.name:'')} → ${esc(B?B.name:'')}</div>${reasons}${issue}`;
 }
 function researcherTreeLegendHtml(){
+  const chronological=researcherTreeLayoutMode==='phdYear';
   return `<div class="rTreeLegend">
     <span class="rTreeLegendItem"><i class="rTreeDot ego"></i>${esc(t('researcherTreeLegendEgo'))}</span>
     <span class="rTreeLegendItem"><i class="rTreeDot"></i>${esc(t('researcherTreeLegendKnown'))}</span>
-    <span class="rTreeLegendItem"><i class="rTreeDot ghost"></i>${esc(t('researcherTreeLegendGhost'))}</span>
     <span class="rTreeLegendItem"><i class="rTreeLine"></i>${esc(t('researcherTreeLegendPhd'))}</span>
-    <span class="rTreeLegendItem"><i class="rTreeLine soft"></i>${esc(t('researcherTreeLegendOther'))}</span>
-    <span class="rTreeLegendHint">${esc(t('researcherTreeHint'))}</span>
+    ${chronological?`<span class="rTreeLegendItem"><i class="rTreeYearMark"></i>${esc(t('researcherTreeYearUnknown'))}</span><span class="rTreeLegendItem"><i class="rTreeLine soft"></i>${esc(t('researcherTreeLegendOther'))}</span>`:`<span class="rTreeLegendItem"><i class="rTreeLine soft"></i>${esc(t('researcherTreeLegendOther'))}</span>`}
+    <span class="rTreeLegendHint">${esc(chronological?t('researcherTreeYearAxisHint'):t('researcherTreeHint'))}</span>
   </div>`;
+}
+function researcherTreeAxisSvg(layout){
+  if(!layout.axis) return '';
+  const guides=layout.axis.years.map(({year,y})=>`<g class="rTreeYearGuide"><line x1="42" y1="${Math.round(y)}" x2="${Math.round(layout.W)}" y2="${Math.round(y)}"/><text x="5" y="${Math.round(y+4)}">${year}</text></g>`).join('');
+  const unknown=layout.axis.unknownY==null?'':`<g class="rTreeYearGuide unknown"><line x1="42" y1="${Math.round(layout.axis.unknownY)}" x2="${Math.round(layout.W)}" y2="${Math.round(layout.axis.unknownY)}"/><text x="5" y="${Math.round(layout.axis.unknownY+4)}">?</text></g>`;
+  return guides+unknown;
 }
 function researcherTreeHtml(){
   const g=researcherTreeGraph();
   const egoId=researcherTreeEgoId(g);
   researcherTreeState=null;
   if(!egoId||!g.nodes.size) return `<div class="researcherEmpty">${esc(t('researcherTreeNoSelection'))}</div>`;
-  const layout=researcherTreeLayout(g,egoId);
+  const layout=researcherTreeLayoutMode==='phdYear'?researcherTreePhdYearLayout(g,egoId):researcherTreeLayout(g,egoId);
   researcherTreeState={g,egoId,layout};
   if(!layout.rels.length){
     const node=g.nodes.get(egoId);
@@ -5207,13 +5323,13 @@ function researcherTreeHtml(){
   const edges=layout.rels.map((r,i)=>{
     const a=layout.pos[r.sup], b=layout.pos[r.sub];
     if(!a||!b) return '';
-    const d=researcherTreeEdgePath(a,b);
-    return `<path class="rTreeEdge${r.soft?' soft':''}" data-tree-edge="${i}" d="${d}"/><path class="rTreeHit" data-tree-hit="${i}" d="${d}"/>`;
+    const d=researcherTreeEdgePath(a,b,!!layout.axis);
+    return `<path class="rTreeEdge${r.soft?' soft':''}${r.timeConflict?' timeConflict':''}" data-tree-edge="${i}" d="${d}"/><path class="rTreeHit" data-tree-hit="${i}" d="${d}"/>`;
   }).join('');
   const nodes=layout.ids.map(id=>researcherTreeNodeHtml(g.nodes.get(id),layout.pos[id],egoId)).join('');
   return `${researcherTreeLegendHtml()}<div class="rTreeWrap" id="rTreeWrap">
     <div class="rTreeCanvas" style="width:${Math.round(layout.W)}px; height:${Math.round(layout.H)}px">
-      <svg class="rTreeEdges" width="${Math.round(layout.W)}" height="${Math.round(layout.H)}" role="img" aria-label="${esc(t('researcherTreeAria'))}">${edges}</svg>
+      <svg class="rTreeEdges" width="${Math.round(layout.W)}" height="${Math.round(layout.H)}" role="img" aria-label="${esc(t('researcherTreeAria'))}">${researcherTreeAxisSvg(layout)}${edges}</svg>
       ${nodes}
       <div class="rTreeTip" id="rTreeTip" hidden></div>
     </div>
@@ -5309,7 +5425,8 @@ function researcherTreeStatusHtml(){
   const d=researcherTreeDepth, fill=((d-1)/7)*100;
   const seg=(attr,value,current,label)=>`<button type="button" class="lsbtn rTreeSegBtn${value===current?' on':''}" data-${attr}="${value}" aria-pressed="${value===current}">${esc(label)}</button>`;
   return `<span id="researcherTreeControls" class="researcherTreeControls">
-    <span class="rTreeSeg" role="group" title="${esc(t('researcherTreeOrientationLabel'))}">${seg('tree-orient','v',researcherTreeOrientation,t('researcherTreeOrientV'))}${seg('tree-orient','h',researcherTreeOrientation,t('researcherTreeOrientH'))}</span>
+    <span class="rTreeSeg" role="group" title="${esc(t('researcherTreeLayoutLabel'))}">${seg('tree-layout','generation',researcherTreeLayoutMode,t('researcherTreeLayoutGeneration'))}${seg('tree-layout','phdYear',researcherTreeLayoutMode,t('researcherTreeLayoutPhdYear'))}</span>
+    ${researcherTreeLayoutMode==='generation'?`<span class="rTreeSeg" role="group" title="${esc(t('researcherTreeOrientationLabel'))}">${seg('tree-orient','v',researcherTreeOrientation,t('researcherTreeOrientV'))}${seg('tree-orient','h',researcherTreeOrientation,t('researcherTreeOrientH'))}</span>`:''}
     <span class="rTreeSeg" role="group" title="${esc(t('researcherTreeScopeLabel'))}">${seg('tree-scope','phd',researcherTreeScope,t('researcherTreeScopePhd'))}${seg('tree-scope','all',researcherTreeScope,t('researcherTreeScopeAll'))}</span>
     <label class="rTreeDepthControl" title="${esc(t('researcherTreeDepthLabel'))}">
       <span>${esc(t('researcherTreeDepth'))}</span>
@@ -5353,7 +5470,7 @@ function renderResearcherList(){
   updateResearcherTreePicker(view);
   if(view==='tree'){
     const st=researcherTreeState;
-    $('#researcherListCount').textContent = st ? I18N[lang].researcherTreeStats(st.layout.ids.length, st.layout.rels.length) : '';
+    $('#researcherListCount').textContent = st ? `${I18N[lang].researcherTreeStats(st.layout.ids.length, st.layout.rels.length)}${st.layout.axis?` · ${I18N[lang].researcherTreeYearStats(st.layout.knownYears,st.layout.unknownYears)}`:''}` : '';
   }else if(view==='map' && mapPlotMode()==='institutions'){
     // institution mode: every registered institution, and how many have researchers here
     const total=(mapPlaced||[]).length, withPeople=(mapPlaced||[]).filter(c=>c.people>0).length;
@@ -9576,117 +9693,6 @@ const MANUAL_FIGS = {
       <text x="288" y="130" fill="var(--text2)">attachments/ ${J?'— 添付した PDF':'— attached PDFs'}</text>
     </svg>`;
   },
-  add(lg){
-    const J = lg==='ja';
-    return `<svg viewBox="0 0 560 150" xmlns="http://www.w3.org/2000/svg" font-size="11">
-      <text x="14" y="24" fill="var(--text2)">${J?'「追加」→「文献情報を入力して検索」に入力':'“Add” → “Search by reference info”'}</text>
-      <rect x="14" y="36" width="210" height="30" rx="8" fill="var(--panel)" stroke="var(--border)"/>
-      <text x="24" y="55" fill="var(--text3)" font-size="11.5">10.1038/nature12373</text>
-      <rect x="232" y="36" width="106" height="30" rx="8" fill="var(--accent)"/>
-      <text x="285" y="55" text-anchor="middle" fill="#fff" font-size="11.5">${J?'検索':'Search'}</text>
-      <path d="M348 51 H382 M374 44 L386 51 L374 58" stroke="var(--accent)" fill="none" stroke-width="2"/>
-      <rect x="394" y="18" width="152" height="114" rx="10" fill="var(--panel)" stroke="var(--border)"/>
-      <rect x="406" y="32" width="128" height="9" rx="4" fill="var(--accent)" opacity=".85"/>
-      <rect x="406" y="52" width="110" height="7" rx="3" fill="var(--border2)"/>
-      <rect x="406" y="66" width="90" height="7" rx="3" fill="var(--border2)"/>
-      <rect x="406" y="80" width="62" height="7" rx="3" fill="var(--border2)"/>
-      <circle cx="414" cy="110" r="8" fill="var(--green-soft)" stroke="var(--green)"/>
-      <path d="M410.5 110 l2.5 2.8 4.5 -5.6" stroke="var(--green)" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-      <text x="428" y="114" fill="var(--green)" font-size="10.5">${J?'自動で入力されます':'Filled in automatically'}</text>
-      <text x="470" y="146" text-anchor="middle" font-size="10.5" fill="var(--text3)">${J?'タイトル・著者・雑誌・年 など':'Title, authors, journal, year, …'}</text>
-    </svg>`;
-  },
-  connector(lg){
-    const J = lg==='ja';
-    return `<svg viewBox="0 0 640 250" xmlns="http://www.w3.org/2000/svg" font-size="11">
-      <rect x="16" y="18" width="150" height="66" rx="11" fill="var(--panel)" stroke="var(--border)"/>
-      ${miFig('download', 32, 31, 18, 'var(--accent)')}
-      <text x="68" y="43" font-weight="700" fill="var(--text)">ZIP</text>
-      <text x="32" y="64" fill="var(--text2)" font-size="10">${J?'解凍して読み込む':'Unzip and load'}</text>
-      <path d="M176 51 H214 M206 44 L218 51 L206 58" stroke="var(--accent)" fill="none" stroke-width="2"/>
-      <rect x="230" y="18" width="182" height="66" rx="11" fill="var(--panel)" stroke="var(--border)"/>
-      <text x="246" y="39" font-weight="700" fill="var(--text)" font-size="12.5">chrome://extensions</text>
-      <rect x="248" y="53" width="62" height="18" rx="9" fill="var(--accent-soft)" stroke="var(--accent-border)"/>
-      <text x="279" y="66" text-anchor="middle" fill="var(--accent)" font-size="9.5">${J?'開発者ON':'Dev ON'}</text>
-      <rect x="320" y="53" width="56" height="18" rx="7" fill="var(--bg)" stroke="var(--border2)"/>
-      <text x="348" y="66" text-anchor="middle" fill="var(--text2)" font-size="9.5">${J?'読込':'Load'}</text>
-      <path d="M422 51 H460 M452 44 L464 51 L452 58" stroke="var(--accent)" fill="none" stroke-width="2"/>
-      <rect x="476" y="18" width="148" height="66" rx="11" fill="var(--panel)" stroke="var(--border)"/>
-      ${miFig('gear', 492, 31, 16, 'var(--accent)')}
-      <text x="518" y="43" font-weight="700" fill="var(--text)">${J?'詳細':'Details'}</text>
-      <circle cx="496" cy="63" r="6" fill="var(--green-soft)" stroke="var(--green)"/>
-      <path d="M493 63 l2 2.2 4 -5" stroke="var(--green)" fill="none" stroke-width="1.5" stroke-linecap="round"/>
-      <text x="508" y="67" fill="var(--green)" font-size="9.5">${J?'file URL 許可':'Allow file URLs'}</text>
-      <rect x="16" y="120" width="190" height="96" rx="11" fill="var(--panel)" stroke="var(--border)"/>
-      <text x="32" y="143" font-weight="700" fill="var(--text)">${J?'論文ページ':'Paper page'}</text>
-      <rect x="32" y="157" width="138" height="8" rx="4" fill="var(--border2)"/>
-      <rect x="32" y="174" width="112" height="8" rx="4" fill="var(--border2)"/>
-      ${miFig('book', 170, 133, 18, 'var(--accent)')}
-      <text x="111" y="203" text-anchor="middle" fill="var(--text3)" font-size="10">${J?'本のアイコンをクリック':'Click the book icon'}</text>
-      <path d="M216 168 H250 M242 161 L254 168 L242 175" stroke="var(--accent)" fill="none" stroke-width="2"/>
-      <rect x="266" y="110" width="202" height="116" rx="12" fill="var(--panel)" stroke="var(--border)"/>
-      <text x="282" y="132" font-weight="700" fill="var(--text)" font-size="12.5">Paper Library Connector</text>
-      <rect x="282" y="145" width="146" height="20" rx="9" fill="var(--bg)" stroke="var(--border2)"/>
-      <text x="300" y="159" fill="var(--text2)" font-size="10">${J?'保存先ライブラリ':'Destination library'}</text>
-      <rect x="282" y="176" width="15" height="15" rx="3" fill="var(--accent-soft)" stroke="var(--accent)"/>
-      <path d="M285 183 l3 3 6 -7" stroke="var(--accent)" fill="none" stroke-width="1.5" stroke-linecap="round"/>
-      <text x="307" y="188" fill="var(--text2)" font-size="10.5">${J?'コレクションを選択':'Choose collections'}</text>
-      <rect x="282" y="199" width="146" height="22" rx="8" fill="var(--accent)"/>
-      <text x="355" y="214" text-anchor="middle" fill="#fff" font-size="10.5">${J?'保存':'Save'}</text>
-      <path d="M478 168 H512 M504 161 L516 168 L504 175" stroke="var(--green)" fill="none" stroke-width="2"/>
-      <rect x="528" y="120" width="96" height="96" rx="11" fill="var(--panel)" stroke="var(--border)"/>
-      <text x="576" y="143" text-anchor="middle" font-weight="700" fill="var(--text)" font-size="11.5">Paper Library</text>
-      <circle cx="576" cy="166" r="11" fill="var(--green-soft)" stroke="var(--green)"/>
-      <path d="M570.5 166 l4 4.2 7 -8.4" stroke="var(--green)" fill="none" stroke-width="1.8" stroke-linecap="round"/>
-      <text x="576" y="191" text-anchor="middle" fill="var(--green)" font-weight="600" font-size="10">${J?'自動取り込み':'Auto-import'}</text>
-      <text x="576" y="207" text-anchor="middle" fill="var(--text3)" font-size="9">${J?'次回も反映':'Next open too'}</text>
-    </svg>`;
-  },
-  organize(lg){
-    const J = lg==='ja';
-    return `<svg viewBox="0 0 560 170" xmlns="http://www.w3.org/2000/svg" font-size="11">
-      <rect x="14" y="22" width="168" height="128" rx="10" fill="var(--panel)" stroke="var(--border)"/>
-      <text x="26" y="44" font-weight="600" fill="var(--text)">${J?'コレクション':'Collections'}</text>
-      ${miFig('folder', 26, 54, 15)}
-      <text x="48" y="66" fill="var(--text2)">${J?'光化学':'Photochemistry'}</text>
-      <rect x="22" y="80" width="152" height="26" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-dasharray="4 3"/>
-      ${miFig('folder', 28, 85, 15, 'var(--accent)')}
-      <text x="50" y="97" fill="var(--accent)" font-weight="600">${J?'有機合成':'Org. synthesis'}</text>
-      ${miFig('folder', 26, 114, 15)}
-      <text x="48" y="126" fill="var(--text2)">${J?'レビュー':'Reviews'}</text>
-      <rect x="224" y="26" width="320" height="28" rx="8" fill="var(--panel)" stroke="var(--border)"/>
-      <rect x="236" y="36" width="180" height="8" rx="4" fill="var(--border2)"/>
-      <rect x="224" y="64" width="320" height="28" rx="8" fill="var(--sel)" stroke="var(--accent)"/>
-      <rect x="236" y="74" width="200" height="8" rx="4" fill="var(--text3)"/>
-      <rect x="224" y="102" width="320" height="28" rx="8" fill="var(--panel)" stroke="var(--border)"/>
-      <rect x="236" y="112" width="160" height="8" rx="4" fill="var(--border2)"/>
-      <path d="M224 82 C 200 92, 200 92, 186 92 M196 86 L184 93 L196 99" stroke="var(--accent)" fill="none" stroke-width="2" stroke-dasharray="4 3"/>
-      <text x="384" y="152" text-anchor="middle" fill="var(--accent)" font-weight="600">${J?'文献をコレクションへドラッグ＆ドロップ':'Drag &amp; drop references into a collection'}</text>
-      <text x="384" y="166" text-anchor="middle" font-size="10.5" fill="var(--text3)">${J?'⌘/Ctrl・Shift クリックで複数選択してまとめて移動もできます':'Cmd/Ctrl- or Shift-click to select several and move them together'}</text>
-    </svg>`;
-  },
-  search(lg){
-    const J = lg==='ja';
-    return `<svg viewBox="0 0 560 150" xmlns="http://www.w3.org/2000/svg" font-size="11">
-      <rect x="14" y="16" width="260" height="30" rx="8" fill="var(--panel)" stroke="var(--border)"/>
-      ${miFig('search', 24, 23, 15)}
-      <text x="48" y="35" fill="var(--text3)" font-size="11.5">${J?'検索（タイトル・著者・DOI…）':'Search (title, author, DOI…)'}</text>
-      <text x="290" y="35" fill="var(--text2)" font-size="10.5">${J?'← タイトル・著者・タグなどをまとめて検索':'← matches title, authors, tags, … at once'}</text>
-      <rect x="14" y="70" width="530" height="30" rx="8" fill="var(--panel)" stroke="var(--border)"/>
-      <text x="34" y="89" fill="var(--accent)" font-weight="700">${J?'年':'Year'} ▼</text>
-      <line x1="96" y1="70" x2="96" y2="100" stroke="var(--border2)"/>
-      <text x="112" y="89" fill="var(--text2)">${J?'タイトル':'Title'}</text>
-      <line x1="300" y1="70" x2="300" y2="100" stroke="var(--border2)"/>
-      <text x="316" y="89" fill="var(--text2)">${J?'著者':'Authors'}</text>
-      <line x1="460" y1="70" x2="460" y2="100" stroke="var(--border2)"/>
-      ${miFig('funnel', 508, 76, 15, 'var(--accent)')}
-      <path d="M56 104 v10" stroke="var(--accent)" stroke-dasharray="3 3"/>
-      <text x="24" y="128" fill="var(--accent)" font-weight="600">${J?'見出しをクリックで並べ替え':'Click a header to sort'}</text>
-      <path d="M516 104 v10" stroke="var(--accent)" stroke-dasharray="3 3"/>
-      <text x="544" y="128" text-anchor="end" fill="var(--accent)" font-weight="600">${J?'漏斗アイコンで絞り込み':'Funnel icon to filter'}</text>
-      <text x="24" y="144" fill="var(--text3)" font-size="10.5">${J?'見出しのドラッグで並び順、右端ドラッグで幅を変更できます':'Drag headers to reorder; drag their right edge to resize'}</text>
-    </svg>`;
-  },
   pdf(lg){
     const J = lg==='ja';
     return `<svg viewBox="0 0 560 160" xmlns="http://www.w3.org/2000/svg" font-size="11">
@@ -9738,50 +9744,6 @@ const MANUAL_FIGS = {
       <rect x="416" y="122" width="64" height="22" rx="7" fill="var(--accent-soft)" stroke="var(--accent-border)"/>
       <text x="448" y="137" text-anchor="middle" fill="var(--accent)" font-size="10.5">${J?'＋ 追加':'+ Add'}</text>
       <text x="490" y="137" fill="var(--text3)" font-size="10">${J?'未登録も':'even new'}</text>
-    </svg>`;
-  },
-  maintain(lg){
-    const J = lg==='ja';
-    return `<svg viewBox="0 0 560 130" xmlns="http://www.w3.org/2000/svg" font-size="11">
-      <text x="14" y="26" fill="var(--text2)" font-size="10.5">${J?'一覧の下部バー':'The bar below the list'}</text>
-      <rect x="14" y="36" width="530" height="36" rx="8" fill="var(--panel)" stroke="var(--border)"/>
-      <rect x="24" y="43" width="126" height="22" rx="7" fill="var(--bg)" stroke="var(--border2)"/>
-      ${miFig('citations', 30, 46, 14, 'var(--accent)')}
-      <text x="50" y="58" fill="var(--text2)" font-size="10.5">${J?'被引用数を更新':'Update cited-by'}</text>
-      <rect x="158" y="43" width="126" height="22" rx="7" fill="var(--bg)" stroke="var(--border2)"/>
-      ${miFig('users', 164, 46, 14, 'var(--accent)')}
-      <text x="184" y="58" fill="var(--text2)" font-size="10.5">${J?'責任著者を更新':'Update corresp.'}</text>
-      <rect x="330" y="43" width="98" height="22" rx="7" fill="var(--bg)" stroke="var(--border2)"/>
-      ${miFig('alert', 336, 46, 14, 'var(--accent)')}
-      <text x="356" y="58" fill="var(--text2)" font-size="10.5">${J?'重複候補':'Duplicates'}</text>
-      <rect x="404" y="46" width="18" height="16" rx="8" fill="var(--chip)"/>
-      <text x="413" y="58" text-anchor="middle" fill="var(--text2)" font-size="10">2</text>
-      <rect x="436" y="43" width="98" height="22" rx="7" fill="var(--bg)" stroke="var(--border2)"/>
-      ${miFig('alert', 442, 46, 14, 'var(--accent)')}
-      <text x="462" y="58" fill="var(--text2)" font-size="10.5">${J?'修正候補':'Fixes'}</text>
-      <rect x="498" y="46" width="18" height="16" rx="8" fill="var(--chip)"/>
-      <text x="507" y="58" text-anchor="middle" fill="var(--text2)" font-size="10">3</text>
-      <path d="M154 76 v10 M472 76 v10" stroke="var(--accent)" stroke-dasharray="3 3"/>
-      <text x="24" y="102" fill="var(--accent)" font-weight="600">${J?'最新の情報をインターネットから取得':'Fetch the latest data from the internet'}</text>
-      <text x="544" y="102" text-anchor="end" fill="var(--accent)" font-weight="600">${J?'見つかった問題はバッジで通知 → クリックで確認':'Problems appear as badges — click to review'}</text>
-    </svg>`;
-  },
-  settings(lg){
-    const J = lg==='ja';
-    return `<svg viewBox="0 0 560 115" xmlns="http://www.w3.org/2000/svg" font-size="11">
-      <rect x="14" y="26" width="530" height="40" rx="10" fill="var(--panel)" stroke="var(--border)"/>
-      ${miFig('book', 26, 38, 16, 'var(--accent)')}
-      <text x="50" y="51" font-weight="700" fill="var(--text)">Paper Library</text>
-      <rect x="300" y="36" width="88" height="22" rx="7" fill="var(--bg)" stroke="var(--border2)"/>
-      ${miFig('book', 306, 39, 14)}
-      <text x="326" y="51" fill="var(--text2)" font-size="10.5">${J?'マニュアル':'Manual'}</text>
-      <rect x="396" y="36" width="62" height="22" rx="7" fill="var(--bg)" stroke="var(--border2)"/>
-      ${miFig('moon', 402, 39, 14)}
-      <text x="422" y="51" fill="var(--text2)" font-size="10.5">Dark</text>
-      <rect x="466" y="36" width="36" height="22" rx="7" fill="var(--bg)" stroke="var(--border2)"/>
-      <text x="484" y="51" text-anchor="middle" fill="var(--text2)" font-size="10.5">EN</text>
-      <path d="M400 70 v10" stroke="var(--accent)" stroke-dasharray="3 3"/>
-      <text x="544" y="96" text-anchor="end" fill="var(--accent)" font-weight="600">${J?'マニュアル・テーマ・言語の切替':'Manual, theme, and language'}</text>
     </svg>`;
   },
   wordaddin(lg){
@@ -9857,6 +9819,12 @@ const MANUAL = {
         'つまり、選んだフォルダを丸ごとコピーすれば、それがライブラリ全体のバックアップになります。',
         'データはすべて自分のパソコンの中に保存されます。インターネット上にアップロードされることはありません。',
       ]},
+      {sub:'画面設定'},
+      {ul:[
+        '右上のボタンで、ダーク / ライトテーマ [[ic:moon]] と日本語 / 英語表示を切り替えられます。',
+        '更新内容は、マニュアル内の「更新履歴」から確認できます。',
+        '文献情報の自動取得のときだけ、CrossRef・OpenAlex などの公開データベースに接続します。それ以外の操作はすべてパソコンの中で完結します。',
+      ]},
     ]},
     { h:'インポート・エクスポート', tab:'インポート・エクスポート', icon:'download', blocks:[
       {p:'他の文献管理ソフトからのデータの取り込み（インポート）と、他のソフトへの書き出し・バックアップ（エクスポート）をまとめて説明します。'},
@@ -9905,18 +9873,20 @@ const MANUAL = {
     ]},
     { h:'文献を追加・削除する', blocks:[
       {p:'文献の登録方法は「自動取得」「手動入力」「他のソフトからの取り込み」の3つです。削除した文献はすぐには消えず、いったん「ゴミ箱」に移動します。'},
-      {fig:'add'},
-      {sub:'DOI などから自動取得（おすすめ）'},
+      {sub:'URL などから自動取得'},
       {ul:[
         '画面上部の「[[ic:plus]] URL を入力して Enter」欄に、DOI（例：10.1038/nature12373）、arXiv ID、または論文ページの URL を貼り付けて Enter を押すだけでも追加できます。',
         'あるいは「追加」[[ic:plus]] →「文献情報を入力して検索」を開きます。上の欄に DOI・arXiv ID・URL・タイトルのいずれかを入力するか、分からない場合は下の「雑誌名」「年」「巻」「ページ」に分かる範囲で入力します。',
         '「検索」を押すと、タイトル・著者・雑誌名・年などの情報が自動で入力された候補が一覧表示されるので、正しい論文をクリックして追加します。DOI や arXiv ID を直接入力した場合も、確認のため候補が1件だけ表示されます。',
         '同じ DOI の文献がすでにライブラリにある場合は、追加されずに「重複候補の確認」ダイアログが表示されます。内容を見比べて、既存のものを開く・置き換える・削除するかを選べます。',
-        '論文ページを開いたまま追加したい場合は、Chrome 拡張機能（Paper Library Connector）からも保存できます。詳しくは次の「Chrome 拡張機能」タブを参照してください。',
       ]},
       {sub:'手動で入力する'},
       {ul:[
         '「追加」→「手動追加」で空の文献が作られ、右側の詳細パネルがそのまま編集状態で開くので、タイトルや著者などを直接入力します。',
+      ]},
+      {sub:'Chrome 拡張機能から取り込む'},
+      {ul:[
+        '論文ページを開いたまま追加したい場合は、Chrome 拡張機能（Paper Library Connector）からも保存できます。詳しくは次の「Chrome 拡張機能」タブを参照してください。',
       ]},
       {sub:'他のソフトから移行する（インポート）'},
       {ul:[
@@ -9933,7 +9903,6 @@ const MANUAL = {
     ]},
     { h:'Chrome 拡張機能で保存する', tab:'Chrome拡張機能', blocks:[
       {p:'Paper Library Connector は、論文ページを開いたまま文献を保存するための付属拡張機能です。Google Chrome 専用で、Safari・Firefox・Edge など他のブラウザでは動作しません（Chromium 系ブラウザでも動作は保証されません）。保存した文献は、Paper Library を開いたときに自動でライブラリへ取り込まれます。'},
-      {fig:'connector'},
       {sub:'インストール（Google Chrome）'},
       {dl:'拡張機能をダウンロード（ZIP）'},
       {ul:[
@@ -10026,9 +9995,9 @@ const MANUAL = {
         '他で用意したデータをまとめて登録するには、「研究者を追加」メニューの「インポート」から JSON・CSV・AI調査JSON を読み込みます。',
       ]},
     ]},
-    { h:'整理する', blocks:[
+    { h:'整理・編集する', blocks:[
+      {sub:'コレクション・タグで整理する'},
       {p:'文献は「コレクション」（フォルダのようなもの）と「タグ」で分類できます。'},
-      {fig:'organize'},
       {ul:[
         'コレクション：左パネルの「＋」[[ic:plus]] ボタンで作成し、文献をドラッグ＆ドロップで入れます。コレクションの中にコレクションを作って階層化もできます。',
         '1つの文献を複数のコレクションに入れることもできます（同じ文献が両方から見えるだけで、二重登録にはなりません）。',
@@ -10038,9 +10007,18 @@ const MANUAL = {
         '自分の論文 [[ic:check]]：自分が著者の文献に印を付けておける項目です。文献を左パネルの「自分の論文」にドラッグ＆ドロップすると印が付き、以後は左パネルの「自分の論文」からすぐに一覧できます。',
         'まとめて操作：⌘（Windows では Ctrl）を押しながらクリックで複数選択、Shift＋クリックで範囲選択して、まとめてドラッグできます。',
       ]},
+      {sub:'詳細パネルで編集する・PDF を添付する'},
+      {p:'文献をクリックすると、右側に詳細パネルが開きます。'},
+      {fig:'pdf'},
+      {ul:[
+        '書誌情報・アブストラクト・メモなどを確認・編集できます。編集した内容は自動で保存されます。',
+        'PDF の添付 [[ic:paperclip]]：PDF ファイルを一覧の文献の行、または詳細パネルにドラッグ＆ドロップします。詳細パネルの「PDF を添付」ボタンからファイルを選ぶこともできます。',
+        '添付した PDF は、クリックするとブラウザ内で開きます。',
+        '引用をコピー [[ic:quote]]：論文リスト用の書式（著者・雑誌・年など）でコピーできます。歯車アイコン [[ic:gear]] の「引用設定」でスタイルや著者の書き方を変更できます。',
+        '論文相関図 [[ic:graph]]：引用関係で繋がる関連論文をマップ表示します。詳しくは「論文相関図」タブをご覧ください。',
+      ]},
     ]},
     { h:'探す・並べ替える', blocks:[
-      {fig:'search'},
       {ul:[
         '上部の検索欄 [[ic:search]]：タイトル・著者・雑誌名・DOI・タグなどをまとめて検索できます。',
         '「詳細検索」：「著者に◯◯を含み、2020年以降」のような、条件を組み合わせた検索ができます。',
@@ -10050,17 +10028,6 @@ const MANUAL = {
         '表示の切替：下部バーの「表示」メニューで、表 [[ic:table]]、カード [[ic:rows]]、文献棚 [[ic:book]]、カンバンを切り替えられます。検索やコレクションの絞り込みは、どの表示にも反映されます。',
         '文献棚：最近追加、スター、読書中、PDFあり、各コレクションを横方向の棚として表示します。「最近追加」は日数を入力して対象期間を変更できます。文献をクリックすると通常どおり詳細パネルが開きます。',
         'カンバン：文献を「未読」「読書中」「読了」の3列で管理します。カードを別の列へドラッグすると状態が保存されます。読書状態は詳細パネルからも変更できます。',
-      ]},
-    ]},
-    { h:'詳細パネルと PDF', blocks:[
-      {p:'文献をクリックすると、右側に詳細パネルが開きます。'},
-      {fig:'pdf'},
-      {ul:[
-        '書誌情報・アブストラクト・メモなどを確認・編集できます。編集した内容は自動で保存されます。',
-        'PDF の添付 [[ic:paperclip]]：PDF ファイルを一覧の文献の行、または詳細パネルにドラッグ＆ドロップします。詳細パネルの「PDF を添付」ボタンからファイルを選ぶこともできます。',
-        '添付した PDF は、クリックするとブラウザ内で開きます。',
-        '引用をコピー [[ic:quote]]：論文リスト用の書式（著者・雑誌・年など）でコピーできます。歯車アイコン [[ic:gear]] の「引用設定」でスタイルや著者の書き方を変更できます。',
-        '論文相関図 [[ic:graph]]：引用関係で繋がる関連論文をマップ表示します。詳しくは「論文相関図」タブをご覧ください。',
       ]},
     ]},
     { h:'論文相関図（関連論文マップ）', tab:'論文相関図', blocks:[
@@ -10079,7 +10046,6 @@ const MANUAL = {
       ]},
     ]},
     { h:'情報の更新・メンテナンス', tab:'更新・メンテナンス', blocks:[
-      {fig:'maintain'},
       {ul:[
         '被引用数を更新 [[ic:citations]]：下部バーのボタンで、各文献が何回引用されているかの最新値をインターネットから取得します。',
         '責任著者を更新 [[ic:users]]：論文の責任著者（corresponding author）の情報を取得します。',
@@ -10125,14 +10091,6 @@ const MANUAL = {
         '番号の見た目は「番号」で [1]（角括弧）／上付き ¹ を切り替えられます。挿入される文字は既定で Times New Roman 10.5pt です。',
       ]},
     ]},
-    { h:'画面設定', blocks:[
-      {fig:'settings'},
-      {ul:[
-        '右上のボタンで、ダーク / ライトテーマ [[ic:moon]] と日本語 / 英語表示を切り替えられます。',
-        '更新内容は、マニュアル内の「更新履歴」から確認できます。',
-        '文献情報の自動取得のときだけ、CrossRef・OpenAlex などの公開データベースに接続します。それ以外の操作はすべてパソコンの中で完結します。',
-      ]},
-    ]},
     { h:'更新履歴', blocks:[
       {changelog:true},
     ]},
@@ -10159,6 +10117,12 @@ const MANUAL = {
         'Attached PDFs are copied into an “attachments” folder that is created automatically inside the same folder.',
         'This means copying that one folder gives you a complete backup of your library.',
         'Everything stays on your own computer; nothing is uploaded to the internet.',
+      ]},
+      {sub:'Display settings'},
+      {ul:[
+        'The buttons at the top right switch between dark / light themes [[ic:moon]] and Japanese / English.',
+        'You can review updates from the “Changelog” tab inside this manual.',
+        'The app only connects to public databases such as CrossRef and OpenAlex when fetching reference data; everything else happens entirely on your computer.',
       ]},
     ]},
     { h:'Import & export', tab:'Import & export', icon:'download', blocks:[
@@ -10208,18 +10172,20 @@ const MANUAL = {
     ]},
     { h:'Adding & deleting references', blocks:[
       {p:'There are three ways to register a reference: automatic fetching, manual entry, and importing from other software. Deleted references aren’t removed right away — they go to the Trash first.'},
-      {fig:'add'},
-      {sub:'Fetch automatically from a DOI (recommended)'},
+      {sub:'Fetch automatically from a URL'},
       {ul:[
         'You can just paste a DOI (e.g. 10.1038/nature12373), an arXiv ID, or a paper page URL into the “[[ic:plus]] Enter URL and press Enter” box at the top of the screen.',
         'Or open “Add” [[ic:plus]] → “Search by reference info”. Enter a DOI, arXiv ID, URL, or title in the top field, or, if you don’t have one, fill in whatever you know of “Journal”, “Year”, “Vol.”, and “Page” below it.',
         'Press “Search” and a list of candidates appears with title, authors, journal, year, and more already filled in — click the right paper to add it. A direct DOI/arXiv ID also shows as a single candidate for you to confirm.',
         'If a reference with the same DOI is already in your library, it won’t be added again — a “Check possible duplicates” dialog appears instead, letting you open, replace, or delete the existing one.',
-        'To add a reference while still on the paper’s page, you can also save it with the Chrome extension (Paper Library Connector) — see the “Chrome extension” tab next.',
       ]},
       {sub:'Enter manually'},
       {ul:[
         '“Add” → “Add manually” creates an empty record and opens the detail pane on the right already in edit mode, so you can start typing the title, authors, and more right away.',
+      ]},
+      {sub:'Save from the Chrome extension'},
+      {ul:[
+        'To add a reference while still on the paper’s page, you can also save it with the Chrome extension (Paper Library Connector) — see the “Chrome extension” tab next.',
       ]},
       {sub:'Migrate from other software (import)'},
       {ul:[
@@ -10236,7 +10202,6 @@ const MANUAL = {
     ]},
     { h:'Save with the Chrome extension', tab:'Chrome extension', blocks:[
       {p:'Paper Library Connector is the bundled extension for saving references from paper pages directly from the toolbar. It is for Google Chrome only — it does not work in Safari, Firefox, or Edge (other Chromium browsers are not supported either). Saved papers are imported automatically when Paper Library is open.'},
-      {fig:'connector'},
       {sub:'Install (Google Chrome)'},
       {dl:'Download the extension (ZIP)'},
       {ul:[
@@ -10329,9 +10294,9 @@ const MANUAL = {
         'To register data prepared elsewhere in bulk, use “Add” → “Import” to load JSON, CSV, or an AI research JSON file.',
       ]},
     ]},
-    { h:'Organizing', blocks:[
+    { h:'Organizing & editing', blocks:[
+      {sub:'Organize with collections & tags'},
       {p:'References can be organized with collections (like folders) and tags.'},
-      {fig:'organize'},
       {ul:[
         'Collections: create one with the “+” [[ic:plus]] button in the left pane and drag & drop references into it. Collections can be nested inside each other.',
         'A reference can belong to several collections at once (it simply appears in both — it is not duplicated).',
@@ -10341,9 +10306,18 @@ const MANUAL = {
         'My publications [[ic:check]]: mark references you authored. Drag a reference onto “My publications” in the left pane to mark it, then find it there any time.',
         'Bulk actions: Cmd-click (Ctrl on Windows) for multi-select, Shift-click for range select, then drag them together.',
       ]},
+      {sub:'Edit in the detail pane & attach PDFs'},
+      {p:'Clicking a reference opens the detail pane on the right.'},
+      {fig:'pdf'},
+      {ul:[
+        'You can view and edit bibliographic info, the abstract, notes, and more. Edits are saved automatically.',
+        'Attaching PDFs [[ic:paperclip]]: drag & drop a PDF onto a reference row in the list, or onto the detail pane. You can also pick a file with the “Attach PDF” button in the detail pane.',
+        'Attached PDFs open right in the browser when clicked.',
+        'Copy citation [[ic:quote]]: copies a formatted citation (authors, journal, year, …). The gear icon [[ic:gear]] opens Citation settings for style and author formatting.',
+        'Paper graph [[ic:graph]]: maps related papers connected through citations — see the “Paper graph” tab for details.',
+      ]},
     ]},
     { h:'Searching & sorting', blocks:[
-      {fig:'search'},
       {ul:[
         'The search box [[ic:search]] at the top matches titles, authors, journals, DOIs, tags, and more, all at once.',
         '“Advanced search” combines conditions, e.g. “author contains X, published after 2020”.',
@@ -10353,17 +10327,6 @@ const MANUAL = {
         'View switching: use the “View” menu in the bottom bar to choose table [[ic:table]], cards [[ic:rows]], literature shelves [[ic:book]], or Kanban. Search and collection filters apply to every view.',
         'Literature shelves: shows recently added, starred, currently reading, PDF-attached, and collection-specific shelves in horizontal rows. Enter a number of days to control the “Recently added” period. Click a paper to open its usual detail pane.',
         'Kanban: manages papers in three columns — Unread, Reading, and Read. Drag a card to another column to save its status; the same status can be changed in the detail pane.',
-      ]},
-    ]},
-    { h:'Detail pane & PDFs', blocks:[
-      {p:'Clicking a reference opens the detail pane on the right.'},
-      {fig:'pdf'},
-      {ul:[
-        'You can view and edit bibliographic info, the abstract, notes, and more. Edits are saved automatically.',
-        'Attaching PDFs [[ic:paperclip]]: drag & drop a PDF onto a reference row in the list, or onto the detail pane. You can also pick a file with the “Attach PDF” button in the detail pane.',
-        'Attached PDFs open right in the browser when clicked.',
-        'Copy citation [[ic:quote]]: copies a formatted citation (authors, journal, year, …). The gear icon [[ic:gear]] opens Citation settings for style and author formatting.',
-        'Paper graph [[ic:graph]]: maps related papers connected through citations — see the “Paper graph” tab for details.',
       ]},
     ]},
     { h:'Paper graph (related-papers map)', tab:'Paper graph', blocks:[
@@ -10382,7 +10345,6 @@ const MANUAL = {
       ]},
     ]},
     { h:'Updating & maintenance', blocks:[
-      {fig:'maintain'},
       {ul:[
         'Update cited-by counts [[ic:citations]]: a bottom-bar button fetches the latest citation counts from the internet.',
         'Update corresponding authors [[ic:users]]: fetches corresponding-author information for your papers.',
@@ -10425,14 +10387,6 @@ const MANUAL = {
         'Filter by title, author, journal, DOI, etc. in the search box and choose a style (ACS / Nature / Science / RSC / CSJ / Angew.). Use EN / 日本語 at the top right to switch the panel language.',
         'Press “Insert” on a reference to insert a number [1] (or superscript ¹) at the cursor. Numbers are assigned in order of appearance, and re-citing the same reference reuses the same number. Each insertion updates the bibliography at the end automatically. If you delete or reorder references, press “Update bibliography” to resync it.',
         'Use “Number” to switch the appearance between [1] (brackets) and superscript ¹. Inserted text defaults to Times New Roman 10.5pt.',
-      ]},
-    ]},
-    { h:'Display settings', blocks:[
-      {fig:'settings'},
-      {ul:[
-        'The buttons at the top right switch between dark / light themes [[ic:moon]] and Japanese / English.',
-        'You can review updates from the “Changelog” tab inside this manual.',
-        'The app only connects to public databases such as CrossRef and OpenAlex when fetching reference data; everything else happens entirely on your computer.',
       ]},
     ]},
     { h:'Changelog', blocks:[
@@ -13414,6 +13368,11 @@ $('#researcherLeaderboardControlsSlot').addEventListener('click', e=>{
 });
 /* ---- academic-tree controls (bottom status bar) ---- */
 $('#researcherTreeControlsSlot').addEventListener('click', e=>{
+  const layout=e.target.closest('[data-tree-layout]');
+  if(layout){
+    researcherTreeLayoutMode=layout.dataset.treeLayout;
+    saveResearcherTreePrefs(); renderResearcherList(); return;
+  }
   const orient=e.target.closest('[data-tree-orient]');
   if(orient){ researcherTreeOrientation=orient.dataset.treeOrient; saveResearcherTreePrefs(); renderResearcherList(); return; }
   const scope=e.target.closest('[data-tree-scope]');

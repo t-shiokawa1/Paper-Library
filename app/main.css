@@ -3145,249 +3145,14 @@
   body.brandStyle-84 #toolbar .appname:hover .brandLogoLine{animation:plPageLineGlint 1.08s ease-in-out infinite}
   body.brandStyle-84 #toolbar .appname:hover .brandText{transform:translateX(.55px); letter-spacing:.012em}
 
-  /* --- responsive toolbar: keep Paper Library visible --- */
-  #toolbar{
-    min-width:0;
-  }
-  #toolbar .appname{
-    flex:0 0 auto;
-    min-width:max-content;
-    max-width:none;
-    overflow:visible;
-  }
-  #toolbar .appname .brandText{
-    display:inline-block;
-    min-width:max-content;
-    white-space:nowrap;
-  }
-  #toolbar .menuwrap{
-    flex:0 1 auto;
-    min-width:0;
-  }
-  #toolbar .addWrap{
-    width:clamp(190px, 21vw, 300px);
-    flex:0 1 300px;
-  }
-  .searchWrap{
-    width:clamp(210px, 25vw, 340px);
-    flex:0 1 340px;
-  }
-  .searchAdvBtn{
-    flex:0 0 auto;
-  }
-  .libraryStatusBtn{
-    flex:0 1 190px;
-    overflow:hidden;
-  }
-  .libraryStatusBtn span{
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  #btnManual, #btnTheme, #btnLang{
-    flex:0 0 auto;
-  }
-  @media (max-width: 1280px){
-    #toolbar{gap:6px; padding-left:10px; padding-right:10px;}
-    #toolbar .addWrap{width:clamp(170px, 19vw, 260px); flex-basis:260px;}
-    .searchWrap{width:clamp(180px, 22vw, 300px); flex-basis:300px;}
-    .searchAdvBtn span[data-i18n="advancedSearch"]{display:none;}
-    .searchAdvBtn{padding:0 8px;}
-    .libraryStatusBtn{max-width:165px;}
-  }
-  @media (max-width: 1100px){
-    #toolbar .addWrap{width:clamp(150px, 18vw, 230px); flex-basis:230px;}
-    .searchWrap{width:clamp(160px, 20vw, 260px); flex-basis:260px;}
-    #btnManual span[data-i18n="manual"]{display:none;}
-    #btnManual{padding:0 8px;}
-    .libraryStatusBtn{max-width:135px;}
-  }
-  @media (max-width: 960px){
-    #toolbar .appname{font-size:14px;}
-    #toolbar .logo{width:22px; height:22px;}
-    #toolbar .addWrap{flex-basis:190px; width:190px;}
-    .searchWrap{flex-basis:220px; width:220px;}
-    #btnTheme .ic{margin-right:0;}
-    #themeLabel{display:none;}
-    #btnTheme{padding:0 8px;}
-    .libraryStatusBtn{display:none;}
-  }
-
-
-  /* --- responsive toolbar v1.1: collapse secondary text before layout breaks --- */
-  #toolbar{
-    flex-wrap:nowrap;
-    overflow:hidden;
-  }
-  #toolbar .appname{
-    position:relative;
-    z-index:2;
-  }
-  #toolbar .spacer{
-    min-width:0;
-  }
-  #btnExport, #btnManual, #btnTheme, #btnLang, .searchAdvBtn, .addMenuCaret, .addGoBtn{
-    flex:0 0 auto;
-  }
-  @media (max-width: 1360px){
-    #toolbar{gap:5px; padding-left:8px; padding-right:8px;}
-    #toolbar .addWrap{width:clamp(150px, 17vw, 230px); flex-basis:230px;}
-    .searchWrap{width:clamp(150px, 19vw, 250px); flex-basis:250px;}
-    .searchAdvBtn span[data-i18n="advancedSearch"]{display:none;}
-    .searchAdvBtn{padding:0 8px; min-width:32px; justify-content:center;}
-    #btnManual span[data-i18n="manual"]{display:none;}
-    #btnManual{padding:0 8px; min-width:32px; justify-content:center;}
-    .libraryStatusBtn span[data-i18n="changeFolder"]{display:none;}
-    .libraryStatusBtn{max-width:128px; padding:0 8px;}
-  }
-  @media (max-width: 1180px){
-    #toolbar .ver{display:none;}
-    #toolbar .addWrap{width:clamp(124px, 15vw, 180px); flex-basis:180px;}
-    .searchWrap{width:clamp(126px, 17vw, 210px); flex-basis:210px;}
-    #btnExport span[data-i18n="export"],
-    #themeLabel{display:none;}
-    #btnExport, #btnTheme{padding:0 8px; min-width:32px; justify-content:center;}
-    #btnExport .ic[data-ic="chevron"]{display:none;}
-    #btnAddGo{font-size:0; width:34px; padding:0; display:inline-flex; align-items:center; justify-content:center;}
-    #btnAddGo::before{content:'+'; font-size:16px; line-height:1; font-weight:700;}
-    #addBox, #searchBox{font-size:12.5px;}
-    #addBox::placeholder, #searchBox::placeholder{color:transparent;}
-    .libraryStatusBtn{display:none;}
-  }
-  @media (max-width: 980px){
-    #toolbar .appname{font-size:14px; min-width:max-content;}
-    #toolbar .logo{width:22px; height:22px;}
-    #toolbar .addWrap{width:112px; flex-basis:112px;}
-    .searchWrap{width:126px; flex-basis:126px;}
-    .addMenuCaret{width:32px; padding:0; display:inline-flex; justify-content:center;}
-    #btnLang{padding:0 8px; min-width:32px;}
-  }
-  @media (max-width: 840px){
-    #toolbar{overflow-x:auto; scrollbar-width:none;}
-    #toolbar::-webkit-scrollbar{display:none;}
-    #toolbar .appname{
-      position:sticky;
-      left:0;
-      background:var(--panel);
-      padding-right:8px;
-      box-shadow:8px 0 12px color-mix(in srgb, var(--panel) 88%, transparent);
-    }
-    #toolbar .addWrap{width:44px; flex:0 0 44px; justify-content:center; overflow:hidden;}
-    #toolbar .addWrap .addBoxIcon{margin:0; color:var(--accent);}
-    #addBox, #btnAddGo{display:none;}
-    .addMenuCaret{border-left:0; width:24px; min-width:24px;}
-    .searchWrap{width:44px; flex:0 0 44px; justify-content:center;}
-    .searchWrap .searchBoxIcon{display:none;}
-    #searchBox{display:none;}
-    .searchAdvBtn{border-left:0; width:42px; padding:0;}
-  }
-
-
-  /* --- responsive toolbar v1.2: more gradual iconization --- */
-  #toolbar{flex-wrap:nowrap; overflow:hidden; gap:8px;}
-  #toolbar .appname{flex:0 0 auto; min-width:max-content;}
-  #toolbar .spacer{min-width:0;}
-  #toolbar .addWrap{width:clamp(180px, 20vw, 300px); flex:0 1 300px;}
-  .searchWrap{width:clamp(190px, 23vw, 330px); flex:0 1 330px;}
-  #btnExport, #btnManual, #btnTheme, #btnLang, .searchAdvBtn, .addMenuCaret, .addGoBtn{flex:0 0 auto;}
-
-  @media (max-width: 1500px){
-    #toolbar{gap:7px; padding-left:10px; padding-right:10px;}
-    #toolbar .addWrap{width:clamp(170px, 18vw, 280px); flex-basis:280px;}
-    .searchWrap{width:clamp(180px, 21vw, 305px); flex-basis:305px;}
-  }
-  @media (max-width: 1420px){
-    #toolbar{gap:6px;}
-    #toolbar .addWrap{width:clamp(158px, 17vw, 250px); flex-basis:250px;}
-    .searchWrap{width:clamp(165px, 20vw, 275px); flex-basis:275px;}
-    .libraryStatusBtn span[data-i18n="changeFolder"]{display:none;}
-    .libraryStatusBtn{max-width:150px; padding:0 9px;}
-    .searchAdvBtn span[data-i18n="advancedSearch"],
-    #btnManual span[data-i18n="manual"],
-    #btnExport span[data-i18n="export"],
-    #themeLabel{display:inline !important;}
-  }
-  @media (max-width: 1340px){
-    #toolbar .addWrap{width:clamp(146px, 16vw, 222px); flex-basis:222px;}
-    .searchWrap{width:clamp(152px, 18vw, 245px); flex-basis:245px;}
-    #btnManual span[data-i18n="manual"]{display:none !important;}
-    #btnManual{padding:0 8px; min-width:34px; justify-content:center;}
-    .searchAdvBtn span[data-i18n="advancedSearch"],
-    #btnExport span[data-i18n="export"],
-    #themeLabel{display:inline !important;}
-  }
-  @media (max-width: 1260px){
-    #toolbar .addWrap{width:clamp(134px, 15vw, 200px); flex-basis:200px;}
-    .searchWrap{width:clamp(142px, 17vw, 220px); flex-basis:220px;}
-    .searchAdvBtn span[data-i18n="advancedSearch"]{display:none !important;}
-    .searchAdvBtn{padding:0 8px; min-width:34px; justify-content:center;}
-    #btnExport span[data-i18n="export"],
-    #themeLabel{display:inline !important;}
-  }
-  @media (max-width: 1180px){
-    #toolbar .ver{display:inline-flex !important;}
-    #toolbar .addWrap{width:clamp(124px, 14vw, 180px); flex-basis:180px;}
-    .searchWrap{width:clamp(130px, 16vw, 200px); flex-basis:200px;}
-    #btnExport span[data-i18n="export"]{display:none !important;}
-    #btnExport{padding:0 8px; min-width:34px; justify-content:center;}
-    #btnExport .ic[data-ic="chevron"]{display:inline-flex !important;}
-    #themeLabel{display:inline !important;}
-    #btnAddGo{font-size:13px; width:auto; padding:0 10px;}
-    #btnAddGo::before{content:none !important;}
-    #addBox, #searchBox{display:block !important; font-size:12.5px;}
-    #addBox::placeholder, #searchBox::placeholder{color:var(--text3) !important;}
-  }
-  @media (max-width: 1100px){
-    #toolbar .ver{display:none !important;}
-    #toolbar .addWrap{width:clamp(118px, 13vw, 160px); flex-basis:160px;}
-    .searchWrap{width:clamp(122px, 15vw, 180px); flex-basis:180px;}
-    #themeLabel{display:none !important;}
-    #btnTheme{padding:0 8px; min-width:34px; justify-content:center;}
-  }
-  @media (max-width: 1020px){
-    #toolbar .appname{font-size:14px;}
-    #toolbar .logo{width:22px; height:22px;}
-    #toolbar .addWrap{width:132px; flex:0 1 132px;}
-    .searchWrap{width:142px; flex:0 1 142px;}
-    #btnAddGo{font-size:0; width:34px; padding:0; display:inline-flex; align-items:center; justify-content:center;}
-    #btnAddGo::before{content:'+' !important; font-size:16px; line-height:1; font-weight:700;}
-    #addBox::placeholder, #searchBox::placeholder{color:transparent !important;}
-    .libraryStatusBtn{max-width:112px; display:inline-flex !important;}
-  }
-  @media (max-width: 930px){
-    #toolbar{gap:5px;}
-    #toolbar .addWrap{width:118px; flex-basis:118px;}
-    .searchWrap{width:126px; flex-basis:126px;}
-    .libraryStatusBtn{display:none !important;}
-    .addMenuCaret{width:32px; padding:0; display:inline-flex; justify-content:center;}
-    #btnLang{padding:0 8px; min-width:34px;}
-  }
-  @media (max-width: 840px){
-    #toolbar{overflow:hidden; scrollbar-width:auto;}
-    #toolbar .appname{position:relative; left:auto; background:transparent; box-shadow:none; padding-right:8px;}
-    #toolbar .addWrap{width:104px; flex:0 1 104px; justify-content:flex-start; overflow:hidden;}
-    #toolbar .addWrap .addBoxIcon{margin:0 2px 0 0; color:var(--text2);}
-    #addBox, #btnAddGo{display:block !important;}
-    .addMenuCaret{border-left:1px solid var(--border); width:28px; min-width:28px;}
-    .searchWrap{width:110px; flex:0 1 110px; justify-content:flex-start;}
-    .searchWrap .searchBoxIcon{display:inline-flex;}
-    #searchBox{display:block !important;}
-    .searchAdvBtn{border-left:1px solid var(--border); width:36px; padding:0;}
-  }
-  @media (max-width: 760px){
-    #toolbar{overflow-x:auto; scrollbar-width:none;}
-    #toolbar::-webkit-scrollbar{display:none;}
-    #toolbar .appname{position:sticky; left:0; z-index:3; background:var(--panel); box-shadow:8px 0 12px color-mix(in srgb, var(--panel) 88%, transparent);}
-    #toolbar .addWrap{width:44px; flex:0 0 44px; justify-content:center;}
-    #toolbar .addWrap .addBoxIcon{margin:0; color:var(--accent);}
-    #addBox, #btnAddGo{display:none !important;}
-    .addMenuCaret{border-left:0; width:24px; min-width:24px;}
-    .searchWrap{width:44px; flex:0 0 44px; justify-content:center;}
-    #searchBox{display:none !important;}
-    .searchAdvBtn{border-left:0; width:42px; padding:0;}
-  }
-
-
-  /* --- responsive toolbar v1.3: one-step-at-a-time collapse --- */
+  /* --- responsive toolbar: shared foundation ---
+     .addWrap/.searchWrap themselves no longer size here; that ladder used to be
+     duplicated across four independently-numbered rewrites (v1, v1.1, v1.2,
+     v1.3) with mismatched breakpoints, which let one box collapse before the
+     other depending on window width. It now lives in one place, the "add/search
+     width + collapse ladder" block below. This block only keeps the foundation
+     (app name never shrinks, utility buttons stay icon-sized, etc.) that those
+     versions each redeclared identically. */
   #toolbar{
     flex-wrap:nowrap;
     overflow:hidden;
@@ -3397,160 +3162,27 @@
     flex:0 0 auto;
     min-width:max-content;
   }
-  #toolbar .spacer{min-width:0;}
-  #toolbar .addWrap{
-    width:clamp(180px, 20vw, 300px);
-    flex:0 1 300px;
+  #toolbar .appname .brandText{
+    display:inline-block;
+    min-width:max-content;
+    white-space:nowrap;
   }
-  .searchWrap{
-    width:clamp(190px, 23vw, 330px);
-    flex:0 1 330px;
+  #toolbar .menuwrap{
+    min-width:0;
+  }
+  #toolbar .spacer{
+    min-width:0;
   }
   #btnExport, #btnManual, #btnTheme, #btnLang, .searchAdvBtn, .addMenuCaret, .addGoBtn{
     flex:0 0 auto;
   }
-  #btnManual span[data-i18n="manual"],
-  .searchAdvBtn span[data-i18n="advancedSearch"],
-  #btnExport span[data-i18n="export"],
-  #themeLabel,
-  .libraryStatusBtn span[data-i18n="changeFolder"]{
-    display:inline !important;
+  .libraryStatusBtn{
+    flex:0 1 190px;
+    overflow:hidden;
   }
-  #toolbar .ver{display:inline-flex !important;}
-  .libraryStatusBtn{display:inline-flex !important; max-width:190px;}
-  #btnAddGo{
-    font-size:13px;
-    width:auto;
-    min-width:34px;
-    padding:0 10px;
-  }
-  #btnAddGo::before{content:none !important;}
-  #addBox, #searchBox{
-    display:block !important;
-    font-size:13px;
-  }
-  #addBox::placeholder, #searchBox::placeholder{color:var(--text3) !important;}
-  .addMenuCaret{border-left:1px solid var(--border); width:34px; min-width:34px;}
-  .searchAdvBtn{border-left:1px solid var(--border); width:auto; min-width:34px; padding:0 10px;}
-
-  /* 1: shrink only */
-  @media (max-width: 1520px){
-    #toolbar{gap:7px; padding-left:10px; padding-right:10px;}
-    #toolbar .addWrap{width:clamp(168px, 18vw, 275px); flex-basis:275px;}
-    .searchWrap{width:clamp(176px, 21vw, 300px); flex-basis:300px;}
-  }
-  /* 2: folder status label shortens */
-  @media (max-width: 1460px){
-    #toolbar{gap:6px;}
-    #toolbar .addWrap{width:clamp(158px, 17vw, 252px); flex-basis:252px;}
-    .searchWrap{width:clamp(166px, 20vw, 278px); flex-basis:278px;}
-    .libraryStatusBtn span[data-i18n="changeFolder"]{display:none !important;}
-    .libraryStatusBtn{max-width:150px; padding:0 9px;}
-  }
-  /* 3: Manual -> icon only */
-  @media (max-width: 1400px){
-    #toolbar .addWrap{width:clamp(150px, 16vw, 232px); flex-basis:232px;}
-    .searchWrap{width:clamp(156px, 19vw, 258px); flex-basis:258px;}
-    #btnManual span[data-i18n="manual"]{display:none !important;}
-    #btnManual{padding:0 8px; min-width:34px; justify-content:center;}
-  }
-  /* 4: Advanced search -> icon only */
-  @media (max-width: 1340px){
-    #toolbar .addWrap{width:clamp(142px, 15vw, 214px); flex-basis:214px;}
-    .searchWrap{width:clamp(148px, 18vw, 238px); flex-basis:238px;}
-    .searchAdvBtn span[data-i18n="advancedSearch"]{display:none !important;}
-    .searchAdvBtn{padding:0 8px; min-width:34px; justify-content:center;}
-  }
-  /* 5: Export -> icon only */
-  @media (max-width: 1280px){
-    #toolbar .addWrap{width:clamp(134px, 14vw, 196px); flex-basis:196px;}
-    .searchWrap{width:clamp(140px, 17vw, 218px); flex-basis:218px;}
-    #btnExport span[data-i18n="export"]{display:none !important;}
-    #btnExport{padding:0 8px; min-width:34px; justify-content:center;}
-    #btnExport .ic[data-ic="chevron"]{display:inline-flex !important;}
-  }
-  /* 5.5: save state -> dot only; avoids crowded mixed Japanese/path text */
-  @media (max-width: 1250px){
-    #saveDot{font-size:0; gap:0;}
-    #saveDot::before{margin-right:0;}
-    .libraryStatusBtn{max-width:96px; padding:0 8px;}
-    #libName{max-width:62px;}
-  }
-  /* 5.8: library path -> folder icon only before it becomes clipped */
-  @media (max-width: 1125px){
-    #libName{max-width:18px;}
-    #libName .libNameText{display:none !important;}
-    .libraryStatusBtn{max-width:46px; min-width:34px; justify-content:center; gap:5px;}
-  }
-
-  /* 6: Dark -> icon only */
-  @media (max-width: 1220px){
-    #toolbar .addWrap{width:clamp(126px, 13vw, 178px); flex-basis:178px;}
-    .searchWrap{width:clamp(132px, 16vw, 198px); flex-basis:198px;}
-    #themeLabel{display:none !important;}
-    #btnTheme{padding:0 8px; min-width:34px; justify-content:center;}
-  }
-  /* 7: Add button -> + only */
-  @media (max-width: 1160px){
-    #toolbar .addWrap{width:clamp(118px, 12vw, 160px); flex-basis:160px;}
-    .searchWrap{width:clamp(124px, 15vw, 180px); flex-basis:180px;}
-    #btnAddGo{
-      font-size:0;
-      width:34px;
-      padding:0;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-    }
-    #btnAddGo::before{content:'+' !important; font-size:16px; line-height:1; font-weight:700;}
-  }
-  /* 8: version badge hides */
-  @media (max-width: 1100px){
-    #toolbar .ver{display:none !important;}
-    #toolbar .addWrap{width:clamp(112px, 12vw, 148px); flex-basis:148px;}
-    .searchWrap{width:clamp(118px, 14vw, 166px); flex-basis:166px;}
-  }
-  /* 9: library status hides */
-  @media (max-width: 1040px){
-    #toolbar .appname{font-size:14px;}
-    #toolbar .logo{width:22px; height:22px;}
-    #toolbar .addWrap{width:132px; flex:0 1 132px;}
-    .searchWrap{width:146px; flex:0 1 146px;}
-    .libraryStatusBtn{display:none !important;}
-  }
-  /* 10: placeholders hide */
-  @media (max-width: 980px){
-    #toolbar{gap:5px;}
-    #toolbar .addWrap{width:122px; flex-basis:122px;}
-    .searchWrap{width:132px; flex-basis:132px;}
-    #addBox::placeholder, #searchBox::placeholder{color:transparent !important;}
-    .addMenuCaret{width:30px; min-width:30px; padding:0; display:inline-flex; justify-content:center;}
-    #btnLang{padding:0 8px; min-width:34px;}
-  }
-  /* 11: DOI input -> add icon group only */
-  @media (max-width: 900px){
-    #toolbar .addWrap{width:46px; flex:0 0 46px; justify-content:center; overflow:hidden;}
-    #toolbar .addWrap .addBoxIcon{margin:0; color:var(--accent);}
-    #addBox, #btnAddGo{display:none !important;}
-    .addMenuCaret{border-left:0; width:24px; min-width:24px;}
-    .searchWrap{width:120px; flex:0 1 120px;}
-    #searchBox{display:block !important;}
-  }
-  /* 12: search box -> search icon only */
-  @media (max-width: 820px){
-    #toolbar{overflow-x:auto; scrollbar-width:none;}
-    #toolbar::-webkit-scrollbar{display:none;}
-    #toolbar .appname{
-      position:sticky;
-      left:0;
-      z-index:3;
-      background:var(--panel);
-      box-shadow:8px 0 12px color-mix(in srgb, var(--panel) 88%, transparent);
-      padding-right:8px;
-    }
-    .searchWrap{width:44px; flex:0 0 44px; justify-content:center;}
-    #searchBox{display:none !important;}
-    .searchAdvBtn{border-left:0; width:42px; padding:0;}
+  .libraryStatusBtn span{
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
 
 
@@ -3736,7 +3368,10 @@
 
 
 
-  /* --- toolbar v2.9: match search/add widths and faster placeholder reveal --- */
+  /* --- toolbar: add/search width + collapse ladder ---
+     Single ladder for .addWrap/.searchWrap width and the labels/badges that
+     free up room for them, so the two boxes always shrink in step instead of
+     one collapsing to icon-only while the other is still full width. */
   #toolbar .addWrap,
   #toolbar .searchWrap{
     width:clamp(220px, 24vw, 340px) !important;
@@ -3784,6 +3419,7 @@
     }
   }
   @media (max-width: 1520px){
+    #toolbar{gap:7px; padding-left:10px; padding-right:10px;}
     #toolbar .addWrap,
     #toolbar .searchWrap{
       width:clamp(200px, 22vw, 310px) !important;
@@ -3796,6 +3432,9 @@
       width:clamp(180px, 20vw, 280px) !important;
       flex-basis:280px !important;
     }
+    #btnManual span[data-i18n="manual"]{display:none !important;}
+    #btnManual{padding:0 8px; min-width:34px; justify-content:center;}
+    .libraryStatusBtn span[data-i18n="changeFolder"]{display:none !important;}
   }
   @media (max-width: 1280px){
     #toolbar .addWrap,
@@ -3803,6 +3442,11 @@
       width:clamp(160px, 18vw, 240px) !important;
       flex-basis:240px !important;
     }
+    .searchAdvBtn span[data-i18n="advancedSearch"]{display:none !important;}
+    .searchAdvBtn{padding:0 8px; min-width:34px; justify-content:center;}
+    #btnExport span[data-i18n="export"]{display:none !important;}
+    #btnExport{padding:0 8px; min-width:34px; justify-content:center;}
+    #btnExport .ic[data-ic="chevron"]{display:inline-flex !important;}
   }
   @media (max-width: 1160px){
     #toolbar .addWrap,
@@ -3810,6 +3454,9 @@
       width:clamp(140px, 16vw, 200px) !important;
       flex-basis:200px !important;
     }
+    #themeLabel{display:none !important;}
+    #btnTheme{padding:0 8px; min-width:34px; justify-content:center;}
+    #toolbar .ver{display:none !important;}
   }
   @media (max-width: 1040px){
     #toolbar .addWrap,
@@ -3817,6 +3464,9 @@
       width:150px !important;
       flex:0 1 150px !important;
     }
+    #toolbar .appname{font-size:14px;}
+    #toolbar .logo{width:22px; height:22px;}
+    .libraryStatusBtn{display:none !important;}
   }
   @media (max-width: 980px){
     #toolbar .addWrap,
@@ -3831,6 +3481,8 @@
       flex:0 0 46px !important;
       min-width:46px;
     }
+    #toolbar .addWrap .addBoxIcon{margin:0; color:var(--accent);}
+    #addBox, #btnAddGo{display:none !important;}
     #toolbar .searchWrap{
       width:120px !important;
       flex:0 1 120px !important;
@@ -3843,6 +3495,7 @@
       flex:0 0 44px !important;
       min-width:44px;
     }
+    #searchBox{display:none !important;}
   }
 
 
@@ -3996,14 +3649,20 @@
   .rTreeDot.ghost{background:transparent; border:1.5px dashed var(--text3)}
   .rTreeLine{width:20px; height:0; border-top:2px solid var(--text3); flex:0 0 auto}
   .rTreeLine.soft{border-top-style:dashed}
+  .rTreeYearMark{width:20px; height:0; border-top:1px dashed var(--text3); flex:0 0 auto}
   .rTreeWrap{flex:1 1 auto; overflow:auto; background:
     radial-gradient(circle at 50% 26%, color-mix(in srgb, var(--accent-soft) 42%, var(--bg)), var(--bg) 74%)}
   .rTreeCanvas{position:relative; margin:0 auto}
   .rTreeEdges{position:absolute; left:0; top:0; overflow:visible}
   .rTreeEdge{fill:none; stroke:color-mix(in srgb, var(--text3) 72%, transparent); stroke-width:1.7}
   .rTreeEdge.soft{stroke-dasharray:5 4; stroke:color-mix(in srgb, var(--text3) 48%, transparent)}
+  .rTreeEdge.timeConflict{stroke:var(--danger); stroke-dasharray:4 3}
   .rTreeEdge.hot{stroke:var(--accent); stroke-width:2.6}
   .rTreeHit{fill:none; stroke:transparent; stroke-width:16; cursor:pointer}
+  .rTreeYearGuide{pointer-events:none}
+  .rTreeYearGuide line{stroke:color-mix(in srgb, var(--text3) 30%, transparent); stroke-width:1; stroke-dasharray:3 5}
+  .rTreeYearGuide text{fill:var(--text3); font-size:10px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .rTreeYearGuide.unknown line{stroke:color-mix(in srgb, var(--text3) 55%, transparent); stroke-dasharray:2 3}
   .rTreeNode{position:absolute; width:184px; height:40px; display:flex; align-items:center; gap:9px;
     padding:0 11px; border:1.4px solid var(--border); border-radius:9px; background:var(--panel);
     cursor:pointer; box-shadow:0 1px 3px rgba(15,23,42,.06); transition:opacity .12s, border-color .12s}
@@ -4027,6 +3686,7 @@
   .rTreeTipRow{color:var(--text2)}
   .rTreeTipRow b{color:var(--text); font-weight:600}
   .rTreeTipNote{display:block; color:var(--text3); font-size:11px; padding-left:1em}
+  .rTreeTipWarn{color:var(--danger); padding-left:0; margin-top:4px}
   .rTreeEmpty{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
     height:100%; min-height:220px; padding:32px; text-align:center; color:var(--text3); font-size:12.5px}
   .rTreeEmpty b{font-size:14px; color:var(--text2)}
