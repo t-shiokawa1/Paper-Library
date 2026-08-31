@@ -17,7 +17,7 @@
   header .langBtn{flex:0 0 auto; border:1px solid var(--border); background:#fff; color:var(--text2); border-radius:6px; padding:3px 9px; font-size:11.5px; cursor:pointer}
   header .langBtn:hover{border-color:var(--accent); color:var(--accent)}
   .controls{padding:8px 12px; border-bottom:1px solid var(--border); display:flex; flex-direction:column; gap:7px}
-  .subbar{padding:8px 12px; border-bottom:1px solid var(--border); display:flex; flex-direction:column; gap:7px; background:#fbfcff}
+  .subbar{padding:8px 12px; border-bottom:1px solid var(--border); display:flex; flex-direction:column; gap:7px; background:#fff}
   .sectionTitle{display:flex; align-items:center; gap:7px; margin-top:1px; color:var(--text); font-size:13px; font-weight:800; letter-spacing:.01em}
   .sectionTitle svg{width:20px; height:20px; flex:0 0 auto; padding:3px; border-radius:5px; background:var(--accent-soft); color:var(--accent)}
   .sectionCount{margin-left:auto; color:var(--text3); font-size:11.5px; font-weight:700; letter-spacing:0}
@@ -38,18 +38,19 @@
   .btn.quiet{border-color:transparent; background:transparent; color:var(--text2); padding:4px 6px; font-size:11.5px}
   .btn.quiet:hover{background:var(--accent-soft); color:var(--accent); filter:none}
   .btn:disabled{opacity:.5; cursor:default}
-  .libraryPicker{display:flex; align-items:center; width:100%; min-width:0; border:1px solid var(--accent); border-radius:6px; overflow:hidden; background:#fff; color:var(--accent);}
-  .libraryPicker .libNameBtn{font:inherit; border:0; background:#fff; color:var(--accent); padding:5px 9px; flex:1 1 auto; min-width:0; overflow:hidden; white-space:nowrap; font-weight:600; cursor:pointer; max-width:none; display:inline-flex; align-items:center; justify-content:flex-start; gap:5px;}
-  .libraryPicker .libNameBtn:hover{background:var(--accent-soft)}
-  .libraryPicker .libNameBtn .libNameIcon{width:14px; height:14px; flex:0 0 auto;}
+  .libraryPicker{display:flex; align-items:center; width:100%; min-width:0; border:1px solid var(--border); border-radius:8px; overflow:hidden; background:#fff; color:var(--text2); box-shadow:0 1px 2px rgba(15,23,42,.04); transition:border-color .15s ease,box-shadow .15s ease;}
+  .libraryPicker:hover{border-color:#cbd5e1;}
+  .libraryPicker .libNameBtn{font:inherit; border:0; background:#fff; color:var(--text); padding:6px 9px; flex:1 1 auto; min-width:0; overflow:hidden; white-space:nowrap; font-weight:600; cursor:pointer; max-width:none; display:inline-flex; align-items:center; justify-content:flex-start; gap:5px;}
+  .libraryPicker .libNameBtn:hover{background:#f8fafc}
+  .libraryPicker .libNameBtn .libNameIcon{width:14px; height:14px; flex:0 0 auto; color:var(--accent);}
   .libraryPicker .libNameBtn #libButtonLabel{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-  .libraryPicker .libIconBtn{width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; border:0; border-left:1px solid var(--border); background:#fff; color:var(--accent); cursor:pointer; padding:0;}
-  .libraryPicker .libIconBtn:hover{background:var(--accent-soft)}
+  .libraryPicker .libIconBtn{width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center; border:0; border-left:1px solid var(--border); background:#fff; color:var(--text3); cursor:pointer; padding:0;}
+  .libraryPicker .libIconBtn:hover{background:var(--accent-soft); color:var(--accent)}
   .libraryPicker .libIconBtn:disabled{opacity:.45; cursor:default;}
   .libraryPicker .libIconBtn:disabled:hover{background:#fff;}
   .libraryPicker .libIconBtn svg{width:14px; height:14px; flex:0 0 auto;}
-  .seg{display:inline-flex; border:1px solid var(--border); border-radius:8px; overflow:hidden; background:#fff}
-  .seg .segBtn{font:inherit; border:0; border-left:1px solid var(--border); background:#fff; color:var(--text2); padding:5px 12px; cursor:pointer; min-width:36px; line-height:1.15; text-align:center}
+  .seg{display:inline-flex; width:100%; border:1px solid var(--border); border-radius:8px; overflow:hidden; background:#fff}
+  .seg .segBtn{flex:1 1 0; font:inherit; border:0; border-left:1px solid var(--border); background:#fff; color:var(--text2); padding:5px 12px; cursor:pointer; min-width:0; line-height:1.15; text-align:center}
   .seg .segBtn:first-child{border-left:0}
   .seg .segBtn:hover{background:var(--accent-soft); color:var(--accent)}
   .seg .segBtn.active{background:var(--accent); color:#fff}
@@ -82,7 +83,7 @@
 /* 02: richer reference cards */
 #results{
   padding:8px;
-  background:linear-gradient(180deg,#f8fafc 0%,#ffffff 100%);
+  background:#fff;
 }
 .card{
   border-radius:11px;
@@ -105,7 +106,7 @@
 
 /* 03: refined controls and focus states */
 .controls{
-  background:#fbfcff;
+  background:#fff;
   gap:8px;
 }
 select,
