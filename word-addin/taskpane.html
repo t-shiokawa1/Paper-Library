@@ -10,16 +10,22 @@
   *{box-sizing:border-box}
   html,body{margin:0; min-height:100%; font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif; color:var(--text); font-size:13px; background:#fff}
   body{overflow-y:auto}
-  header{padding:10px 12px; display:flex; align-items:center; gap:8px}
+  header{padding:8px 12px 3px; display:flex; align-items:center; gap:8px}
   header .logo{width:24px;height:24px;flex:0 0 auto;display:block}
   header .t{font-weight:700}
   header .lib{margin-left:auto; font-size:11.5px; color:var(--text3); text-align:right; line-height:1.3}
   header .langBtn{flex:0 0 auto; border:1px solid var(--border); background:#fff; color:var(--text2); border-radius:6px; padding:3px 9px; font-size:11.5px; cursor:pointer}
   header .langBtn:hover{border-color:var(--accent); color:var(--accent)}
-  .controls{padding:8px 12px 12px; display:flex; flex-direction:column; gap:7px}
+  .controls{padding:3px 12px 12px; display:flex; flex-direction:column; gap:7px}
   .subbar{padding:12px 12px; display:flex; flex-direction:column; gap:7px; background:#fff}
   .sectionTitle{display:flex; align-items:center; gap:7px; margin-top:1px; color:var(--text); font-size:13px; font-weight:800; letter-spacing:.01em}
-  .sectionTitle svg{width:20px; height:20px; flex:0 0 auto; padding:3px; border-radius:5px; background:var(--accent-soft); color:var(--accent)}
+  .sectionTitle .sectionLeadIcon{width:20px; height:20px; flex:0 0 auto; padding:3px; border-radius:5px; background:var(--accent-soft); color:var(--accent)}
+  .sectionToggle{width:100%; border:0; padding:0; background:transparent; font:inherit; text-align:left; cursor:pointer}
+  .sectionToggle .sectionChevron{width:15px; height:15px; flex:0 0 auto; margin-left:auto; padding:0; color:var(--text3); background:transparent; transition:transform .15s ease}
+  .sectionToggle[aria-expanded="false"] .sectionChevron{transform:rotate(-90deg)}
+  .sectionToggle:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:6px}
+  .sectionPanel{display:flex; flex-direction:column; gap:7px}
+  .sectionPanel[hidden]{display:none}
   .sectionCount{margin-left:auto; color:var(--text3); font-size:11.5px; font-weight:700; letter-spacing:0}
   .row{display:flex; gap:6px; align-items:center; flex-wrap:wrap}
   .row > label{font-size:11.5px; color:var(--text2)}
@@ -155,27 +161,32 @@ input:focus{
   </header>
 
   <div class="controls">
-    <div class="sectionTitle">
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.5 7.5h6l1.8 2.2h9.2v8.8H3.5V7.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M3.5 7.5V5.4h5.3l1.7 2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <button type="button" class="sectionTitle sectionToggle" data-section-toggle="library" aria-expanded="true" aria-controls="section-library">
+      <svg class="sectionLeadIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.5 7.5h6l1.8 2.2h9.2v8.8H3.5V7.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M3.5 7.5V5.4h5.3l1.7 2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span data-i18n="libraryGroup">ライブラリフォルダ</span>
-    </div>
-    <div class="row">
-      <div class="libraryPicker" id="libraryPicker">
-        <button type="button" class="libNameBtn" id="btnLoad" data-i18n-title="loadTitle">
-          <svg class="libNameIcon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.4 5.1h4.5l1.2 1.5h5.5v6.2H2.4z" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round"/><path d="M2.4 5.1V3.6h4.1l1.1 1.5" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span id="libButtonLabel" data-i18n="loadBtn">ライブラリを選択</span>
-        </button>
-        <button type="button" class="libIconBtn" id="btnReloadLib" data-i18n-title="reloadLibTitle" aria-label="ライブラリを再読み込み">
-          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.1 6.2A5.2 5.2 0 1 0 12 11.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.1 2.9v3.3H9.8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
+      <svg class="sectionChevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3.5 5.5 4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="sectionPanel" id="section-library">
+      <div class="row">
+        <div class="libraryPicker" id="libraryPicker">
+          <button type="button" class="libNameBtn" id="btnLoad" data-i18n-title="loadTitle">
+            <svg class="libNameIcon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.4 5.1h4.5l1.2 1.5h5.5v6.2H2.4z" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round"/><path d="M2.4 5.1V3.6h4.1l1.1 1.5" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span id="libButtonLabel" data-i18n="loadBtn">ライブラリを選択</span>
+          </button>
+          <button type="button" class="libIconBtn" id="btnReloadLib" data-i18n-title="reloadLibTitle" aria-label="ライブラリを再読み込み">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.1 6.2A5.2 5.2 0 1 0 12 11.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.1 2.9v3.3H9.8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+        <input type="file" id="file" accept=".json,application/json" class="hidden">
+        <input type="file" id="folder" webkitdirectory directory multiple class="hidden">
       </div>
-      <input type="file" id="file" accept=".json,application/json" class="hidden">
-      <input type="file" id="folder" webkitdirectory directory multiple class="hidden">
     </div>
-    <div class="sectionTitle">
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8.5 8.5H6.8A2.8 2.8 0 0 0 4 11.3v1.1a2.8 2.8 0 0 0 2.8 2.8h1.7v-3.7H6.9v-.2c0-.7.5-1.3 1.2-1.3h.4V8.5Zm8.7 0h-1.7a2.8 2.8 0 0 0-2.8 2.8v1.1a2.8 2.8 0 0 0 2.8 2.8h1.7v-3.7h-1.6v-.2c0-.7.5-1.3 1.2-1.3h.4V8.5Z" fill="currentColor"/></svg>
+    <button type="button" class="sectionTitle sectionToggle" data-section-toggle="style" aria-expanded="true" aria-controls="section-style">
+      <svg class="sectionLeadIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8.5 8.5H6.8A2.8 2.8 0 0 0 4 11.3v1.1a2.8 2.8 0 0 0 2.8 2.8h1.7v-3.7H6.9v-.2c0-.7.5-1.3 1.2-1.3h.4V8.5Zm8.7 0h-1.7a2.8 2.8 0 0 0-2.8 2.8v1.1a2.8 2.8 0 0 0 2.8 2.8h1.7v-3.7h-1.6v-.2c0-.7.5-1.3 1.2-1.3h.4V8.5Z" fill="currentColor"/></svg>
       <span data-i18n="styleGroup">引用スタイル</span>
-    </div>
+      <svg class="sectionChevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3.5 5.5 4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="sectionPanel" id="section-style">
     <div class="fields">
       <div class="field">
         <label data-i18n="styleLabel">スタイル</label>
@@ -203,14 +214,17 @@ input:focus{
       <span style="flex:1"></span>
       <button class="btn quiet" id="btnRefresh" data-i18n-title="refreshTitle"><svg class="refreshSvg" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.1 6.2A5.2 5.2 0 1 0 12 11.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.1 2.9v3.3H9.8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="refreshLabel">文献リストを更新</span></button>
     </div>
+    </div>
   </div>
 
   <div class="subbar">
-    <div class="sectionTitle">
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 7h8M5 12h14M5 17h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16.5" cy="7" r="2" fill="var(--accent-soft)" stroke="currentColor" stroke-width="1.8"/><circle cx="10" cy="17" r="2" fill="var(--accent-soft)" stroke="currentColor" stroke-width="1.8"/></svg>
+    <button type="button" class="sectionTitle sectionToggle" data-section-toggle="search" aria-expanded="true" aria-controls="section-search">
+      <svg class="sectionLeadIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 7h8M5 12h14M5 17h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16.5" cy="7" r="2" fill="var(--accent-soft)" stroke="currentColor" stroke-width="1.8"/><circle cx="10" cy="17" r="2" fill="var(--accent-soft)" stroke="currentColor" stroke-width="1.8"/></svg>
       <span data-i18n="searchGroup">検索・絞り込み</span>
       <span class="sectionCount" id="count"></span>
-    </div>
+      <svg class="sectionChevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3.5 5.5 4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="sectionPanel" id="section-search">
     <div class="fields">
       <div class="field">
         <label data-i18n="collLabel">コレクション</label>
@@ -229,14 +243,16 @@ input:focus{
     <div class="row">
       <input type="search" id="q" data-i18n-ph="searchPh">
     </div>
+    </div>
   </div>
 
   <section class="resultsArea" aria-label="文献リスト">
-    <div class="sectionTitle">
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 5.5h11.5M7 10.5h11.5M7 15.5h11.5M7 20.5h11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 5.5h.01M4 10.5h.01M4 15.5h.01M4 20.5h.01" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
+    <button type="button" class="sectionTitle sectionToggle" data-section-toggle="results" aria-expanded="true" aria-controls="section-results">
+      <svg class="sectionLeadIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 5.5h11.5M7 10.5h11.5M7 15.5h11.5M7 20.5h11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 5.5h.01M4 10.5h.01M4 15.5h.01M4 20.5h.01" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
       <span data-i18n="referenceGroup">文献リスト</span>
-    </div>
-    <div id="results"></div>
+      <svg class="sectionChevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3.5 5.5 4.5 4.5 4.5-4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="sectionPanel" id="section-results"><div id="results"></div></div>
   </section>
   <div class="toast" id="toast"></div>
 
@@ -431,6 +447,7 @@ var officeReady = false;
 var LS_LIB = 'plWordAddin.library';
 var LS_PREFS = 'plWordAddin.prefs';
 var LS_LANG = 'plWordAddin.lang';
+var LS_SECTIONS = 'plWordAddin.sections';
 // inserted content defaults to Times New Roman 10.5pt
 var INS_FONT = "Times New Roman", INS_SIZE = 10.5;
 // inline button icons
@@ -555,6 +572,29 @@ function setMarkerActive(val){ segButtons().forEach(function(b){ b.classList.tog
 function savePrefs(){
   PREFS = { style: $('#style').value, includeTitle: $('#incTitle').checked, includeUrl: $('#incUrl').checked, marker: currentMarker() };
   try{ localStorage.setItem(LS_PREFS, JSON.stringify(PREFS)); }catch(e){}
+}
+function setSectionOpen(button, open){
+  var panel = document.getElementById(button.getAttribute('aria-controls'));
+  if(!panel) return;
+  button.setAttribute('aria-expanded', open ? 'true' : 'false');
+  panel.hidden = !open;
+}
+function restoreSections(){
+  var saved = {};
+  try{ saved = JSON.parse(localStorage.getItem(LS_SECTIONS) || '{}') || {}; }catch(e){}
+  document.querySelectorAll('[data-section-toggle]').forEach(function(button){
+    var key = button.dataset.sectionToggle;
+    setSectionOpen(button, saved[key] !== false);
+    button.addEventListener('click', function(){
+      var open = button.getAttribute('aria-expanded') !== 'true';
+      setSectionOpen(button, open);
+      try{
+        var next = JSON.parse(localStorage.getItem(LS_SECTIONS) || '{}') || {};
+        next[key] = open;
+        localStorage.setItem(LS_SECTIONS, JSON.stringify(next));
+      }catch(e){}
+    });
+  });
 }
 function authorsShort(authors){ return (authors||[]).map(function(a){ return a.family || a.given; }).filter(Boolean).join('; '); }
 function itemText(it){
@@ -909,6 +949,7 @@ function restore(){
   }catch(e){}
   applyI18n();
 }
+restoreSections();
 restore();
 
 if(window.Office && Office.onReady){
