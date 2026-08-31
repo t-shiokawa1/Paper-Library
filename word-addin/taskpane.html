@@ -20,9 +20,11 @@
   .subbar{padding:8px 12px; border-bottom:1px solid var(--border); display:flex; flex-direction:column; gap:7px; background:#fbfcff}
   .sectionTitle{display:flex; align-items:center; gap:7px; margin-top:1px; color:var(--text); font-size:13px; font-weight:800; letter-spacing:.01em}
   .sectionTitle svg{width:20px; height:20px; flex:0 0 auto; padding:3px; border-radius:5px; background:var(--accent-soft); color:var(--accent)}
+  .sectionCount{margin-left:auto; color:var(--text3); font-size:11.5px; font-weight:700; letter-spacing:0}
   .row{display:flex; gap:6px; align-items:center; flex-wrap:wrap}
   .row > label{font-size:11.5px; color:var(--text2)}
   select, input[type=search], input[type=text]{ font:inherit; padding:5px 8px; border:1px solid var(--border); border-radius:6px; background:#fff; color:var(--text); outline:none; min-width:0 }
+  select{appearance:none; -webkit-appearance:none; padding-right:32px; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='m1 1 5 6 5-6' fill='none' stroke='%235a6675' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.8'/%3E%3C/svg%3E"); background-position:right 10px center; background-repeat:no-repeat; background-size:12px 8px; box-shadow:0 1px 2px rgba(15,23,42,.06)}
   select:focus, input:focus{border-color:var(--accent)}
   #q{flex:1}
   .fields{display:flex; gap:8px; align-items:flex-end}
@@ -33,6 +35,8 @@
   .btn:hover{filter:brightness(1.07)}
   .btn.ghost{background:#fff; color:var(--accent)}
   .btn.ghost:hover{background:var(--accent-soft)}
+  .btn.quiet{border-color:transparent; background:transparent; color:var(--text2); padding:4px 6px; font-size:11.5px}
+  .btn.quiet:hover{background:var(--accent-soft); color:var(--accent); filter:none}
   .btn:disabled{opacity:.5; cursor:default}
   .libraryPicker{display:flex; align-items:center; width:100%; min-width:0; border:1px solid var(--accent); border-radius:6px; overflow:hidden; background:#fff; color:var(--accent);}
   .libraryPicker .libNameBtn{font:inherit; border:0; background:#fff; color:var(--accent); padding:5px 9px; flex:1 1 auto; min-width:0; overflow:hidden; white-space:nowrap; font-weight:600; cursor:pointer; max-width:none; display:inline-flex; align-items:center; justify-content:flex-start; gap:5px;}
@@ -111,6 +115,7 @@ input[type=text]{
   border-radius:8px;
   transition:border-color .15s ease,box-shadow .15s ease,background .15s ease;
 }
+select{padding-right:32px;}
 select:hover,
 input[type=search]:hover,
 input[type=text]:hover{border-color:#cbd5e1;}
@@ -195,7 +200,7 @@ input:focus{
       <label class="check"><input type="checkbox" id="incTitle"> <span data-i18n="incTitle">タイトル</span></label>
       <label class="check"><input type="checkbox" id="incUrl"> <span data-i18n="incUrl">DOI/URL</span></label>
       <span style="flex:1"></span>
-      <button class="btn ghost" id="btnRefresh" data-i18n-title="refreshTitle"><svg class="refreshSvg" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.1 6.2A5.2 5.2 0 1 0 12 11.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.1 2.9v3.3H9.8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="refreshLabel">文献リストを更新</span></button>
+      <button class="btn quiet" id="btnRefresh" data-i18n-title="refreshTitle"><svg class="refreshSvg" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.1 6.2A5.2 5.2 0 1 0 12 11.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.1 2.9v3.3H9.8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="refreshLabel">文献リストを更新</span></button>
     </div>
   </div>
 
@@ -203,6 +208,7 @@ input:focus{
     <div class="sectionTitle">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 7h8M5 12h14M5 17h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16.5" cy="7" r="2" fill="var(--accent-soft)" stroke="currentColor" stroke-width="1.8"/><circle cx="10" cy="17" r="2" fill="var(--accent-soft)" stroke="currentColor" stroke-width="1.8"/></svg>
       <span data-i18n="searchGroup">検索・絞り込み</span>
+      <span class="sectionCount" id="count"></span>
     </div>
     <div class="fields">
       <div class="field">
@@ -218,7 +224,6 @@ input:focus{
       <label class="check"><input type="checkbox" id="fStar"> <span data-i18n="starredOpt">★ スター</span></label>
       <label class="check"><input type="checkbox" id="fMine"> <span data-i18n="myPubOpt">自分の論文</span></label>
       <span style="flex:1"></span>
-      <span id="count" style="font-size:11.5px;color:var(--text3)"></span>
     </div>
     <div class="row">
       <input type="search" id="q" data-i18n-ph="searchPh">

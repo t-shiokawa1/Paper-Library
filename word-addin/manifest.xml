@@ -18,7 +18,7 @@
            xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
            xsi:type="TaskPaneApp">
   <Id>e4bd1298-a84d-4249-b366-c20d396bc42e</Id>
-  <Version>1.0.1.0</Version>
+  <Version>1.0.2.0</Version>
   <ProviderName>Paper Library</ProviderName>
   <DefaultLocale>ja-JP</DefaultLocale>
   <DisplayName DefaultValue="Paper Library"/>
@@ -41,11 +41,6 @@
     <Hosts>
       <Host xsi:type="Document">
         <DesktopFormFactor>
-          <GetStarted>
-            <Title resid="GetStarted.Title"/>
-            <Description resid="GetStarted.Description"/>
-            <LearnMoreUrl resid="Urls.Support"/>
-          </GetStarted>
           <FunctionFile resid="Urls.Functions"/>
           <ExtensionPoint xsi:type="PrimaryCommandSurface">
             <CustomTab id="PaperLibrary.Tab">
@@ -95,11 +90,9 @@
         <bt:String id="Tab.Label" DefaultValue="Paper Library"/>
         <bt:String id="Group.Label" DefaultValue="Paper Library"/>
         <bt:String id="OpenBtn.Label" DefaultValue="文献パネルを開く"/>
-        <bt:String id="GetStarted.Title" DefaultValue="Paper Library へようこそ"/>
       </bt:ShortStrings>
       <bt:LongStrings>
         <bt:String id="OpenBtn.Tip" DefaultValue="Paper Library の文献パネルを開き、文献を検索・選択します。"/>
-        <bt:String id="GetStarted.Description" DefaultValue="リボンの「文献パネルを開く」を押すとパネルが開きます。library.json を読み込んで検索してください。"/>
       </bt:LongStrings>
     </Resources>
   </VersionOverrides>
