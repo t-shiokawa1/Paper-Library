@@ -8,8 +8,8 @@
 <style>
   :root{ --accent:#2563eb; --accent-soft:#eaf1ff; --border:#e2e6ee; --text:#1c2430; --text2:#5a6675; --text3:#8a94a3; --bg:#f6f8fb; }
   *{box-sizing:border-box}
-  html,body{margin:0; height:100%; font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif; color:var(--text); font-size:13px; background:#fff}
-  body{display:flex; flex-direction:column}
+  html,body{margin:0; min-height:100%; font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif; color:var(--text); font-size:13px; background:#fff}
+  body{overflow-y:auto}
   header{padding:10px 12px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px}
   header .logo{width:24px;height:24px;flex:0 0 auto;display:block}
   header .t{font-weight:700}
@@ -18,7 +18,8 @@
   header .langBtn:hover{border-color:var(--accent); color:var(--accent)}
   .controls{padding:8px 12px; border-bottom:1px solid var(--border); display:flex; flex-direction:column; gap:7px}
   .subbar{padding:8px 12px; border-bottom:1px solid var(--border); display:flex; flex-direction:column; gap:7px; background:#fbfcff}
-  .groupHead{font-size:10px; font-weight:700; letter-spacing:.05em; color:var(--text3); text-transform:uppercase; margin-top:1px}
+  .sectionTitle{display:flex; align-items:center; gap:7px; margin-top:1px; color:var(--text); font-size:13px; font-weight:800; letter-spacing:.01em}
+  .sectionTitle svg{width:20px; height:20px; flex:0 0 auto; padding:3px; border-radius:5px; background:var(--accent-soft); color:var(--accent)}
   .row{display:flex; gap:6px; align-items:center; flex-wrap:wrap}
   .row > label{font-size:11.5px; color:var(--text2)}
   select, input[type=search], input[type=text]{ font:inherit; padding:5px 8px; border:1px solid var(--border); border-radius:6px; background:#fff; color:var(--text); outline:none; min-width:0 }
@@ -50,7 +51,9 @@
   .seg .segBtn.active{background:var(--accent); color:#fff}
   .seg .segBtn sup{font-size:.72em; line-height:0}
   .check{display:inline-flex; align-items:center; gap:4px; font-size:11.5px; color:var(--text2)}
-  #results{flex:1; overflow-y:auto; padding:6px 8px}
+  .resultsArea{border-top:1px solid var(--border); background:#fff}
+  .resultsArea .sectionTitle{padding:8px 12px 7px; border-bottom:1px solid var(--border)}
+  #results{overflow:visible; padding:6px 8px}
   .card{border:1px solid var(--border); border-radius:8px; padding:8px 10px; margin-bottom:7px; background:#fff}
   .card:hover{border-color:var(--accent)}
   .card .ct{font-weight:600; line-height:1.3; margin-bottom:3px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
@@ -146,6 +149,10 @@ input:focus{
   </header>
 
   <div class="controls">
+    <div class="sectionTitle">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.5 7.5h6l1.8 2.2h9.2v8.8H3.5V7.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M3.5 7.5V5.4h5.3l1.7 2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span data-i18n="libraryGroup">ライブラリフォルダ</span>
+    </div>
     <div class="row">
       <div class="libraryPicker" id="libraryPicker">
         <button type="button" class="libNameBtn" id="btnLoad" data-i18n-title="loadTitle">
@@ -159,7 +166,10 @@ input:focus{
       <input type="file" id="file" accept=".json,application/json" class="hidden">
       <input type="file" id="folder" webkitdirectory directory multiple class="hidden">
     </div>
-    <div class="groupHead" data-i18n="styleGroup">引用スタイル</div>
+    <div class="sectionTitle">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8.5 8.5H6.8A2.8 2.8 0 0 0 4 11.3v1.1a2.8 2.8 0 0 0 2.8 2.8h1.7v-3.7H6.9v-.2c0-.7.5-1.3 1.2-1.3h.4V8.5Zm8.7 0h-1.7a2.8 2.8 0 0 0-2.8 2.8v1.1a2.8 2.8 0 0 0 2.8 2.8h1.7v-3.7h-1.6v-.2c0-.7.5-1.3 1.2-1.3h.4V8.5Z" fill="currentColor"/></svg>
+      <span data-i18n="styleGroup">引用スタイル</span>
+    </div>
     <div class="fields">
       <div class="field">
         <label data-i18n="styleLabel">スタイル</label>
@@ -190,7 +200,10 @@ input:focus{
   </div>
 
   <div class="subbar">
-    <div class="groupHead" data-i18n="searchGroup">検索・絞り込み</div>
+    <div class="sectionTitle">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 7h8M5 12h14M5 17h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16.5" cy="7" r="2" fill="var(--accent-soft)" stroke="currentColor" stroke-width="1.8"/><circle cx="10" cy="17" r="2" fill="var(--accent-soft)" stroke="currentColor" stroke-width="1.8"/></svg>
+      <span data-i18n="searchGroup">検索・絞り込み</span>
+    </div>
     <div class="fields">
       <div class="field">
         <label data-i18n="collLabel">コレクション</label>
@@ -212,7 +225,13 @@ input:focus{
     </div>
   </div>
 
-  <div id="results"></div>
+  <section class="resultsArea" aria-label="文献リスト">
+    <div class="sectionTitle">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 5.5h11.5M7 10.5h11.5M7 15.5h11.5M7 20.5h11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 5.5h.01M4 10.5h.01M4 15.5h.01M4 20.5h.01" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
+      <span data-i18n="referenceGroup">文献リスト</span>
+    </div>
+    <div id="results"></div>
+  </section>
   <div class="toast" id="toast"></div>
 
 <script>
@@ -358,7 +377,7 @@ var I18N = {
     notLoaded:'未読み込み', nRefs:function(n){return n+' 件の文献';},
     searchPh:'タイトル・著者・雑誌・DOI で検索…', loadBtn:'ライブラリを選択', libLoaded:'ライブラリ', loadTitle:'ライブラリフォルダを選択', reloadLibTitle:'library.json を再読み込み', changeLibTitle:'ライブラリフォルダを変更',
     styleLabel:'スタイル', collLabel:'コレクション', allColl:'すべてのコレクション',
-    styleGroup:'引用スタイル', searchGroup:'検索・絞り込み', tagLabel:'タグ', allTags:'すべてのタグ', starredOpt:'★ スター', myPubOpt:'自分の論文',
+    libraryGroup:'ライブラリフォルダ', styleGroup:'引用スタイル', searchGroup:'検索・絞り込み', referenceGroup:'文献リスト', tagLabel:'タグ', allTags:'すべてのタグ', starredOpt:'★ スター', myPubOpt:'自分の論文',
     incTitle:'タイトル', incUrl:'DOI/URL', numberLabel:'番号', bracketOpt:'括弧 [1]', superOpt:'上付き ¹', superBracketOpt:'上付き [1]',
     refreshBtn:'文献リストを更新', refreshTitle:'本文の番号と末尾の文献リストを再同期します',
     insertBtn:'挿入', copyBtn:'コピー',
@@ -377,7 +396,7 @@ var I18N = {
     notLoaded:'Not loaded', nRefs:function(n){return n+' references';},
     searchPh:'Search title, author, journal, DOI…', loadBtn:'Select library', libLoaded:'Library', loadTitle:'Select library folder', reloadLibTitle:'Reload library.json', changeLibTitle:'Change library folder',
     styleLabel:'Style', collLabel:'Collection', allColl:'All collections',
-    styleGroup:'Citation style', searchGroup:'Search & filter', tagLabel:'Tag', allTags:'All tags', starredOpt:'★ Starred', myPubOpt:'My publications',
+    libraryGroup:'Library folder', styleGroup:'Citation style', searchGroup:'Search & filter', referenceGroup:'Reference list', tagLabel:'Tag', allTags:'All tags', starredOpt:'★ Starred', myPubOpt:'My publications',
     incTitle:'Title', incUrl:'DOI/URL', numberLabel:'Number', bracketOpt:'Brackets [1]', superOpt:'Superscript ¹', superBracketOpt:'Superscript [1]',
     refreshBtn:'Update bibliography', refreshTitle:'Re-sync the in-text numbers and the reference list',
     insertBtn:'Insert', copyBtn:'Copy',
@@ -608,7 +627,7 @@ function markerText(n){
   return '[' + n + ']';
 }
 // collapse a set of numbers into a compact string: runs of 3+ become ranges (1–4),
-// everything else is comma separated (1, 3, 5).
+// everything else is comma separated without spaces (1,3,5).
 function collapseNums(nums){
   var u = Array.from(new Set(nums)).filter(function(x){ return x; }).sort(function(a,b){ return a - b; });
   var parts = [], i = 0;
@@ -619,7 +638,7 @@ function collapseNums(nums){
     else for(var k = i; k <= j; k++) parts.push(String(u[k]));
     i = j + 1;
   }
-  return parts.join(', ');
+  return parts.join(',');
 }
 // in-text text for a group of adjacent citations (e.g. "[1–4]" or superscript "1–4")
 function groupMarkerText(nums, marker){
@@ -637,7 +656,7 @@ function assignNumbers(idsInOrder){
 var BIB_INDENT = 22; // pt — hanging indent / gap between number and citation
 function buildBibliographyHtml(items, opts){
   if(!items.length) return '';
-  var base = "font-family:'Times New Roman',serif;font-size:10.5pt;text-align:left;margin:0pt 0pt 6pt " + BIB_INDENT + "pt;text-indent:-" + BIB_INDENT + "pt;";
+  var base = "font-family:'Times New Roman',serif;font-size:10.5pt;text-align:left;margin:0pt 0pt 0pt " + BIB_INDENT + "pt;text-indent:-" + BIB_INDENT + "pt;";
   return items.map(function(it, i){
     var body = it ? itemToCitationHtml(it, opts) : esc(tr('notFound'));
     return '<p style="' + base + '">' + esc(bibLabel(i + 1)) + '&#9;' + body + '</p>';
@@ -749,6 +768,8 @@ async function refreshCitations(o){
               p2.leftIndent = BIB_INDENT;
               p2.firstLineIndent = -BIB_INDENT;
               p2.alignment = 'Left';
+              p2.spaceBefore = 0;
+              p2.spaceAfter = 0;
             });
             await context.sync();
           }catch(e){ /* older Word: rely on the inline CSS hanging indent */ }

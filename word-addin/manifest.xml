@@ -94,12 +94,12 @@
       <bt:ShortStrings>
         <bt:String id="Tab.Label" DefaultValue="Paper Library"/>
         <bt:String id="Group.Label" DefaultValue="Paper Library"/>
-        <bt:String id="OpenBtn.Label" DefaultValue="文献を挿入"/>
+        <bt:String id="OpenBtn.Label" DefaultValue="文献パネルを開く"/>
         <bt:String id="GetStarted.Title" DefaultValue="Paper Library へようこそ"/>
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="OpenBtn.Tip" DefaultValue="Paper Library の文献を検索し、引用文献をカーソル位置に挿入します。"/>
-        <bt:String id="GetStarted.Description" DefaultValue="リボンの「文献を挿入」を押すとパネルが開きます。library.json を読み込んで検索してください。"/>
+        <bt:String id="OpenBtn.Tip" DefaultValue="Paper Library の文献パネルを開き、文献を検索・選択します。"/>
+        <bt:String id="GetStarted.Description" DefaultValue="リボンの「文献パネルを開く」を押すとパネルが開きます。library.json を読み込んで検索してください。"/>
       </bt:LongStrings>
     </Resources>
   </VersionOverrides>
