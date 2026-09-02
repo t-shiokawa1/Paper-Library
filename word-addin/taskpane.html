@@ -12,10 +12,32 @@
   body{overflow-y:auto}
   header{padding:8px 12px 9px; display:flex; align-items:center; gap:8px}
   header .logo{width:24px;height:24px;flex:0 0 auto;display:block}
-  header .t{font-weight:700}
-  header .lib{margin-left:auto; font-size:11.5px; color:var(--text3); text-align:right; line-height:1.3}
-  header .langBtn{flex:0 0 auto; border:1px solid var(--border); background:#fff; color:var(--text2); border-radius:6px; padding:3px 9px; font-size:11.5px; cursor:pointer}
-  header .langBtn:hover{border-color:var(--accent); color:var(--accent)}
+  header .t{font-weight:700; white-space:nowrap; flex:0 0 auto}
+  header .lib{margin-left:auto; min-width:0; font-size:11.5px; color:var(--text3); text-align:right; line-height:1.3; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  header .langBtn{flex:0 0 auto; display:inline-flex; align-items:center; gap:4px; border:1px solid var(--border); background:#fff; color:var(--text2); border-radius:6px; padding:3px 8px; font-size:11.5px; font-weight:600; cursor:pointer}
+  header .langBtn.iconOnly{padding:3px 6px}
+  header .langBtn .hdrIcon{width:14px; height:14px; flex:0 0 auto}
+  header .langBtn:hover{border-color:var(--accent); color:var(--accent); background:var(--accent-soft)}
+  header .langBtn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  /* ---- manual overlay ---- */
+  .manualOverlay{position:fixed; inset:0; z-index:60; background:#fff; display:flex; flex-direction:column}
+  .manualHead{display:flex; align-items:center; gap:7px; flex:0 0 auto; padding:9px 12px; border-bottom:1px solid var(--border); font-weight:800; background:#fff}
+  .manualHead .manualHeadIcon{width:18px; height:18px; flex:0 0 auto; padding:3px; border-radius:5px; background:var(--accent-soft); color:var(--accent)}
+  .manualClose{margin-left:auto; flex:0 0 auto; width:26px; height:26px; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--border); border-radius:6px; background:#fff; color:var(--text2); cursor:pointer; padding:0}
+  .manualClose svg{width:14px; height:14px}
+  .manualClose:hover{border-color:var(--accent); color:var(--accent); background:var(--accent-soft)}
+  .manualBody{flex:1 1 auto; overflow-y:auto; padding:12px 12px 28px; line-height:1.65}
+  .manualBody h3{margin:18px 0 6px; font-size:13px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:6px}
+  .manualBody h3:first-child{margin-top:0}
+  .manualBody h3::before{content:""; width:3px; align-self:stretch; border-radius:2px; background:var(--accent); flex:0 0 auto}
+  .manualBody p{margin:0 0 8px; color:var(--text2); font-size:12px}
+  .manualBody ul{margin:0 0 8px; padding-left:17px; color:var(--text2); font-size:12px}
+  .manualBody li{margin-bottom:5px}
+  .manualBody li::marker{color:var(--text3)}
+  .manualBody code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11px; background:#f1f5f9; border:1px solid var(--border); border-radius:4px; padding:1px 5px; color:var(--text); word-break:break-all}
+  .manualBody .mIntro{background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:9px 11px; margin-bottom:14px}
+  .manualBody .mIntro p{margin:0}
   .controls{padding:0 12px; display:flex; flex-direction:column; gap:0}
   .subbar{padding:0 12px; display:flex; flex-direction:column; gap:0; background:#fff}
   .sectionTitle{display:flex; align-items:center; gap:7px; margin-top:0; color:var(--text); font-size:13px; font-weight:800; letter-spacing:.01em}
@@ -157,8 +179,25 @@ input:focus{
     </svg>
     <span class="t">Paper Library</span>
     <span class="lib" id="libInfo"></span>
-    <button class="langBtn" id="btnLang">EN</button>
+    <button class="langBtn" id="btnLang" data-i18n-title="langTitle">
+      <svg class="hdrIcon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6.15" stroke="currentColor" stroke-width="1.35"/><ellipse cx="8" cy="8" rx="2.65" ry="6.15" stroke="currentColor" stroke-width="1.2"/><path d="M8 1.85v12.3M1.85 8h12.3" stroke="currentColor" stroke-width="1.2"/><path d="M3.15 4.3c1.4.75 3.02 1.15 4.85 1.15S11.45 5.05 12.85 4.3M3.15 11.7c1.4-.75 3.02-1.15 4.85-1.15s3.45.4 4.85 1.15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <span id="langLabel">EN</span>
+    </button>
+    <button class="langBtn iconOnly" id="btnManual" data-i18n-title="manualTitle" aria-label="マニュアル">
+      <svg class="hdrIcon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 4.35C6.7 3.2 4.6 3.1 2.75 3.65v8.2c1.85-.55 3.95-.45 5.25.75" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 4.35c1.3-1.15 3.4-1.25 5.25-.7v8.2c-1.85-.55-3.95-.45-5.25.75" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 4.5v8.1" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+    </button>
   </header>
+
+  <div class="manualOverlay hidden" id="manualOverlay" role="dialog" aria-modal="true" aria-labelledby="manualHeadTitle">
+    <div class="manualHead">
+      <svg class="manualHeadIcon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 4.35C6.7 3.2 4.6 3.1 2.75 3.65v8.2c1.85-.55 3.95-.45 5.25.75" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 4.35c1.3-1.15 3.4-1.25 5.25-.7v8.2c-1.85-.55-3.95-.45-5.25.75" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 4.5v8.1" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+      <span id="manualHeadTitle">マニュアル</span>
+      <button type="button" class="manualClose" id="btnManualClose" data-i18n-title="closeTitle" aria-label="閉じる">
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m4.4 4.4 7.2 7.2m0-7.2-7.2 7.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="manualBody" id="manualBody"></div>
+  </div>
 
   <div class="controls">
     <button type="button" class="sectionTitle sectionToggle" data-section-toggle="library" aria-expanded="true" aria-controls="section-library">
@@ -413,6 +452,7 @@ var I18N = {
     copied:'引用をコピーしました', copyFail:'コピーできませんでした',
     wordOnly:'Word 上でのみ挿入できます（プレビュー環境では不可）', wordOnlyUpdate:'Word 上でのみ動作します',
     badFormat:'library.json の形式を認識できません', noCites:'（引用がありません）', notFound:'(ライブラリに見つかりません)',
+    langTitle:'表示言語を切り替える', manualTitle:'マニュアルを開く', manualHead:'マニュアル', closeTitle:'閉じる',
   },
   en: {
     notLoaded:'Not loaded', nRefs:function(n){return n+' references';},
@@ -432,8 +472,162 @@ var I18N = {
     copied:'Citation copied', copyFail:'Could not copy',
     wordOnly:'Only available inside Word', wordOnlyUpdate:'Only works inside Word',
     badFormat:'Unrecognized library.json format', noCites:'(no citations)', notFound:'(not found in library)',
+    langTitle:'Switch the display language', manualTitle:'Open the manual', manualHead:'Manual', closeTitle:'Close',
   }
 };
+/* ================================================================
+   In-panel manual (opened from the book button next to EN)
+   Block types: {p} paragraph, {ul} bullet list. [[code:…]] renders
+   as inline monospace. Keep ja / en in sync.
+================================================================ */
+var MANUAL = {
+  ja: [
+    { intro:'Word のリボンの「Paper Library」タブから開くパネルです。Paper Library で作った library.json を読み込むと、文献を検索して、カーソル位置に番号付きの引用と、文末の文献リストを挿入できます。' },
+    { h:'このパネルでできること', blocks:[
+      {ul:[
+        '番号は本文に出てきた順に自動で振られます。同じ文献をもう一度引用すると、同じ番号を使い回します。',
+        '引用を挿入するたびに、文末の文献リストが自動で作り直されます。',
+        '雑誌名の斜体や年の太字はそのまま入ります。挿入される文字は既定で Times New Roman 10.5pt です。',
+      ]},
+    ]},
+    { h:'1. ライブラリを読み込む', blocks:[
+      {ul:[
+        '「ライブラリフォルダ」→「ライブラリを選択」を押して、Paper Library の保存フォルダ（[[code:library.json]] が入っているフォルダ）を選びます。',
+        'フォルダを選べない環境では、[[code:library.json]] を直接選んでください。本体アプリの「エクスポート → ライブラリ全体 → JSON」で書き出したファイルでも構いません。',
+        '一度読み込むと内容がこのパネルに保存され、次に開いたときは自動で復元します。',
+        '本体で文献を増やしたら、「ライブラリを選択」の右にある円形矢印のボタンで再読み込みしてください。',
+        'ライブラリが大きすぎて保存できないときは、パネルを開くたびに読み込み直す必要があります。',
+      ]},
+    ]},
+    { h:'2. 引用を挿入する', blocks:[
+      {ul:[
+        '「検索・絞り込み」で、タイトル・著者・雑誌・DOI などのキーワードや、コレクション・タグ・★スター・自分の論文で文献を絞り込みます。',
+        '引用を入れたい位置に Word のカーソルを置いてから、「文献リスト」の各カードの「挿入」を押します。',
+        '本文に [1] が入り、文書の末尾に文献リストが追加されます。',
+        '「コピー」を押すと、その文献の書誌情報だけをクリップボードにコピーします。',
+      ]},
+    ]},
+    { h:'3. 表示を変える', blocks:[
+      {ul:[
+        'スタイル：ACS / Nature / Science / RSC / CSJ / Wiley から選べます。切り替えると、挿入済みの文献リストも自動で書き換わります。',
+        '番号：[1]（角括弧）／上付き ¹／上付き [1] を選べます。',
+        'タイトル・DOI/URL：チェックを入れると、文献リストにタイトルや DOI/URL も入ります。',
+        'セクションの見出しをクリックすると開閉できます。開閉の状態は次回も保たれます。',
+        'ヘッダーの地球アイコンのボタンで、日本語と英語を切り替えられます。',
+      ]},
+    ]},
+    { h:'4. 文献リストを更新する', blocks:[
+      {ul:[
+        '本文の引用を消したり並べ替えたりすると、番号と文末リストがずれます。「文献リストを更新」を押すと、本文の番号と末尾のリストを付け直します。',
+        'スタイルや番号の設定を変えたときも、この操作で全体をそろえられます。',
+      ]},
+    ]},
+    { h:'うまくいかないとき', blocks:[
+      {ul:[
+        '「Word 上でのみ挿入できます」と出る：ブラウザでこのページを直接開いています。Word のリボンの「Paper Library」タブ →「文献パネルを開く」から開いてください。',
+        'パネルが白いまま／内容が古い：Word を完全に終了してから開き直してください。',
+        '文献が出てこない：まず library.json を読み込みます。検索欄やコレクション・タグの絞り込みが残っていないかも確認してください。',
+      ]},
+    ]},
+    { h:'お問い合わせ', blocks:[
+      {p:'不明点や、こうしてほしいという改善点があれば、下記までご連絡ください。'},
+      {contact:true},
+    ]},
+  ],
+  en: [
+    { intro:'This panel opens from the “Paper Library” tab on the Word ribbon. Load the library.json created by Paper Library, then search your references and insert numbered citations at the cursor together with a bibliography at the end of the document.' },
+    { h:'What this panel does', blocks:[
+      {ul:[
+        'Numbers are assigned in order of appearance. Citing the same reference again reuses its number.',
+        'Every insertion rebuilds the bibliography at the end of the document automatically.',
+        'Italic journal names and bold years are preserved. Inserted text defaults to Times New Roman 10.5pt.',
+      ]},
+    ]},
+    { h:'1. Load your library', blocks:[
+      {ul:[
+        'Under “Library folder”, press “Select library” and choose your Paper Library folder (the one containing [[code:library.json]]).',
+        'If folder selection is not available, pick [[code:library.json]] directly. A file exported from the main app via “Export → Whole library → JSON” works too.',
+        'Once loaded, the contents are cached in this panel and restored automatically next time.',
+        'After adding references in the main app, press the circular-arrow button next to “Select library” to reload.',
+        'If the library is too large to cache, you will need to load it again each time you open the panel.',
+      ]},
+    ]},
+    { h:'2. Insert a citation', blocks:[
+      {ul:[
+        'Use “Search & filter” to narrow the list by title, author, journal or DOI, and by collection, tag, ★ starred or my publications.',
+        'Place the Word cursor where the citation should go, then press “Insert” on a card in the reference list.',
+        '[1] is inserted in the text and the bibliography is added at the end of the document.',
+        '“Copy” copies only that reference’s formatted citation to the clipboard.',
+      ]},
+    ]},
+    { h:'3. Change the formatting', blocks:[
+      {ul:[
+        'Style: ACS / Nature / Science / RSC / CSJ / Wiley. Switching a style also rewrites the bibliography already in the document.',
+        'Number: [1] (brackets), superscript ¹, or superscript [1].',
+        'Title and DOI/URL: tick these to include them in the bibliography.',
+        'Click a section heading to collapse or expand it. The state is remembered next time.',
+        'Use the globe button in the header to switch between English and Japanese.',
+      ]},
+    ]},
+    { h:'4. Update the bibliography', blocks:[
+      {ul:[
+        'Deleting or reordering citations in the text puts the numbers out of sync. Press “Update bibliography” to renumber the text and rebuild the list at the end.',
+        'Use it as well after changing the style or the number format, to bring the whole document in line.',
+      ]},
+    ]},
+    { h:'Troubleshooting', blocks:[
+      {ul:[
+        '“Only available inside Word”: you opened this page directly in a browser. Open it from the Word ribbon: “Paper Library” tab → “Open the reference panel”.',
+        'The panel stays blank or shows an old version: quit Word completely and open it again.',
+        'No references listed: load library.json first, and check that no search text, collection or tag filter is still applied.',
+      ]},
+    ]},
+    { h:'Contact', blocks:[
+      {p:'For questions or suggestions, please contact us at the address below.'},
+      {contact:true},
+    ]},
+  ]
+};
+var MANUAL_MAIL = 'aaths.takumi@gmail.com';
+function manualRich(str){
+  return esc(str).replace(/\[\[code:([^\]]+)\]\]/g, function(_, c){ return '<code>'+c+'</code>'; });
+}
+function renderManual(){
+  var box = document.getElementById('manualBody');
+  if(!box) return;
+  var html = (MANUAL[LANG] || MANUAL.ja).map(function(sec){
+    if(sec.intro) return '<div class="mIntro"><p>'+manualRich(sec.intro)+'</p></div>';
+    var body = (sec.blocks||[]).map(function(b){
+      if(b.p) return '<p>'+manualRich(b.p)+'</p>';
+      if(b.ul) return '<ul>'+b.ul.map(function(li){ return '<li>'+manualRich(li)+'</li>'; }).join('')+'</ul>';
+      if(b.contact) return '<p><a href="mailto:'+MANUAL_MAIL+'">'+MANUAL_MAIL+'</a></p>';
+      return '';
+    }).join('');
+    return '<h3>'+manualRich(sec.h||'')+'</h3>'+body;
+  }).join('');
+  box.innerHTML = html;
+}
+function manualIsOpen(){
+  var ov = document.getElementById('manualOverlay');
+  return !!ov && !ov.classList.contains('hidden');
+}
+function openManual(){
+  var ov = document.getElementById('manualOverlay');
+  if(!ov) return;
+  renderManual();
+  ov.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  var body = document.getElementById('manualBody'); if(body) body.scrollTop = 0;
+  var close = document.getElementById('btnManualClose'); if(close) close.focus();
+}
+function closeManual(){
+  var ov = document.getElementById('manualOverlay');
+  if(!ov) return;
+  ov.classList.add('hidden');
+  document.body.style.overflow = '';
+  var btn = document.getElementById('btnManual'); if(btn) btn.focus();
+}
+
 var LANG = 'ja';
 function tr(k){ var a=[].slice.call(arguments,1); var v=I18N[LANG][k]; return typeof v==='function' ? v.apply(null,a) : v; }
 
@@ -714,12 +908,47 @@ function applyInsertFont(range, superscript){
 }
 function wordReady(){ return officeReady && window.Word && typeof Word.run === 'function'; }
 
+// Relations that mean the caret/selection is sitting on (or hard against the end
+// of) one of our content controls. Word grows a content control when text is
+// inserted at its boundary, so inserting there would put the new citation INSIDE
+// the old one — and refreshCitations(), which rewrites the whole content of a
+// citation control, would then wipe one of the two.
+var NEST_RELATIONS = ['Equal','Inside','InsideStart','InsideEnd','Overlaps','OverlapsBefore','OverlapsAfter','Contains','ContainsStart','ContainsEnd','AdjacentAfter'];
+function isPlControl(c){ var t = c.tag || ''; return t.indexOf(CITE_TAG) === 0 || t === BIB_TAG; }
+// Returns { range, where } for the insertion point: normally the selection itself,
+// but anchored just outside an existing citation when the caret touches one.
+async function citationAnchor(context, sel){
+  var fallback = { range: sel, where: 'Replace' };
+  try{
+    var ccs = context.document.body.contentControls;
+    ccs.load('items/tag');
+    await context.sync();
+    var mine = ccs.items.filter(isPlControl);
+    if(!mine.length) return fallback;
+    var ranges = mine.map(function(c){ return c.getRange('Whole'); });
+    var rels = ranges.map(function(rg){ return sel.compareLocationWith(rg); });
+    await context.sync();
+    var after = -1, before = -1;
+    rels.forEach(function(rel, i){
+      var v = rel.value;
+      if(NEST_RELATIONS.indexOf(v) >= 0) after = i;
+      else if(v === 'AdjacentBefore' && before < 0) before = i;
+    });
+    // "After"/"Before" land on exactly the same spot as the caret, but outside the
+    // control, so the new citation becomes a sibling instead of a nested child.
+    if(after >= 0) return { range: ranges[after], where: 'After' };
+    if(before >= 0) return { range: ranges[before], where: 'Before' };
+  }catch(e){ /* compareLocationWith unsupported — fall back to the raw selection */ }
+  return fallback;
+}
+
 async function insertCitationNumber(it){
   if(!wordReady()){ toast(tr('wordOnly'), true); return; }
   try{
     await Word.run(async function(context){
       var sel = context.document.getSelection();
-      var r = sel.insertText(markerText(1), 'Replace'); // placeholder number; refresh fixes it
+      var at = await citationAnchor(context, sel);
+      var r = at.range.insertText(markerText(1), at.where); // placeholder number; refresh fixes it
       var cc = r.insertContentControl();
       cc.tag = CITE_TAG + it.id;
       cc.title = 'Paper Library citation';
@@ -913,6 +1142,9 @@ segButtons().forEach(function(b){
 });
 $('#btnRefresh').addEventListener('click', function(){ refreshCitations(); });
 $('#btnLang').addEventListener('click', function(){ setLang(LANG === 'ja' ? 'en' : 'ja'); });
+$('#btnManual').addEventListener('click', function(){ openManual(); });
+$('#btnManualClose').addEventListener('click', function(){ closeManual(); });
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && manualIsOpen()) closeManual(); });
 $('#results').addEventListener('click', function(e){
   var num = e.target.closest('[data-num]'), cp = e.target.closest('[data-copy]');
   var list = $('#results').__list || [];
@@ -926,7 +1158,11 @@ function applyI18n(){
   document.querySelectorAll('[data-i18n-ph]').forEach(function(el){ var v = I18N[LANG][el.dataset.i18nPh]; if(typeof v === 'string') el.placeholder = v; });
   document.querySelectorAll('[data-i18n-title]').forEach(function(el){ var v = I18N[LANG][el.dataset.i18nTitle]; if(typeof v === 'string') el.title = v; });
   var refreshLabel = $('#refreshLabel'); if(refreshLabel) refreshLabel.textContent = tr('refreshBtn');
-  $('#btnLang').textContent = (LANG === 'ja') ? 'EN' : '日本語';
+  $('#langLabel').textContent = (LANG === 'ja') ? 'EN' : '日本語';
+  $('#btnManual').setAttribute('aria-label', tr('manualTitle'));
+  $('#manualHeadTitle').textContent = tr('manualHead');
+  $('#btnManualClose').setAttribute('aria-label', tr('closeTitle'));
+  if(manualIsOpen()) renderManual();
   document.documentElement.lang = LANG;
   if(STATE.items.length) buildFilterOptions();
   updateLibInfo();
