@@ -525,6 +525,7 @@ var MANUAL = {
     { h:'うまくいかないとき', blocks:[
       {ul:[
         '「Word 上でのみ挿入できます」と出る：ブラウザでこのページを直接開いています。Word のリボンの「Paper Library」タブ →「文献パネルを開く」から開いてください。',
+        '引用番号を消したら「Click or tap here to enter text.」と出る：番号を消しても、番号を包んでいた Word の入れ物（コンテンツコントロール）が空のまま残っているためです。「文献リストを更新」を押すと、その入れ物ごと取り除かれ、残りの番号と文末のリストも振り直されます。',
         'パネルが白いまま／内容が古い：Word を完全に終了してから開き直してください。',
         '文献が出てこない：まず library.json を読み込みます。検索欄やコレクション・タグの絞り込みが残っていないかも確認してください。',
       ]},
@@ -578,6 +579,7 @@ var MANUAL = {
     { h:'Troubleshooting', blocks:[
       {ul:[
         '“Only available inside Word”: you opened this page directly in a browser. Open it from the Word ribbon: “Paper Library” tab → “Open the reference panel”.',
+        '“Click or tap here to enter text.” appears where you deleted a number: the empty Word content control that wrapped the number is still there. Press “Update bibliography” to remove it and renumber the remaining citations and the reference list.',
         'The panel stays blank or shows an old version: quit Word completely and open it again.',
         'No references listed: load library.json first, and check that no search text, collection or tag filter is still applied.',
       ]},
@@ -860,6 +862,10 @@ async function copyCitation(it){
 ================================================================ */
 var CITE_TAG = 'PLCITE:';
 var BIB_TAG = 'PLBIB';
+// Word shows "Click or tap here to enter text." inside an empty content control.
+// A single space keeps an emptied citation invisible until the next refresh
+// removes the control for good.
+var PLACEHOLDER = ' ';
 // in-text marker text; bibliography number label matches the same style
 function markerText(n){
   if(PREFS.marker === 'super') return String(n);
@@ -953,6 +959,7 @@ async function insertCitationNumber(it){
       cc.tag = CITE_TAG + it.id;
       cc.title = 'Paper Library citation';
       cc.appearance = 'Hidden';
+      cc.placeholderText = PLACEHOLDER; // hide Word's "Click or tap here…" prompt
       applyInsertFont(r, PREFS.marker === 'super' || PREFS.marker === 'superBracket');
       await context.sync();
     });
@@ -968,10 +975,24 @@ async function refreshCitations(o){
   try{
     await Word.run(async function(context){
       var ccs = context.document.body.contentControls;
-      ccs.load('items/tag');
+      ccs.load('items/tag,items/text');
       await context.sync();
 
       var cites = ccs.items.filter(function(c){ return (c.tag || '').indexOf(CITE_TAG) === 0; });
+
+      // Deleting a number by hand empties its content control but leaves the control
+      // in the document, where Word renders its placeholder prompt. Treat an empty
+      // control as "this citation was removed": drop it instead of resurrecting the
+      // number. Controls holding only U+200B are the hidden members of a grouped
+      // citation (see the cluster loop below), so they must survive.
+      var stale = cites.filter(function(c){ return !(c.text || '').length; });
+      if(stale.length){
+        stale.forEach(function(c){ c.delete(true); });
+        cites = cites.filter(function(c){ return (c.text || '').length; });
+        await context.sync();
+      }
+      cites.forEach(function(c){ c.placeholderText = PLACEHOLDER; }); // also fixes older documents
+
       var ids = cites.map(function(c){ return c.tag.slice(CITE_TAG.length); });
       var num = assignNumbers(ids);
       var sup = (PREFS.marker === 'super' || PREFS.marker === 'superBracket');
@@ -1025,6 +1046,7 @@ async function refreshCitations(o){
         bib.tag = BIB_TAG;
         bib.title = 'Paper Library bibliography';
         bib.appearance = 'Hidden';
+        bib.placeholderText = PLACEHOLDER;
       }
       if(bib){
         var html = buildBibliographyHtml(items, opts);
