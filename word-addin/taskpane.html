@@ -42,7 +42,7 @@
   .subbar{padding:0 12px; display:flex; flex-direction:column; gap:0; background:#fff}
   .sectionTitle{display:flex; align-items:center; gap:7px; margin-top:0; color:var(--text); font-size:13px; font-weight:800; letter-spacing:.01em}
   .sectionTitle .sectionLeadIcon{width:20px; height:20px; flex:0 0 auto; padding:3px; border-radius:5px; background:var(--accent-soft); color:var(--accent)}
-  .sectionToggle{width:100%; border:0; border-top:1px solid var(--border); padding:9px 0; background:transparent; font:inherit; text-align:left; cursor:pointer}
+  .sectionToggle{width:100%; border:0; padding:9px 0; background:transparent; font:inherit; text-align:left; cursor:pointer}
   .sectionToggle .sectionChevron{width:15px; height:15px; flex:0 0 auto; margin-left:auto; padding:0; color:var(--text3); background:transparent; transition:transform .15s ease}
   .sectionToggle[aria-expanded="false"] .sectionChevron{transform:rotate(-90deg)}
   .sectionToggle:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:6px}
@@ -85,7 +85,7 @@
   .seg .segBtn.active{background:var(--accent); color:#fff}
   .seg .segBtn sup{font-size:.72em; line-height:0}
   .check{display:inline-flex; align-items:center; gap:4px; font-size:11.5px; color:var(--text2)}
-  .resultsArea{background:#fff; padding:0 12px; border-bottom:1px solid var(--border)}
+  .resultsArea{background:#fff; padding:0 12px}
   .resultsArea .sectionTitle{padding:9px 0}
   #results{overflow:visible; padding:6px 0 0}
   .card{border:1px solid var(--border); border-radius:8px; padding:8px 10px; margin-bottom:7px; background:#fff}
@@ -118,12 +118,10 @@
   border-radius:11px;
   padding:9px 10px;
   box-shadow:0 1px 3px rgba(15,23,42,.035);
-  transition:border-color .15s ease,box-shadow .15s ease,transform .15s ease;
+  transition:border-color .15s ease;
 }
 .card:hover{
   border-color:rgba(37,99,235,.48);
-  box-shadow:0 5px 14px rgba(15,23,42,.075);
-  transform:translateY(-1px);
 }
 .card .ct{font-weight:700;}
 .card .cmeta .journal{
@@ -446,7 +444,7 @@ var I18N = {
     count:function(n,m){return n+' / '+m+' 件';},
     emptyLoad:'まず「ライブラリ」ボタンから library.json を読み込んでください。（Paper Library の保存フォルダ内、または「エクスポート → ライブラリ全体 → JSON」）',
     moreItems:function(n){return '上位 '+n+' 件を表示（絞り込んでください）';}, noTitle:'(無題)',
-    loaded:'ライブラリを読み込みました', reloaded:'ライブラリを再読み込みしました', loadedNoCache:'ライブラリを読み込みましたが、大きすぎるため次回は再読み込みが必要です', loadFail:function(e){return '読み込み失敗: '+e;}, folderNoJson:'選択したフォルダに library.json が見つかりません', reloadNeedsSelect:'この環境では自動再読み込みできません。もう一度ライブラリフォルダを選択してください',
+    loaded:'ライブラリを読み込みました', reloaded:'ライブラリを再読み込みしました', loadedNoCache:'ライブラリを読み込みましたが、大きすぎるため次回は再読み込みが必要です', loadFail:function(e){return '読み込み失敗: '+e;}, folderNoJson:'選択したフォルダに library.json が見つかりません', reloadNeedsSelect:'ライブラリフォルダをもう一度選ぶと最新の内容に更新されます',
     inserted:'引用を挿入しました', insertFail:function(e){return '挿入に失敗: '+e;},
     updated:'文献リストを更新しました', updateFail:function(e){return '更新に失敗: '+e;},
     copied:'引用をコピーしました', copyFail:'コピーできませんでした',
@@ -466,7 +464,7 @@ var I18N = {
     count:function(n,m){return n+' / '+m;},
     emptyLoad:'Load library.json with the “Library” button. (It is in your Paper Library folder, or export via Export → Whole library → JSON.)',
     moreItems:function(n){return 'Showing top '+n+' (refine your search)';}, noTitle:'(untitled)',
-    loaded:'Library loaded', reloaded:'Library reloaded', loadedNoCache:'Library loaded, but it is too large to cache. Reload it next time.', loadFail:function(e){return 'Load failed: '+e;}, folderNoJson:'library.json was not found in the selected folder', reloadNeedsSelect:'Automatic reload is not available in this environment. Select the library folder again',
+    loaded:'Library loaded', reloaded:'Library reloaded', loadedNoCache:'Library loaded, but it is too large to cache. Reload it next time.', loadFail:function(e){return 'Load failed: '+e;}, folderNoJson:'library.json was not found in the selected folder', reloadNeedsSelect:'Select the library folder again to update to the latest contents',
     inserted:'Citation inserted', insertFail:function(e){return 'Insert failed: '+e;},
     updated:'Bibliography updated', updateFail:function(e){return 'Update failed: '+e;},
     copied:'Citation copied', copyFail:'Could not copy',
@@ -495,7 +493,7 @@ var MANUAL = {
         '「ライブラリフォルダ」→「ライブラリを選択」を押して、Paper Library の保存フォルダ（[[code:library.json]] が入っているフォルダ）を選びます。',
         'フォルダを選べない環境では、[[code:library.json]] を直接選んでください。本体アプリの「エクスポート → ライブラリ全体 → JSON」で書き出したファイルでも構いません。',
         '一度読み込むと内容がこのパネルに保存され、次に開いたときは自動で復元します。',
-        '本体で文献を増やしたら、「ライブラリを選択」の右にある円形矢印のボタンで再読み込みしてください。',
+        '本体で文献を増やしたら、「ライブラリを選択」の右にある円形矢印のボタンで再読み込みしてください。Word ではフォルダの選択画面がもう一度開くので、同じフォルダを選び直すと最新の内容になります。',
         'ライブラリが大きすぎて保存できないときは、パネルを開くたびに読み込み直す必要があります。',
       ]},
     ]},
@@ -549,7 +547,7 @@ var MANUAL = {
         'Under “Library folder”, press “Select library” and choose your Paper Library folder (the one containing [[code:library.json]]).',
         'If folder selection is not available, pick [[code:library.json]] directly. A file exported from the main app via “Export → Whole library → JSON” works too.',
         'Once loaded, the contents are cached in this panel and restored automatically next time.',
-        'After adding references in the main app, press the circular-arrow button next to “Select library” to reload.',
+        'After adding references in the main app, press the circular-arrow button next to “Select library” to reload. In Word the folder picker opens again — choose the same folder to pick up the latest contents.',
         'If the library is too large to cache, you will need to load it again each time you open the panel.',
       ]},
     ]},
@@ -1095,9 +1093,18 @@ async function loadLibraryFromHandle(silent){
   return true;
 }
 async function reloadLibrary(){
+  // Word for Mac's task pane has no File System Access API, so a library picked with
+  // the folder <input> leaves us no handle to re-read. Check that synchronously and
+  // open the picker straight away: awaiting first would spend the click's user
+  // activation, and the picker would then be blocked.
+  if(!STATE.libraryFileHandle && !STATE.dirHandle){
+    toast(tr('reloadNeedsSelect'));
+    chooseLibrary();
+    return;
+  }
   try{
     if(await loadLibraryFromHandle(true)) return;
-    toast(tr('reloadNeedsSelect'), true);
+    toast(tr('reloadNeedsSelect'));
     chooseLibrary();
   }catch(err){
     console.error(err);
