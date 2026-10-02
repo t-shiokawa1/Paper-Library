@@ -44,8 +44,11 @@ const ICONS = {
   alert:'<path d="M12 4 2.5 20.5h19z"/><path d="M12 10v4.5M12 17.6h.01"/>',
   retry:'<path d="M20 11a8 8 0 1 0-1.5 5.5"/><path d="M20 5v5h-5"/>',
   zoom:'<circle cx="10.5" cy="10.5" r="5.5"/><path d="M15 15l5 5"/><path d="M8.5 10.5h4M10.5 8.5v4"/>',
+  zoomOut:'<circle cx="10.5" cy="10.5" r="5.5"/><path d="M15 15l5 5"/><path d="M8.5 10.5h4"/>',
+  zoomReset:'<path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9"/><path d="M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9"/><path d="M20 15v3.5a1.5 1.5 0 0 1-1.5 1.5H15"/><path d="M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15"/>',
   text:'<path d="M5 6h14M12 6v12M8.5 18h7"/>',
-  citations:'<circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="9" r="2.4"/><circle cx="8.5" cy="18" r="2.4"/><path d="M8.3 7 15.6 8.6M7.7 15.7 6.6 8.3M10.2 16.6 16.1 10.9"/>',
+  // 引用⇄被引用の双方向性を左右の対向矢印で表す（論文相関図の網アイコンと区別）
+  citations:'<path d="M4.5 9H19M19 9 16 6M19 9 16 12"/><path d="M19.5 15H5M5 15 8 12M5 15 8 18"/>',
   users:'<circle cx="9" cy="8" r="3"/><path d="M3.8 19a5.2 5.2 0 0 1 10.4 0"/><circle cx="17" cy="9.5" r="2.3"/><path d="M14.8 15.5a4.2 4.2 0 0 1 5.4 3.5"/>',
   user:'<circle cx="12" cy="8" r="3.6"/><path d="M5.5 19.5a6.5 6.5 0 0 1 13 0"/>',
   graph:'<circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="17" r="2.2"/><circle cx="19" cy="16" r="2.2"/><circle cx="12" cy="12.5" r="1.6"/><path d="M12 7.2v3.7M10.6 13.6 6.4 15.6M13.5 13.3 17.4 15M6.8 15.5 10.6 6.6M17.2 14.9 13 6.7"/>',
@@ -65,14 +68,28 @@ const ICONS = {
   moon:'<path d="M20.5 15.2A8.2 8.2 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2z"/>',
   sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/>',
   book:'<path d="M12 6.5C10 4.8 6.8 4.5 4.5 5.2V18c2.3-.7 5.5-.4 7.5 1.3 2-1.7 5.2-2 7.5-1.3V5.2C17.2 4.5 14 4.8 12 6.5z"/><path d="M12 6.5v12.8"/>',
+  // puzzle piece — the browser-extension mark, so the Chrome extension tab no
+  // longer shares the book icon with the Word add-in
+  puzzle:'<path d="M5.5 8.5a1 1 0 0 1 1-1h2.6a2 2 0 1 1 3.8 0h2.6a1 1 0 0 1 1 1v2.6a2 2 0 1 0 0 3.8v2.6a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1z"/>',
   image:'<rect x="3.5" y="4.5" width="17" height="15" rx="1.5"/><circle cx="8.5" cy="9" r="1.5"/><path d="m5.5 17 4.3-4 3.1 2.6 2.3-2 3.3 3.4"/>',
   grid:'<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/>',
+  // uneven columns — the magazine (masonry) view, so it can't be mistaken for the
+  // gallery's plain picture icon
+  masonry:'<rect x="3.5" y="4.5" width="7" height="9" rx="1"/><rect x="3.5" y="15.5" width="7" height="4" rx="1"/><rect x="13.5" y="4.5" width="7" height="5" rx="1"/><rect x="13.5" y="11" width="7" height="8.5" rx="1"/>',
   mapPin:'<path d="M12 21c4.5-4.6 7-8 7-11a7 7 0 1 0-14 0c0 3 2.5 6.4 7 11z"/><circle cx="12" cy="10" r="2.5"/>',
   globe:'<circle cx="12" cy="12" r="8.2"/><path d="M3.8 12h16.4M12 3.8c2.4 2.2 3.6 5.2 3.6 8.2s-1.2 6-3.6 8.2c-2.4-2.2-3.6-5.2-3.6-8.2S9.6 6 12 3.8z"/>',
   clipboard:'<rect x="5.5" y="5" width="13" height="15" rx="1.5"/><path d="M9 5V3.8h6V5M8.5 8.5h7M8.5 12h7M8.5 15.5h4"/>',
   copy:'<rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15.5 8.5V6A1.5 1.5 0 0 0 14 4.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/>',
   eyeOff:'<path d="M4 4l16 16"/><path d="M9.9 5.2A9.6 9.6 0 0 1 12 5c5 0 8.5 4 9.5 7a12 12 0 0 1-2.2 3.3M6.5 6.8C4.2 8.2 2.8 10.4 2.5 12c1 3 4.5 7 9.5 7a9.3 9.3 0 0 0 3.6-.7"/><path d="M9.8 9.9a3 3 0 0 0 4.2 4.2"/>',
   eye:'<path d="M2.5 12c1-3 4.5-7 9.5-7s8.5 4 9.5 7c-1 3-4.5 7-9.5 7s-8.5-4-9.5-7z"/><circle cx="12" cy="12" r="3"/>',
+  // ---- note (Markdown) toolbar ----
+  bold:'<path d="M7.5 4.8h5.2a3.4 3.4 0 0 1 0 6.9H7.5z"/><path d="M7.5 11.7h6a3.7 3.7 0 0 1 0 7.5h-6z"/>',
+  italic:'<path d="M15 5h-5M14 19H9M13.4 5 10.6 19"/>',
+  strike:'<path d="M4.2 12h15.6"/><path d="M8 8.4c0-1.9 1.7-3.2 4-3.2 1.9 0 3.3.8 3.9 2.1M16 15.4c0 2-1.7 3.4-4.1 3.4-2.5 0-4.2-1.3-4.4-3.1"/>',
+  code:'<path d="M9 7 4.5 12 9 17M15 7l4.5 5L15 17"/>',
+  heading:'<path d="M6 5v14M18 5v14M6 12h12"/>',
+  listBullet:'<path d="M9 6.5h11M9 12h11M9 17.5h11"/><path d="M4.8 6.5h.01M4.8 12h.01M4.8 17.5h.01"/>',
+  listCheck:'<path d="M11 6.5h9M11 12h9M11 17.5h9"/><path d="m4 6.6 1.4 1.5L7.9 5.3M4 12.1l1.4 1.5 2.5-2.8M4 17.6l1.4 1.5 2.5-2.8"/>',
 };
 function ic(name, attrs){
   const p = ICONS[name] || '';
@@ -123,6 +140,92 @@ function renderIcons(root){
 
 const APP_VERSION = '2.1';
 const CHANGELOG = [
+  { date:'2026-09-24',
+    ja:[
+      '系譜図で研究者にカーソルを合わせたときのパネルを廃止しました。指導した学生の多い研究者では、関係の一覧が画面の高さを超えて系譜図全体を覆ってしまっていました',
+      'カーソルを合わせたときの強調表示はそのままです。その研究者につながる線が太くなり、関係のない箱は薄くなり、同じ人物が別の場所にも描かれているときはそちらも光ります',
+      '関係の種類や期間は、これまで通り関係の線にカーソルを合わせるか、研究者をクリックして右の詳細パネルで確認できます',
+    ],
+    en:[
+      'Removed the panel that appeared when hovering a researcher in the genealogy tree. For an advisor with many students the list of relations grew taller than the window and covered the whole tree',
+      'The highlight on hover is unchanged: the lines that reach that researcher thicken, unrelated boxes dim, and the other places the same person is drawn light up',
+      'The kind of relation and its period are still available by hovering the relation line itself, or by clicking the researcher to open the detail pane on the right',
+    ],
+  },
+  { date:'2026-09-18',
+    ja:[
+      '右パネルの画像をクリックすると拡大表示できるようになりました。図・編集画面のプレビュー・メモ内の画像のいずれもその場で開きます',
+      '拡大表示では、ホイールで拡大縮小、ドラッグで移動、ダブルクリックで「全体表示」と「等倍（100%）」の切り替えができます。Esc または余白のクリックで閉じます',
+      '右パネルのコレクション候補を2行表示にしました。階層が深いときも、親のパスを上に小さく出し、コレクション自身の名前は省略せずに表示します',
+      '右パネルの「整理」で、コレクションをタグより上に移動しました（左サイドバーと同じ並び）',
+      '研究者のランキング基準に「ライブラリ内の文献数（共著を含む）」を追加しました。従来の「ライブラリ内の文献数」は責任著者としての文献だけを数えるため、名前を「（責任著者）」付きに改めています',
+    ],
+    en:[
+      'Clicking an image in the detail pane now opens it in an enlarged viewer — the figure, the preview in the edit view, and note images alike',
+      'In the viewer, scroll to zoom, drag to pan, and double-click to toggle between fitting the window and 100% (one image pixel per screen pixel). Esc or a click outside the picture closes it',
+      'Collection suggestions in the detail pane are now two lines: the parent path above in small dimmed text, with the collection\u2019s own name below in full, so deeply nested collections stay readable',
+      'In the detail pane\u2019s Organize section, collections now come before tags, matching the order in the left sidebar',
+      'Added “Library references (incl. co-authored)” as a researcher ranking metric. The existing “Library references” metric counts only papers where the researcher is the corresponding author, so it is now labelled “(corresponding)”',
+    ],
+  },
+  { date:'2026-09-13',
+    ja:[
+      '引用文のページを「最初のページのみ」で出せるようにしました。引用設定の「ページ」で「全ページ（13937–13945）」と「最初のページのみ（13937）」を切り替えられます',
+      '設定は詳細パネルの引用プレビュー・引用関係ダイアログの「引用文」表示・Word アドインのそれぞれにあり、どの引用スタイル（ACS・RSC・CSJ・Angew.・Nature・Science）でも効きます',
+      '表示だけの設定なので、保存されているページ番号や BibTeX・RIS・CSV の書き出しは変わりません。論文番号だけの文献（Nat. Commun. 2741 や e202301234 など）もそのまま表示されます',
+    ],
+    en:[
+      'Citations can now print the first page only. “Pages” in the citation settings switches between the full range (13937–13945) and the first page only (13937)',
+      'The setting appears in the detail-pane citation preview, in the formatted-citation layout of the citations dialog, and in the Word add-in, and applies to every style (ACS, RSC, CSJ, Angew., Nature, Science)',
+      'It only affects display: the stored page numbers and the BibTeX / RIS / CSV exports are unchanged, and references with an article number only (Nat. Commun. 2741, e202301234) print as before',
+    ],
+  },
+  { date:'2026-09-08',
+    ja:[
+      'BibTeX の書き出しを修正しました。タイトルなどに { } % \\ が含まれていると .bib がその場所で途切れ、書き出した文献の年・雑誌名・ページが失われていました',
+      'BibTeX の書き出しで、NaCl・DNA・pH・Pd(II) のように途中に大文字を含む語を { } で囲むようにしました。LaTeX 側で小文字に潰されるのを防ぎます。ページ範囲も BibTeX の書式（1--10）で書き出します',
+      'BibTeX の取り込みで LaTeX の記法を文字に変換するようにしました。$\\alpha$ は α、{\\"o} は ö、{\\ss} は ß、{\\textmu} は µ、CO$_2$ は CO₂、\\textsuperscript{2+} は ²⁺ として読み込まれます（これまでは $$ が残ったり、文字ごと消えたりしていました）',
+      'CSV の書き出しに BOM を付けました。Excel で開いたときに日本語のタイトルや Müller のような名前が文字化けしなくなります',
+      'メモのリンクで、URL の途中に目に見えない文字を混ぜてスクリプトを実行させる細工を防ぐようにしました',
+      'ダークモードで、引用プレビューの DOI リンクや研究者プロフィールのリンクが読めない濃い青のままだったのを直しました',
+      'マガジン表示で、画像を登録していない文献のタイトルが背景に溶けて読みにくかったのを直しました',
+      '詳細パネルを狭くしたときに、引用プレビューの「コピー」「引用設定」が2行に割れていたのを直しました',
+      '研究者マップの見た目の選択肢を、「Style 1」などの内部名から「紫・静止」「深度ごとに色分け」のように実際の見え方が分かる名前に変えました',
+    ],
+    en:[
+      'Fixed BibTeX export. A { } % or \\ in a title used to cut the .bib entry short at that point, losing the year, journal and pages of the exported reference',
+      'BibTeX export now braces words with an interior capital (NaCl, DNA, pH, Pd(II)) so LaTeX cannot lowercase them, and writes page ranges in BibTeX form (1--10)',
+      'BibTeX import now converts LaTeX notation to characters: $\\alpha$ becomes α, {\\"o} becomes ö, {\\ss} becomes ß, {\\textmu} becomes µ, CO$_2$ becomes CO₂ and \\textsuperscript{2+} becomes ²⁺ (previously a stray $$ was left behind, or the character was dropped entirely)',
+      'CSV export now carries a BOM, so Japanese titles and names such as Müller no longer come out garbled when the file is opened in Excel',
+      'Note links can no longer be disguised with invisible characters in the URL to make them run a script',
+      'Fixed the DOI link in the citation preview and the researcher profile links, which stayed an unreadable dark blue in dark mode',
+      'Fixed magazine view: the title of a reference with no image blended into the background and was hard to read',
+      'Fixed “Copy” and “Citation settings” in the citation preview breaking across two lines when the detail pane is narrow',
+      'Renamed the researcher-map appearance options from internal names such as “Style 1” to names that describe what they draw (“Violet, static”, “Color by depth”)',
+    ],
+  },
+  { date:'2026-08-28',
+    ja:[
+      'アカデミックツリーに、家系図のような直角の線で関係を描く「直角」表示を追加しました',
+      '画面下の「線」で「曲線」と「直角」を切り替えられます（「世代」レイアウトのとき）。直角では、同じ指導教員から伸びる線が1本の横棒にまとまり、指導教員はその子の中央に寄ります',
+      '世代を飛ばす関係（祖父世代から直接つながる線など）は、間の研究者を貫かないよう従来どおり曲線で描きます',
+      'さらに「形」を追加し、系譜の描き方を「合流」と「家系図」から選べるようにしました',
+      '「合流」（従来どおり）は1人の研究者を必ず1つの箱で表すので、共通の指導教員がいることが線の合流として分かります。「家系図」は経路ごとに枝を分けて描くため線が一切交差しませんが、複数の経路からたどれる研究者は複数の箱に分かれます',
+      '「家系図」で分かれた箱には「2か所」のように表示箇所の数が付き、カーソルを合わせると同じ人物の箱が強調されます',
+      'ツリー下部のボタンが増えたため、配置・向き・線・形は「表示」ボタンのパネルにまとめました。よく使う「関係の範囲」と「深度」はそのままバーに残しています',
+      '「家系図」で同じ研究者が複数箇所に現れる場合、子孫を描くのは中心研究者に近い側の箱だけにしました。もう一方は点線枠で止まります（同じ人の子孫が何組もできてしまうのを防ぐためです）',
+    ],
+    en:[
+      'Added an elbow line style to the academic tree, drawing relations with the right-angled lines of a printed family tree',
+      'The “Lines” switch at the bottom toggles between curved and elbow (on the Generation layout). With elbow lines, everyone advised by the same researcher hangs off one shared crossbar, and the advisor is centred above them',
+      'Relations that skip a generation stay curved, so they do not cut straight through the researchers in the row between',
+      'Added a “Shape” switch that chooses between the “Merged” and “Family tree” genealogies',
+      '“Merged” (the existing behaviour) keeps one box per researcher, so a shared advisor reads as two lines meeting. “Family tree” gives every path its own branch, so no line ever crosses another — at the cost of splitting a researcher several paths lead to across several boxes',
+      'Boxes split that way are marked with how many places they appear in (“2 places” and so on), and hovering one highlights the others',
+      'The layout, orientation, lines and shape now live in a “Display” panel rather than as separate switches; the relation scope and depth, which get touched while reading, stay in the bar',
+      'When the family-tree shape repeats a researcher, only the copy nearest the centre researcher now grows a line of descendants; the others are drawn dashed and stop there, instead of duplicating the whole line under each copy',
+    ],
+  },
   { date:'2026-08-24',
     ja:[
       'マニュアルを刷新し、操作を実際の画面で体験できる「操作ガイド」を追加しました',
@@ -140,14 +243,14 @@ const CHANGELOG = [
       '研究者台帳に「ツリー」表示（アカデミックツリー）を追加しました',
       'PhD指導教員を親子関係として、選択した研究者を中心に上（指導した側）と下（指導された側）へ広がる系譜を表示します。向きは「上下」と「左右」を切り替えられます',
       '指導教員が複数いる場合も主・副を区別せず等価に扱うため、1人の研究者が複数の指導教員につながります。名前だけ判明していて未登録の指導教員は、点線枠のノードとして表示します',
-      '「所属・PIも含む」に切り替えると、職歴・学歴の各期間に登録した研究室主宰者（PI）も破線で表示します。ノードや線にカーソルを合わせると、関係の種類と期間が分かります',
+      '「所属・PIも含む」に切り替えると、職歴・学歴の各期間に登録した研究室主宰者（PI）も破線で表示します。線にカーソルを合わせると関係の種類と期間が分かり、研究者にカーソルを合わせるとその人につながる線が強調されます',
       '中心研究者からたどる深さを「深度」スライダーで変更でき、研究者マップのノードからも「アカデミックツリーで見る」で開けます',
     ],
     en:[
       'Added a Tree view (academic tree) to the researcher directory',
       'It treats PhD advisors as parent links and shows the genealogy spreading up (advisors) and down (advisees) from the selected researcher. The orientation can be switched between vertical and horizontal',
       'Co-advisors are treated as equals rather than primary/secondary, so a researcher can link to several advisors. Advisors that are only known by name are drawn as dashed, unregistered nodes',
-      'Switching to “Include lab / PI” also draws, as dashed lines, the lab head recorded on each career or education period. Hovering a researcher or a line reveals the kind of relation and its period',
+      'Switching to “Include lab / PI” also draws, as dashed lines, the lab head recorded on each career or education period. Hovering a line reveals the kind of relation and its period; hovering a researcher highlights the lines that reach them',
       'A depth slider controls how far the genealogy is followed from the center researcher, and researcher-map nodes can open it via “View in academic tree”',
     ],
   },
@@ -300,9 +403,9 @@ const I18N = {
     importKeywordsTitle:'キーワードの取り込み', importKeywordsSummary:(n,m)=>`${n} 件の文献に、キーワードが ${m} 種類見つかりました。タグとして取り込みますか？`, importKeywordsMore:(n)=>` …他 ${n} 件`, importKeywordsConfirm:'取り込む',
     referenceExport:'表示中の文献', expBibShown:'BibTeX (.bib)', expRisShown:'RIS (.ris)', expCsvShown:'CSV (.csv)', expJsonShown:'JSON (.json)', libraryExportLabel:'ライブラリ全体', expJson:'JSON (.json)', researcherExport:'研究者', researcherExportShownLabel:'表示中', researcherExportAllLabel:'すべて', researcherExpJsonShown:'JSON (.json)', researcherExpCsvShown:'CSV (.csv)', researcherExpJson:'JSON (.json)', researcherExpCsv:'CSV (.csv)', researcherExportEmpty:'エクスポートできる研究者がいません。', researcherExported:(n)=>`${n} 名の研究者をエクスポートしました`,
     shortcuts:'キーボードショートカット', shortcutsHint:'? キーでいつでも表示', searchPh:'検索ワードを入力', advancedSearch:'詳細検索', quickAddTitle:'この DOI / URL を取得して追加', addBoxPh:'URL を入力して Enter', addMoreTitle:'手動追加・インポート', library:'ライブラリ', collections:'コレクション', tags:'タグ',
-    newCollection:'新規コレクション', searchCollTip:'コレクションを検索', collapseAllCollections:'すべてのフォルダを閉じる', expandAllCollections:'すべてのフォルダを開く', searchCollPh:'コレクション名で絞り込み', searchCollEmpty:'一致するコレクションはありません',
+    newCollection:'新規コレクション', searchCollTip:'コレクションを検索', collapseAllCollections:'すべてのフォルダを閉じる', expandAllCollections:'すべてのフォルダを開く', collWrapNamesOn:'コレクション名を折り返して全文表示', collWrapNamesOff:'コレクション名を1行で表示', searchCollPh:'コレクション名で絞り込み', searchCollEmpty:'一致するコレクションはありません',
     searchTagTip:'タグを検索', newTag:'新規タグ', searchTagPh:'タグ名で絞り込み', searchTagEmpty:'一致するタグはありません', renameTag:'タグ名を変更', deleteTag:'タグを削除', confirmDeleteTag:(n)=>`タグ「${n}」を削除しますか？（文献自体は削除されません）`, promptTagName:'タグ名：', tagEditorPh:'タグを検索・追加（既存から選択／新規入力）', tagEditorNoMatch:'一致するタグはありません', tagEditorAddNew:(n)=>`新規タグ「${n}」を追加`, tagEditorEmpty:'タグはまだありません',
-    collEditorPh:'コレクションを検索・追加（既存から選択／新規作成）', collEditorNoMatch:'一致するコレクションはありません', collEditorEmpty:'コレクションはまだありません', collEditorAddNew:(n)=>`新規コレクション「${n}」を作成`, collRemove:'コレクションから外す', allItems:'すべての文献', researchers:'研究者', researcherSearchPh:'研究者を検索', newResearcher:'研究者を登録', researcherProfile:'研究者プロフィール', researcherName:'表示名', researcherFamilyName:'姓（英字・論文照合用）', researcherGivenName:'名（英字・論文照合用）', researcherMiddleName:'ミドルネーム（英字・任意）', researcherAliases:'別言語・別文字表記（1行に1つ）', researcherNameHelp:'論文との照合には、姓・名・ミドルネームを使います。表記順を変えた名前は別表記に入れません。', researcherAwards:'受賞歴', researcherAwardName:'賞名', researcherAwardOrganization:'授与機関', researcherPhdAdvisor:'PhD指導教員', affiliation:'所属', researcherWebsite:'Webサイト', researcherIds:'外部プロフィール', researcherPapers:'責任著者の文献', researcherCorrespondingPapers:'責任著者の文献', researcherNoPapers:'関連文献はありません。', researcherOpen:'研究者を開く', researcherRegister:'この研究者を登録', researcherUnregistered:'未登録', researcherManual:'手動登録', researcherDelete:'研究者を削除', researcherDeleteConfirm:'この研究者プロフィールを削除しますか？ 文献は削除されません。', researcherOpenAlex:'OpenAlex 候補を検索', researcherOpenAlexUpdate:'OpenAlex から研究者情報を更新', researcherOpenAlexHelp:'検索時に、氏名と別表記が OpenAlex に送信されます。候補は自動では確定されません。', researcherOpenAlexUpdateHelp:'OpenAlex ID または ORCID を使って取得します。反映する項目は次に選べます。', openAlexApiKey:'OpenAlex API キー', openAlexApiKeyHelp:'このキーはこのブラウザだけに保存され、library.json には保存されません。', openAlexKeyMissing:'OpenAlex API キーを入力してください。', openAlexSearchFailed:'OpenAlex の候補を取得できませんでした。', openAlexCandidate:'この候補の情報を確認', openAlexConfirmed:'OpenAlex で確認済み', researcherSaved:'研究者プロフィールを保存しました', researcherNoCandidates:'候補が見つかりませんでした。', researcherEnrichmentPreview:'取得内容を確認', researcherEnrichmentHelp:'選択した項目だけを反映します。OpenAlex にない生年月日・画像・Google Scholar・ResearchGate・PhD取得年は変更しません。', researcherEnrichmentApply:'選択した項目を反映', researcherEnrichmentCancel:'取り消す', researcherEnrichmentCurrent:'現在', researcherEnrichmentNew:'取得値', researcherEnrichmentNoChanges:'反映できる新しい情報はありません。', researcherEnrichmentFailed:'研究者情報を取得できませんでした。', researcherEnrichmentUpdated:'OpenAlex の研究者情報を反映しました。', researcherEnrichmentSource:'OpenAlex 取得', researcherEnrichmentRelatedNote:'上位25件の文献から推定した共著者', researcherSourceCount:(n)=>`${n} 件の文献`, researcherCorrCount:(n)=>`責任著者 ${n} 件`, researcherColName:'研究者', researcherColProfiles:'外部プロフィール', researcherColPapers:'文献数', researcherColCorresponding:'責任著者', researcherColStatus:'確認状況', researcherInstitutions:'研究機関', researcherCurrentInstitutions:'現所属（1行に1つ）', researcherPastInstitutions:'過去の所属（1行に1つ）', researcherBirthDate:'生年月日', researcherPhdYear:'PhD取得年', researcherHomepage:'Homepage', researcherGoogleScholar:'Google Scholar', researcherResearchGate:'ResearchGate', researcherResearchMap:'researchmap', researcherTotalCitations:'総引用数', researcherImage:'画像', researcherImageUrl:'画像URL', researcherFields:'研究分野', researcherRelated:'関係のある研究者（1行に1つ）',
+    collEditorPh:'コレクションを検索・追加（既存から選択／新規作成）', collEditorNoMatch:'一致するコレクションはありません', collEditorEmpty:'コレクションはまだありません', collEditorAddNew:(n)=>`新規コレクション「${n}」を作成`, collRemove:'コレクションから外す', allItems:'すべての文献', researchers:'研究者', researcherSearchPh:'研究者を検索', newResearcher:'研究者を登録', researcherProfile:'研究者プロフィール', researcherName:'表示名', researcherFamilyName:'姓（英字・論文照合用）', researcherGivenName:'名（英字・論文照合用）', researcherMiddleName:'ミドルネーム（英字・任意）', researcherAliases:'別言語・別文字表記（1行に1つ）', researcherNameHelp:'論文との照合には、姓・名・ミドルネームを使います。表記順を変えた名前は別表記に入れません。', researcherAwards:'受賞歴', researcherAwardName:'賞名', researcherAwardOrganization:'授与機関', researcherPhdAdvisor:'PhD指導教員', affiliation:'所属', researcherWebsite:'Webサイト', researcherIds:'外部プロフィール', researcherPapers:'責任著者の文献', researcherCorrespondingPapers:'責任著者の文献', researcherNoPapers:'関連文献はありません。', researcherOpen:'研究者を開く', researcherRegister:'この研究者を登録', researcherUnregistered:'未登録', researcherManual:'手動登録', researcherDelete:'研究者を削除', researcherDeleteConfirm:'この研究者プロフィールを削除しますか？ 文献は削除されません。', researcherOpenAlex:'OpenAlex 候補を検索', researcherOpenAlexUpdate:'OpenAlex から研究者情報を更新', researcherOpenAlexHelp:'検索時に、氏名と別表記が OpenAlex に送信されます。候補は自動では確定されません。', researcherOpenAlexUpdateHelp:'OpenAlex ID または ORCID を使って取得します。反映する項目は次に選べます。', openAlexApiKey:'OpenAlex API キー', openAlexApiKeyHelp:'このキーはこのブラウザだけに保存され、library.json には保存されません。', openAlexKeyMissing:'OpenAlex API キーを入力してください。', openAlexSearchFailed:'OpenAlex の候補を取得できませんでした。', openAlexCandidate:'この候補の情報を確認', openAlexConfirmed:'OpenAlex で確認済み', researcherSaved:'研究者プロフィールを保存しました', researcherNoCandidates:'候補が見つかりませんでした。', researcherEnrichmentPreview:'取得内容を確認', researcherEnrichmentHelp:'選択した項目だけを反映します。OpenAlex にない生年月日・画像・Google Scholar・ResearchGate・PhD取得年は変更しません。', researcherEnrichmentApply:'選択した項目を反映', researcherEnrichmentCancel:'取り消す', researcherEnrichmentCurrent:'現在', researcherEnrichmentNew:'取得値', researcherEnrichmentNoChanges:'反映できる新しい情報はありません。', researcherEnrichmentFailed:'研究者情報を取得できませんでした。', researcherEnrichmentUpdated:'OpenAlex の研究者情報を反映しました。', researcherEnrichmentSource:'OpenAlex 取得', researcherEnrichmentRelatedNote:'上位25件の文献から推定した共著者', researcherSourceCount:(n)=>`${n} 件の文献`, researcherCorrCount:(n)=>`責任著者 ${n} 件`, researcherColName:'研究者', researcherColProfiles:'外部プロフィール', researcherColPapers:'文献数', researcherColCorresponding:'責任著者', researcherColStatus:'確認状況', researcherInstitutions:'研究機関', researcherCurrentInstitutions:'現所属（1行に1つ）', researcherPastInstitutions:'過去の所属（1行に1つ）', researcherBirthDate:'生年月日', researcherDeathDate:'没年月日', researcherPhdYear:'PhD取得年', researcherHomepage:'Homepage', researcherGoogleScholar:'Google Scholar', researcherResearchGate:'ResearchGate', researcherResearchMap:'researchmap', researcherTotalCitations:'総引用数', researcherImage:'画像', researcherImageUrl:'画像URL', researcherFields:'研究分野', researcherRelated:'関係のある研究者（1行に1つ）',
     viewGrid:'グリッド', viewProfileCards:'プロフィール', viewLargeList:'リスト', viewMap:'地図', viewLeaderboard:'ランキング', viewTree:'ツリー',
     researcherAvgCitations:'平均引用',
     researcherAffiliationsLabel:'所属', affNamePh:'機関名を選択／入力', affCurrent:'現所属', affPast:'過去', affStart:'開始年', affEnd:'終了年', affPresent:'現在',
@@ -335,11 +438,11 @@ const I18N = {
     instDictTitle:'所属（機関）辞書', instDictEdit:'辞書を編集', instDictAdd:'追加', instDictAddName:'新しい機関名', instDictSearch:'機関名で検索',
     instDictHint:'地図のピン配置に使う機関の緯度・経度です。内蔵の値は編集すると上書きされ、リセットで元に戻せます。追加した機関は同名の全研究者に反映されます。',
     instDictBuiltin:'内蔵', instDictOverride:'上書き', instDictUser:'手動', instDictReset:'リセット', instDictDelete:'削除', instDictEmpty:'該当する機関はありません', instDictCount:(n)=>`${n} 件`, instDictInvalidCoord:'緯度は −90〜90、経度は −180〜180 で入力してください', instDictCountry:'国コード', instDictSortBy:'並び替え', instDictSortName:'名前',
-    starred:'スター', starItem:'スターを付ける', unstarItem:'スターを外す', myPublication:'自分の論文', markMyPublication:'自分の論文にする', unmarkMyPublication:'自分の論文から外す', trash:'ゴミ箱', emptyTrash:'完全に削除する', trashPermanentNote:'完全削除すると元に戻せません。', restoreItem:'復元', deleteForever:'完全に削除', deleteSingle:'削除', colTrashDelete:'操作', uncategorized:'未分類',
+    starred:'スター付き', starItem:'スターを付ける', unstarItem:'スターを外す', myPublication:'自分の論文', markMyPublication:'自分の論文にする', unmarkMyPublication:'自分の論文から外す', trash:'ゴミ箱', emptyTrash:'完全に削除する', trashPermanentNote:'完全削除すると元に戻せません。', restoreItem:'復元', deleteForever:'完全に削除', deleteSingle:'削除', colTrashDelete:'操作', uncategorized:'未分類',
     colStar:'スター', colPdf:'pdf', colTitle:'タイトル', colAuthors:'著者', colYear:'年', colJournal:'出版物', colCitedBy:'被引用数', colType:'種別', colCategory:'種類', colDoi:'DOI', colAdded:'追加日',
     colTrashRestore:'復元',
     columns:'列', colReset:'既定に戻す', refreshCited:'被引用数を更新', refreshCorresponding:'責任著者を更新',
-    refreshAll:'更新', refreshCategory:'種類を更新', refreshModeAutoAll:'すべて更新（表示中の全件）', refreshOnlyLabel:'項目を選んで更新',
+    refreshAll:'更新', refreshCategory:'種類を更新', refreshPages:'ページを補完', refreshModeAutoAll:'すべて更新（表示中の全件）', refreshOnlyLabel:'項目を選んで更新',
     refreshModeAuto:'自動で更新（表示中の全件）', refreshModePick:'文献を選択して更新',
     pickHintCited:'被引用数を更新する文献をクリックして選択（Shiftで範囲選択）',
     pickHintCorresponding:'責任著者を更新する文献をクリックして選択（Shiftで範囲選択）',
@@ -380,6 +483,11 @@ const I18N = {
     journalDictColMatch:'取得される表記・別名', journalDictColAlias:'表記揺れ・別名', journalDictColFull:'正式名', journalDictColAbbr:'略称',
     journalDictAdd:'辞書に追加', journalDictRemove:'削除',
     journalDictCount:(u,b)=>`自分 ${u}件 ・ 標準 ${b}件`,
+    journalDictUnmapped:'未登録',
+    journalDictUnmappedCount:(n,i)=>`未登録 ${n}種 ・ ${i}件`,
+    journalDictUnmappedNone:'このライブラリの雑誌名はすべて辞書に載っています。',
+    journalDictUnmappedHint:'辞書に載っていない雑誌名です。行を選ぶと上の入力欄に入ります。',
+    journalDictUnmappedItems:(n)=>`${n}件`,
     journalDictBuiltinPh:'辞書を検索（雑誌名・略称・表記揺れ）',
     journalDictBuiltinEmpty:'一致する項目はありません。',
     journalDictEmpty:'まだ辞書に登録がありません。',
@@ -389,6 +497,8 @@ const I18N = {
     journalDictUpdated:'辞書を更新しました。',
     journalDictRemoved:'辞書から削除しました。',
     wrapToggle:'折り返し', newSubCollection:'サブフォルダを作成', collColor:'色を変更',
+    collectionScope:'表示範囲', collectionScopeTip:(label)=>`表示範囲（現在：${label}）`, collectionScopeTitle:(name)=>`${name} の表示範囲`,
+    collectionScopeAll:'配下を含むすべて', collectionScopeDirect:'直下のみ', collectionScopeDescendants:'配下のみ',
     collColorCustom:'カスタム：', collColorDefault:'既定',
     filterContains:'…を含む', filterFrom:'から', filterTo:'まで', filterClear:'クリア',
     filters:'フィルタ', viewMenu:'表示', viewStyle:'表示スタイル', cardCols:(n)=>`${n}列`, filterOptions:'候補', filterNoOptions:'候補がありません', iconOnlyToggle:'ボタンをアイコンのみ表示', themeDark:'Dark', themeLight:'Light',
@@ -400,6 +510,7 @@ const I18N = {
     displaySettings:'表示設定', columnsLabel:'列数', cols2:'2列', cols3:'3列', cols4:'4列',
     gallerySortLabel:'並び替え', sortDirAsc:'昇順', sortDirDesc:'降順', sortByAdded:'追加日',
     imageFitLabel:'画像の表示', imageFitCrop:'余白なし（トリミング）', imageFitContain:'全体表示（余白あり）',
+    reviewMarkLabel:'レビュー論文', reviewMark:'レビュー論文を色分け', reviewMarkWide:'Perspective・Account も含める',
     shelfRecent:'最近追加した文献', shelfStarred:'スター付き', shelfReading:'読書中', shelfPdf:'PDFあり', shelfCollections:'コレクション',
     shelfItems:(n)=>`${n} 件`, shelfMore:(n)=>`ほか ${n} 件`, shelfEmpty:'この棚に文献はありません', shelfRecentDays:'日以内',
     readingStatus:'読書状態', statusUnread:'未読', statusReading:'読書中', statusRead:'読了',
@@ -408,9 +519,12 @@ const I18N = {
     refreshingCited:'被引用数を取得中…', refreshedCited:(n)=>`${n} 件の被引用数を更新しました`,
     refreshedCitedPartial:(n,f)=>`${n} 件を更新しました（${f} 件は取得失敗 — 取得ログを確認）`,
     refreshedCitedS2:(n,s)=>`${n} 件を更新しました（うち ${s} 件は Semantic Scholar から補完）`,
-    refreshingCorresponding:'責任著者を取得中…',
+    refreshingCorresponding:'責任著者を取得中…', refreshingCategory:'種類を取得中…', refreshingPages:'ページを取得中…',
+    bulkUnloadWarn:'文献情報の更新を実行中です。ページを離れると、最後の途中保存以降の更新結果は失われます。',
+    bulkBusy:'更新を実行中です。終わるまで待つか、「中止」を押してください', bulkCancel:'中止', bulkCancelled:(n)=>`更新を中止しました（${n} 件処理済み）`,
     refreshedCorresponding:(n)=>`${n} 件の責任著者を更新しました`,
     refreshedCategory:(n)=>`${n} 件の種類を更新しました`,
+    refreshedPages:(n)=> n ? `${n} 件のページを補完しました` : '補完できるページはありませんでした',
     refreshedCorrespondingPartial:(n,f)=>`${n} 件の責任著者を更新しました（${f} 件は取得失敗 — 取得ログを確認）`,
     noCorrespondingTargets:'更新対象の責任著者はありません',
     noCorrespondingFound:'OpenAlex に責任著者情報がありません',
@@ -430,7 +544,12 @@ const I18N = {
     addByIdHint:'DOI・arXiv ID・論文ページの URL を貼り付けると自動で取得します。分からない場合は、雑誌名・年・巻・ページやタイトルを入力して検索してください。',
     addByIdInputPh:'DOI / arXiv ID / URL / タイトル', addByIdJournalPh:'雑誌名（略称可）', addByIdYearPh:'年', addByIdVolumePh:'巻', addByIdPagePh:'ページ',
     cancel:'キャンセル', close:'閉じる', expand:'展開', collapse:'折りたたみ', fetchAdd:'検索', changelog:'更新履歴', manual:'マニュアル',
+    imageViewer:'画像を拡大', zoomIn:'拡大', zoomOut:'縮小', zoomReset:'全体表示に戻す', imageOpenNew:'別タブで開く', imageViewerHint:'ホイールで拡大縮小・ドラッグで移動・ダブルクリックで切替',
     startSub:'文献管理ツール',
+    bootChecking:'前回のライブラリを確認中…', bootRestoring:'前回のライブラリを開いています',
+    bootStepRead:'library.json を読み込み中', bootStepParse:'データを確認中', bootStepRender:'画面を準備中',
+    bootHint:'大きなライブラリでは数秒かかることがあります。そのままお待ちください。',
+    bootPick:'別のフォルダを選ぶ',
     openFolder:'ライブラリフォルダを開く / 作成',
     openFolderSub:'フォルダを選択します。library.json があれば読み込み、なければ新規作成します。',
     openLast:'前回のライブラリを開く', changeFolder:'作業フォルダを変更',
@@ -444,8 +563,17 @@ const I18N = {
     doi:'DOI', arxiv:'arXiv ID', url:'URL', citekey:'引用キー', correspondingAuthors:'責任著者', correspondingPickHint:'一覧から著者を選ぶと自動で追加されます。一覧にない人は入力して ＋ で追加してください（複数可）。', correspondingAddPh:'著者を選択、または入力', correspondingEmpty:'未設定', tagsField:'タグ（カンマ区切り）',
     imageSection:'画像', imageEmpty:'クリップボードから貼り付けるか、ファイルを選択して画像を追加', imagePaste:'クリップボードから貼り付け', imagePasteHint:'画像をコピーして ⌘/Ctrl+V でも貼り付けできます（許可ダイアログなし）。', imageFromFile:'ファイルを選択', imageReplace:'画像を置き換え', imageRemove:'画像を削除', imageRemoveConfirm:'この画像を削除しますか？', imageSaved:'画像を保存しました', imageNeedsLibrary:'画像を保存するには、先にライブラリフォルダを開いてください', imageNotImage:'画像ファイルを選んでください', imageClipboardUnsupported:'このブラウザではクリップボード画像の読み取りに対応していません。ファイルを選択してください', imageClipboardEmpty:'クリップボードに画像が見つかりませんでした', imageClipboardFailed:'クリップボードから貼り付けできませんでした',
     abstract:'要旨', notes:'メモ', attachments:'添付ファイル', info:'論文情報', organize:'整理',
+    paneResizeHint:'ドラッグで幅を変更、ダブルクリックで既定に戻す', colResizeHint:'ドラッグで列幅を変更、ダブルクリックで既定に戻す',
+    notesPlaceholder:'Markdown で書けます。画像は貼り付け・ドラッグ＆ドロップで追加できます',
+    notesHint:'Markdown 記法が使えます（**太字** / *斜体* / # 見出し / - 箇条書き / - [ ] チェック / > 引用 / | 表 |）。[[引用キー]] で他の文献へリンクでき、貼り付けた画像は attachments/ に保存されます。',
+    noteRefMissing:'この引用キーの文献は見つかりません',
+    noteBacklinks:'この文献を参照しているメモ', noteImageAdded:'メモに画像を追加しました',
+    mdBold:'太字', mdItalic:'斜体', mdStrike:'取り消し線', mdCode:'コード', mdHeading:'見出し', mdList:'箇条書き', mdTaskList:'チェックリスト', mdQuote:'引用',
+    mdLink:'リンク', mdImage:'画像を挿入', mdRefInsert:'文献リンク [[引用キー]]', mdTable:'表', mdTableCol:'列', mdPreview:'プレビュー',
     addPdf:'PDF を添付', openLink:'リンクを開く', openAttachment:'開く', copyCite:'引用をコピー', copyBib:'BibTeX をコピー',
+    citLayout:'一覧の表示', citLayoutCard:'カード（雑誌チップ）', citLayoutCite:'引用文',
     citationStyle:'引用スタイル', citationSettings:'引用設定', authorScope:'著者', authorScopeAll:'全著者', authorScopeFirst:'ファーストオーサーのみ', authorScopeCorresponding:'責任著者のみ', includeTitle:'タイトルを含める', includeUrl:'URL を含める',
+    citPageStyle:'ページ', citPageStyleFull:'全ページ（13937–13945）', citPageStyleFirst:'最初のページのみ（13937）',
     citePreview:'引用プレビュー', citePreviewHint:'現在の設定でコピーされる引用文', copy:'コピー',
     detailEdit:'編集', detailEditHint:'この文献の情報を編集', detailDisplaySettings:'表示設定', detailDisplaySettingsHint:'表示する項目と並び順を設定', detailSettingsHint:'チェックで表示・非表示、⋮⋮ をドラッグ（または ↑↓）で並び替え。データがない項目は自動で非表示になります。', detailNoData:'データなし', detailMoveUp:'上へ', detailMoveDown:'下へ',
     refAuthors:'著者', imageBorderToggle:'画像に枠線を表示', authorOpenResearcher:(n)=>`${n} の研究者情報を開く`, authorCorresponding:'責任著者',
@@ -490,14 +618,27 @@ const I18N = {
     graphSharedRefs:(n)=>`共通参照 ${n} 件`, graphDirectCites:'この論文が種論文を引用', graphDirectCitedBy:'種論文がこの論文を引用',
     graphNearest:'近い論文', graphStats:(n,e)=>`${n} 論文 / ${e} 関係`,
     graphCached:(d)=>`キャッシュ表示（${d} 取得・API 呼び出しなし）`,
+    graphCancel:'中止',
+    storageCompacted:(mb)=>`研究者の写真を表示用サイズに縮小し、library.json を ${mb} MB 軽くしました`,
     graphPartial:(n)=>`関連論文 ${n} 件を取得できませんでした（表示が不完全な可能性があります）`,
     researcherTree:'アカデミックツリー', researcherTreeAria:'PhD指導関係による研究者の系譜',
-    researcherTreeHint:'研究者または関係の線にカーソルを合わせると詳細を表示します',
+    researcherTreeHint:'関係の線にカーソルを合わせると詳細を表示 / 研究者にカーソルを合わせるとつながりを強調',
     researcherTreeSource:'研究者プロフィールの指導教員・経歴から作成',
     researcherTreeOrientation:'向き', researcherTreeOrientationLabel:'系譜を並べる向き',
     researcherTreeOrientV:'上下', researcherTreeOrientH:'左右',
     researcherTreeLayout:'配置', researcherTreeLayoutLabel:'研究者を並べる基準',
     researcherTreeLayoutGeneration:'世代', researcherTreeLayoutPhdYear:'PhD取得年',
+    researcherTreeEdgeStyle:'線', researcherTreeEdgeStyleLabel:'関係の線の描き方',
+    researcherTreeEdgeCurve:'曲線', researcherTreeEdgeOrtho:'直角',
+    researcherTreeDisplay:'表示', researcherTreeDisplayLabel:'ツリーの見た目の設定',
+    researcherTreeShape:'形', researcherTreeShapeLabel:'同じ研究者を1つにまとめるか、経路ごとに描き分けるか',
+    researcherTreeShapeNote:'「家系図」は経路ごとに枝を分けるため線が交差しませんが、複数の経路からたどれる研究者は複数箇所に表示されます',
+    researcherTreeShapeGraph:'合流', researcherTreeShapeTree:'家系図',
+    researcherTreeDupBadge:(n)=>`${n}か所`,
+    researcherTreeDupNote:(n)=>`図中の ${n} か所に表示されています`,
+    researcherTreeStubNote:'この箱の先は省略しています（別の箱の下に表示）',
+    researcherTreeLegendDup:'同一人物を複数箇所に表示（点線は先を省略）',
+    researcherTreeTruncated:'表示上限のため一部を省略しています（深度を下げてください）',
     researcherTreeYearAxisHint:'PhD取得年を縦軸に表示。大きな年差は圧縮し、所属・PIの関係は破線で表示します',
     researcherTreeYearUnknown:'PhD取得年不明', researcherTreeYearOrderIssue:'PhD取得年の順序を確認',
     researcherTreeYearStats:(known,unknown)=>`PhD取得年あり ${known} / 不明 ${unknown}`,
@@ -507,8 +648,7 @@ const I18N = {
     researcherTreeKindPhd:'PhD指導教員', researcherTreeKindPhdDown:'PhD指導した',
     researcherTreeKindPosition:'所属研究室のPI', researcherTreeKindPositionDown:'研究室に受け入れた',
     researcherTreeKindEducation:'在学時の指導者', researcherTreeKindEducationDown:'在学中に指導した',
-    researcherTreeUp:'上の世代', researcherTreeDown:'下の世代',
-    researcherTreeUnregistered:'未登録', researcherTreeNoRelations:'登録された関係はありません',
+    researcherTreeUnregistered:'未登録',
     researcherTreeNoSelection:'研究者を選ぶと、その系譜を表示します。',
     researcherTreeEmpty:'選択中の範囲では、この研究者に登録された関係がありません。PhD指導教員は研究者プロフィールの「学歴」で登録できます。',
     researcherTreeStats:(n,e)=>`${n} 研究者 / ${e} 関係`,
@@ -522,11 +662,11 @@ const I18N = {
     researcherMapSource:'ライブラリ内の責任著者情報から作成',
     researcherMapDepth:'深度', researcherMapDepthLabel:'中心研究者からたどる共同研究の深さ', researcherMapDepthValue:(n)=>`${n}`,
     researcherMapStyle:'円', researcherMapStyleLabel:'研究者を表す円のスタイル',
-    researcherMapStyleAurora:'Aurora (Style 1)', researcherMapStylePulse:'Pulse (Style 2)',
+    researcherMapStyleAurora:'紫・静止', researcherMapStylePulse:'青・ゆっくり明滅',
     researcherMapEdgeStyle:'線', researcherMapEdgeStyleLabel:'共同研究を表す線の種類', researcherMapEdgeSolid:'実線', researcherMapEdgeDashed:'破線',
     researcherMapSeedStyle:'中心', researcherMapSeedStyleLabel:'基準となる中心研究者の強調方法',
-    researcherMapSeedDoubleGlow:'二重線 + Glow (Style 2)', researcherMapSeedPulseGlow:'Pulse + Glow (Style 1)',
-    researcherMapRouteStyle:'流線の表示形式', researcherMapRouteStyleLabel:'破線を選んだ場合に切り替えられる、中心へ向かう流線の見た目', researcherMapRouteFlow:'Style 1', researcherMapRouteFlowDepth:'Style 3', researcherMapRouteFlowSoft:'Style 4',
+    researcherMapSeedDoubleGlow:'二重の輪・静止', researcherMapSeedPulseGlow:'光の輪が明滅',
+    researcherMapRouteStyle:'流線の表示形式', researcherMapRouteStyleLabel:'破線を選んだ場合に切り替えられる、中心へ向かう流線の見た目', researcherMapRouteFlow:'単色', researcherMapRouteFlowDepth:'深度ごとに色分け', researcherMapRouteFlowSoft:'淡くゆっくり',
     researcherMapOpacity:'色の濃さ', researcherMapOpacityLabel:'状態ごとの研究者の色の濃さ', researcherMapOpacityDetail:'詳細', researcherMapOpacityValue:(n)=>`${n}%`,
     researcherMapOpacityActive:'選択研究者', researcherMapOpacityCenter:'中心研究者', researcherMapOpacityPath:'中心までの経由研究者', researcherMapOpacityNeighbor:'選択研究者から深度1', researcherMapOpacityOther:'その他',
     researcherMapDistance:(n)=>`中心から ${n} 段階`,
@@ -539,6 +679,9 @@ const I18N = {
     researcherMapAliases:'統合した表記', researcherMapOpenPaper:'ライブラリで表示',
     addedFromCite:'ライブラリに追加しました',
     searchTerms:'検索語', searchMode:'条件', searchField:'対象', fieldAll:'すべて', yearFrom:'年（開始）', yearTo:'年（終了）', clear:'クリア', apply:'適用',
+    searchConditions:'条件', advAddCondition:'条件を追加', advRemoveCondition:'この条件を削除', advValuePh:'検索語を入力',
+    opContains:'含む', opNotContains:'含まない', opEquals:'完全一致', advFieldIds:'DOI・arXiv・引用キー',
+    advHint:'入力した語はそのまま一続きで照合します（複数語を入れるとフレーズ検索になります）。大文字小文字とアクセント記号は区別しません。',
     deleteItem:'ゴミ箱に移動',
     confirmDelete:(t)=>`「${t}」をゴミ箱に移動しますか？`,
     confirmTrashMulti:(n)=>`${n} 件の文献をゴミ箱に移動しますか？`,
@@ -571,15 +714,35 @@ const I18N = {
     dupDoi:'同じ DOI の文献が既に存在します', copied:'コピーしました',
     imported:(n,s)=>`${n} 件をインポートしました（${s} 件は重複のためスキップ）`,
     connectorImported:(n)=>`拡張機能から ${n} 件を取り込みました`,
+    connectorImporting:(n,t)=>`拡張機能から取り込み中… ${n}/${t}`,
+    connectorEnriching:(n,t)=>`文献情報を取得中… ${n}/${t}`,
+    connectorUnloadWarn:'拡張機能からの取り込みを実行中です。ページを離れると、取り込み中の文献の情報が欠けたままになります。',
+    connectorBusy:'拡張機能からの取り込み中です。終わるまでお待ちください',
     exported:(n)=>`${n} 件をエクスポートしました`,
     pdfAttached:'PDF を添付しました', pdfAutoAttached:'Open Access PDF を自動添付しました', attDeleted:'添付を削除しました',
     confirmDeleteAtt:(n)=>`添付「${n}」を削除しますか？`,
+    attRoleMain:'本文', attRoleSI:'SI', attRoleOther:'その他',
+    attRoleDlgTitle:'PDF の役割を選ぶ',
+    attRoleDlgHint:'どれが本文（原著）で、どれが SI（Supporting Information）かを選んでください。ファイル名は 本文＝<引用キー>.pdf、SI＝<引用キー>_SI.pdf になります。',
+    attRoleOtherPh:'ラベル（例: correction）',
+    attRolePages:(n)=>`${n} ページ`,
+    attRoleEvName:'ファイル名から判定',
+    attRoleEvText:'1 ページ目の文字から判定',
+    attRoleEvWatermark:'ダウンロード元の記録から判定',
+    attRoleEvNone:'判定できませんでした',
+    attRoleMainTaken:(n)=>`本文はすでに「${n}」です。ここで「本文」を選ぶと入れ替わり、「${n}」は SI になります。`,
+    attRoleSavedAsSi:(n)=>`SI として保存しました：${n}`,
+    attRoleRenamed:(a,b)=>`「${a}」を「${b}」に変更しました`,
+    attRoleSwapped:'本文と SI を入れ替えました',
+    attRoleRenameFail:'名前の変更に失敗しました',
+    attRoleNoLibrary:'ライブラリを開いてから操作してください',
+    attRoleChangeTitle:'役割を変える',
     invalidId:'DOI または arXiv ID を認識できませんでした',
     newItem:'（無題）', libLoadFail:'ライブラリの読み込みに失敗しました', invalidLibrary:'library.json の形式が正しくありません。現在のライブラリは変更していません。', saveFail:'保存に失敗しました', invalidExternalUrl:'安全ではないリンクのため開けません',
     permDenied:'フォルダへのアクセスが許可されませんでした',
     demoWarn:'お試しモード：データは保存されません',
     typeNames:{article:'雑誌論文', preprint:'プレプリント', book:'書籍', chapter:'書籍の章', inproceedings:'会議録', thesis:'学位論文', report:'レポート', web:'Webページ', misc:'その他'},
-    categoryNames:{article:'Article', communication:'Communication', review:'Review', minireview:'Minireview', perspective:'Perspective', account:'Account', highlight:'Highlight', editorial:'Editorial'}, categoryNone:'（未設定）',
+    categoryNames:{article:'Article', communication:'Communication', review:'Review', minireview:'Minireview', perspective:'Perspective', account:'Account', highlight:'Highlight', editorial:'Editorial'}, categoryNone:'未設定',
     changeFolderMenuTitle:'ライブラリの切り替え・新規作成', openChangeFolder:'別のフォルダを開く / 変更', newLibrary:'新規ライブラリを作成',
     newLibOverwriteConfirm:'このフォルダには既に library.json があります。上書きして新しい空のライブラリを作成しますか？（既存のデータは失われます）',
     unsavedWarn:'未保存の変更があります。',
@@ -590,9 +753,9 @@ const I18N = {
     importKeywordsTitle:'Import keywords', importKeywordsSummary:(n,m)=>`Found ${m} distinct keyword${m===1?'':'s'} across ${n} reference${n===1?'':'s'}. Import them as tags?`, importKeywordsMore:(n)=>` …and ${n} more`, importKeywordsConfirm:'Import',
     referenceExport:'Shown references', expBibShown:'BibTeX (.bib)', expRisShown:'RIS (.ris)', expCsvShown:'CSV (.csv)', expJsonShown:'JSON (.json)', libraryExportLabel:'Whole library', expJson:'JSON (.json)', researcherExport:'Researchers', researcherExportShownLabel:'Shown', researcherExportAllLabel:'All', researcherExpJsonShown:'JSON (.json)', researcherExpCsvShown:'CSV (.csv)', researcherExpJson:'JSON (.json)', researcherExpCsv:'CSV (.csv)', researcherExportEmpty:'There are no researchers to export.', researcherExported:(n)=>`Exported ${n} researcher${n===1?'':'s'}`,
     shortcuts:'Keyboard shortcuts', shortcutsHint:'Press ? anytime to show', searchPh:'Search keywords', advancedSearch:'Advanced search', quickAddTitle:'Fetch and add this DOI / URL', addBoxPh:'Enter URL and press Enter', addMoreTitle:'Manual add / import', library:'Library', collections:'Collections', tags:'Tags',
-    newCollection:'New collection', searchCollTip:'Search collections', collapseAllCollections:'Collapse all folders', expandAllCollections:'Expand all folders', searchCollPh:'Filter by name', searchCollEmpty:'No matching collections',
+    newCollection:'New collection', searchCollTip:'Search collections', collapseAllCollections:'Collapse all folders', expandAllCollections:'Expand all folders', collWrapNamesOn:'Wrap collection names', collWrapNamesOff:'Show collection names on one line', searchCollPh:'Filter by name', searchCollEmpty:'No matching collections',
     searchTagTip:'Search tags', newTag:'New tag', searchTagPh:'Filter by name', searchTagEmpty:'No matching tags', renameTag:'Rename tag', deleteTag:'Delete tag', confirmDeleteTag:(n)=>`Delete tag “${n}”? (References themselves are kept.)`, promptTagName:'Tag name:', tagEditorPh:'Search or add a tag (pick an existing one or type a new one)', tagEditorNoMatch:'No matching tags', tagEditorAddNew:(n)=>`Add new tag “${n}”`, tagEditorEmpty:'No tags yet',
-    collEditorPh:'Search or add a collection (pick an existing one or create a new one)', collEditorNoMatch:'No matching collections', collEditorEmpty:'No collections yet', collEditorAddNew:(n)=>`Create new collection “${n}”`, collRemove:'Remove from collection', allItems:'All items', researchers:'Researchers', researcherSearchPh:'Search researchers', newResearcher:'Add researcher', researcherProfile:'Researcher profile', researcherName:'Display name', researcherFamilyName:'Family name (Latin script, for matching)', researcherGivenName:'Given name (Latin script, for matching)', researcherMiddleName:'Middle name (Latin script, optional)', researcherAliases:'Other-language / other-script names (one per line)', researcherNameHelp:'Paper matching uses the family, given, and middle names. Do not add a reordered name as an alias.', researcherAwards:'Awards', researcherAwardName:'Award', researcherAwardOrganization:'Granting organization', researcherPhdAdvisor:'PhD advisor', affiliation:'Affiliation', researcherWebsite:'Website', researcherIds:'External profiles', researcherPapers:'Corresponding-author references', researcherCorrespondingPapers:'Corresponding-author references', researcherNoPapers:'No related references.', researcherOpen:'Open researcher', researcherRegister:'Register this researcher', researcherUnregistered:'Unregistered', researcherManual:'Manually added', researcherDelete:'Delete researcher', researcherDeleteConfirm:'Delete this researcher profile? References will not be deleted.', researcherOpenAlex:'Search OpenAlex candidates', researcherOpenAlexHelp:'Your name and aliases are sent to OpenAlex when you search. Candidates are never selected automatically.', openAlexApiKey:'OpenAlex API key', openAlexApiKeyHelp:'This key stays in this browser and is never saved in library.json.', openAlexKeyMissing:'Enter an OpenAlex API key first.', openAlexSearchFailed:'Could not retrieve OpenAlex candidates.', openAlexCandidate:'Confirm this candidate', openAlexConfirmed:'Confirmed with OpenAlex', researcherSaved:'Researcher profile saved', researcherNoCandidates:'No candidates found.', researcherSourceCount:(n)=>`${n} reference${n===1?'':'s'}`, researcherCorrCount:(n)=>`${n} corresponding-author reference${n===1?'':'s'}`, researcherColName:'Researcher', researcherColProfiles:'External profiles', researcherColPapers:'References', researcherColCorresponding:'Corresponding', researcherColStatus:'Status', researcherInstitutions:'Institutions', researcherCurrentInstitutions:'Current institutions (one per line)', researcherPastInstitutions:'Past institutions (one per line)', researcherBirthDate:'Date of birth', researcherPhdYear:'PhD year', researcherHomepage:'Homepage', researcherGoogleScholar:'Google Scholar', researcherResearchGate:'ResearchGate', researcherResearchMap:'researchmap', researcherTotalCitations:'Total citations', researcherImage:'Image', researcherImageUrl:'Image URL', researcherFields:'Research fields', researcherRelated:'Related researchers (one per line)',
+    collEditorPh:'Search or add a collection (pick an existing one or create a new one)', collEditorNoMatch:'No matching collections', collEditorEmpty:'No collections yet', collEditorAddNew:(n)=>`Create new collection “${n}”`, collRemove:'Remove from collection', allItems:'All items', researchers:'Researchers', researcherSearchPh:'Search researchers', newResearcher:'Add researcher', researcherProfile:'Researcher profile', researcherName:'Display name', researcherFamilyName:'Family name (Latin script, for matching)', researcherGivenName:'Given name (Latin script, for matching)', researcherMiddleName:'Middle name (Latin script, optional)', researcherAliases:'Other-language / other-script names (one per line)', researcherNameHelp:'Paper matching uses the family, given, and middle names. Do not add a reordered name as an alias.', researcherAwards:'Awards', researcherAwardName:'Award', researcherAwardOrganization:'Granting organization', researcherPhdAdvisor:'PhD advisor', affiliation:'Affiliation', researcherWebsite:'Website', researcherIds:'External profiles', researcherPapers:'Corresponding-author references', researcherCorrespondingPapers:'Corresponding-author references', researcherNoPapers:'No related references.', researcherOpen:'Open researcher', researcherRegister:'Register this researcher', researcherUnregistered:'Unregistered', researcherManual:'Manually added', researcherDelete:'Delete researcher', researcherDeleteConfirm:'Delete this researcher profile? References will not be deleted.', researcherOpenAlex:'Search OpenAlex candidates', researcherOpenAlexHelp:'Your name and aliases are sent to OpenAlex when you search. Candidates are never selected automatically.', openAlexApiKey:'OpenAlex API key', openAlexApiKeyHelp:'This key stays in this browser and is never saved in library.json.', openAlexKeyMissing:'Enter an OpenAlex API key first.', openAlexSearchFailed:'Could not retrieve OpenAlex candidates.', openAlexCandidate:'Confirm this candidate', openAlexConfirmed:'Confirmed with OpenAlex', researcherSaved:'Researcher profile saved', researcherNoCandidates:'No candidates found.', researcherSourceCount:(n)=>`${n} reference${n===1?'':'s'}`, researcherCorrCount:(n)=>`${n} corresponding-author reference${n===1?'':'s'}`, researcherColName:'Researcher', researcherColProfiles:'External profiles', researcherColPapers:'References', researcherColCorresponding:'Corresponding', researcherColStatus:'Status', researcherInstitutions:'Institutions', researcherCurrentInstitutions:'Current institutions (one per line)', researcherPastInstitutions:'Past institutions (one per line)', researcherBirthDate:'Date of birth', researcherDeathDate:'Date of death', researcherPhdYear:'PhD year', researcherHomepage:'Homepage', researcherGoogleScholar:'Google Scholar', researcherResearchGate:'ResearchGate', researcherResearchMap:'researchmap', researcherTotalCitations:'Total citations', researcherImage:'Image', researcherImageUrl:'Image URL', researcherFields:'Research fields', researcherRelated:'Related researchers (one per line)',
     viewGrid:'Grid', viewProfileCards:'Profiles', viewLargeList:'List', viewMap:'Map', viewLeaderboard:'Ranking', viewTree:'Tree',
     researcherAvgCitations:'Avg. citations',
     researcherAffiliationsLabel:'Affiliations', affNamePh:'Select / type an institution', affCurrent:'Current', affPast:'Past', affStart:'From', affEnd:'To', affPresent:'present',
@@ -629,7 +792,7 @@ const I18N = {
     colStar:'Star', colPdf:'pdf', colTitle:'Title', colAuthors:'Authors', colYear:'Year', colJournal:'Publication', colCitedBy:'Cited by', colType:'Type', colCategory:'Category', colDoi:'DOI', colAdded:'Added',
     colTrashRestore:'Restore',
     columns:'Columns', colReset:'Reset to default', refreshCited:'Refresh citations', refreshCorresponding:'Refresh corresponding authors',
-    refreshAll:'Update', refreshCategory:'Refresh category', refreshModeAutoAll:'Update all (all shown)', refreshOnlyLabel:'Update one field',
+    refreshAll:'Update', refreshCategory:'Refresh category', refreshPages:'Fill in missing pages', refreshModeAutoAll:'Update all (all shown)', refreshOnlyLabel:'Update one field',
     refreshModeAuto:'Refresh automatically (all shown)', refreshModePick:'Select items to refresh',
     pickHintCited:'Click items to refresh their cited-by count (Shift to select a range)',
     pickHintCorresponding:'Click items to refresh their corresponding author (Shift to select a range)',
@@ -670,6 +833,11 @@ const I18N = {
     journalDictColMatch:'Fetched form / alias', journalDictColAlias:'Variants / aliases', journalDictColFull:'Full name', journalDictColAbbr:'Abbreviation',
     journalDictAdd:'Add to dictionary', journalDictRemove:'Remove',
     journalDictCount:(u,b)=>`Yours ${u} · Built-in ${b}`,
+    journalDictUnmapped:'Unregistered',
+    journalDictUnmappedCount:(n,i)=>`${n} unregistered · ${i} references`,
+    journalDictUnmappedNone:'Every journal name in this library is covered by the dictionary.',
+    journalDictUnmappedHint:'Journal names the dictionary does not cover. Pick a row to load it into the fields above.',
+    journalDictUnmappedItems:(n)=>`${n}`,
     journalDictBuiltinPh:'Search the dictionary (name, abbreviation, variant)',
     journalDictBuiltinEmpty:'No matching entries.',
     journalDictEmpty:'No entries in the dictionary yet.',
@@ -679,6 +847,8 @@ const I18N = {
     journalDictUpdated:'Dictionary updated.',
     journalDictRemoved:'Removed from the dictionary.',
     wrapToggle:'Wrap', newSubCollection:'New subfolder', collColor:'Change color',
+    collectionScope:'View scope', collectionScopeTip:(label)=>`View scope (currently: ${label})`, collectionScopeTitle:(name)=>`View scope for ${name}`,
+    collectionScopeAll:'All, including subfolders', collectionScopeDirect:'This folder only', collectionScopeDescendants:'Subfolders only',
     collColorCustom:'Custom:', collColorDefault:'Default',
     filterContains:'Contains…', filterFrom:'From', filterTo:'To', filterClear:'Clear',
     filters:'Filters', viewMenu:'View', viewStyle:'View style', cardCols:(n)=>`${n} column${n===1?'':'s'}`, filterOptions:'Options', filterNoOptions:'No options', iconOnlyToggle:'Icons only', themeDark:'Dark', themeLight:'Light',
@@ -690,6 +860,7 @@ const I18N = {
     displaySettings:'Display', columnsLabel:'Columns', cols2:'2 columns', cols3:'3 columns', cols4:'4 columns',
     gallerySortLabel:'Sort', sortDirAsc:'Ascending', sortDirDesc:'Descending', sortByAdded:'Date added',
     imageFitLabel:'Image', imageFitCrop:'Fill (no margin)', imageFitContain:'Fit whole image (margin)',
+    reviewMarkLabel:'Reviews', reviewMark:'Highlight review articles', reviewMarkWide:'Include Perspective / Account',
     shelfRecent:'Recently added', shelfStarred:'Starred', shelfReading:'Reading', shelfPdf:'PDF attached', shelfCollections:'Collections',
     shelfItems:(n)=>`${n} item${n===1?'':'s'}`, shelfMore:(n)=>`${n} more`, shelfEmpty:'No papers on this shelf', shelfRecentDays:'days',
     readingStatus:'Reading status', statusUnread:'Unread', statusReading:'Reading', statusRead:'Read',
@@ -698,9 +869,12 @@ const I18N = {
     refreshingCited:'Fetching citation counts…', refreshedCited:(n)=>`Updated cited-by counts for ${n} item(s)`,
     refreshedCitedPartial:(n,f)=>`Updated ${n} item(s) (${f} failed — see the fetch log)`,
     refreshedCitedS2:(n,s)=>`Updated ${n} item(s) (${s} via Semantic Scholar)`,
-    refreshingCorresponding:'Fetching corresponding authors…',
+    refreshingCorresponding:'Fetching corresponding authors…', refreshingCategory:'Fetching categories…', refreshingPages:'Fetching pages…',
+    bulkUnloadWarn:'An update is running. Leaving now loses the results fetched since the last checkpoint.',
+    bulkBusy:'An update is running. Wait for it to finish or press Cancel', bulkCancel:'Cancel', bulkCancelled:(n)=>`Update cancelled (${n} item(s) processed)`,
     refreshedCorresponding:(n)=>`Updated corresponding authors for ${n} item(s)`,
     refreshedCategory:(n)=>`Updated category for ${n} item(s)`,
+    refreshedPages:(n)=> n ? `Filled in pages for ${n} item(s)` : 'No missing pages could be filled in',
     refreshedCorrespondingPartial:(n,f)=>`Updated corresponding authors for ${n} item(s) (${f} failed — see the fetch log)`,
     noCorrespondingTargets:'No corresponding-author targets to update',
     noCorrespondingFound:'No corresponding-author data in OpenAlex',
@@ -720,7 +894,12 @@ const I18N = {
     addByIdHint:'Paste a DOI, an arXiv ID, or a paper page URL to fetch it automatically. If you don’t have one, search instead by journal, year, volume, page, or title.',
     addByIdInputPh:'DOI / arXiv ID / URL / title', addByIdJournalPh:'Journal (abbrev. ok)', addByIdYearPh:'Year', addByIdVolumePh:'Vol.', addByIdPagePh:'Page',
     cancel:'Cancel', close:'Close', expand:'Expand', collapse:'Collapse', fetchAdd:'Search', changelog:'Changelog', manual:'Manual',
+    imageViewer:'Enlarge image', zoomIn:'Zoom in', zoomOut:'Zoom out', zoomReset:'Fit to window', imageOpenNew:'Open in a new tab', imageViewerHint:'Scroll to zoom, drag to pan, double-click to toggle',
     startSub:'A reference manager',
+    bootChecking:'Checking for your last library…', bootRestoring:'Opening your last library',
+    bootStepRead:'Reading library.json', bootStepParse:'Checking the data', bootStepRender:'Preparing the view',
+    bootHint:'A large library can take a few seconds. Please wait.',
+    bootPick:'Choose a different folder',
     openFolder:'Open / create a library folder',
     openFolderSub:'Pick a folder. If it contains library.json it is loaded; otherwise a new library is created.',
     openLast:'Open the last library', changeFolder:'Change working folder',
@@ -734,8 +913,17 @@ const I18N = {
     doi:'DOI', arxiv:'arXiv ID', url:'URL', citekey:'Citation key', correspondingAuthors:'Corresponding authors', correspondingPickHint:'Selecting an author adds it automatically; type a name and press + for anyone not listed.', correspondingAddPh:'Select or type an author', correspondingEmpty:'None set', tagsField:'Tags (comma-separated)',
     imageSection:'Figure', imageEmpty:'Paste from the clipboard or choose a file to add an image', imagePaste:'Paste from clipboard', imagePasteHint:'You can also copy an image and press ⌘/Ctrl+V — no permission dialog.', imageFromFile:'Choose file', imageReplace:'Replace image', imageRemove:'Remove image', imageRemoveConfirm:'Remove this image?', imageSaved:'Image saved', imageNeedsLibrary:'Open a library folder first to store images', imageNotImage:'Please choose an image file', imageClipboardUnsupported:'This browser cannot read images from the clipboard. Choose a file instead', imageClipboardEmpty:'No image found on the clipboard', imageClipboardFailed:'Could not paste from the clipboard',
     abstract:'Abstract', notes:'Notes', attachments:'Attachments', info:'Paper info', organize:'Organize',
+    paneResizeHint:'Drag to resize · double-click to reset', colResizeHint:'Drag to resize the column · double-click to reset',
+    notesPlaceholder:'Write in Markdown. Paste or drop an image to add one',
+    notesHint:'Markdown is supported (**bold** / *italic* / # heading / - list / - [ ] checklist / > quote / | table |). Link another reference with [[citekey]]; pasted and dropped images are saved into attachments/.',
+    noteRefMissing:'No reference in this library has that citation key',
+    noteBacklinks:'Notes linking here', noteImageAdded:'Image added to the note',
+    mdBold:'Bold', mdItalic:'Italic', mdStrike:'Strikethrough', mdCode:'Code', mdHeading:'Heading', mdList:'Bullet list', mdTaskList:'Checklist', mdQuote:'Quote',
+    mdLink:'Link', mdImage:'Insert image', mdRefInsert:'Reference link [[citekey]]', mdTable:'Table', mdTableCol:'Column', mdPreview:'Preview',
     addPdf:'Attach PDF', openLink:'Open link', openAttachment:'Open', copyCite:'Copy citation', copyBib:'Copy BibTeX',
+    citLayout:'List style', citLayoutCard:'Cards (journal chip)', citLayoutCite:'Formatted citation',
     citationStyle:'Citation style', citationSettings:'Citation settings', authorScope:'Authors', authorScopeAll:'All authors', authorScopeFirst:'First author only', authorScopeCorresponding:'Corresponding only', includeTitle:'Include title', includeUrl:'Include URL',
+    citPageStyle:'Pages', citPageStyleFull:'Full range (13937–13945)', citPageStyleFirst:'First page only (13937)',
     citePreview:'Citation preview', citePreviewHint:'The citation that will be copied with the current settings', copy:'Copy',
     detailEdit:'Edit', detailEditHint:'Edit this reference', detailDisplaySettings:'Display settings', detailDisplaySettingsHint:'Choose which items appear and their order', detailSettingsHint:'Toggle each item, and drag ⋮⋮ (or use ↑↓) to reorder. Items with no data are hidden automatically.', detailNoData:'no data', detailMoveUp:'Move up', detailMoveDown:'Move down',
     refAuthors:'Authors', imageBorderToggle:'Show image border', authorOpenResearcher:(n)=>`Open researcher profile for ${n}`, authorCorresponding:'Corresponding author',
@@ -780,14 +968,27 @@ const I18N = {
     graphSharedRefs:(n)=>`${n} shared references`, graphDirectCites:'This paper cites the seed', graphDirectCitedBy:'The seed cites this paper',
     graphNearest:'Closest papers', graphStats:(n,e)=>`${n} papers / ${e} links`,
     graphCached:(d)=>`Cached (fetched ${d}, no API calls)`,
+    graphCancel:'Cancel',
+    storageCompacted:(mb)=>`Researcher photos were resized for display; library.json is ${mb} MB smaller`,
     graphPartial:(n)=>`Failed to fetch ${n} related papers (the map may be incomplete)`,
     researcherTree:'Academic Tree', researcherTreeAria:'Researcher genealogy built from PhD advising',
-    researcherTreeHint:'Hover a researcher or a relation line to see details',
+    researcherTreeHint:'Hover a relation line for details, or a researcher to highlight their connections',
     researcherTreeSource:'Built from advisors and career history in researcher profiles',
     researcherTreeOrientation:'Orientation', researcherTreeOrientationLabel:'Direction the genealogy runs in',
     researcherTreeOrientV:'Vertical', researcherTreeOrientH:'Horizontal',
     researcherTreeLayout:'Layout', researcherTreeLayoutLabel:'How researchers are arranged',
     researcherTreeLayoutGeneration:'Generation', researcherTreeLayoutPhdYear:'PhD year',
+    researcherTreeEdgeStyle:'Lines', researcherTreeEdgeStyleLabel:'How relation lines are drawn',
+    researcherTreeEdgeCurve:'Curved', researcherTreeEdgeOrtho:'Elbow',
+    researcherTreeDisplay:'Display', researcherTreeDisplayLabel:'How the tree is drawn',
+    researcherTreeShape:'Shape', researcherTreeShapeLabel:'Merge each researcher into one box, or draw every path separately',
+    researcherTreeShapeNote:'“Family tree” gives every path its own branch so no line crosses, but a researcher several paths lead to is drawn in several places',
+    researcherTreeShapeGraph:'Merged', researcherTreeShapeTree:'Family tree',
+    researcherTreeDupBadge:(n)=>`${n} places`,
+    researcherTreeDupNote:(n)=>`Drawn at ${n} places in this tree`,
+    researcherTreeStubNote:'Not expanded here — this line is drawn under their other box',
+    researcherTreeLegendDup:'Same researcher, several places (dashed: not expanded)',
+    researcherTreeTruncated:'Trimmed at the display limit — lower the depth',
     researcherTreeYearAxisHint:'Vertical axis shows PhD years; large gaps are compressed and lab / PI relations are dashed',
     researcherTreeYearUnknown:'PhD year unknown', researcherTreeYearOrderIssue:'Check PhD-year order',
     researcherTreeYearStats:(known,unknown)=>`PhD year known ${known} / unknown ${unknown}`,
@@ -797,8 +998,7 @@ const I18N = {
     researcherTreeKindPhd:'PhD advisor', researcherTreeKindPhdDown:'PhD advised',
     researcherTreeKindPosition:'PI of the host lab', researcherTreeKindPositionDown:'hosted in the lab',
     researcherTreeKindEducation:'Supervisor during studies', researcherTreeKindEducationDown:'supervised during studies',
-    researcherTreeUp:'Earlier generation', researcherTreeDown:'Later generation',
-    researcherTreeUnregistered:'Unregistered', researcherTreeNoRelations:'No relations recorded',
+    researcherTreeUnregistered:'Unregistered',
     researcherTreeNoSelection:'Select a researcher to show their genealogy.',
     researcherTreeEmpty:'No relations are recorded for this researcher in the selected scope. PhD advisors can be entered under Education in the researcher profile.',
     researcherTreeStats:(n,e)=>`${n} researchers / ${e} relations`,
@@ -812,11 +1012,11 @@ const I18N = {
     researcherMapSource:'Built from corresponding-author data in this library',
     researcherMapDepth:'Depth', researcherMapDepthLabel:'Collaboration depth from the center researcher', researcherMapDepthValue:(n)=>`${n}`,
     researcherMapStyle:'Circle', researcherMapStyleLabel:'Researcher circle style',
-    researcherMapStyleAurora:'Aurora (Style 1)', researcherMapStylePulse:'Pulse (Style 2)',
+    researcherMapStyleAurora:'Violet, static', researcherMapStylePulse:'Blue, slow pulse',
     researcherMapEdgeStyle:'Line', researcherMapEdgeStyleLabel:'Collaboration line type', researcherMapEdgeSolid:'Solid', researcherMapEdgeDashed:'Dashed',
     researcherMapSeedStyle:'Center', researcherMapSeedStyleLabel:'How to emphasize the center researcher',
-    researcherMapSeedDoubleGlow:'Double ring + Glow (Style 2)', researcherMapSeedPulseGlow:'Pulse + Glow (Style 1)',
-    researcherMapRouteStyle:'Flow appearance', researcherMapRouteStyleLabel:'Centerward flow appearance, selectable when dashed lines are chosen', researcherMapRouteFlow:'Style 1', researcherMapRouteFlowDepth:'Style 3', researcherMapRouteFlowSoft:'Style 4',
+    researcherMapSeedDoubleGlow:'Double ring, static', researcherMapSeedPulseGlow:'Pulsing halo',
+    researcherMapRouteStyle:'Flow appearance', researcherMapRouteStyleLabel:'Centerward flow appearance, selectable when dashed lines are chosen', researcherMapRouteFlow:'Single color', researcherMapRouteFlowDepth:'Color by depth', researcherMapRouteFlowSoft:'Soft and slow',
     researcherMapOpacity:'Color intensity', researcherMapOpacityLabel:'Researcher color intensity for each state', researcherMapOpacityDetail:'Details', researcherMapOpacityValue:(n)=>`${n}%`,
     researcherMapOpacityActive:'Selected researcher', researcherMapOpacityCenter:'Center researcher', researcherMapOpacityPath:'Researchers on the path to center', researcherMapOpacityNeighbor:'Depth 1 from selected', researcherMapOpacityOther:'Others',
     researcherMapDistance:(n)=>`${n} hop${n===1?'':'s'} from center`,
@@ -829,6 +1029,9 @@ const I18N = {
     researcherMapAliases:'Merged name variants', researcherMapOpenPaper:'Show in library',
     addedFromCite:'Added to library',
     searchTerms:'Search terms', searchMode:'Mode', searchField:'Field', fieldAll:'All', yearFrom:'Year from', yearTo:'Year to', clear:'Clear', apply:'Apply',
+    searchConditions:'Conditions', advAddCondition:'Add condition', advRemoveCondition:'Remove this condition', advValuePh:'Enter a search term',
+    opContains:'contains', opNotContains:'does not contain', opEquals:'is exactly', advFieldIds:'DOI / arXiv / cite key',
+    advHint:'A value is matched as one continuous string, so several words act as a phrase. Case and accents are ignored.',
     deleteItem:'Move to trash',
     confirmDelete:(t)=>`Move “${t}” to Trash?`,
     confirmTrashMulti:(n)=>`Move ${n} reference${n===1?'':'s'} to Trash?`,
@@ -861,22 +1064,42 @@ This cannot be undone.`,
     dupDoi:'An item with the same DOI already exists', copied:'Copied',
     imported:(n,s)=>`Imported ${n} item(s) (${s} duplicate(s) skipped)`,
     connectorImported:(n)=>`Imported ${n} item(s) from the browser extension`,
+    connectorImporting:(n,t)=>`Importing from the extension… ${n}/${t}`,
+    connectorEnriching:(n,t)=>`Fetching metadata… ${n}/${t}`,
+    connectorUnloadWarn:'An import from the browser extension is running. Leaving now leaves those items with incomplete metadata.',
+    connectorBusy:'An import from the browser extension is running. Please wait for it to finish',
     exported:(n)=>`Exported ${n} item(s)`,
     pdfAttached:'PDF attached', pdfAutoAttached:'Open Access PDF attached', attDeleted:'Attachment deleted',
     confirmDeleteAtt:(n)=>`Delete attachment “${n}”?`,
+    attRoleMain:'Main text', attRoleSI:'SI', attRoleOther:'Other',
+    attRoleDlgTitle:'Choose each PDF’s role',
+    attRoleDlgHint:'Pick which file is the main text and which is the SI (Supporting Information). They are stored as <citekey>.pdf and <citekey>_SI.pdf.',
+    attRoleOtherPh:'Label (e.g. correction)',
+    attRolePages:(n)=>`${n} pages`,
+    attRoleEvName:'from the file name',
+    attRoleEvText:'from the first page’s text',
+    attRoleEvWatermark:'from the download record',
+    attRoleEvNone:'could not tell',
+    attRoleMainTaken:(n)=>`“${n}” is the main text today. Choosing “Main text” here swaps them, and “${n}” becomes the SI.`,
+    attRoleSavedAsSi:(n)=>`Saved as SI: ${n}`,
+    attRoleRenamed:(a,b)=>`Renamed “${a}” to “${b}”`,
+    attRoleSwapped:'Swapped the main text and the SI',
+    attRoleRenameFail:'Could not rename the file',
+    attRoleNoLibrary:'Open a library first',
+    attRoleChangeTitle:'Change role',
     invalidId:'Could not recognize a DOI or arXiv ID',
     newItem:'(untitled)', libLoadFail:'Failed to load the library', invalidLibrary:'library.json has an invalid format. The current library was not changed.', saveFail:'Save failed', invalidExternalUrl:'This link cannot be opened safely',
     permDenied:'Folder access was not granted',
     demoWarn:'Trial mode: data will not be saved',
     typeNames:{article:'Journal article', preprint:'Preprint', book:'Book', chapter:'Book chapter', inproceedings:'Conference paper', thesis:'Thesis', report:'Report', web:'Web page', misc:'Misc'},
-    categoryNames:{article:'Article', communication:'Communication', review:'Review', minireview:'Minireview', perspective:'Perspective', account:'Account', highlight:'Highlight', editorial:'Editorial'}, categoryNone:'(none)',
+    categoryNames:{article:'Article', communication:'Communication', review:'Review', minireview:'Minireview', perspective:'Perspective', account:'Account', highlight:'Highlight', editorial:'Editorial'}, categoryNone:'None',
     changeFolderMenuTitle:'Switch / create library', openChangeFolder:'Open / change folder', newLibrary:'Create new library',
     newLibOverwriteConfirm:'This folder already contains a library.json. Overwrite it and create a new empty library? (Existing data will be lost.)',
     unsavedWarn:'There are unsaved changes.',
   },
 };
 Object.assign(I18N.ja, {
-  researcherRelated:'関連研究者', researcherRecordRelated:'この期間の関連研究者', researcherCareerHide:'この経歴を非表示にする', researcherCareerShow:'この経歴を表示する', researcherCareerHiddenBadge:'非表示', researcherDisplayHiddenCareer:'非表示の経歴も表示', researcherFamilyName:'姓', researcherGivenName:'名', researcherWikipedia:'Wikipedia', researcherSortLabel:'並び替え', researcherFilterLabel:'絞り込み', researcherFilterClearAll:'すべて解除', researcherLeaderboardMetric:'ランキング基準', researcherLeaderboardLibraryPapers:'ライブラリ内の文献数', researcherLeaderboardLibraryCitations:'ライブラリ内の被引用数', researcherLeaderboardExternalCitations:'外部プロフィールの総引用数', researcherLeaderboardHIndex:'外部プロフィールの h-index', researcherLeaderboardI10Index:'外部プロフィールの i10-index', researcherLeaderboardWorksCount:'外部プロフィールの文献数',
+  researcherRelated:'関連研究者', researcherRecordRelated:'この期間の関連研究者', researcherCareerHide:'この経歴を非表示にする', researcherCareerShow:'この経歴を表示する', researcherCareerHiddenBadge:'非表示', researcherDisplayHiddenCareer:'非表示の経歴も表示', researcherFamilyName:'姓', researcherGivenName:'名', researcherWikipedia:'Wikipedia', researcherSortLabel:'並び替え', researcherFilterLabel:'絞り込み', researcherFilterClearAll:'すべて解除', researcherLeaderboardMetric:'ランキング基準', researcherLeaderboardLibraryPapers:'ライブラリ内の文献数（責任著者）', researcherLeaderboardLibraryAllPapers:'ライブラリ内の文献数（共著を含む）', researcherLeaderboardLibraryCitations:'ライブラリ内の被引用数', researcherLeaderboardExternalCitations:'外部プロフィールの総引用数', researcherLeaderboardHIndex:'外部プロフィールの h-index', researcherLeaderboardI10Index:'外部プロフィールの i10-index', researcherLeaderboardWorksCount:'外部プロフィールの文献数',
   save:'保存',
   researcherEdit:'編集', researcherCreateProfile:'プロフィールを作成', researcherEditorBasic:'基本情報', researcherEditorAffiliations:'職歴', researcherEditorEducation:'学歴', researcherEditorResearch:'研究情報', researcherEditorProfiles:'外部プロフィール', researcherEditorImage:'画像', researcherEditorRelated:'関連研究者', researcherEditorDiscard:'未保存の変更があります。保存せず閉じますか？', researcherEditorAiPendingSave:'AIの回答が編集内容へ反映されていません。反映せずに保存しますか？', researcherEditorInvalidPeriod:'期間の終了年は開始年以降にしてください。', researcherPositionsLabel:'職歴', researcherEducationLabel:'学歴', researcherPositionTitle:'職位', researcherPositionOrganization:'部局・組織', researcherEducationProgram:'課程・専攻', researcherEducationDegree:'学位・修了内容', researcherAiMissingSource:'出典URLがない項目は読み込みませんでした。',
   researcherLinkedIn:'LinkedIn', researcherImageUrlOptional:'画像URL（任意）', researcherImageUrlHelp:'画像URLは、Web上にある画像のアドレスです。ファイル選択・貼り付けで設定した画像は、この端末に保存するため表示しません。', researcherImageStored:'ファイルまたはクリップボードから設定した画像', researcherImagePosition:'画像の調整', researcherImagePositionX:'横方向', researcherImagePositionY:'縦方向', researcherImageScale:'拡大', researcherImagePositionReset:'リセット', researcherImageFitWhole:'全体を表示', researcherImageFitFill:'枠を埋める', researcherImageCropHint:'ドラッグで位置を調整、スライダー／ホイールで拡大縮小できます。',
@@ -899,7 +1122,7 @@ Object.assign(I18N.ja, {
   researcherEnrichmentKeep:'現在値を保持', researcherEnrichmentUse:'取得値を採用', researcherEnrichmentUpdatedFrom:(s)=>`${s} の研究者情報を反映しました。`
 });
 Object.assign(I18N.en, {
-  researcherRelated:'Related researchers', researcherRecordRelated:'Related researchers (this period)', researcherCareerHide:'Hide this entry', researcherCareerShow:'Show this entry', researcherCareerHiddenBadge:'Hidden', researcherDisplayHiddenCareer:'Show hidden entries', researcherFamilyName:'Family name', researcherGivenName:'Given name', researcherWikipedia:'Wikipedia', researcherSortLabel:'Sort', researcherFilterLabel:'Filter', researcherFilterClearAll:'Clear all', researcherLeaderboardMetric:'Rank by', researcherLeaderboardLibraryPapers:'Library references', researcherLeaderboardLibraryCitations:'Citations of library references', researcherLeaderboardExternalCitations:'External-profile citations', researcherLeaderboardHIndex:'External-profile h-index', researcherLeaderboardI10Index:'External-profile i10-index', researcherLeaderboardWorksCount:'External-profile publications',
+  researcherRelated:'Related researchers', researcherRecordRelated:'Related researchers (this period)', researcherCareerHide:'Hide this entry', researcherCareerShow:'Show this entry', researcherCareerHiddenBadge:'Hidden', researcherDisplayHiddenCareer:'Show hidden entries', researcherFamilyName:'Family name', researcherGivenName:'Given name', researcherWikipedia:'Wikipedia', researcherSortLabel:'Sort', researcherFilterLabel:'Filter', researcherFilterClearAll:'Clear all', researcherLeaderboardMetric:'Rank by', researcherLeaderboardLibraryPapers:'Library references (corresponding)', researcherLeaderboardLibraryAllPapers:'Library references (incl. co-authored)', researcherLeaderboardLibraryCitations:'Citations of library references', researcherLeaderboardExternalCitations:'External-profile citations', researcherLeaderboardHIndex:'External-profile h-index', researcherLeaderboardI10Index:'External-profile i10-index', researcherLeaderboardWorksCount:'External-profile publications',
   save:'Save',
   researcherEdit:'Edit', researcherCreateProfile:'Create profile', researcherEditorBasic:'Basic information', researcherEditorAffiliations:'Career', researcherEditorEducation:'Education', researcherEditorResearch:'Research information', researcherEditorProfiles:'External profiles', researcherEditorImage:'Image', researcherEditorRelated:'Related researchers', researcherEditorDiscard:'You have unsaved changes. Close without saving?', researcherEditorAiPendingSave:'The AI response has not been applied to the draft. Save without applying it?', researcherEditorInvalidPeriod:'An end year must not be earlier than its start year.', researcherPositionsLabel:'Career', researcherEducationLabel:'Education', researcherPositionTitle:'Title', researcherPositionOrganization:'Department / organization', researcherEducationProgram:'Program / major', researcherEducationDegree:'Degree / completion', researcherAiMissingSource:'Items without source URLs were not imported.',
   researcherLinkedIn:'LinkedIn', researcherImageUrlOptional:'Image URL (optional)', researcherImageUrlHelp:'An image URL is the address of an image on the web. Images selected from a file or clipboard are stored on this device, so their internal data is not shown here.', researcherImageStored:'Image set from a file or clipboard', researcherImagePosition:'Image adjustment', researcherImagePositionX:'Horizontal', researcherImagePositionY:'Vertical', researcherImageScale:'Zoom', researcherImagePositionReset:'Reset', researcherImageFitWhole:'Fit whole', researcherImageFitFill:'Fill frame', researcherImageCropHint:'Drag to reposition; use the slider or wheel to zoom.',
@@ -922,12 +1145,12 @@ Object.assign(I18N.en, {
   researcherEnrichmentKeep:'Keep current', researcherEnrichmentUse:'Use retrieved', researcherEnrichmentUpdatedFrom:(s)=>`Applied researcher information from ${s}.`
 });
 Object.assign(I18N.ja, {
-  researcherPublications:'論文', researcherLibraryPapers:'ライブラリ内の文献', researcherOrcidWorksExpand:(n)=>`${n} 件のORCID登録文献を表示`, researcherCareer:'経歴', researcherCareerPosition:'職歴', researcherCareerEducation:'学歴', researcherCareerPhd:'PhD取得', researcherPhdInstitution:'PhD取得機関', researcherPhdDegree:'PhDの学位・分野', researcherDisplaySettings:'表示設定', researcherDisplaySources:'出典を表示', researcherDisplayCareerTypes:'経歴の種別を表示', researcherEditorAwards:'受賞歴', researcherFieldAdd:'追加', researcherFieldPlaceholder:'既存の研究分野を選択、または入力', researcherRelatedPlaceholder:'登録済み研究者を選択、または入力', researcherModified:'最終変更日', researcherDisplayPastInstitutions:'過去所属も表示', researcherHIndex:'h-index', researcherI10Index:'i10-index', researcherWorksCount:'外部プロフィールの論文数', researcherAge:(n)=>`${n}歳`, researcherAgeApprox:(n)=>`約${n}歳`, researcherAgeCol:'年齢', researcherDisplayReciprocalRelated:'逆方向の関係も表示', researcherRelatedReciprocalHint:'この研究者を「関係のある研究者」に登録している研究者',
+  researcherPublications:'論文', researcherLibraryPapers:'ライブラリ内の文献', researcherDisplayCoAuthored:'共著論文も表示', researcherOrcidWorksExpand:(n)=>`${n} 件のORCID登録文献を表示`, researcherCareer:'経歴', researcherCareerPosition:'職歴', researcherCareerEducation:'学歴', researcherCareerPhd:'PhD取得', researcherPhdInstitution:'PhD取得機関', researcherPhdDegree:'PhDの学位・分野', researcherDisplaySettings:'表示設定', researcherDisplaySources:'出典を表示', researcherDisplayCareerTypes:'経歴の種別を表示', researcherEditorAwards:'受賞歴', researcherFieldAdd:'追加', researcherFieldPlaceholder:'既存の研究分野を選択、または入力', researcherRelatedPlaceholder:'登録済み研究者を選択、または入力', researcherModified:'最終変更日', researcherDisplayPastInstitutions:'過去所属も表示', researcherHIndex:'h-index', researcherI10Index:'i10-index', researcherWorksCount:'外部プロフィールの論文数', researcherAge:(n)=>`${n}歳`, researcherAgeApprox:(n)=>`約${n}歳`, researcherAgeAtDeath:(n)=>`享年${n}`, researcherAgeAtDeathApprox:(n)=>`享年約${n}`, researcherAgeCol:'年齢', researcherDisplayReciprocalRelated:'逆方向の関係も表示', researcherRelatedReciprocalHint:'この研究者を「関係のある研究者」に登録している研究者',
   researcherDisplayAbbrev:'所属を略記して表示', affAbbrevEdit:'略記辞書を編集', affAbbrevTitle:'所属の略記辞書', affAbbrevIntro:'長い所属名を表示するときの略記ルールです。表示だけに使われ、検索・照合や保存データには影響しません。よく使う略記は登録済みで、自由に追加・編集・削除できます。', affAbbrevFrom:'元の語（完全形）', affAbbrevTo:'略記', affAbbrevAdd:'ルールを追加', affAbbrevReset:'既定に戻す', affAbbrevResetConfirm:'略記辞書を初期状態に戻しますか？ 追加・編集した内容は失われます。', affAbbrevEmpty:'ルールがありません。', affAbbrevDone:'完了',
   researcherEditorSourceEdit:'出典', researcherEditorSourceHide:'閉じる', researcherEditorSourcePh:'出典URL（1行に1つ）', researcherEditorSourceAdd:'出典を追加'
 });
 Object.assign(I18N.en, {
-  researcherPublications:'Publications', researcherLibraryPapers:'Library references', researcherOrcidWorksExpand:(n)=>`Show ${n} ORCID works`, researcherCareer:'Career', researcherCareerPosition:'Position', researcherCareerEducation:'Education', researcherCareerPhd:'PhD obtained', researcherPhdInstitution:'PhD institution', researcherPhdDegree:'PhD degree / field', researcherDisplaySettings:'Display settings', researcherDisplaySources:'Show sources', researcherDisplayCareerTypes:'Show career types', researcherEditorAwards:'Awards', researcherFieldAdd:'Add', researcherFieldPlaceholder:'Select an existing research field or enter a new one', researcherRelatedPlaceholder:'Select a registered researcher or enter a name', researcherModified:'Last modified', researcherDisplayPastInstitutions:'Show past institutions', researcherHIndex:'h-index', researcherI10Index:'i10-index', researcherWorksCount:'Profile publications', researcherAge:(n)=>`${n} years old`, researcherAgeApprox:(n)=>`~${n} years old`, researcherAgeCol:'Age', researcherDisplayReciprocalRelated:'Show reverse relationships', researcherRelatedReciprocalHint:'This researcher is listed as related by that researcher',
+  researcherPublications:'Publications', researcherLibraryPapers:'Library references', researcherDisplayCoAuthored:'Show co-authored papers', researcherOrcidWorksExpand:(n)=>`Show ${n} ORCID works`, researcherCareer:'Career', researcherCareerPosition:'Position', researcherCareerEducation:'Education', researcherCareerPhd:'PhD obtained', researcherPhdInstitution:'PhD institution', researcherPhdDegree:'PhD degree / field', researcherDisplaySettings:'Display settings', researcherDisplaySources:'Show sources', researcherDisplayCareerTypes:'Show career types', researcherEditorAwards:'Awards', researcherFieldAdd:'Add', researcherFieldPlaceholder:'Select an existing research field or enter a new one', researcherRelatedPlaceholder:'Select a registered researcher or enter a name', researcherModified:'Last modified', researcherDisplayPastInstitutions:'Show past institutions', researcherHIndex:'h-index', researcherI10Index:'i10-index', researcherWorksCount:'Profile publications', researcherAge:(n)=>`${n} years old`, researcherAgeApprox:(n)=>`~${n} years old`, researcherAgeAtDeath:(n)=>`aged ${n} at death`, researcherAgeAtDeathApprox:(n)=>`~${n} at death`, researcherAgeCol:'Age', researcherDisplayReciprocalRelated:'Show reverse relationships', researcherRelatedReciprocalHint:'This researcher is listed as related by that researcher',
   researcherDisplayAbbrev:'Abbreviate affiliations', affAbbrevEdit:'Edit abbreviations', affAbbrevTitle:'Affiliation abbreviations', affAbbrevIntro:'Rules for shortening long affiliation names on display. They affect display only — never search, matching, or stored data. Common abbreviations are preloaded; add, edit, or remove any of them.', affAbbrevFrom:'Full form', affAbbrevTo:'Abbreviation', affAbbrevAdd:'Add rule', affAbbrevReset:'Reset to defaults', affAbbrevResetConfirm:'Reset the abbreviation dictionary to its defaults? Your added and edited rules will be lost.', affAbbrevEmpty:'No rules yet.', affAbbrevDone:'Done',
   researcherEditorSourceEdit:'Sources', researcherEditorSourceHide:'Close', researcherEditorSourcePh:'Source URLs (one per line)', researcherEditorSourceAdd:'Add source'
 });
@@ -995,6 +1218,7 @@ function applyI18n(){
   document.getElementById('startLang').textContent = lang==='ja' ? 'EN' : '日本語';
   updateThemeButton();
   updateListViewButton();
+  applyCollWrapMode();   // title は状態で切り替わるので data-i18n-title に乗らない
   if(typeof updateGraphCitationControls === 'function') updateGraphCitationControls();
   if(typeof updateResearcherMapControls === 'function') updateResearcherMapControls();
   if(typeof researcherMapState !== 'undefined' && researcherMapState){
@@ -1033,6 +1257,24 @@ function toggleTheme(){
 ---------------------------------------------------------------- */
 const $ = (sel)=>document.querySelector(sel);
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+// Click handler for async actions (delete, trash, merge, network fetch…). The
+// button that was clicked is marked aria-busy until the handler settles, and a
+// second activation of that button in the meantime is dropped — before this,
+// a double click (or clicks queued behind a native confirm()) ran the action
+// twice. Buttons that finish instantly never show the busy style (it fades in
+// after 200 ms, see .isBusy in main.css).
+function busyClick(root, handler){
+  if(!root) return;
+  root.addEventListener('click', async (e)=>{
+    const btn = e.target.closest && e.target.closest('button,[role="button"],a[href]');
+    if(btn && btn.getAttribute('aria-busy')==='true'){ e.preventDefault(); e.stopPropagation(); return; }
+    const result = handler(e);
+    if(!btn || !result || typeof result.then!=='function') return;
+    btn.setAttribute('aria-busy', 'true'); btn.classList.add('isBusy');
+    try{ await result; }
+    finally{ btn.removeAttribute('aria-busy'); btn.classList.remove('isBusy'); }
+  });
+}
 function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
 function showToast(msg, isErr){
   const el = $('#toast');
@@ -1161,8 +1403,42 @@ function textAuthorsForTable(text){
   return tableAuthorsText(parseAuthorListText(text), '');
 }
 function normalizeRange(s){ return String(s||'').replace(/\s*[-–—]+\s*/g, '–'); }
+// 引用文に載せるページ表記。雑誌によっては「最初のページだけ」を書く流儀があるので、
+// 整形の直前にここで落とす。it.pages 自体はフルレンジのまま保つので、BibTeX/RIS/CSV の
+// 書き出しも検索も影響を受けない（表示だけの設定）。論文番号（2741 / e202301234）は
+// ダッシュを含まないのでそのまま返る。
+function citationPages(s, mode){
+  const v = normalizeRange(s);
+  return mode === 'first' ? (v.split('–')[0] || '').trim() : v;
+}
+// Journals that publish by article number (Nat. Commun., Sci. Rep., most
+// open-access titles, and Wiley's e-locators like e202301234) carry no page
+// range at all — the article number is what pins the paper down, and that is
+// what citation styles print in the page slot: Nat. Commun. 2023, 14, 2741.
+// So every ingest path funnels its page-ish fields through here, in order of
+// preference, and the first non-empty one becomes `pages`.
+function pickPages(){
+  for(let i=0; i<arguments.length; i++){
+    const v = normalizeRange(String(arguments[i] == null ? '' : arguments[i]).trim());
+    if(v) return v;
+  }
+  return '';
+}
+// Paperpile/RIS exports (and some publisher pages) carry the journal name with
+// its HTML entities intact — "ACS Applied Materials &amp; Interfaces". Decoding
+// here is what lets the built-in dictionary match; journalDisplay() decodes the
+// fallback so an unmapped name is not shown with the entity either.
+function decodeJournalEntities(s){
+  return String(s==null?'':s)
+    .replace(/&(?:amp|#38|#x26);/gi, '&')
+    .replace(/&(?:lt|#60|#x3c);/gi, '<')
+    .replace(/&(?:gt|#62|#x3e);/gi, '>')
+    .replace(/&(?:quot|#34|#x22);/gi, '"')
+    .replace(/&(?:apos|#39|#x27);/gi, "'")
+    .replace(/&(?:nbsp|#160|#xa0);/gi, ' ');
+}
 function normalizeJournalKey(s){
-  return String(s||'')
+  return decodeJournalEntities(s)
     .toLowerCase()
     .replace(/[–—-]/g, ' ')
     .replace(/&/g, 'and')
@@ -1207,6 +1483,7 @@ const JOURNAL_ABBR = new Map([
   ['nature synthesis','Nat. Synth.'],
   ['nature reviews chemistry','Nat. Rev. Chem.'],
   ['nature reviews materials','Nat. Rev. Mater.'],
+  ['nature reviews methods primers','Nat. Rev. Methods Primers'],
   ['communications chemistry','Commun. Chem.'],
   ['communications biology','Commun. Biol.'],
   ['communications materials','Commun. Mater.'],
@@ -1239,6 +1516,8 @@ const JOURNAL_ABBR = new Map([
   ['acs catalysis','ACS Catal.'],
   ['acs energy letters','ACS Energy Lett.'],
   ['acs materials letters','ACS Mater. Lett.'],
+  ['acs applied materials and interfaces','ACS Appl. Mater. Interfaces'],
+  ['acs appl mater interfaces','ACS Appl. Mater. Interfaces'],
   ['acs nano','ACS Nano'],
   ['nano letters','Nano Lett.'],
   ['chemistry of materials','Chem. Mater.'],
@@ -1287,6 +1566,11 @@ const JOURNAL_ABBR = new Map([
   ['advanced optical materials','Adv. Opt. Mater.'],
   ['advanced healthcare materials','Adv. Healthc. Mater.'],
   ['advanced sustainable systems','Adv. Sustainable Syst.'],
+  ['advanced synthesis and catalysis','Adv. Synth. Catal.'],
+  ['adv synth catal','Adv. Synth. Catal.'],
+  ['macromolecular chemistry and physics','Macromol. Chem. Phys.'],
+  ['macromol chem phys','Macromol. Chem. Phys.'],
+  ['materials basel','Materials'],
   ['chemistry an asian journal','Chem. Asian J.'],
   ['european journal of organic chemistry','Eur. J. Org. Chem.'],
   ['european journal of inorganic chemistry','Eur. J. Inorg. Chem.'],
@@ -1343,6 +1627,8 @@ const JOURNAL_ABBR = new Map([
   ['j macromol sci part a pure appl chem','J. Macromol. Sci. Part A'],
   ['journal of materials chemistry','J. Mater. Chem.'],
   ['j mater chem a mater energy sustain','J. Mater. Chem. A'],
+  ['j mater chem b mater biol med','J. Mater. Chem. B'],
+  ['j mater chem c mater opt electron devices','J. Mater. Chem. C'],
   ['journal of medicinal chemistry','J. Med. Chem.'],
   ['the journal of physical chemistry a','J. Phys. Chem. A'],
   ['journal of physical chemistry a','J. Phys. Chem. A'],
@@ -1363,7 +1649,80 @@ const JOURNAL_ABBR = new Map([
   ['structural chemistry','Struct. Chem.'],
   ['synthetic metals','Synth. Met.'],
   ['topics in current chemistry','Top. Curr. Chem.'],
-  ['top curr chem j','Top. Curr. Chem.'],]);
+  ['top curr chem j','Top. Curr. Chem.'],
+  ['chemical engineering journal','Chem. Eng. J.'],
+  ['chem eng j','Chem. Eng. J.'],
+  ['chinese chemical letters','Chin. Chem. Lett.'],
+  ['chin chem lett','Chin. Chem. Lett.'],
+  ['chinese journal of catalysis','Chin. J. Catal.'],
+  ['chin j catal','Chin. J. Catal.'],
+  ['chinese journal of polymer science','Chin. J. Polym. Sci.'],
+  ['chin j polym sci','Chin. J. Polym. Sci.'],
+  ['coordination chemistry reviews','Coord. Chem. Rev.'],
+  ['coord chem rev','Coord. Chem. Rev.'],
+  ['materials today chemistry','Mater. Today Chem.'],
+  ['mater today chem','Mater. Today Chem.'],
+  ['nat rev methods primers','Nat. Rev. Methods Primers'],
+  ['organic materials','Org. Mater.'],
+  ['org mater','Org. Mater.'],
+  ['results in chemistry','Results Chem.'],
+  ['results chem','Results Chem.'],
+  ['sensors and actuators b chemical','Sens. Actuators B Chem.'],
+  ['sens actuators b chem','Sens. Actuators B Chem.'],  // ---- 表記ゆれの統一（同じ雑誌が一覧・フィルタで 2 行に割れるのを防ぐ） ----
+  ['j chem soc chem commun','J. Chem. Soc., Chem. Commun.'],
+  ['journal of the chemical society chemical communications','J. Chem. Soc., Chem. Commun.'],
+  ['acta chemica scandinavica','Acta Chem. Scand.'],
+  ['acta chem scand','Acta Chem. Scand.'],
+  ['nanoscale advances','Nanoscale Adv.'],
+  ['nanoscale adv','Nanoscale Adv.'],
+  ['bulletin of the korean chemical society','Bull. Korean Chem. Soc.'],
+  ['bulletin korean chem soc','Bull. Korean Chem. Soc.'],
+  ['bull korean chem soc','Bull. Korean Chem. Soc.'],
+  ['progress in polymer science','Prog. Polym. Sci.'],
+  ['prog polym sci','Prog. Polym. Sci.'],
+  // ---- ピリオドが落ちた NLM 流の略称を正しい略称に寄せる ----
+  ['catalysis letters','Catal. Lett.'],
+  ['catal lett','Catal. Lett.'],
+  ['Monatshefte für Chemie - Chemical Monthly','Monatsh. Chem.'],
+  ['monatsh chem','Monatsh. Chem.'],
+  ['russian journal of organic chemistry','Russ. J. Org. Chem.'],
+  ['russ j org chem','Russ. J. Org. Chem.'],
+  ['npj quantum materials','npj Quantum Mater.'],
+  ['npj quant mater','npj Quantum Mater.'],
+  ['ccs chemistry','CCS Chem.'],
+  ['ccs chem','CCS Chem.'],
+  ['journal of heterocyclic chemistry','J. Heterocycl. Chem.'],
+  ['journal of heterocyclic chem','J. Heterocycl. Chem.'],
+  ['j heterocycl chem','J. Heterocycl. Chem.'],
+  ['journal of synthetic organic chemistry japan','J. Synth. Org. Chem., Jpn.'],
+  ['j synth org chem jpn','J. Synth. Org. Chem., Jpn.'],
+  // ---- フルネームのままだと ACS / Nature の引用で略されない誌 ----
+  ['dyes and pigments','Dyes Pigm.'],
+  ['dyes pigm','Dyes Pigm.'],
+  ['journal of hazardous materials','J. Hazard. Mater.'],
+  ['j hazard mater','J. Hazard. Mater.'],
+  ['israel journal of chemistry','Isr. J. Chem.'],
+  ['isr j chem','Isr. J. Chem.'],
+  ['chinese journal of structural chemistry','Chin. J. Struct. Chem.'],
+  ['chin j struct chem','Chin. J. Struct. Chem.'],
+  ['npg asia materials','NPG Asia Mater.'],
+  ['npg asia mater','NPG Asia Mater.'],
+  ['materials today communications','Mater. Today Commun.'],
+  ['mater today commun','Mater. Today Commun.'],
+  ['materials today proceedings','Mater. Today Proc.'],
+  ['mater today proc','Mater. Today Proc.'],
+  ['materials advances','Mater. Adv.'],
+  ['mater adv','Mater. Adv.'],
+  ['organic magnetic resonance','Org. Magn. Reson.'],
+  ['org magn reson','Org. Magn. Reson.'],
+  ['precision chemistry','Precis. Chem.'],
+  ['precis chem','Precis. Chem.'],
+  ['procedia computer science','Procedia Comput. Sci.'],
+  ['procedia comput sci','Procedia Comput. Sci.'],
+  ['synthetic communications','Synth. Commun.'],
+  ['synth commun','Synth. Commun.'],
+  ['heterocycles','Heterocycles'],
+]);
 const JOURNAL_ABBR_NORMALIZED = new Map(Array.from(JOURNAL_ABBR, ([k,v])=>[normalizeJournalKey(k), v]));
 const JOURNAL_FULL_NAMES = new Map([
   ['chemrxiv','ChemRxiv'],
@@ -1437,6 +1796,8 @@ const JOURNAL_FULL_NAMES = new Map([
   ['j comput chem','Journal of Computational Chemistry'],
   ['j mater chem','Journal of Materials Chemistry'],
   ['j mater chem a mater energy sustain','Journal of Materials Chemistry A'],
+  ['j mater chem b mater biol med','Journal of Materials Chemistry B'],
+  ['j mater chem c mater opt electron devices','Journal of Materials Chemistry C'],
   ['j med chem','Journal of Medicinal Chemistry'],
   ['j phys chem a','The Journal of Physical Chemistry A'],
   ['j phys chem b','The Journal of Physical Chemistry B'],
@@ -1474,10 +1835,14 @@ const JOURNAL_FULL_NAMES = new Map([
   ['acs mater lett','ACS Materials Letters'],
   ['acs nano','ACS Nano'],
   ['acs sens','ACS Sensors'],
+  ['acs appl mater interfaces','ACS Applied Materials & Interfaces'],
   ['adv energy mater','Advanced Energy Materials'],
   ['adv healthc mater','Advanced Healthcare Materials'],
   ['adv opt mater','Advanced Optical Materials'],
   ['adv sustainable syst','Advanced Sustainable Systems'],
+  ['adv synth catal','Advanced Synthesis & Catalysis'],
+  ['macromol chem phys','Macromolecular Chemistry and Physics'],
+  ['materials basel','Materials'],
   ['anal chem','Analytical Chemistry'],
   ['annu rev plant biol','Annual Review of Plant Biology'],
   ['biochemistry','Biochemistry'],
@@ -1557,6 +1922,42 @@ const JOURNAL_FULL_NAMES = new Map([
   ['tetrahedron','Tetrahedron'],
   ['trends chem','Trends in Chemistry'],
   ['wires comput mol sci','Wiley Interdisciplinary Reviews: Computational Molecular Science'],
+  ['chem eng j','Chemical Engineering Journal'],
+  ['chin chem lett','Chinese Chemical Letters'],
+  ['chin j catal','Chinese Journal of Catalysis'],
+  ['chin j polym sci','Chinese Journal of Polymer Science'],
+  ['coord chem rev','Coordination Chemistry Reviews'],
+  ['mater today chem','Materials Today Chemistry'],
+  ['nat rev methods primers','Nature Reviews Methods Primers'],
+  ['org mater','Organic Materials'],
+  ['results chem','Results in Chemistry'],
+  ['sens actuators b chem','Sensors and Actuators B: Chemical'],
+  // ---- 上で追加した略称に対応するフルネーム ----
+  ['j chem soc chem commun','Journal of the Chemical Society, Chemical Communications'],
+  ['acta chem scand','Acta Chemica Scandinavica'],
+  ['nanoscale adv','Nanoscale Advances'],
+  ['bull korean chem soc','Bulletin of the Korean Chemical Society'],
+  ['prog polym sci','Progress in Polymer Science'],
+  ['catal lett','Catalysis Letters'],
+  ['monatsh chem','Monatshefte für Chemie - Chemical Monthly'],
+  ['russ j org chem','Russian Journal of Organic Chemistry'],
+  ['npj quantum mater','npj Quantum Materials'],
+  ['ccs chem','CCS Chemistry'],
+  ['j heterocycl chem','Journal of Heterocyclic Chemistry'],
+  ['j synth org chem jpn','Journal of Synthetic Organic Chemistry, Japan'],
+  ['dyes pigm','Dyes and Pigments'],
+  ['j hazard mater','Journal of Hazardous Materials'],
+  ['isr j chem','Israel Journal of Chemistry'],
+  ['chin j struct chem','Chinese Journal of Structural Chemistry'],
+  ['npg asia mater','NPG Asia Materials'],
+  ['mater today commun','Materials Today Communications'],
+  ['mater today proc','Materials Today: Proceedings'],
+  ['mater adv','Materials Advances'],
+  ['org magn reson','Organic Magnetic Resonance'],
+  ['precis chem','Precision Chemistry'],
+  ['procedia comput sci','Procedia Computer Science'],
+  ['synth commun','Synthetic Communications'],
+  ['heterocycles','Heterocycles'],
 ]);
 const JOURNAL_FULL_NORMALIZED = new Map(Array.from(JOURNAL_FULL_NAMES, ([k,v])=>[normalizeJournalKey(k), v]));
 // User-defined journal dictionary, stored in library.json (lib.journalDict) so it
@@ -1580,6 +1981,17 @@ function rebuildUserJournalDict(){
 function mappedJournalAbbr(s){ const k = normalizeJournalKey(s); return userJournalAbbr.get(k) || JOURNAL_ABBR_NORMALIZED.get(k) || ''; }
 function mappedJournalFull(s){ const k = normalizeJournalKey(s); return userJournalFull.get(k) || JOURNAL_FULL_NORMALIZED.get(k) || ''; }
 function canonicalJournalAbbr(s){ return mappedJournalAbbr(s) || String(s || ''); }
+// 取り込み時に journalAbbr を正しい略称へ寄せる。表示側（journalDisplay）でも辞書は
+// 引くが、保存する値そのものを揃えておかないと CSV 書き出しや Word アドインに渡る
+// library.json に壊れた略称（"Nat Commun" / "Macro Chemistry &amp; Physics"）が残る。
+// **新しい取り込み経路を足したら必ずこれを通すこと。** ファイル取り込みは
+// finishImport() が、DOI 取得は crossrefMsgToItem() が入口。
+function applyCanonicalJournal(it){
+  if(!it || isMdpiChemistry(it)) return it;   // MDPI Chemistry の例外は据え置き
+  const canon = mappedJournalAbbr(it.journal) || mappedJournalAbbr(it.journalAbbr);
+  if(canon) it.journalAbbr = canon;
+  return it;
+}
 // The MDPI journal "Chemistry" (DOI 10.3390/chemistry…) collides with "Chemistry",
 // the informal registration of "Chemistry – A European Journal" (Chem. Eur. J.).
 // Only the DOI / publisher can tell them apart, so bare "Chemistry" is treated as
@@ -1593,8 +2005,23 @@ function isMdpiChemistry(item){
 function journalDisplay(item){
   const j = item.journal || '';
   // keep the bare-"Chemistry" → Chem. Eur. J. mapping from hijacking the MDPI journal
-  if(isMdpiChemistry(item)) return item.journalAbbr || j || 'Chemistry';
-  return mappedJournalAbbr(j) || mappedJournalAbbr(item.journalAbbr) || item.journalAbbr || j;
+  if(isMdpiChemistry(item)) return decodeJournalEntities(item.journalAbbr || j || 'Chemistry');
+  return mappedJournalAbbr(j) || mappedJournalAbbr(item.journalAbbr)
+    || decodeJournalEntities(item.journalAbbr || j);
+}
+// 雑誌名（略称）をチップにして、年・巻・ページをその右に並べる小さなメタ行。
+// 引用関係・論文相関図・研究者まわりで見た目を揃えるため、生成はここに集約する。
+// 雑誌名は必ず journalDisplay() を通すので、略称辞書（JOURNAL_ABBR / ユーザー辞書）が
+// そのまま効く。opts.detail:true で年のうしろに巻・ページも出す（引用関係のカード用）。
+function journalYearHtml(it, opts){
+  const chip = journalDisplay(it);
+  const year = String(it.year || '').trim();
+  const extra = (opts && opts.detail)
+    ? [String(it.volume || '').trim(), String(it.pages || '').trim()].filter(Boolean).join(', ')
+    : '';
+  return (chip ? `<span class="jChip">${esc(chip)}</span>` : '')
+    + (year ? `<span class="jYear">${esc(year)}</span>` : '')
+    + (extra ? `<span class="jVol">${esc(extra)}</span>` : '');
 }
 function isAngewEnglVariant(s){
   const k = normalizeJournalKey(s);
@@ -1614,6 +2041,62 @@ function isChemCommunCambVariant(s){
 function shouldUseCurrentAngew(item){
   const y = parseInt(item && item.year, 10);
   return !y || y >= 1998;
+}
+/* ---------- review detection (表示設定 → レビュー論文を色分け) ----------
+   A reference counts as a review when its 種類 (category) says so, or when it
+   ran in a journal that publishes nothing but reviews. Journal names are matched
+   on their normalizeJournalKey() form, and both `journal` and `journalAbbr` are
+   tried, so "Chemical Society Reviews" / "Chem. Soc. Rev." / "chem soc rev" all
+   hit the same entry.
+   Entries are explicit — never a "the name contains Rev" rule, which would drag
+   in Phys. Rev. Lett. and Phys. Rev. B. Only the Nature Reviews / Annual Review /
+   WIREs families, where every title in the family is a review journal, are
+   matched by prefix. */
+const REVIEW_JOURNAL_KEYS = new Set([
+  'chemical society reviews', 'chem soc rev',
+  'chemical reviews', 'chem rev',
+  'accounts of chemical research', 'acc chem res',
+  'accounts of materials research', 'acc mater res',
+  'coordination chemistry reviews', 'coord chem rev',
+  'progress in polymer science', 'prog polym sci',
+  'progress in materials science', 'prog mater sci',
+  'chemical record', 'chem rec',
+]);
+const REVIEW_JOURNAL_PREFIXES = [
+  'nature reviews ', 'nat rev ',
+  'annual review of ', 'annual reviews ', 'annu rev ',
+  'wiley interdisciplinary reviews ', 'wires ',
+];
+function isReviewJournalName(s){
+  const k = normalizeJournalKey(s);
+  if(!k) return false;
+  if(REVIEW_JOURNAL_KEYS.has(k)) return true;
+  return REVIEW_JOURNAL_PREFIXES.some(p => k.startsWith(p));
+}
+// 種類 values that count as a review. Perspective / Account are invited overviews
+// rather than reviews proper, so they are opt-in via a second 表示設定 checkbox.
+const REVIEW_CATEGORIES = ['review','minireview'];
+const REVIEW_CATEGORIES_WIDE = REVIEW_CATEGORIES.concat(['perspective','account']);
+// 表示設定 → レビュー論文を色分け. Off by default; the "wide" flag remembers the
+// Perspective / Account opt-in even while the highlight itself is off.
+let reviewMarkEnabled = localStorage.getItem('refshelf.reviewMark') === '1';
+let reviewMarkWide = localStorage.getItem('refshelf.reviewMarkWide') === '1';
+function saveReviewMarkPrefs(){
+  try{
+    localStorage.setItem('refshelf.reviewMark', reviewMarkEnabled ? '1' : '0');
+    localStorage.setItem('refshelf.reviewMarkWide', reviewMarkWide ? '1' : '0');
+  }catch(_e){}
+}
+function isReviewItem(it){
+  if(!it) return false;
+  const cats = reviewMarkWide ? REVIEW_CATEGORIES_WIDE : REVIEW_CATEGORIES;
+  if(it.category && cats.includes(it.category)) return true;
+  return isReviewJournalName(it.journal) || isReviewJournalName(it.journalAbbr);
+}
+// Class hook for the card-style views. Emitted only while the toggle is on, so
+// flipping it needs a re-render (renderList) but costs nothing when it is off.
+function reviewClassForItem(it){
+  return (reviewMarkEnabled && isReviewItem(it)) ? 'isReview' : '';
 }
 function fieldMatchesJournalFix(kind, value){
   if(kind === 'angew') return isAngewEnglVariant(value);
@@ -1726,6 +2209,32 @@ function normDoi(doi){
   if(!doi) return '';
   return doi.trim().replace(/^https?:\/\/(dx\.)?doi\.org\//i,'').replace(/^doi:\s*/i,'').toLowerCase();
 }
+// Wiley publishes Angewandte Chemie as two language editions that share one
+// article number: 10.1002/anie.X (International Edition) and 10.1002/ange.X
+// (the German edition). OpenAlex keeps them as two separate works with
+// different titles ("Confined Spaces in [n]Cyclo-2,7-pyrenylenes" vs
+// "Supramolekulare Bindungstaschen in …") and split cited-by counts (42 vs 4
+// for anie/ange.202102809), so neither DOI equality nor title matching sees
+// them as one paper — only the shared article number does. The International
+// Edition is the record to keep: it carries the citations, while the German one
+// only adds a second, wrongly tiny node to the paper map.
+const DOI_EDITION_RE = /^(10\.1002\/)(anie|ange)(\..+)$/;
+// The other edition's DOI, or '' when this DOI has no twin edition.
+function doiTwin(doi){
+  const m = normDoi(doi).match(DOI_EDITION_RE);
+  return m ? m[1] + (m[2]==='anie' ? 'ange' : 'anie') + m[3] : '';
+}
+// Shared identity for a twin pair: both editions map to the same key.
+function doiEditionKey(doi){
+  const d = normDoi(doi);
+  const m = d.match(DOI_EDITION_RE);
+  return m ? m[1] + 'anie' + m[3] : d;
+}
+// True for the edition that is hidden when both are present.
+function isSecondaryEditionDoi(doi){
+  const m = normDoi(doi).match(DOI_EDITION_RE);
+  return !!m && m[2]==='ange';
+}
 function stripTags(s){ const d = document.createElement('div'); d.innerHTML = s||''; return (d.textContent||'').replace(/\s+/g,' ').trim(); }
 function normTitle(s){
   return String(s||'')
@@ -1735,17 +2244,20 @@ function normTitle(s){
     .replace(/\s+/g,' ')
     .trim();
 }
+// Hoisted: the duplicate scan calls titleTokens once per library record, and
+// rebuilding this Set each time was most of its cost.
+const TITLE_STOPWORDS = new Set(['a','an','the','of','and','or','in','on','for','to','by','with','as','from','using','via']);
 function titleTokens(s){
-  const stop = new Set(['a','an','the','of','and','or','in','on','for','to','by','with','as','from','using','via']);
-  return normTitle(s).split(/\s+/).filter(w=>w.length>2 && !stop.has(w));
+  return normTitle(s).split(/\s+/).filter(w=>w.length>2 && !TITLE_STOPWORDS.has(w));
 }
-function tokenSimilarity(a, b){
-  const A = new Set(titleTokens(a)), B = new Set(titleTokens(b));
+function titleTokenSet(s){ return new Set(titleTokens(s)); }
+function tokenSetSimilarity(A, B){
   if(!A.size || !B.size) return 0;
   let hit = 0;
   A.forEach(w=>{ if(B.has(w)) hit++; });
   return hit / Math.max(A.size, B.size);
 }
+function tokenSimilarity(a, b){ return tokenSetSimilarity(titleTokenSet(a), titleTokenSet(b)); }
 function yearClose(a, b){
   const ya = parseInt(a && a.year, 10), yb = parseInt(b && b.year, 10);
   if(!ya || !yb) return true;
@@ -1760,13 +2272,19 @@ function duplicateReasonKey(reason){
 // duplicate" list so a dismissed pair stays hidden.
 function duplicatePairKey(idA, idB){ return [idA, idB].sort().join('|'); }
 function isDuplicatePairIgnored(idA, idB){
-  return Array.isArray(lib.ignoredDuplicates) && lib.ignoredDuplicates.includes(duplicatePairKey(idA, idB));
+  const list = lib.ignoredDuplicates;
+  // checked once per pair by the duplicate scan: skip the key's sort/join when
+  // there is nothing to look up, which is the usual case
+  if(!Array.isArray(list) || !list.length) return false;
+  return list.includes(duplicatePairKey(idA, idB));
 }
 function duplicateMatchesForItem(item, pool){
   const out = [];
   if(isItemTrashed(item)) return out; // trashed records are not duplicates of anything
   const doi = normDoi(item.doi);
   const nt = normTitle(item.title);
+  // tokenised once here instead of once per candidate inside tokenSimilarity
+  const tokens = nt.length >= 18 ? titleTokenSet(item.title) : null;
   for(const other of pool || []){
     if(!other || other.id===item.id) continue;
     if(isItemTrashed(other)) continue;            // skip trashed matches (e.g. just-deleted)
@@ -1783,8 +2301,11 @@ function duplicateMatchesForItem(item, pool){
       out.push({item, match:other, score:96, reason:'title'});
       continue;
     }
-    const sim = tokenSimilarity(item.title, other.title);
-    if(sim >= 0.86 && yearClose(item, other)){
+    // yearClose first: it is two parseInts, and it rejects most pairs before
+    // the far more expensive tokenisation runs
+    if(!yearClose(item, other)) continue;
+    const sim = tokenSetSimilarity(tokens, titleTokenSet(other.title));
+    if(sim >= 0.86){
       out.push({item, match:other, score:Math.round(sim * 100), reason:'similar'});
     }
   }
@@ -1938,7 +2459,7 @@ let researcherEditorAiState = {queryName:'',sourceUrls:'',jsonText:'',proposal:n
 let researcherDetailSettingsOpen = false;
 let researcherDetailPrefs;
 try{ researcherDetailPrefs=JSON.parse(localStorage.getItem('refshelf.researcherDetailPrefs')||'{}'); }catch(_e){ researcherDetailPrefs={}; }
-researcherDetailPrefs=Object.assign({sources:false,careerTypes:false,showHidden:false,reciprocalRelated:false},researcherDetailPrefs||{});
+researcherDetailPrefs=Object.assign({sources:false,careerTypes:false,showHidden:false,reciprocalRelated:false,coAuthored:false},researcherDetailPrefs||{});
 function saveResearcherDetailPrefs(){ try{ localStorage.setItem('refshelf.researcherDetailPrefs',JSON.stringify(researcherDetailPrefs)); }catch(_e){} }
 // Affiliation abbreviation dictionary — shortens long institution names on display
 // only (never affects search, matching, or stored data). Ships with common academic
@@ -1991,7 +2512,7 @@ function openAffAbbrevEditor(){
 // GLOBAL preference (shared by all references), stored in localStorage.
 let detailEditMode = false;
 let referenceDetailSettingsOpen = false;
-const REFERENCE_DETAIL_BLOCKS = ['image','authors','cite','abstract','attachments','organize','notes'];
+const REFERENCE_DETAIL_BLOCKS = ['image','authors','cite','abstract','attachments','organize','notes','backlinks'];
 function sanitizeReferenceOrder(order){
   const result = (Array.isArray(order)?order:[]).filter(k=>REFERENCE_DETAIL_BLOCKS.includes(k));
   // Insert any block missing from a saved order at its canonical position
@@ -2027,7 +2548,7 @@ let researcherListView = localStorage.getItem('refshelf.researcherListView') || 
 if(researcherListView==='cards') researcherListView='profile'; // legacy view renamed
 let researcherSortKey = 'name', researcherSortAsc = true;
 let researcherColumnFilters = {};
-const RESEARCHER_LEADERBOARD_METRICS=['papers','libraryCitations','citations','worksCount','hIndex','i10Index'];
+const RESEARCHER_LEADERBOARD_METRICS=['papers','allPapers','libraryCitations','citations','worksCount','hIndex','i10Index'];
 let researcherLeaderboardMetric=localStorage.getItem('refshelf.researcherLeaderboardMetric')||'citations';
 if(!RESEARCHER_LEADERBOARD_METRICS.includes(researcherLeaderboardMetric)) researcherLeaderboardMetric='citations';
 const RESEARCHER_COLUMN_KEYS=['name','image','institutions','birthDate','age','phdYear','homepage','googleScholar','researchGate','researchMap','papers','citations','hIndex','i10Index','worksCount','fields','related','added','modified','status'];
@@ -2053,9 +2574,12 @@ let multiSelectAnchorId = null;
 let selectedCollectionIds = new Set();
 let collectionSelectAnchorId = null;
 let collapsedCollectionIds = new Set();
+// コレクション名を折り返して全文を見せるか（既定: 折り返す）。深い階層では
+// 名前に使える幅が全角8文字ほどまで減り、1行では末尾が … で消えるため。
+let collWrapNames = localStorage.getItem('refshelf.collWrapNames') !== '0';
 let collectionsSectionCollapsed = true;
 let tagsSectionCollapsed = true;
-let filter = { query:'', coll:'all', tags:new Set(), cols:{}, advanced:{ terms:'', mode:'and', field:'all', yearFrom:'', yearTo:'' } };
+let filter = { query:'', coll:'all', collScope:'all', tags:new Set(), cols:{}, advanced:{ rows:[{field:'all', op:'contains', value:''}], mode:'and', yearFrom:'', yearTo:'' } };
 let sortKey = 'dateAdded', sortAsc = false;
 let dirty = false, saveTimer = null, saving = false;
 let changeVersion = 0, savedVersion = 0;
@@ -2124,7 +2648,7 @@ const COLUMN_DEFS = {
   title:   { i18n:'colTitle',   w:280, min:120, sortable:true,
              cell:(it)=>`<span class="itTitle">${esc(it.title)||esc(t('newItem'))}</span>`, tip:(it)=>it.title },
   notes:   { i18n:'notes',      w:220, min:100, sortable:true,
-             cell:(it)=>esc(String(it.notes||'').replace(/\s+/g, ' ').trim()), tip:(it)=>it.notes },
+             cell:(it)=>esc(stripMdCached(it.notes)), tip:(it)=>stripMdCached(it.notes) },
   authors: { i18n:'colAuthors', w:180, min:80,  sortable:true,
              cell:(it)=>esc(tableAuthorsText(it.authors, it.correspondingAuthors)), tip:(it)=>tableAuthorsText(it.authors, it.correspondingAuthors) },
   corresponding: { i18n:'correspondingAuthors', w:150, min:80, sortable:true,
@@ -2405,14 +2929,14 @@ function passesColFilters(it){
 let citationPrefs;
 try{ citationPrefs = JSON.parse(localStorage.getItem('refshelf.citationPrefs') || '{}'); }
 catch(e){ citationPrefs = {}; }
-citationPrefs = Object.assign({style:'acs', includeTitle:true, authorScope:'all', includeUrl:true}, citationPrefs);
+citationPrefs = Object.assign({style:'acs', includeTitle:true, authorScope:'all', includeUrl:true, pageStyle:'full'}, citationPrefs);
 
 // Independent citation format for the citations (references / cited-by) dialog,
 // kept separate from the detail-pane citation preview (citationPrefs).
 let citDialogPrefs;
 try{ citDialogPrefs = JSON.parse(localStorage.getItem('refshelf.citDialogPrefs') || '{}'); }
 catch(e){ citDialogPrefs = {}; }
-citDialogPrefs = Object.assign({style:'acs', includeTitle:true, authorScope:'all', includeUrl:false}, citDialogPrefs);
+citDialogPrefs = Object.assign({layout:'card', style:'acs', includeTitle:true, authorScope:'all', includeUrl:false, pageStyle:'full'}, citDialogPrefs);
 
 function updateSaveDot(){
   const el = $('#saveDot');
@@ -2422,17 +2946,29 @@ function updateSaveDot(){
   else if(dirty){ el.textContent = t('unsaved'); el.className='dirty'; }
   else { el.textContent = t('saved'); el.className=''; }
 }
-function touch(item){
+// Every save re-serializes the whole library and rewrites library.json, so the
+// debounce decides how often that happens. Typing pauses constantly, and a
+// 700 ms one fires between sentences — hence the longer wait for keystrokes,
+// bounded by SAVE_MAX_WAIT_MS so unsaved work is never left sitting for long.
+const SAVE_DEBOUNCE_MS = 700;
+const SAVE_TYPING_DEBOUNCE_MS = 2000;
+const SAVE_MAX_WAIT_MS = 8000;
+let saveDeadline = 0;
+function touch(item, opts){
   if(item) item.dateModified = new Date().toISOString();
   changeVersion++;
   dirty = true; updateSaveDot();
+  const now = Date.now();
+  if(!saveDeadline) saveDeadline = now + SAVE_MAX_WAIT_MS;
+  const base = (opts && opts.typing) ? SAVE_TYPING_DEBOUNCE_MS : SAVE_DEBOUNCE_MS;
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(saveNow, 700);
+  saveTimer = setTimeout(saveNow, Math.max(0, Math.min(base, saveDeadline - now)));
   connectorNotify();
 }
 async function saveNow(){
   clearTimeout(saveTimer);
   saveTimer = null;
+  saveDeadline = 0;
   if(!backend || backend.kind==='mem'){
     savedVersion = changeVersion;
     dirty = false;
@@ -2481,8 +3017,23 @@ async function ensureSavedBeforeSwitch(){
   }
   return true;
 }
+// Leaving the page: warn while there is unsaved data, a save is still being
+// written, or an update run is in progress (its results are only in memory).
+// A pending debounced save is started right away, so choosing "stay" — or the
+// few hundred ms before the page actually goes — gets it onto disk.
 window.addEventListener('beforeunload', (e)=>{
-  if(dirty && backend && backend.kind==='fs'){ e.preventDefault(); e.returnValue = t('unsavedWarn'); }
+  const fs = backend && backend.kind==='fs';
+  const busyJob = bulkJob; // declared further down; read only after the whole script has run
+  const importing = connectorJob; // same — the extension import run
+  if(!busyJob && !importing && !(fs && (dirty || saving))) return;
+  if(fs && dirty && saveTimer) saveNow();
+  e.preventDefault();
+  e.returnValue = t(busyJob ? 'bulkUnloadWarn' : importing ? 'connectorUnloadWarn' : 'unsavedWarn');
+});
+// Switching tabs / minimizing is often the step before closing: flush the
+// debounced save instead of leaving up to SAVE_MAX_WAIT_MS of edits in memory.
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState==='hidden' && dirty && saveTimer && backend && backend.kind==='fs') saveNow();
 });
 
 /* ---------------------------------------------------------------
@@ -2742,7 +3293,7 @@ function crossrefMsgToItem(msg){
     journal,
     journalAbbr: rawAbbr,
     year: dp[0] ? String(dp[0]) : '',
-    volume: msg.volume || '', issue: msg.issue || '', pages: normalizeRange(msg.page || msg['article-number'] || ''),
+    volume: msg.volume || '', issue: msg.issue || '', pages: pickPages(msg.page, msg['article-number']),
     publisher: msg.publisher || '',
     doi,
     url: msg.URL || (doi ? 'https://doi.org/' + doi : ''),
@@ -2750,13 +3301,7 @@ function crossrefMsgToItem(msg){
     correspondingAuthors: extractCorrespondingAuthors(msg),
   }));
   // CrossRef's short-container-title often drops periods (e.g. "Nat Commun").
-  // Prefer the canonical, period-correct abbreviation when we know it — but keep
-  // the MDPI journal *Chemistry* as-is (its bare name must not become "Chem. Eur. J.").
-  if(!isMdpiChemistry(it)){
-    const canon = mappedJournalAbbr(journal) || mappedJournalAbbr(rawAbbr);
-    if(canon) it.journalAbbr = canon;
-  }
-  return it;
+  return applyCanonicalJournal(it);
 }
 async function fetchCrossref(doi){
   const r = await fetch('https://api.crossref.org/works/' + encodeURIComponent(doi));
@@ -2850,11 +3395,20 @@ function oaCorrespondingAuthors(authorships){
     .map(a=>{ const n = oaAuthorName(a); return n.given ? `${n.family}, ${n.given}` : n.family; })
     .filter(Boolean).join('; ');
 }
+// OpenAlex records an article number as first_page == last_page (Nat. Commun.
+// 2741 arrives as 2741/2741), so collapsing the equal pair is what recovers it.
+function oaBiblioPages(w){
+  const bib = (w && w.biblio) || {};
+  if(!bib.first_page) return '';
+  return (bib.last_page && bib.last_page !== bib.first_page)
+    ? pickPages(`${bib.first_page}–${bib.last_page}`)
+    : pickPages(bib.first_page);
+}
 function openAlexToItem(w){
   const authors = (w.authorships||[]).map(oaAuthorName);
   const src = (w.primary_location && w.primary_location.source) || {};
   const bib = w.biblio || {};
-  const pages = bib.first_page ? (bib.last_page && bib.last_page!==bib.first_page ? `${bib.first_page}–${bib.last_page}` : bib.first_page) : '';
+  const pages = oaBiblioPages(w);
   const doi = normDoi(w.doi || '');
   const isArxiv = /arxiv/i.test(src.display_name||'') || /10\.48550\/arxiv/i.test(doi);
   return normalizeRepositoryPreprintItem(newItem({
@@ -2893,7 +3447,10 @@ async function autoEnrichOnAdd(it){
     // CrossRef often lacks a section label; OpenAlex may still classify reviews
     if(!it.category){ const c = detectCategoryFromLabel(w.type); if(c) it.category = c; }
     setItemUpdateState(it, 'ok');
-    touch(); renderList(); renderDetail();
+    // In-place cell patch, not renderList(): this runs once per freshly added
+    // item, and a full list render is ~46 ms at 1500 items — importing ten
+    // papers from the extension froze the UI for half a second.
+    touch(); refreshRowCells(it); renderDetailIfShown(it);
   }catch(e){
     setItemUpdateState(it, 'none'); // clears the running indicator; leave data as-is
   }
@@ -2918,7 +3475,10 @@ async function enrichCategory(it){
   let cat = '';
   if(it.doi){
     try{
-      const r = await fetch('https://api.crossref.org/works/' + encodeURIComponent(normDoi(it.doi)) + '?select=subtype,group-title');
+      // No ?select= here: CrossRef's /works/{doi} route rejects that parameter
+      // with HTTP 400, and subtype / group-title are not selectable on the list
+      // route either. The full record is small enough to just take whole.
+      const r = await fetch('https://api.crossref.org/works/' + encodeURIComponent(normDoi(it.doi)));
       if(r.ok) cat = crossrefCategory((await r.json()).message || {});
     }catch(e){ /* ignore — fall through to OpenAlex */ }
   }
@@ -2927,6 +3487,32 @@ async function enrichCategory(it){
     catch(e){ /* leave blank if OpenAlex has no record */ }
   }
   if(cat){ it.category = cat; return true; }
+  return false;
+}
+// Fill in a missing `pages` for an existing record. Article-number journals
+// (Nat. Commun., Sci. Rep., Angew.'s e-locators …) leave CrossRef's `page` empty
+// and put the identifier in `article-number`, so records imported from elsewhere
+// — or added before that fallback existed — end up with no page at all, which
+// makes the citation ambiguous. CrossRef first (it is the publisher's own
+// record), OpenAlex second. Only fills when empty: a manual value is never
+// overwritten. Best-effort/silent, same contract as enrichCategory.
+async function enrichPages(it){
+  if(!it || it.pages) return false;
+  let pages = '';
+  if(it.doi){
+    try{
+      const r = await fetch('https://api.crossref.org/works/' + encodeURIComponent(normDoi(it.doi)));
+      if(r.ok){
+        const msg = (await r.json()).message || {};
+        pages = pickPages(msg.page, msg['article-number']);
+      }
+    }catch(e){ /* ignore — fall through to OpenAlex */ }
+  }
+  if(!pages && (it.doi || it.arxiv)){
+    try{ pages = oaBiblioPages(await fetchOneOaByItem(it, 'doi,biblio')); }
+    catch(e){ /* leave blank if OpenAlex has no record either */ }
+  }
+  if(pages){ it.pages = pages; return true; }
   return false;
 }
 // A 429 from OpenAlex now means the daily budget is exhausted (resets at
@@ -3002,7 +3588,23 @@ function clearUpdateStates(){
 function nextFrame(){ return new Promise(r=>requestAnimationFrame(()=>r())); }
 // refresh only the cells that citation/corresponding updates touch, in place, so
 // data appears live during a refresh without the cost of a full renderList per item
-const LIVE_UPDATE_COLS = ['authors','corresponding','citedBy'];
+// (`category` is here because the same enrich pass fills the 種類 column too).
+const LIVE_UPDATE_COLS = ['authors','corresponding','citedBy','category'];
+// Rebuild the detail pane only when it is actually showing this item. Background
+// work (connector import, bulk enrich) used to call renderDetail() unconditionally,
+// which rebuilt the pane's innerHTML — losing the caret, focus and scroll position
+// of whatever the user was editing — to redraw a record that was not even on screen.
+function renderDetailIfShown(item){ if(item && item.id === selectedId) renderDetail(); }
+// Run `fn` over `list` with at most `limit` in flight. Firing every enrich at once
+// meant N parallel OpenAlex requests all landing (and re-rendering) at once.
+async function runPool(list, limit, fn){
+  const queue = list.slice();
+  const workers = [];
+  for(let i=0; i<Math.min(limit, queue.length); i++){
+    workers.push((async()=>{ while(queue.length) await fn(queue.shift()); })());
+  }
+  await Promise.all(workers);
+}
 function refreshRowCells(it){
   if(!it || !it.id) return;
   document.querySelectorAll('#itemRows tr' + dataIdSelector(it.id)).forEach(tr=>{
@@ -3138,6 +3740,7 @@ function renderFetchLog(){
 async function retryLogEntry(en){
   const it = lib.items.find(x=>x.id===en.itemId);
   if(!it) return;
+  if(bulkJob){ showToast(t('bulkBusy'), true); return; } // keep the entry until it can actually retry
   const idx = fetchLog.indexOf(en);
   if(idx>=0) fetchLog.splice(idx,1);
   updateFetchLogBadge();
@@ -3154,15 +3757,19 @@ $('#menuAlerts').addEventListener('click', (e)=>{
   if(d) d.open();
 });
 $('#btnLogClear').addEventListener('click', ()=>{ fetchLog.length = 0; updateFetchLogBadge(); renderFetchLog(); });
-$('#btnLogRetryAll').addEventListener('click', async ()=>{
+busyClick($('#btnLogRetryAll'), async ()=>{
   const citedIds = Array.from(new Set(fetchLog.filter(e=>e.kind!=='corresponding').map(e=>e.itemId).filter(Boolean)));
   const corrIds = Array.from(new Set(fetchLog.filter(e=>e.kind==='corresponding').map(e=>e.itemId).filter(Boolean)));
   const citedItems = citedIds.map(id=>lib.items.find(x=>x.id===id)).filter(Boolean);
   const corrItems = corrIds.map(id=>lib.items.find(x=>x.id===id)).filter(Boolean);
   if(!citedItems.length && !corrItems.length) return;
+  const lease = acquireBulkJob();
+  if(!lease) return;
   fetchLog.length = 0; updateFetchLogBadge();
-  if(citedItems.length) await refreshCitedByCounts(citedItems);
-  if(corrItems.length) await refreshCorrespondingAuthors(corrItems);
+  try{
+    if(citedItems.length) await refreshCitedByCounts(citedItems, {job:lease.job});
+    if(corrItems.length && !bulkStopped(lease.job)) await refreshCorrespondingAuthors(corrItems, {job:lease.job});
+  }finally{ releaseBulkJob(lease); }
   renderFetchLog();
 });
 $('#fetchLogBody').addEventListener('click', (e)=>{
@@ -3241,6 +3848,99 @@ async function fetchArxiv(id){
 }
 
 /* ---------------------------------------------------------------
+   LaTeX <-> Unicode
+   A .bib value is LaTeX: a bare "}" or "%" truncates the entry when it is
+   read back, and other managers hand us accents, Greek and sub/superscripts
+   as macros. Both directions live next to each other so the round trip
+   (import -> library -> export -> import) stays lossless.
+---------------------------------------------------------------- */
+// Structure-breaking / active characters, and the sentinel each one parks in
+// while the importer strips the *structural* braces and math delimiters.
+const LATEX_OUT = { '\\':'\\textbackslash{}', '{':'\\{', '}':'\\}', '$':'\\$',
+  '%':'\\%', '&':'\\&', '#':'\\#', '_':'\\_', '~':'\\textasciitilde{}', '^':'\\textasciicircum{}' };
+const LATEX_PARK = { '{':'\uE001', '}':'\uE002', '$':'\uE003', '%':'\uE004',
+  '&':'\uE005', '#':'\uE006', '_':'\uE007', '\\':'\uE000', '~':'\uE008', '^':'\uE009' };
+const LATEX_UNPARK_RE = /[\uE000-\uE009]/g;
+const LATEX_UNPARK = Object.fromEntries(Object.entries(LATEX_PARK).map(([ch,tok])=>[tok,ch]));
+
+const LATEX_ACCENTS = {  // command -> combining mark; NFC folds them onto the letter
+  "'":'\u0301', '`':'\u0300', '^':'\u0302', '"':'\u0308', '~':'\u0303', '=':'\u0304', '.':'\u0307',
+  u:'\u0306', v:'\u030C', H:'\u030B', c:'\u0327', k:'\u0328', r:'\u030A', b:'\u0331', d:'\u0323', t:'\u0361' };
+const LATEX_MACROS = {
+  // letters that are not just an accented base
+  ss:'ß', o:'ø', O:'Ø', ae:'æ', AE:'Æ', aa:'å', AA:'Å', l:'ł', L:'Ł', i:'ı', j:'ȷ',
+  oe:'œ', OE:'Œ', dh:'ð', DH:'Ð', th:'þ', TH:'Þ', ng:'ŋ', NG:'Ŋ', dj:'đ', DJ:'Đ',
+  // Greek — everywhere in chemistry titles as $\alpha$, $\beta$, ...
+  alpha:'α', beta:'β', gamma:'γ', delta:'δ', epsilon:'ε', varepsilon:'ε', zeta:'ζ', eta:'η',
+  theta:'θ', vartheta:'ϑ', iota:'ι', kappa:'κ', lambda:'λ', mu:'μ', nu:'ν', xi:'ξ',
+  pi:'π', varpi:'ϖ', rho:'ρ', varrho:'ϱ', sigma:'σ', varsigma:'ς', tau:'τ', upsilon:'υ',
+  phi:'φ', varphi:'φ', chi:'χ', psi:'ψ', omega:'ω',
+  Gamma:'Γ', Delta:'Δ', Theta:'Θ', Lambda:'Λ', Xi:'Ξ', Pi:'Π', Sigma:'Σ', Upsilon:'Υ', Phi:'Φ', Psi:'Ψ', Omega:'Ω',
+  // symbols
+  textmu:'µ', micro:'µ', textdegree:'°', degree:'°', textcelsius:'℃',
+  textendash:'–', textemdash:'—', textquotesingle:"'", textquotedblleft:'“', textquotedblright:'”',
+  textquoteleft:'‘', textquoteright:'’', textbullet:'•', textperiodcentered:'·', cdot:'·',
+  textpm:'±', pm:'±', mp:'∓', times:'×', div:'÷', textregistered:'®', textcopyright:'©',
+  copyright:'©', texttrademark:'™', textdagger:'†', textdaggerdbl:'‡', textsection:'§',
+  ldots:'…', dots:'…', textellipsis:'…', prime:'′', textprime:'′', infty:'∞',
+  leq:'≤', le:'≤', geq:'≥', ge:'≥', neq:'≠', ne:'≠', approx:'≈', sim:'∼', equiv:'≡', propto:'∝',
+  rightarrow:'→', to:'→', leftarrow:'←', gets:'←', leftrightarrow:'↔',
+  Rightarrow:'⇒', Leftarrow:'⇐', Leftrightarrow:'⇔', rightleftharpoons:'⇌',
+  langle:'⟨', rangle:'⟩', cdots:'⋯', ang:'Å', angstrom:'Å' };
+const LATEX_SUP = { '0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹',
+  '+':'⁺','-':'⁻','\u2212':'⁻','=':'⁼','(':'⁽',')':'⁾','n':'ⁿ','i':'ⁱ' };
+const LATEX_SUB = { '0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉',
+  '+':'₊','-':'₋','\u2212':'₋','=':'₌','(':'₍',')':'₎',
+  a:'ₐ', e:'ₑ', h:'ₕ', i:'ᵢ', j:'ⱼ', k:'ₖ', l:'ₗ', m:'ₘ', n:'ₙ', o:'ₒ', p:'ₚ',
+  r:'ᵣ', s:'ₛ', t:'ₜ', u:'ᵤ', v:'ᵥ', x:'ₓ' };
+// All-or-nothing: if one character has no Unicode script form, keep the run flat
+// rather than emitting a half-raised "H₂0".
+function latexScript(text, map){
+  const chars = Array.from(String(text));
+  const mapped = chars.map(c=>map[c]);
+  return (chars.length && mapped.every(c=>c!==undefined)) ? mapped.join('') : String(text);
+}
+function latexMath(x){
+  return String(x)
+    .replace(/\^\s*\{([^{}]*)\}/g, (m,v)=>latexScript(v, LATEX_SUP))
+    .replace(/\^\s*([A-Za-z0-9+\-])/g, (m,v)=>latexScript(v, LATEX_SUP))
+    .replace(/_\s*\{([^{}]*)\}/g, (m,v)=>latexScript(v, LATEX_SUB))
+    .replace(/_\s*([A-Za-z0-9+\-])/g, (m,v)=>latexScript(v, LATEX_SUB));
+}
+function latexDecode(v){
+  let s = String(v==null?'':v);
+  s = s.replace(/\\\\/g, ' ');                       // "\\" is a line break, not an escape
+  // the three that decode to characters our own later passes would eat again
+  s = s.replace(/\\text(backslash|asciitilde|asciicircum)\s*(?:\{\s*\})?/g,
+    (m,n)=> n==='backslash' ? LATEX_PARK['\\'] : n==='asciitilde' ? LATEX_PARK['~'] : LATEX_PARK['^']);
+  s = s.replace(/\\([{}$%&#_])/g, (m,c)=>LATEX_PARK[c]);
+  // explicit scripts first: \textsuperscript must not be mistaken for \textsc
+  s = s.replace(/\\textsuperscript\s*\{([^{}]*)\}/g, (m,x)=>latexScript(x, LATEX_SUP));
+  s = s.replace(/\\textsubscript\s*\{([^{}]*)\}/g, (m,x)=>latexScript(x, LATEX_SUB));
+  // font / chemistry wrappers: keep the argument, drop the command (innermost out)
+  for(let n=0; n<8; n++){
+    const before = s;
+    s = s.replace(/\\(?:text(?:it|bf|rm|sf|tt|sc|md|up|sl|normal)?|emph|mathrm|mathit|mathbf|mathsf|mathtt|mathnormal|ensuremath|ce|chem|mbox|hbox|MakeUppercase|MakeLowercase|uppercase|lowercase|bm|boldsymbol|mathchem)\s*\{([^{}]*)\}/g, '$1');
+    if(s===before) break;
+  }
+  s = s.replace(/\$([^$]*)\$/g, (m,x)=>latexMath(x));  // ^ and _ only mean scripts in math
+  // accents: \"o and \"{o} and (after the braces go) {\"o}
+  s = s.replace(/\\(['`^"~=.])\s*\{\s*([a-zA-Z])\s*\}/g, (m,a,ch)=>ch+LATEX_ACCENTS[a]);
+  s = s.replace(/\\(['`^"~=.])\s*([a-zA-Z])/g, (m,a,ch)=>ch+LATEX_ACCENTS[a]);
+  // letter accents only in their braced form, so \v{s} never eats \varepsilon
+  s = s.replace(/\\([bcdHkrtuv])\s*\{\s*([a-zA-Z])\s*\}/g, (m,a,ch)=>ch+LATEX_ACCENTS[a]);
+  // named macros; a control word swallows the whitespace after it, so "{\ss}chwer"
+  // and "\ss chwer" both come out as "ßchwer". Unknown commands still drop.
+  s = s.replace(/\\([a-zA-Z]+)\s*(?:\{\s*\})?\s*/g, (m,name)=>{
+    const hit = LATEX_MACROS[name];
+    return hit !== undefined ? hit : '';
+  });
+  return s.replace(/\$/g,'').replace(/[{}]/g,'')      // leftover math + grouping braces
+    .replace(LATEX_UNPARK_RE, tok=>LATEX_UNPARK[tok])
+    .normalize('NFC');
+}
+
+/* ---------------------------------------------------------------
    BibTeX
 ---------------------------------------------------------------- */
 const BIB_TYPE_OUT = { article:'article', preprint:'misc', book:'book', chapter:'incollection',
@@ -3249,32 +3949,41 @@ const BIB_TYPE_IN = { article:'article', book:'book', incollection:'chapter', in
   inproceedings:'inproceedings', conference:'inproceedings', phdthesis:'thesis', mastersthesis:'thesis',
   techreport:'report', misc:'misc', unpublished:'misc', online:'web', electronic:'web' };
 
-function bibEscape(s){ return String(s==null?'':s); }
+function bibEscape(s){ return String(s==null?'':s).replace(/[\\{}$%&#_~^]/g, c=>LATEX_OUT[c]); }
+// DOIs and URLs are read verbatim by every other tool, so only the characters
+// that would break out of the { } value are touched.
+function bibVerbatim(s){ return String(s==null?'':s).replace(/[\\{}]/g, c=>LATEX_OUT[c]); }
+// BibTeX styles lowercase title words unless they are brace-protected, which
+// turns "NaCl" into "nacl". Protect any word carrying a capital past its first
+// character (NaCl, DNA, pH, Pd(II)); the importer strips the braces again.
+function bibProtectCaps(s){
+  return String(s).replace(/\S+/g, w=> /[\\{}]/.test(w) || !/[A-Z]/.test(w.slice(1)) ? w : '{'+w+'}');
+}
+function bibPages(s){ return normalizeRange(s).replace(/–/g,'--'); }   // 1–10 -> 1--10
 function itemToBibTeX(item){
   const type = BIB_TYPE_OUT[item.type] || 'misc';
   const f = [];
   const add = (k,v)=>{ if(v) f.push(`  ${k} = {${bibEscape(v)}}`); };
-  add('title', item.title);
+  const addRaw = (k,v)=>{ if(v) f.push(`  ${k} = {${bibVerbatim(v)}}`); };
+  const addTitle = (k,v)=>{ if(v) f.push(`  ${k} = {${bibProtectCaps(bibEscape(v))}}`); };
+  addTitle('title', item.title);
   add('author', (item.authors||[]).map(a=>a.given ? `${a.family}, ${a.given}` : a.family).join(' and '));
-  if(item.type==='inproceedings' || item.type==='chapter') add('booktitle', item.journal);
+  if(item.type==='inproceedings' || item.type==='chapter') addTitle('booktitle', item.journal);
   else if(item.type!=='book') add('journal', item.journal);
-  add('year', item.year);
-  add('volume', item.volume);
-  add('number', item.issue);
-  add('pages', normalizeRange(item.pages));
+  addRaw('year', item.year);
+  addRaw('volume', item.volume);
+  addRaw('number', item.issue);
+  addRaw('pages', bibPages(item.pages));
   add('publisher', item.publisher);
-  add('doi', item.doi);
+  addRaw('doi', item.doi);
   add('correspondingauthor', item.correspondingAuthors);
-  if(item.arxiv){ add('eprint', item.arxiv); add('archiveprefix','arXiv'); }
-  add('url', item.url);
+  if(item.arxiv){ addRaw('eprint', item.arxiv); addRaw('archiveprefix','arXiv'); }
+  addRaw('url', item.url);
   if(item.tags && item.tags.length) add('keywords', item.tags.join(', '));
   return `@${type}{${item.citekey || genCitekey(item)},\n${f.join(',\n')}\n}\n`;
 }
 function cleanBibValue(v){
-  return v
-    .replace(/\\[a-zA-Z]+\s*/g,'')  // drop latex commands
-    .replace(/[{}]/g,'')
-    .replace(/\s+/g,' ').trim();
+  return latexDecode(v).replace(/\s+/g,' ').trim();
 }
 function parseBibTeX(text){
   const out = [];
@@ -3287,9 +3996,10 @@ function parseBibTeX(text){
     const etype = text.slice(at+1, j).toLowerCase();
     while(j < text.length && /\s/.test(text[j])) j++;
     if(text[j] !== '{'){ i = at + 1; continue; }
-    // find matching close brace
+    // find matching close brace ("\{" and "\}" are literal characters, not nesting)
     let depth = 1, k = j + 1;
     while(k < text.length && depth > 0){
+      if(text[k]==='\\'){ k += 2; continue; }
       if(text[k]==='{') depth++;
       else if(text[k]==='}') depth--;
       k++;
@@ -3316,6 +4026,7 @@ function parseBibTeX(text){
       if(body[q]==='{'){
         let d = 1, r = q + 1;
         while(r < body.length && d > 0){
+          if(body[r]==='\\'){ val += body.slice(r, r+2); r += 2; continue; }   // keep "\{" / "\}" whole
           if(body[r]==='{') d++;
           else if(body[r]==='}') d--;
           if(d>0) val += body[r];
@@ -3324,7 +4035,10 @@ function parseBibTeX(text){
         p = r;
       }else if(body[q]==='"'){
         let r = q + 1;
-        while(r < body.length && body[r] !== '"'){ val += body[r]; r++; }
+        while(r < body.length && body[r] !== '"'){
+          if(body[r]==='\\'){ val += body.slice(r, r+2); r += 2; continue; }
+          val += body[r]; r++;
+        }
         p = r + 1;
       }else{
         let r = q;
@@ -3347,7 +4061,9 @@ function parseBibTeX(text){
       journal: fields.journal || fields.booktitle || '',
       year: fields.year || '',
       volume: fields.volume || '', issue: fields.number || '',
-      pages: normalizeRange(fields.pages || ''), publisher: fields.publisher || fields.school || fields.institution || '',
+      // publisher .bib files put the article number in articleno / eid rather than pages
+      pages: pickPages(fields.pages, fields.articleno, fields['article-number'], fields.eid, fields.artnum),
+      publisher: fields.publisher || fields.school || fields.institution || '',
       doi: normDoi(fields.doi || ''), arxiv: fields.eprint || '',
       url: fields.url || '',
       abstract: fields.abstract || '',
@@ -3364,6 +4080,7 @@ function splitListField(s){
   return String(s||'').split(/[;|]/).map(x=>x.trim()).filter(Boolean);
 }
 function parseCsvRows(text){
+  text = stripCsvBom(text);
   const rows = [];
   let row = [], val = '', q = false;
   for(let i=0;i<text.length;i++){
@@ -3415,7 +4132,7 @@ function parsePaperpileCsv(text){
     journal: get(r,'Journal') || get(r,'Journal (full title)') || get(r,'Book title') || get(r,'Website name'),
     journalAbbr: get(r,'Journal'),
     year: (get(r,'Publication year').match(/\d{4}/)||[''])[0],
-    volume: get(r,'Volume'), issue: get(r,'Issue'), pages: normalizeRange(get(r,'Pages')),
+    volume: get(r,'Volume'), issue: get(r,'Issue'), pages: pickPages(get(r,'Pages'), get(r,'Article number'), get(r,'Article Number')),
     publisher: get(r,'Publisher'),
     doi: normDoi(get(r,'DOI')),
     url: splitListField(get(r,'URLs'))[0] || '',
@@ -3457,7 +4174,7 @@ function parsePaperpileJson(text){
     return arr.map(x=>newItem(Object.assign({}, x, {
       id: uid(),
       doi: normDoi(x.doi || ''),
-      pages: normalizeRange(x.pages || ''),
+      pages: pickPages(x.pages, x['article-number'], x.articleNumber, x.eid),
       tags: Array.isArray(x.tags) ? x.tags : splitListField(x.tags || ''),
       collections: Array.isArray(x.collections)
         ? x.collections.map(id => collPathById ? (collPathById.get(id) || '') : id).filter(Boolean)
@@ -3471,10 +4188,10 @@ function parsePaperpileJson(text){
     type: paperpileType(x.kind || x.pubtype),
     title: x.title || '',
     authors: paperpileAuthors(x.author || []),
-    journal: x.journal || x.journalfull || '',
-    journalAbbr: x.journal || '',
+    journal: stripTags(x.journal || x.journalfull || ''),
+    journalAbbr: stripTags(x.journal || ''),
     year: x.published && x.published.year ? String(x.published.year) : '',
-    volume: x.volume || '', issue: x.issue || x.number || '', pages: normalizeRange(x.pages || ''),
+    volume: x.volume || '', issue: x.issue || x.number || '', pages: pickPages(x.pages, x['article-number'], x.articleNumber, x.eid),
     publisher: x.publisher || '',
     doi: normDoi(x.doi || ''),
     url: Array.isArray(x.url) ? (x.url[0] || '') : (x.url || ''),
@@ -3661,20 +4378,22 @@ function itemToRIS(item){
 }
 function parseRIS(text){
   const out = [];
-  let cur = null, sp = '', ep = '';
+  // `an` holds an article number (C7 / M1) — used only when SP/EP are absent,
+  // which is how e-only journals export.
+  let cur = null, sp = '', ep = '', an = '';
   for(const rawLine of text.split(/\r?\n/)){
     const m = rawLine.match(/^([A-Z][A-Z0-9])\s{2}-\s?(.*)$/);
     if(!m) continue;
     const tag = m[1], val = m[2].trim();
     if(tag==='TY'){
       cur = newItem({ type: RIS_TYPE_IN[val] || 'misc', _importKeywords: [] });
-      sp = ''; ep = '';
+      sp = ''; ep = ''; an = '';
       continue;
     }
     if(!cur) continue;
     switch(tag){
       case 'ER':
-        cur.pages = sp ? (ep ? `${sp}–${ep}` : sp) : normalizeRange(cur.pages);
+        cur.pages = sp ? (ep ? `${sp}–${ep}` : sp) : pickPages(cur.pages, an);
         out.push(cur); cur = null; break;
       case 'AU': case 'A1': case 'A2': {
         if(val.includes(',')){ const p = val.split(','); cur.authors.push({family:p[0].trim(), given:p.slice(1).join(',').trim()}); }
@@ -3688,6 +4407,7 @@ function parseRIS(text){
       case 'IS': cur.issue = val; break;
       case 'SP': sp = val; break;
       case 'EP': ep = val; break;
+      case 'C7': case 'M1': an = an || val; break;   // article number (e-only journals)
       case 'PB': cur.publisher = val; break;
       case 'DO': cur.doi = normDoi(val); break;
       case 'UR': cur.url = cur.url || val; break;
@@ -3696,7 +4416,7 @@ function parseRIS(text){
       case 'AB': case 'N2': cur.abstract = cur.abstract || val; break;
     }
   }
-  if(cur){ cur.pages = sp ? (ep ? `${sp}–${ep}` : sp) : normalizeRange(cur.pages); out.push(cur); }
+  if(cur){ cur.pages = sp ? (ep ? `${sp}–${ep}` : sp) : pickPages(cur.pages, an); out.push(cur); }
   return out;
 }
 
@@ -3730,11 +4450,11 @@ function citationAuthorsHtml(item, opts){
   return esc(citationAuthors(item, opts)).replace(/\bet al\./g, '<i>et al.</i>');
 }
 function itemToCitation(item, opts){
-  opts = Object.assign({style:'acs', includeTitle:true, authorScope:'all', includeUrl:true}, opts || {});
+  opts = Object.assign({style:'acs', includeTitle:true, authorScope:'all', includeUrl:true, pageStyle:'full'}, opts || {});
   const style = citationStyleKey(opts.style);
   const auth = citationAuthors(item, opts);
   const journal = journalDisplay(item);
-  const pages = normalizeRange(item.pages);
+  const pages = citationPages(item.pages, opts.pageStyle);
   const title = opts.includeTitle && item.title ? item.title.replace(/\.?$/,'.') : '';
   let s = '';
   if(style==='nature'){
@@ -3788,12 +4508,12 @@ function itemToCitation(item, opts){
   return s;
 }
 function itemToCitationHtml(item, opts){
-  opts = Object.assign({style:'acs', includeTitle:true, authorScope:'all', includeUrl:true}, opts || {});
+  opts = Object.assign({style:'acs', includeTitle:true, authorScope:'all', includeUrl:true, pageStyle:'full'}, opts || {});
   const style = citationStyleKey(opts.style);
   const auth = citationAuthorsHtml(item, opts);
   const title = opts.includeTitle && item.title ? esc(item.title.replace(/\.?$/, '.')) : '';
   const journal = journalDisplay(item);
-  const pages = normalizeRange(item.pages);
+  const pages = citationPages(item.pages, opts.pageStyle);
   const j = journal ? `<i>${esc(journal)}</i>` : '';
   const y = item.year ? `<b>${esc(item.year)}</b>` : '';
   const vol = item.volume ? ((style==='nature' || style==='science') ? `<b>${esc(item.volume)}</b>` : `<i>${esc(item.volume)}</i>`) : '';
@@ -3886,6 +4606,7 @@ function currentNavState(){
   return {
     view: currentView,
     coll: filter.coll,
+    collScope: filter.collScope || 'all',
     tags: Array.from(filter.tags || []),
     selectedId,
     researcherId: selectedResearcherId,
@@ -3894,7 +4615,7 @@ function currentNavState(){
 }
 function navStatesEqual(a, b){
   if(!a || !b) return false;
-  if(a.view!==b.view || a.coll!==b.coll || a.selectedId!==b.selectedId
+  if(a.view!==b.view || a.coll!==b.coll || a.collScope!==b.collScope || a.selectedId!==b.selectedId
      || a.researcherId!==b.researcherId || a.researcherKey!==b.researcherKey) return false;
   if(a.tags.length!==b.tags.length) return false;
   for(const tg of a.tags){ if(!b.tags.includes(tg)) return false; }
@@ -3919,6 +4640,7 @@ function applyNav(entry){
   const reverse = { type:'nav', state: currentNavState() };
   currentView = s.view;
   if(validFilterCollectionId(s.coll)) filter.coll = s.coll;
+  filter.collScope = s.collScope || 'all';
   filter.tags = new Set(s.tags || []);
   selectedResearcherId = s.researcherId;
   selectedResearcherKey = s.researcherKey;
@@ -4125,11 +4847,71 @@ function restoreDraggedItems(ids, opts){
   });
   return changed;
 }
+/* ---------- advanced search: [field] [operator] [value] rows ----------
+   The dialog builds a list of rows; every non-empty row is one condition, and
+   all of them are joined by the single AND / OR chosen at the top. One global
+   joiner (rather than a per-row one) keeps the meaning unambiguous — mixed
+   AND / OR without parentheses reads differently to everyone. */
+// Accents are stripped on both sides, so López matches Lopez and Müller
+// matches Muller. The value is matched as one literal string, which makes a
+// multi-word value a phrase rather than a set of separate terms.
+function normalizeSearchText(s){
+  return String(s == null ? '' : s)
+    .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase().replace(/\s+/g, ' ').trim();
+}
+// Each field yields the LIST of values it holds, not one joined string. That
+// distinction is what makes 完全一致 usable: a journal carries both its full
+// name and its abbreviation, an item carries several authors or tags, and
+// "exactly Nature Communications" has to match one of those values rather than
+// all of them concatenated. 含む / 含まない still search the joined text.
+const ADV_FIELDS = [
+  {v:'all',           i18n:'fieldAll',             parts:(it)=>ADV_FIELDS.slice(1).reduce((acc,f)=>acc.concat(f.parts(it)), [])},
+  {v:'title',         i18n:'colTitle',             parts:(it)=>[it.title]},
+  {v:'authors',       i18n:'colAuthors',           parts:(it)=>(it.authors||[]).map(a=>`${a.family||''} ${a.given||''}`)},
+  {v:'corresponding', i18n:'correspondingAuthors', parts:(it)=>String(it.correspondingAuthors||'').split(';')},
+  {v:'journal',       i18n:'colJournal',           parts:(it)=>[it.journal, it.journalAbbr]},
+  {v:'abstract',      i18n:'abstract',             parts:(it)=>[it.abstract]},
+  {v:'notes',         i18n:'notes',                parts:(it)=>[it.notes]},
+  {v:'tags',          i18n:'tags',                 parts:(it)=>it.tags||[]},
+  {v:'collections',   i18n:'collections',          parts:(it)=>(it.collections||[]).map(id=>{
+                                                     const c = lib.collections.find(x=>x.id===id); return c ? c.name : '';
+                                                   })},
+  {v:'publisher',     i18n:'publisher',            parts:(it)=>[it.publisher]},
+  {v:'ids',           i18n:'advFieldIds',          parts:(it)=>[it.doi, it.arxiv, it.citekey]},
+];
+const ADV_OPS = ['contains','notContains','equals'];
+const ADV_OP_I18N = {contains:'opContains', notContains:'opNotContains', equals:'opEquals'};
+function advFieldDef(v){ return ADV_FIELDS.find(f=>f.v===v) || ADV_FIELDS[0]; }
+function advRowIsEmpty(row){ return !row || !String(row.value||'').trim(); }
+function newAdvRow(){ return {field:'all', op:'contains', value:''}; }
+function emptyAdvanced(){ return {rows:[newAdvRow()], mode:'and', yearFrom:'', yearTo:''}; }
+// Rows the user actually filled in. An empty value means "not set", so the
+// blank row that always sits at the bottom of the dialog never filters.
+function activeAdvRows(adv){
+  return ((adv && adv.rows) || []).filter(r=>!advRowIsEmpty(r));
+}
+function advRowMatches(it, row){
+  const needle = normalizeSearchText(row.value);
+  if(!needle) return true;
+  const parts = advFieldDef(row.field).parts(it).filter(Boolean);
+  if(row.op === 'equals') return parts.some(v=>normalizeSearchText(v) === needle);
+  const hit = normalizeSearchText(parts.join(' ')).includes(needle);
+  return row.op === 'notContains' ? !hit : hit;
+}
+// True when the advanced search is narrowing anything — used to tint the
+// "詳細検索" button, since the conditions are otherwise invisible once the
+// modal closes.
+function advancedSearchActive(){
+  const adv = filter.advanced || {};
+  return !!(activeAdvRows(adv).length || adv.yearFrom || adv.yearTo);
+}
 function visibleItems(){
   const q = filter.query.toLowerCase();
   const adv = filter.advanced || {};
-  const advTerms = String(adv.terms||'').toLowerCase().split(/\s+/).filter(Boolean);
-  const collIds = ['all','uncat','starred','myPublication','trash'].includes(filter.coll) ? [] : collectionWithDescendants(filter.coll);
+  const advRows = activeAdvRows(adv);
+  const collectionFilter = ['all','uncat','starred','myPublication','trash'].includes(filter.coll)
+    ? null : collectionScopeFilter(filter.coll, filter.collScope);
   return lib.items.filter(it=>{
     const isTrashed = isItemTrashed(it);
     if(filter.coll==='trash'){
@@ -4143,22 +4925,17 @@ function visibleItems(){
     if(filter.coll==='uncat'){ if(it.collections.length) return false; }
     else if(filter.coll==='starred'){ if(!it.starred) return false; }
     else if(filter.coll==='myPublication'){ if(!it.myPublication) return false; }
-    else if(filter.coll!=='all'){ if(!it.collections.some(id=>collIds.includes(id))) return false; }
+    else if(filter.coll!=='all' && !itemMatchesCollectionScope(it, collectionFilter)) return false;
     if(filter.coll!=='trash' && filter.tags.size){ for(const tg of filter.tags){ if(!it.tags.includes(tg)) return false; } }
     if(q){
       const hay = [it.title, (it.authors||[]).map(a=>a.family+' '+a.given).join(' '),
         it.journal, it.journalAbbr, it.correspondingAuthors, it.year, it.doi, it.arxiv, it.citekey, it.notes, (it.tags||[]).join(' ')].join(' ').toLowerCase();
       if(!hay.includes(q)) return false;
     }
-    if(filter.coll!=='trash' && advTerms.length){
-      const values = {
-        title: it.title,
-        authors: (it.authors||[]).map(a=>a.family+' '+a.given).join(' ') + ' ' + (it.correspondingAuthors||''),
-        journal: [it.journal, it.journalAbbr].join(' '),
-        notes: [it.notes, it.abstract, (it.tags||[]).join(' ')].join(' '),
-      };
-      const hay = String(adv.field==='all' ? Object.values(values).join(' ') + ' ' + [it.year,it.doi,it.arxiv,it.citekey].join(' ') : values[adv.field] || '').toLowerCase();
-      const ok = adv.mode==='or' ? advTerms.some(term=>hay.includes(term)) : advTerms.every(term=>hay.includes(term));
+    if(filter.coll!=='trash' && advRows.length){
+      const ok = adv.mode==='or'
+        ? advRows.some(row=>advRowMatches(it, row))
+        : advRows.every(row=>advRowMatches(it, row));
       if(!ok) return false;
     }
     const yr = parseInt(it.year, 10);
@@ -4200,7 +4977,10 @@ function visibleItems(){
 /* ---------------------------------------------------------------
    Rendering
 ---------------------------------------------------------------- */
-function renderAll(){ renderSidebar(); renderWorkspace(); connectorNotify(); }
+// opts.keepDetail — leave the detail pane alone. Background work (the extension
+// import) has to refresh the list, but rebuilding the detail pane's innerHTML
+// underneath someone who is editing a note throws away their caret and focus.
+function renderAll(opts){ renderSidebar(); renderWorkspace(opts); connectorNotify(); refreshGraphRegistration(); }
 
 /* ---------------------------------------------------------------
    Researcher directory
@@ -4305,6 +5085,55 @@ function researcherCorrespondingPapers(profile){
   if(!profile) return [];
   return lib.items.filter(it=>!isItemTrashed(it) && parseAuthorListText(it.correspondingAuthors).some(a=>researcherMatchesName(profile,researcherDisplayName(a))));
 }
+// Does a directory entry (registered profile or paper-derived) match a name?
+// Registered profiles use the stricter family+given match; unregistered entries
+// fall back to full-name key comparison against their known aliases.
+function researcherEntryMatchesName(entry, name){
+  if(!entry || !name) return false;
+  if(entry.profile) return researcherMatchesName(entry.profile, name);
+  const aliasKeys = new Set(Array.from(entry.aliases||[]).flatMap(a=>researcherNameKeys(a)));
+  return researcherNameKeys(name).some(k=>aliasKeys.has(k));
+}
+// Library papers where the researcher is a (non-corresponding) co-author. The
+// author list usually carries fuller given names than the corresponding-author
+// text, so match against it and exclude papers already counted as corresponding.
+function researcherCoAuthoredPapers(entry){
+  if(!entry) return [];
+  const corrIds = entry.paperIds || new Set();
+  return lib.items.filter(it=>!isItemTrashed(it) && !corrIds.has(it.id)
+    && (it.authors||[]).some(a=>researcherEntryMatchesName(entry, researcherDisplayName(a))));
+}
+// Corresponding + co-authored papers, for the leaderboard. Same matching rules as
+// researcherCoAuthoredPapers, but through a per-version author-name index so the
+// ranking does not rescan every item's author list once per researcher.
+let researcherAuthorIndexCache={version:-1,byFamily:null,byKey:null};
+function researcherAuthorIndex(){
+  if(researcherAuthorIndexCache.version===changeVersion) return researcherAuthorIndexCache;
+  const byFamily=new Map(), byKey=new Map();
+  lib.items.forEach(it=>{
+    if(isItemTrashed(it)) return;
+    (it.authors||[]).forEach(a=>{
+      const name=researcherDisplayName(a); if(!name) return;
+      const fam=researcherKey((parseAuthorListText(name)[0]||{}).family);
+      if(fam){ if(!byFamily.has(fam)) byFamily.set(fam,[]); byFamily.get(fam).push([it.id,name]); }
+      researcherNameKeys(name).forEach(k=>{ if(!byKey.has(k)) byKey.set(k,new Set()); byKey.get(k).add(it.id); });
+    });
+  });
+  researcherAuthorIndexCache={version:changeVersion,byFamily,byKey};
+  return researcherAuthorIndexCache;
+}
+function researcherAllPaperCount(entry){
+  if(!entry) return 0;
+  const idx=researcherAuthorIndex(), ids=new Set(entry.paperIds||[]), p=entry.profile;
+  const addKeys=keys=>keys.forEach(k=>(idx.byKey.get(k)||[]).forEach(id=>ids.add(id)));
+  if(p){
+    const parts=researcherProfileNameParts(p);
+    if(parts.family&&(parts.given||parts.middle)){
+      (idx.byFamily.get(researcherKey(parts.family))||[]).forEach(([id,name])=>{ if(!ids.has(id)&&researcherMatchesName(p,name)) ids.add(id); });
+    }else addKeys(researcherProfileKeys(p));
+  }else addKeys(new Set(Array.from(entry.aliases||[]).flatMap(a=>researcherNameKeys(a))));
+  return ids.size;
+}
 function researcherDirectoryEntries(){
   if(researcherDirectoryCache.version===changeVersion) return researcherDirectoryCache.entries;
   const generated=new Map();
@@ -4379,14 +5208,18 @@ function researcherExternalUrl(profile, type){
   if(type==='bluesky') return /^https?:\/\//i.test(raw) ? raw : `https://bsky.app/profile/${encodeURIComponent(raw.replace(/^@/,''))}`;
   return '';
 }
-function renderWorkspace(){
+function renderWorkspace(opts){
   commitNavState();
   const research=currentView==='researchers';
+  const keepDetail = !!(opts && opts.keepDetail);
   $('#listPane').hidden=research;
   $('#researcherPane').hidden=!research;
   if(typeof updateResearcherAddBar==='function') updateResearcherAddBar();
-  if(research){ renderResearcherList(); renderResearcherDetail(); }
-  else { renderList(); renderDetail(); }
+  // Leaving the researcher view must put the search box back to the plain keyword
+  // filter: renderResearcherList() is the only other caller, and it does not run here.
+  updateResearcherTreePicker();
+  if(research){ renderResearcherList(); if(!keepDetail) renderResearcherDetail(); }
+  else { renderList(); if(!keepDetail) renderDetail(); }
 }
 const RESEARCHER_COLUMNS={
   name:{label:'researcherColName',width:210}, image:{label:'researcherImage',width:66}, institutions:{label:'researcherInstitutions',width:230},
@@ -4517,7 +5350,7 @@ function knownInstitutionNames(){
 }
 function researcherSearchText(e){
   const p=e.profile||{}, ids=p.identifiers||{};
-  return [e.name,...e.aliases,p.affiliation,...researcherCurrentInstitutions(p),...researcherPastInstitutions(p),p.birthDate,p.phdYear,p.website,p.totalCitations,...researcherLines(p.researchFields),...researcherLines(p.relatedResearchers),...Object.values(ids)].join(' ').toLocaleLowerCase();
+  return [e.name,...e.aliases,p.affiliation,...researcherCurrentInstitutions(p),...researcherPastInstitutions(p),p.birthDate,p.deathDate,p.phdYear,p.website,p.totalCitations,...researcherLines(p.researchFields),...researcherLines(p.relatedResearchers),...Object.values(ids)].join(' ').toLocaleLowerCase();
 }
 function researcherColumnValue(e,key){
   const p=e.profile||{}, ids=p.identifiers||{};
@@ -4525,7 +5358,7 @@ function researcherColumnValue(e,key){
   if(key==='image') return p.imageUrl||'';
   if(key==='institutions') return [...researcherCurrentInstitutions(p),...researcherPastInstitutions(p)].join(' ');
   if(key==='birthDate') return p.birthDate||'';
-  if(key==='age'){ const info=researcherAgeInfo(p.birthDate); return info?info.age:''; }
+  if(key==='age'){ const info=researcherAgeInfo(p.birthDate,p.deathDate||undefined); return info?info.age:''; }
   if(key==='phdYear') return p.phdYear||'';
   if(key==='homepage') return p.website||'';
   if(key==='googleScholar') return ids.googleScholar||'';
@@ -4581,7 +5414,7 @@ function researcherCellHtml(e,key){
   if(key==='image') return p&&p.imageUrl?`<span class="researcherImageFrame"><img class="researcherImage" src="${esc(p.imageUrl)}" alt="" referrerpolicy="no-referrer"${researcherImagePositionStyle(p)}></span>`:'<span class="researcherMeta">—</span>';
   if(key==='institutions') return researcherInstitutionsHtml(p);
   if(key==='birthDate') return `<span class="researcherMeta">${esc(p&&p.birthDate||'—')}</span>`;
-  if(key==='age'){ const info=p&&researcherAgeInfo(p.birthDate); return `<span class="researcherCount">${info?esc((info.approx?'~':'')+info.age):'—'}</span>`; }
+  if(key==='age'){ const info=p&&researcherAgeInfo(p.birthDate,p.deathDate||undefined); return `<span class="researcherCount">${info?esc((info.approx?'~':'')+info.age+(p.deathDate?'†':'')):'—'}</span>`; }
   if(key==='phdYear') return `<span class="researcherCount">${esc(p&&p.phdYear||'—')}</span>`;
   if(key==='homepage') return researcherLinkHtml(p,'homepage',t('researcherHomepage'));
   if(key==='googleScholar') return researcherLinkHtml(p,'googleScholar','Google Scholar');
@@ -5010,7 +5843,7 @@ const RESEARCHER_TREE_KINDS={
   position: {label:'researcherTreeKindPosition',  down:'researcherTreeKindPositionDown',  soft:true},
   education:{label:'researcherTreeKindEducation', down:'researcherTreeKindEducationDown', soft:true},
 };
-let researcherTreeOrientation='v', researcherTreeScope='phd', researcherTreeDepth=3, researcherTreeLayoutMode='generation';
+let researcherTreeOrientation='v', researcherTreeScope='phd', researcherTreeDepth=3, researcherTreeLayoutMode='generation', researcherTreeEdgeStyle='curve', researcherTreeShape='graph';
 let researcherTreeState=null; // {g, egoId, layout}
 (function loadResearcherTreePrefs(){
   try{
@@ -5019,11 +5852,20 @@ let researcherTreeState=null; // {g, egoId, layout}
     if(p.scope==='phd'||p.scope==='all') researcherTreeScope=p.scope;
     if(Number.isFinite(+p.depth)) researcherTreeDepth=Math.max(1,Math.min(8,Math.round(+p.depth)));
     if(p.layout==='generation'||p.layout==='phdYear') researcherTreeLayoutMode=p.layout;
+    if(p.edgeStyle==='curve'||p.edgeStyle==='ortho') researcherTreeEdgeStyle=p.edgeStyle;
+    if(p.shape==='graph'||p.shape==='tree') researcherTreeShape=p.shape;
   }catch(e){}
 })();
 function saveResearcherTreePrefs(){
-  try{ localStorage.setItem(RESEARCHER_TREE_PREFS_KEY,JSON.stringify({orientation:researcherTreeOrientation,scope:researcherTreeScope,depth:researcherTreeDepth,layout:researcherTreeLayoutMode})); }catch(e){}
+  try{ localStorage.setItem(RESEARCHER_TREE_PREFS_KEY,JSON.stringify({orientation:researcherTreeOrientation,scope:researcherTreeScope,depth:researcherTreeDepth,layout:researcherTreeLayoutMode,edgeStyle:researcherTreeEdgeStyle,shape:researcherTreeShape})); }catch(e){}
 }
+// Elbow (family-tree) lines only make sense on the evenly spaced generation
+// layout: the chronological one has uneven rows and can run edges backwards.
+function researcherTreeOrtho(){ return researcherTreeEdgeStyle==='ortho' && researcherTreeLayoutMode==='generation'; }
+// The duplicating family-tree shape only has a meaning on the generation layout.
+function researcherTreeShaped(){ return researcherTreeShape==='tree' && researcherTreeLayoutMode==='generation'; }
+// An instance id in the family-tree shape maps back to the researcher it repeats.
+function treeRealId(id){ const st=researcherTreeState; return (st&&st.layout.inst&&st.layout.inst[id])||id; }
 function researcherTreePhdYear(node){
   const value=node&&node.entry&&node.entry.profile&&node.entry.profile.phdYear;
   const year=Number(String(value||'').match(/^\d{4}$/)?.[0]);
@@ -5090,7 +5932,10 @@ function researcherTreeEgoId(g){
   degree.forEach((n,id)=>{ const node=g.nodes.get(id); if(node&&!node.ghost&&n>bestN){ best=id; bestN=n; } });
   return best || [...g.nodes.keys()][0] || null;
 }
-const RESEARCHER_TREE_NW=184, RESEARCHER_TREE_NH=40;
+// Box size, and the gutter left between two boxes sitting alongside each other. The
+// box is a fixed width whatever the name is, so the gutter is only part of what reads
+// as the distance between two researchers — the rest is unused room inside the boxes.
+const RESEARCHER_TREE_NW=168, RESEARCHER_TREE_NH=40, RESEARCHER_TREE_BOX_GAP=16;
 // Layered DAG layout: depth-limited component -> generation per node -> order inside
 // each layer (barycentre sweeps) -> coordinates relaxed toward neighbours.
 function researcherTreeLayout(g, egoId){
@@ -5138,7 +5983,7 @@ function researcherTreeLayout(g, egoId){
     });
   }
   const vertical=researcherTreeOrientation==='v';
-  const crossGap = vertical ? RESEARCHER_TREE_NW+26 : RESEARCHER_TREE_NH+16;
+  const crossGap = (vertical ? RESEARCHER_TREE_NW : RESEARCHER_TREE_NH)+RESEARCHER_TREE_BOX_GAP;
   const layerGap = vertical ? RESEARCHER_TREE_NH+62 : RESEARCHER_TREE_NW+86;
   const co={};
   rows.forEach(row=>row.forEach((id,i)=>co[id]=i*crossGap));
@@ -5153,6 +5998,31 @@ function researcherTreeLayout(g, egoId){
       for(let i=row.length-2;i>=0;i--) co[row[i]]=Math.min(co[row[i]], co[row[i+1]]-crossGap);
     });
   }
+  // Elbow lines expose an off-centre parent as a visibly crooked stem, so pull each
+  // parent to the middle of the children it alone advised (and slide such a sibling
+  // block back under its parent), re-applying the row spacing after every nudge.
+  if(researcherTreeOrtho()){
+    const solo=id=>(down[id]||[]).filter(k=>(up[k]||[]).length===1&&layer[k]===layer[id]+1);
+    const mid=list=>(Math.min(...list.map(k=>co[k]))+Math.max(...list.map(k=>co[k])))/2;
+    const settle=n=>{
+      const row=rows.get(n); if(!row) return;
+      for(let i=1;i<row.length;i++) co[row[i]]=Math.max(co[row[i]], co[row[i-1]]+crossGap);
+      for(let i=row.length-2;i>=0;i--) co[row[i]]=Math.min(co[row[i]], co[row[i+1]]-crossGap);
+    };
+    for(let s=0;s<16;s++){
+      [...nums].reverse().forEach(n=>{
+        rows.get(n).forEach(id=>{ const kids=solo(id); if(kids.length) co[id]=mid(kids); });
+        settle(n);
+      });
+      nums.forEach(n=>{
+        rows.get(n).forEach(id=>{
+          const kids=solo(id); if(!kids.length) return;
+          const shift=co[id]-mid(kids); kids.forEach(k=>co[k]+=shift);
+        });
+        settle(n+1);
+      });
+    }
+  }
   const pos={};
   ids.forEach(id=>{ const main=layer[id]*layerGap;
     pos[id]= vertical ? {x:co[id], y:main} : {x:main, y:co[id]}; });
@@ -5161,6 +6031,102 @@ function researcherTreeLayout(g, egoId){
   const ox=pad-Math.min(...xs), oy=pad-Math.min(...ys);
   ids.forEach(i=>{ pos[i].x+=ox; pos[i].y+=oy; });
   return {ids, rels, pos, layer,
+    W:Math.max(...xs)-Math.min(...xs)+pad*2, H:Math.max(...ys)-Math.min(...ys)+pad*2};
+}
+/* ---- family-tree shape (academictree.org style) ---------------------------------
+   The genealogy is re-expanded into a strict tree: every path away from the centre
+   researcher gets its own column, and a column is exactly as wide as the columns it
+   contains. Sibling branches therefore own disjoint bands of the canvas, so no two
+   crossbars can share space and no line can cross another — the guarantee comes from
+   the containment, not from any routing.
+   The price is the graph information: a researcher two paths lead to is DRAWN TWICE,
+   marked as a repeat, instead of the two lines meeting at one box. That merge is
+   exactly what makes overlaps possible in the default shape, so the two cannot be
+   had at once. */
+const RESEARCHER_TREE_MAX_NODES=600;
+function researcherTreeSpanLayout(g, egoId){
+  const parents={}, children={}, bySig=new Map();
+  g.rels.forEach(r=>{ (parents[r.sub]=parents[r.sub]||[]).push(r.sup); (children[r.sup]=children[r.sup]||[]).push(r.sub); bySig.set(r.sup+' '+r.sub,r); });
+  const vertical=researcherTreeOrientation==='v';
+  const crossGap=(vertical?RESEARCHER_TREE_NW:RESEARCHER_TREE_NH)+RESEARCHER_TREE_BOX_GAP;
+  const layerGap=vertical?RESEARCHER_TREE_NH+62:RESEARCHER_TREE_NW+86;
+  const byName=(a,b)=>String(g.nodes.get(a).name).localeCompare(String(g.nodes.get(b).name),lang==='ja'?'ja':'en');
+  const inst={[egoId]:egoId}, count={[egoId]:1}, ids=[egoId], depth={[egoId]:0}, rels=[], busKey=[], stubs={};
+  const newInst=real=>{
+    const n=count[real]=(count[real]||0)+1;
+    const id=n===1?real:real+'\u0000'+n;
+    inst[id]=real; ids.push(id); return id;
+  };
+  /* One walk per direction. A researcher reachable two ways still gets a box on each
+     path — that repeat is what this shape trades the merged join for — but only ONE of
+     those boxes grows a subtree: the copy nearest the centre researcher. Expanding both
+     would duplicate their whole line of descendants, and, because the depth limit counts
+     along each path, could even cut the two copies at different generations, so the same
+     person appeared to have advised different people in different corners of the figure.
+     The copies that stay closed are drawn dashed.
+     Packing is per generation, not per branch: a branch reserves room only in the rows
+     it actually reaches, so a childless researcher can sit alongside the descendants of
+     the sibling above them instead of below the whole block. `next` is the first free
+     slot in each generation; a parent that lands left of it drags its branch right. */
+  const half=(step,sign)=>{
+    // shortest distance from the centre researcher — it picks the copy that expands
+    const minD={[egoId]:0};
+    for(let frontier=[egoId], d=0; frontier.length&&d<researcherTreeDepth; d++){
+      const ahead=[];
+      frontier.forEach(id=>(step[id]||[]).forEach(x=>{
+        if(g.nodes.has(x)&&minD[x]==null){ minD[x]=d+1; ahead.push(x); }
+      }));
+      frontier=ahead;
+    }
+    const expanded=new Set();
+    const cross={}, next={}, kidsOf={};
+    const shiftBranch=(id,d,delta)=>{
+      cross[id]+=delta;
+      next[d]=Math.max(next[d]||0, cross[id]+crossGap);
+      (kidsOf[id]||[]).forEach(k=>shiftBranch(k,d+1,delta));
+    };
+    const rec=(real,id,d,path)=>{
+      depth[id]=sign*d;
+      const reachable=(d>=researcherTreeDepth||ids.length>=RESEARCHER_TREE_MAX_NODES)?[]
+        :(step[real]||[]).filter(x=>g.nodes.has(x)&&!path.has(x));
+      const grow=minD[real]===d&&!expanded.has(real);
+      if(grow) expanded.add(real);
+      else if(reachable.length) stubs[id]=true;
+      const kids=grow?reachable.slice().sort(byName):[];
+      const kidIds=kids.map(k=>{
+        const kid=newInst(k);
+        path.add(k); rec(k,kid,d+1,path); path.delete(k);
+        const src=(sign<0?bySig.get(k+' '+real):bySig.get(real+' '+k))||{kinds:[]};
+        rels.push(Object.assign({},src, sign<0?{sup:kid,sub:id}:{sup:id,sub:kid}));
+        busKey.push(id); // every line into one box hangs off that box's own crossbar
+        return kid;
+      });
+      kidsOf[id]=kidIds;
+      const floor=next[d]||0;
+      let x=kidIds.length?(cross[kidIds[0]]+cross[kidIds[kidIds.length-1]])/2:floor;
+      if(kidIds.length&&x<floor){ kidIds.forEach(k=>shiftBranch(k,d+1,floor-x)); x=floor; }
+      cross[id]=x;
+      next[d]=Math.max(floor, x+crossGap);
+    };
+    rec(egoId,egoId,0,new Set([egoId]));
+    return cross;
+  };
+  const down=half(children,1), up=half(parents,-1);
+  const shift=down[egoId]-up[egoId];
+  const cross=Object.assign({}, Object.fromEntries(Object.entries(up).map(([k,v])=>[k,v+shift])), down);
+  const pos={}, layer={};
+  ids.forEach(id=>{ layer[id]=depth[id];
+    const main=depth[id]*layerGap;
+    pos[id]=vertical?{x:cross[id],y:main}:{x:main,y:cross[id]}; });
+  const pad=Math.max(RESEARCHER_TREE_NW,RESEARCHER_TREE_NH)/2+22;
+  const xs=ids.map(i=>pos[i].x), ys=ids.map(i=>pos[i].y);
+  const ox=pad-Math.min(...xs), oy=pad-Math.min(...ys);
+  ids.forEach(i=>{ pos[i].x+=ox; pos[i].y+=oy; });
+  const repeats={}; ids.forEach(i=>{ if(count[inst[i]]>1) repeats[inst[i]]=count[inst[i]]; });
+  // repeating every path can multiply out on a dense genealogy, so the walk stops at a
+  // ceiling — say so rather than quietly dropping branches
+  return {ids, rels, pos, layer, inst, busKey, repeats, stubs, truncated:ids.length>=RESEARCHER_TREE_MAX_NODES,
+    people:new Set(ids.map(i=>inst[i])).size,
     W:Math.max(...xs)-Math.min(...xs)+pad*2, H:Math.max(...ys)-Math.min(...ys)+pad*2};
 }
 // Chronological alternative to the generation layout. Calendar order is preserved,
@@ -5204,7 +6170,7 @@ function researcherTreePhdYearLayout(g, egoId){
       row.sort((a,b)=>bary(a)-bary(b)||initial.get(a)-initial.get(b));
     });
   }
-  const crossGap=RESEARCHER_TREE_NW+26, co={};
+  const crossGap=RESEARCHER_TREE_NW+RESEARCHER_TREE_BOX_GAP, co={};
   rows.forEach(row=>row.forEach((id,i)=>co[id]=i*crossGap));
   for(let s=0;s<48;s++){
     keys.forEach(key=>{
@@ -5250,45 +6216,92 @@ function researcherTreeEdgePath(a,b, chronological){
   const x1=a.x+NW/2, x2=b.x-NW/2, m=(x1+x2)/2;
   return `M${x1},${a.y} C${m},${a.y} ${m},${b.y} ${x2},${b.y}`;
 }
-function researcherTreeNodeHtml(node, p, egoId){
-  const cls=['rTreeNode']; if(node.id===egoId) cls.push('ego'); if(node.ghost) cls.push('ghost');
+/* Family-tree routing: a parent drops into a horizontal "bus" that every child it
+   advised hangs off. Each relation still gets its own <path> (hover and tooltips are
+   indexed per relation) — the paths simply overlap along the shared bus, which is what
+   produces the single stem-and-crossbar of a printed genealogy. */
+const RESEARCHER_TREE_BUS_R=9, RESEARCHER_TREE_BUS_STAGGER=8;
+function researcherTreeBuses(layout){
+  const vertical=researcherTreeOrientation==='v';
+  const half=vertical?RESEARCHER_TREE_NH/2:RESEARCHER_TREE_NW/2;
+  const mainOf=id=>vertical?layout.pos[id].y:layout.pos[id].x;
+  const crossOf=id=>vertical?layout.pos[id].x:layout.pos[id].y;
+  // In the merged shape every line off one advisor shares a crossbar; in the family-tree
+  // shape the box each branch belongs to owns the crossbar, so the advisors of one
+  // researcher meet on a bar above them exactly like a printed genealogy.
+  // Keyed by corridor as well as by box: in the family-tree shape the centre researcher
+  // owns a bar on both sides of itself (its advisors above, its advisees below), and
+  // merging those two into one group put the bar in the middle of the box itself.
+  const groups=new Map();
+  layout.rels.forEach((r,i)=>{
+    if(!layout.pos[r.sup]||!layout.pos[r.sub]) return;
+    // an edge that skips a generation would run straight through the row in between,
+    // so it keeps the curve rather than joining a bus
+    if(layout.layer[r.sub]-layout.layer[r.sup]!==1) return;
+    const node=layout.busKey?layout.busKey[i]:r.sup, row=layout.layer[r.sup];
+    const key=node+'\u0000'+row;
+    if(!groups.has(key)) groups.set(key,{node,row,edges:[]});
+    groups.get(key).edges.push(i);
+  });
+  const keys=[...groups.values()].sort((a,b)=>a.row-b.row||crossOf(a.node)-crossOf(b.node));
+  const lanes=new Map(), out=new Map();
+  keys.forEach(({node:id,row,edges})=>{
+    const crosses=[crossOf(id),...edges.flatMap(k=>[crossOf(layout.rels[k].sup),crossOf(layout.rels[k].sub)])];
+    const lo=Math.min(...crosses), hi=Math.max(...crosses);
+    // Two crossbars in one corridor would otherwise land on the very same line, where
+    // neither can be told apart, so a bar steps aside where spans actually overlap (the
+    // family-tree shape never overlaps, so there every bar stays centred). Only ever one
+    // step either way, though, and only when the corridor has the room: a bar shoved far
+    // off centre reads as a mistake, which is worse than two bars sharing a line — those
+    // stay separable because hovering one repaints it on top.
+    if(!lanes.has(row)) lanes.set(row,[]);
+    const lane=lanes.get(row);
+    const start=Math.max(...edges.map(k=>mainOf(layout.rels[k].sup)))+half;
+    const end=Math.min(...edges.map(k=>mainOf(layout.rels[k].sub)))-half;
+    const room=(end-start)/2-RESEARCHER_TREE_BUS_R;
+    const offsets=room>=RESEARCHER_TREE_BUS_STAGGER
+      ? [0,RESEARCHER_TREE_BUS_STAGGER,-RESEARCHER_TREE_BUS_STAGGER] : [0];
+    let slot=offsets.findIndex((o,i)=>!lane[i]||!lane[i].some(span=>lo<span.hi+12&&hi>span.lo-12));
+    if(slot<0) slot=0;
+    (lane[slot]=lane[slot]||[]).push({lo,hi});
+    const bus=start+(end-start)/2+offsets[slot];
+    edges.forEach(k=>out.set(k,bus));
+  });
+  return out;
+}
+function researcherTreeElbowPath(a,b,bus){
+  const vertical=researcherTreeOrientation==='v';
+  const half=vertical?RESEARCHER_TREE_NH/2:RESEARCHER_TREE_NW/2;
+  const q=v=>Math.round(v*10)/10;
+  // main = the axis generations run along, cross = the axis a row spreads along
+  const P=(main,cross)=>vertical?`${q(cross)},${q(main)}`:`${q(main)},${q(cross)}`;
+  const m1=(vertical?a.y:a.x)+half, m2=(vertical?b.y:b.x)-half;
+  const c1=vertical?a.x:a.y, c2=vertical?b.x:b.y;
+  if(!(m2-m1>2)||Math.abs(c2-c1)<1.5) return `M${P(m1,c1)} L${P(m2,c2)}`;
+  const inset=Math.min(RESEARCHER_TREE_BUS_R,(m2-m1)/2);
+  const bm=Math.min(m2-inset,Math.max(m1+inset,bus));
+  const s=c2>c1?1:-1, r=Math.max(0,Math.min(RESEARCHER_TREE_BUS_R,Math.abs(c2-c1)/2,bm-m1,m2-bm));
+  return `M${P(m1,c1)} L${P(bm-r,c1)} Q${P(bm,c1)} ${P(bm,c1+s*r)} L${P(bm,c2-s*r)} Q${P(bm,c2)} ${P(bm+r,c2)} L${P(m2,c2)}`;
+}
+function researcherTreeNodeHtml(node, p, egoId, instId){
+  const st=researcherTreeState, id=instId||node.id;
+  const copies=(st&&st.layout.repeats&&st.layout.repeats[node.id])||0;
+  const cls=['rTreeNode']; if(id===egoId) cls.push('ego'); if(node.ghost) cls.push('ghost'); if(copies) cls.push('dup');
+  const stub=!!(st&&st.layout.stubs&&st.layout.stubs[id]); if(stub) cls.push('stub');
   const avatar = node.ghost
     ? `<span class="rAvatar rAvatarInit rAvS rTreeGhostAv">?</span>`
     : researcherAvatarHTML(node.entry,'rAvS');
   const year=researcherTreeLayoutMode==='phdYear'?researcherTreePhdYear(node):null;
   const subText=node.ghost?t('researcherTreeUnregistered'):year?`PhD ${year}`:researcherTreeLayoutMode==='phdYear'?t('researcherTreeYearUnknown'):'';
   const sub=subText?`<span class="rTreeSub">${esc(subText)}</span>`:'';
-  return `<div class="${cls.join(' ')}" style="left:${Math.round(p.x-RESEARCHER_TREE_NW/2)}px; top:${Math.round(p.y-RESEARCHER_TREE_NH/2)}px" data-tree-node="${esc(node.id)}">
-    ${avatar}<span class="rTreeLabel"><span class="rTreeName">${esc(node.name)}</span>${sub}</span></div>`;
-}
-function researcherTreeRelationLines(id, dir){
-  const st=researcherTreeState; if(!st) return [];
-  return (st.layout.rels||[])
-    .filter(r=>dir==='up'?r.sub===id:r.sup===id)
-    .map(r=>{
-      const other=st.g.nodes.get(dir==='up'?r.sup:r.sub);
-      const reasons=r.kinds.map(k=>{
-        const label=esc(t(RESEARCHER_TREE_KINDS[k.kind][dir==='up'?'label':'down']));
-        return k.detail?`${label}<span class="rTreeTipNote">${esc(k.detail)}</span>`:label;
-      });
-      return `<div class="rTreeTipRow"><b>${esc(other?other.name:'')}</b> — ${reasons.join(' / ')}</div>`;
-    });
-}
-function researcherTreeNodeTipHtml(id){
-  const st=researcherTreeState; if(!st) return '';
-  const node=st.g.nodes.get(id); if(!node) return '';
-  const ups=researcherTreeRelationLines(id,'up'), downs=researcherTreeRelationLines(id,'down');
-  const year=researcherTreeLayoutMode==='phdYear'?researcherTreePhdYear(node):null;
-  let h=`<div class="rTreeTipTitle">${esc(node.name)}${node.ghost?` <span class="rTreeTipGhost">${esc(t('researcherTreeUnregistered'))}</span>`:''}</div>`;
-  if(researcherTreeLayoutMode==='phdYear') h+=`<div class="rTreeTipRow"><b>${esc(t('researcherPhdYear'))}</b> — ${esc(year||t('researcherTreeYearUnknown'))}</div>`;
-  if(ups.length) h+=`<div class="rTreeTipHead">${esc(t('researcherTreeUp'))}</div>${ups.join('')}`;
-  if(downs.length) h+=`<div class="rTreeTipHead">${esc(t('researcherTreeDown'))}</div>${downs.join('')}`;
-  if(!ups.length&&!downs.length) h+=`<div class="rTreeTipHead">${esc(t('researcherTreeNoRelations'))}</div>`;
-  return h;
+  const mark=copies?`<span class="rTreeDupMark" title="${esc(I18N[lang].researcherTreeDupNote(copies))}">${esc(I18N[lang].researcherTreeDupBadge(copies))}</span>`:'';
+  const stubTip=stub?` title="${esc(t('researcherTreeStubNote'))}"`:'';
+  return `<div class="${cls.join(' ')}" style="left:${Math.round(p.x-RESEARCHER_TREE_NW/2)}px; top:${Math.round(p.y-RESEARCHER_TREE_NH/2)}px" data-tree-node="${esc(id)}"${stubTip}>
+    ${avatar}<span class="rTreeLabel"><span class="rTreeName">${esc(node.name)}</span>${sub}</span>${mark}</div>`;
 }
 function researcherTreeEdgeTipHtml(rel){
   const st=researcherTreeState; if(!st||!rel) return '';
-  const A=st.g.nodes.get(rel.sup), B=st.g.nodes.get(rel.sub);
+  const A=st.g.nodes.get(treeRealId(rel.sup)), B=st.g.nodes.get(treeRealId(rel.sub));
   const reasons=rel.kinds.map(k=>`<div class="rTreeTipRow">${esc(t(RESEARCHER_TREE_KINDS[k.kind].label))}${k.detail?`<span class="rTreeTipNote">${esc(k.detail)}</span>`:''}</div>`).join('');
   const issue=rel.timeConflict?`<div class="rTreeTipNote rTreeTipWarn">${esc(t('researcherTreeYearOrderIssue'))}</div>`:'';
   return `<div class="rTreeTipTitle">${esc(A?A.name:'')} → ${esc(B?B.name:'')}</div>${reasons}${issue}`;
@@ -5300,7 +6313,8 @@ function researcherTreeLegendHtml(){
     <span class="rTreeLegendItem"><i class="rTreeDot"></i>${esc(t('researcherTreeLegendKnown'))}</span>
     <span class="rTreeLegendItem"><i class="rTreeLine"></i>${esc(t('researcherTreeLegendPhd'))}</span>
     ${chronological?`<span class="rTreeLegendItem"><i class="rTreeYearMark"></i>${esc(t('researcherTreeYearUnknown'))}</span><span class="rTreeLegendItem"><i class="rTreeLine soft"></i>${esc(t('researcherTreeLegendOther'))}</span>`:`<span class="rTreeLegendItem"><i class="rTreeLine soft"></i>${esc(t('researcherTreeLegendOther'))}</span>`}
-    <span class="rTreeLegendHint">${esc(chronological?t('researcherTreeYearAxisHint'):t('researcherTreeHint'))}</span>
+    ${researcherTreeShaped()?`<span class="rTreeLegendItem"><i class="rTreeDupMark static">${esc(I18N[lang].researcherTreeDupBadge(2))}</i>${esc(t('researcherTreeLegendDup'))}</span>`:''}
+    <span class="rTreeLegendHint" title="${esc(chronological?t('researcherTreeYearAxisHint'):t('researcherTreeHint'))}">${esc(chronological?t('researcherTreeYearAxisHint'):t('researcherTreeHint'))}</span>
   </div>`;
 }
 function researcherTreeAxisSvg(layout){
@@ -5314,19 +6328,22 @@ function researcherTreeHtml(){
   const egoId=researcherTreeEgoId(g);
   researcherTreeState=null;
   if(!egoId||!g.nodes.size) return `<div class="researcherEmpty">${esc(t('researcherTreeNoSelection'))}</div>`;
-  const layout=researcherTreeLayoutMode==='phdYear'?researcherTreePhdYearLayout(g,egoId):researcherTreeLayout(g,egoId);
+  const layout=researcherTreeLayoutMode==='phdYear'?researcherTreePhdYearLayout(g,egoId)
+    :researcherTreeShaped()?researcherTreeSpanLayout(g,egoId)
+    :researcherTreeLayout(g,egoId);
   researcherTreeState={g,egoId,layout};
   if(!layout.rels.length){
     const node=g.nodes.get(egoId);
     return `${researcherTreeLegendHtml()}<div class="rTreeWrap"><div class="rTreeEmpty"><b>${esc(node?node.name:'')}</b><span>${esc(t('researcherTreeEmpty'))}</span></div></div>`;
   }
+  const buses=(researcherTreeOrtho()&&!layout.axis)?researcherTreeBuses(layout):null;
   const edges=layout.rels.map((r,i)=>{
     const a=layout.pos[r.sup], b=layout.pos[r.sub];
     if(!a||!b) return '';
-    const d=researcherTreeEdgePath(a,b,!!layout.axis);
+    const d=(buses&&buses.has(i))?researcherTreeElbowPath(a,b,buses.get(i)):researcherTreeEdgePath(a,b,!!layout.axis);
     return `<path class="rTreeEdge${r.soft?' soft':''}${r.timeConflict?' timeConflict':''}" data-tree-edge="${i}" d="${d}"/><path class="rTreeHit" data-tree-hit="${i}" d="${d}"/>`;
   }).join('');
-  const nodes=layout.ids.map(id=>researcherTreeNodeHtml(g.nodes.get(id),layout.pos[id],egoId)).join('');
+  const nodes=layout.ids.map(id=>researcherTreeNodeHtml(g.nodes.get(treeRealId(id)),layout.pos[id],egoId,id)).join('');
   return `${researcherTreeLegendHtml()}<div class="rTreeWrap" id="rTreeWrap">
     <div class="rTreeCanvas" style="width:${Math.round(layout.W)}px; height:${Math.round(layout.H)}px">
       <svg class="rTreeEdges" width="${Math.round(layout.W)}" height="${Math.round(layout.H)}" role="img" aria-label="${esc(t('researcherTreeAria'))}">${researcherTreeAxisSvg(layout)}${edges}</svg>
@@ -5338,10 +6355,14 @@ function researcherTreeHtml(){
 function wireResearcherTree(){
   const wrap=$('#rTreeWrap'); if(!wrap) return;
   const tip=$('#rTreeTip'), canvas=wrap.querySelector('.rTreeCanvas');
+  // elbow lines share their crossbar, so a highlighted edge has to be repainted last
+  // or the neighbouring grey line drawn after it hides the highlight
+  const raise=el=>{ if(el.parentNode) el.parentNode.appendChild(el); };
   const clear=()=>{
     if(tip) tip.hidden=true;
     wrap.querySelectorAll('.rTreeEdge.hot').forEach(el=>el.classList.remove('hot'));
     wrap.querySelectorAll('.rTreeNode.dim').forEach(el=>el.classList.remove('dim'));
+    wrap.querySelectorAll('.rTreeNode.same').forEach(el=>el.classList.remove('same'));
   };
   const place=(html,e)=>{
     if(!tip||!canvas) return;
@@ -5358,19 +6379,29 @@ function wireResearcherTree(){
     if(hit){
       const i=+hit.dataset.treeHit, rel=st.layout.rels[i]; if(!rel) return;
       clear(); place(researcherTreeEdgeTipHtml(rel),e);
-      const edge=wrap.querySelector(`[data-tree-edge="${i}"]`); if(edge) edge.classList.add('hot');
+      const edge=wrap.querySelector(`[data-tree-edge="${i}"]`); if(edge){ edge.classList.add('hot'); raise(edge); }
       wrap.querySelectorAll('[data-tree-node]').forEach(el=>{
         if(el.dataset.treeNode!==rel.sup&&el.dataset.treeNode!==rel.sub) el.classList.add('dim'); });
     }else if(node){
       const id=node.dataset.treeNode;
-      clear(); place(researcherTreeNodeTipHtml(id),e);
+      // Highlight only. The panel here used to list every relation with its period and
+      // institution, which for an advisor with twenty students grew taller than the
+      // canvas and covered the tree; the same detail is one click away on the right.
+      clear();
       const near=new Set([id]);
       st.layout.rels.forEach((r,i)=>{
         if(r.sup!==id&&r.sub!==id) return;
         near.add(r.sup); near.add(r.sub);
-        const edge=wrap.querySelector(`[data-tree-edge="${i}"]`); if(edge) edge.classList.add('hot');
+        const edge=wrap.querySelector(`[data-tree-edge="${i}"]`); if(edge){ edge.classList.add('hot'); raise(edge); }
       });
-      wrap.querySelectorAll('[data-tree-node]').forEach(el=>{ if(!near.has(el.dataset.treeNode)) el.classList.add('dim'); });
+      // the other places this researcher is repeated stay lit, so the repeat that the
+      // family-tree shape trades the merge for is still visible at a glance
+      const real=treeRealId(id);
+      wrap.querySelectorAll('[data-tree-node]').forEach(el=>{
+        const other=el.dataset.treeNode;
+        if(other!==id&&treeRealId(other)===real){ el.classList.add('same'); return; }
+        if(!near.has(other)) el.classList.add('dim');
+      });
     }else clear();
   });
   wrap.addEventListener('mouseleave', clear);
@@ -5385,7 +6416,7 @@ function wireResearcherTree(){
   wrap.addEventListener('click', e=>{
     const el=e.target.closest('[data-tree-node]'); if(!el) return;
     const st=researcherTreeState; if(!st) return;
-    const node=st.g.nodes.get(el.dataset.treeNode);
+    const node=st.g.nodes.get(treeRealId(el.dataset.treeNode));
     if(!node||node.ghost||!node.entry) return;
     clear(); centreResearcherTreeOn(node.entry);
   });
@@ -5404,6 +6435,9 @@ function centreResearcherTreeOn(entry){
 function updateResearcherTreePicker(view){
   const box=$('#searchBox'), list=$('#researcherTreePickList'), wrap=$('#searchWrap');
   if(!box) return;
+  // Called from renderWorkspace too (where the researcher list is not rendered at
+  // all), so fall back to the stored researcher view instead of assuming 'tree'.
+  if(view===undefined) view=researcherListView;
   const on = currentView==='researchers' && view==='tree';
   if(list) list.innerHTML = on ? researcherDirectoryEntries().map(e=>`<option value="${esc(formatResearcherName(e))}"></option>`).join('') : '';
   if(on) box.setAttribute('list','researcherTreePickList'); else box.removeAttribute('list');
@@ -5421,12 +6455,32 @@ function researcherTreePickEntry(text){
   return entries.find(e=>formatResearcherName(e).toLocaleLowerCase().startsWith(lower))
       || entries.find(e=>formatResearcherName(e).toLocaleLowerCase().includes(lower)) || null;
 }
+/* The bottom bar keeps what gets touched while reading — how far to trace, which
+   relations count — and folds the four look settings into one popover whose button
+   still says what is in effect. The panel also has room for a line of explanation
+   next to the choice it belongs to, which a row of bare toggles never had. */
 function researcherTreeStatusHtml(){
   const d=researcherTreeDepth, fill=((d-1)/7)*100;
   const seg=(attr,value,current,label)=>`<button type="button" class="lsbtn rTreeSegBtn${value===current?' on':''}" data-${attr}="${value}" aria-pressed="${value===current}">${esc(label)}</button>`;
+  const gen=researcherTreeLayoutMode==='generation';
+  const summary=[t(gen?'researcherTreeLayoutGeneration':'researcherTreeLayoutPhdYear')].concat(gen?[
+    t(researcherTreeOrientation==='v'?'researcherTreeOrientV':'researcherTreeOrientH'),
+    t(researcherTreeEdgeStyle==='ortho'?'researcherTreeEdgeOrtho':'researcherTreeEdgeCurve'),
+    t(researcherTreeShape==='tree'?'researcherTreeShapeTree':'researcherTreeShapeGraph'),
+  ]:[]).join(lang==='ja'?'・':' · ');
+  const row=(label,body,note)=>`<div class="rTreeMenuRow"><span class="rTreeMenuLabel">${esc(label)}</span><span class="rTreeSeg">${body}</span></div>${note?`<div class="rTreeMenuNote">${esc(note)}</div>`:''}`;
   return `<span id="researcherTreeControls" class="researcherTreeControls">
-    <span class="rTreeSeg" role="group" title="${esc(t('researcherTreeLayoutLabel'))}">${seg('tree-layout','generation',researcherTreeLayoutMode,t('researcherTreeLayoutGeneration'))}${seg('tree-layout','phdYear',researcherTreeLayoutMode,t('researcherTreeLayoutPhdYear'))}</span>
-    ${researcherTreeLayoutMode==='generation'?`<span class="rTreeSeg" role="group" title="${esc(t('researcherTreeOrientationLabel'))}">${seg('tree-orient','v',researcherTreeOrientation,t('researcherTreeOrientV'))}${seg('tree-orient','h',researcherTreeOrientation,t('researcherTreeOrientH'))}</span>`:''}
+    <div class="menuwrap">
+      <button class="lsbtn" id="btnResearcherTreeDisplay" title="${esc(t('researcherTreeDisplayLabel'))} — ${esc(summary)}">
+        <span class="ic" data-ic="sliders"></span><span>${esc(t('researcherTreeDisplay'))}</span>
+        <span class="rTreeDisplaySummary">${esc(summary)}</span><span class="ic" data-ic="chevron"></span></button>
+      <div class="menu rTreeMenu" id="researcherTreeDisplayMenu" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto">
+        ${row(t('researcherTreeLayout'),seg('tree-layout','generation',researcherTreeLayoutMode,t('researcherTreeLayoutGeneration'))+seg('tree-layout','phdYear',researcherTreeLayoutMode,t('researcherTreeLayoutPhdYear')))}
+        ${gen?row(t('researcherTreeOrientation'),seg('tree-orient','v',researcherTreeOrientation,t('researcherTreeOrientV'))+seg('tree-orient','h',researcherTreeOrientation,t('researcherTreeOrientH'))):''}
+        ${gen?row(t('researcherTreeEdgeStyle'),seg('tree-line','curve',researcherTreeEdgeStyle,t('researcherTreeEdgeCurve'))+seg('tree-line','ortho',researcherTreeEdgeStyle,t('researcherTreeEdgeOrtho'))):''}
+        ${gen?row(t('researcherTreeShape'),seg('tree-shape','graph',researcherTreeShape,t('researcherTreeShapeGraph'))+seg('tree-shape','tree',researcherTreeShape,t('researcherTreeShapeTree')),t('researcherTreeShapeNote')):''}
+      </div>
+    </div>
     <span class="rTreeSeg" role="group" title="${esc(t('researcherTreeScopeLabel'))}">${seg('tree-scope','phd',researcherTreeScope,t('researcherTreeScopePhd'))}${seg('tree-scope','all',researcherTreeScope,t('researcherTreeScopeAll'))}</span>
     <label class="rTreeDepthControl" title="${esc(t('researcherTreeDepthLabel'))}">
       <span>${esc(t('researcherTreeDepth'))}</span>
@@ -5434,6 +6488,13 @@ function researcherTreeStatusHtml(){
       <output id="researcherTreeDepthValue">${d}</output>
     </label>
   </span>`;
+}
+// Changing a look setting re-renders the whole status bar, which throws the panel
+// away; put it back so several settings can be tried without reopening it.
+function reopenResearcherTreeDisplayMenu(){
+  const btn=$('#btnResearcherTreeDisplay'), menu=$('#researcherTreeDisplayMenu');
+  if(!btn||!menu) return;
+  menu.classList.add('open'); positionFloatingMenu(btn,menu);
 }
 function renderResearcherList(){
   const allEntries=researcherDirectoryEntries();
@@ -5470,7 +6531,7 @@ function renderResearcherList(){
   updateResearcherTreePicker(view);
   if(view==='tree'){
     const st=researcherTreeState;
-    $('#researcherListCount').textContent = st ? `${I18N[lang].researcherTreeStats(st.layout.ids.length, st.layout.rels.length)}${st.layout.axis?` · ${I18N[lang].researcherTreeYearStats(st.layout.knownYears,st.layout.unknownYears)}`:''}` : '';
+    $('#researcherListCount').textContent = st ? `${I18N[lang].researcherTreeStats(st.layout.people||st.layout.ids.length, st.layout.rels.length)}${st.layout.axis?` · ${I18N[lang].researcherTreeYearStats(st.layout.knownYears,st.layout.unknownYears)}`:''}${st.layout.truncated?` · ${t('researcherTreeTruncated')}`:''}` : '';
   }else if(view==='map' && mapPlotMode()==='institutions'){
     // institution mode: every registered institution, and how many have researchers here
     const total=(mapPlaced||[]).length, withPeople=(mapPlaced||[]).filter(c=>c.people>0).length;
@@ -5493,7 +6554,7 @@ function researcherRowData(e){
 }
 function researcherTableHtml(shown,keys){
   const row=(e)=>`<tr class="row ${researcherSel(e)}" ${researcherRowData(e)}>${keys.map(k=>`<td class="col-${k}">${researcherCellHtml(e,k)}</td>`).join('')}</tr>`;
-  return `<table id="researcherTable" style="width:${Math.max(1000,keys.reduce((sum,k)=>sum+researcherColWidth(k),0))}px"><colgroup>${keys.map(k=>`<col style="width:${researcherColWidth(k)}px">`).join('')}</colgroup><thead><tr>${keys.map(k=>`<th class="thmove${researcherSortKey===k?' sort-active':''}" data-researcher-col="${k}" draggable="true"><span class="thlabel">${esc(t(RESEARCHER_COLUMNS[k].label))}</span><button type="button" class="thsort${researcherSortKey===k?' active':''}" data-researcher-sort="${k}" title="${esc(t('sortColumn'))}"><span>${researcherSortKey===k?(researcherSortAsc?'▲':'▼'):'▼'}</span></button><span class="thfilter${researcherColumnFilters[k]?' on':''}" data-researcher-filter="${k}" title="${esc(t('filters'))}">${ic('funnel')}</span>${k==='name'?`<span class="thdisplay" data-researcher-name-display title="${esc(t('researcherNameDisplay'))}">${ic('sliders')}</span>`:''}${k==='institutions'?`<span class="thdisplay" data-researcher-institution-display title="${esc(t('researcherDisplayPastInstitutions'))}">${ic('sliders')}</span>`:''}<span class="colresize" data-researcher-resize="${k}"></span></th>`).join('')}</tr></thead><tbody>${shown.map(row).join('')}</tbody></table>`;
+  return `<table id="researcherTable" style="width:${Math.max(1000,keys.reduce((sum,k)=>sum+researcherColWidth(k),0))}px"><colgroup>${keys.map(k=>`<col style="width:${researcherColWidth(k)}px">`).join('')}</colgroup><thead><tr>${keys.map(k=>`<th class="thmove${researcherSortKey===k?' sort-active':''}" data-researcher-col="${k}" draggable="true"><span class="thlabel">${esc(t(RESEARCHER_COLUMNS[k].label))}</span><button type="button" class="thsort${researcherSortKey===k?' active':''}" data-researcher-sort="${k}" title="${esc(t('sortColumn'))}"><span>${researcherSortKey===k?(researcherSortAsc?'▲':'▼'):'▼'}</span></button><span class="thfilter${researcherColumnFilters[k]?' on':''}" data-researcher-filter="${k}" title="${esc(t('filters'))}">${ic('funnel')}</span>${k==='name'?`<span class="thdisplay" data-researcher-name-display title="${esc(t('researcherNameDisplay'))}">${ic('sliders')}</span>`:''}${k==='institutions'?`<span class="thdisplay" data-researcher-institution-display title="${esc(t('researcherDisplayPastInstitutions'))}">${ic('sliders')}</span>`:''}<span class="colresize" data-researcher-resize="${k}" title="${esc(t('colResizeHint'))}"></span></th>`).join('')}</tr></thead><tbody>${shown.map(row).join('')}</tbody></table>`;
 }
 function researcherCiteText(p){ return p&&Number.isFinite(Number(p.totalCitations))?Number(p.totalCitations).toLocaleString():'—'; }
 function researcherAvgCiteText(e){
@@ -5551,8 +6612,13 @@ function researcherLeaderboardHtml(shown){
   const metric=researcherLeaderboardMetric;
   const libraryCitations=e=>Array.from(e.paperIds||[]).reduce((sum,id)=>sum+(Number((lib.items||[]).find(item=>item.id===id)?.citedByCount)||0),0);
   const profileKey={citations:'totalCitations',worksCount:'worksCount',hIndex:'hIndex',i10Index:'i10Index'}[metric];
-  const value=e=>metric==='papers'?e.paperIds.size:metric==='libraryCitations'?libraryCitations(e):Number(e.profile&&e.profile[profileKey])||0;
-  const label={papers:'researcherLeaderboardLibraryPapers',libraryCitations:'researcherLeaderboardLibraryCitations',citations:'researcherLeaderboardExternalCitations',hIndex:'researcherLeaderboardHIndex',i10Index:'researcherLeaderboardI10Index',worksCount:'researcherLeaderboardWorksCount'}[metric];
+  const cache=new Map();
+  const value=e=>{
+    if(cache.has(e)) return cache.get(e);
+    const v=metric==='papers'?e.paperIds.size:metric==='allPapers'?researcherAllPaperCount(e):metric==='libraryCitations'?libraryCitations(e):Number(e.profile&&e.profile[profileKey])||0;
+    cache.set(e,v); return v;
+  };
+  const label={papers:'researcherLeaderboardLibraryPapers',allPapers:'researcherLeaderboardLibraryAllPapers',libraryCitations:'researcherLeaderboardLibraryCitations',citations:'researcherLeaderboardExternalCitations',hIndex:'researcherLeaderboardHIndex',i10Index:'researcherLeaderboardI10Index',worksCount:'researcherLeaderboardWorksCount'}[metric];
   const ranked=[...shown].sort((a,b)=>{
     return value(b)-value(a) || b.paperIds.size-a.paperIds.size || formatResearcherName(a).localeCompare(formatResearcherName(b),lang);
   });
@@ -5570,7 +6636,7 @@ function researcherLeaderboardHtml(shown){
 }
 function researcherLeaderboardStatusHtml(){
   const metric=researcherLeaderboardMetric;
-  const labels={papers:'researcherLeaderboardLibraryPapers',libraryCitations:'researcherLeaderboardLibraryCitations',citations:'researcherLeaderboardExternalCitations',hIndex:'researcherLeaderboardHIndex',i10Index:'researcherLeaderboardI10Index',worksCount:'researcherLeaderboardWorksCount'};
+  const labels={papers:'researcherLeaderboardLibraryPapers',allPapers:'researcherLeaderboardLibraryAllPapers',libraryCitations:'researcherLeaderboardLibraryCitations',citations:'researcherLeaderboardExternalCitations',hIndex:'researcherLeaderboardHIndex',i10Index:'researcherLeaderboardI10Index',worksCount:'researcherLeaderboardWorksCount'};
   return `<div class="menuwrap researcherLeaderboardControl"><button class="lsbtn" id="btnResearcherLeaderboardMetric"><span>${esc(t('researcherLeaderboardMetric'))}</span><span>${esc(t(labels[metric]))}</span><span class="ic" data-ic="chevron"></span></button><div class="menu" id="researcherLeaderboardMetricMenu" style="bottom:calc(100% + 4px); top:auto; right:0; left:auto"><div class="menuLabel">${esc(t('researcherLeaderboardMetric'))}</div>${RESEARCHER_LEADERBOARD_METRICS.map(key=>`<button data-researcher-leaderboard-set="${key}" class="${metric===key?'viewActive':''}"><span class="ic" data-ic="${metric===key?'check':'blank'}"></span><span>${esc(t(labels[key]))}</span></button>`).join('')}</div></div>`;
 }
 // ④ world map ---------------------------------------------------------------
@@ -6520,9 +7586,10 @@ function researcherReciprocalRelatedHtml(profile){
 function researcherDetailHasRelated(profile){
   return !!(researcherLines(profile&&profile.relatedResearchers).length || (researcherDetailPrefs.reciprocalRelated && researcherReciprocalRelatedNames(profile).length));
 }
-function researcherPaperHtml(it){
-  const meta=[journalDisplay(it),it.year].filter(Boolean).join(' · '), authors=authorsShort(it.authors||[]);
-  return `<button type="button" class="researcherPaperCard" data-researcher-paper="${esc(it.id)}" title="${esc(t('researcherMapOpenPaper'))}"><span class="researcherPaperAccent"></span><span class="researcherPaperBody"><strong>${esc(it.title||t('newItem'))}</strong>${authors?`<span class="researcherPaperAuthors">${esc(authors)}</span>`:''}${meta?`<span class="researcherPaperMeta">${esc(meta)}</span>`:''}</span><span class="researcherPaperOpen">${ic('arrowUpRight')}</span></button>`;
+function researcherPaperHtml(it, role){
+  const meta=journalYearHtml(it), authors=authorsShort(it.authors||[]);
+  const isCo=role==='co';
+  return `<button type="button" class="researcherPaperCard${isCo?' co':''}" data-researcher-paper="${esc(it.id)}" title="${esc(t('researcherMapOpenPaper'))}"><span class="researcherPaperAccent"></span><span class="researcherPaperBody"><strong>${esc(it.title||t('newItem'))}</strong>${authors?`<span class="researcherPaperAuthors">${esc(authors)}</span>`:''}${meta?`<span class="researcherPaperMeta">${meta}</span>`:''}</span><span class="researcherPaperOpen">${ic('arrowUpRight')}</span></button>`;
 }
 function researcherImageEditorHtml(p){
   const preview=p.imageUrl?`<span class="researcherImageFrame"><img class="researcherImage" src="${esc(p.imageUrl)}" alt="" referrerpolicy="no-referrer"${researcherImagePositionStyle(p)}></span>`:`<span class="researcherImagePlaceholder">${ic('image')}</span>`;
@@ -6810,24 +7877,40 @@ function dayOptionsHtml(selected){
   for(let d=1;d<=31;d++){ const dd=String(d).padStart(2,'0'); out+=`<option value="${dd}"${sel===dd?' selected':''}>${d}</option>`; }
   return out;
 }
-// birthDate is stored as "YYYY-MM-DD" (trailing parts may be blank).
+// birth/death dates are stored as "YYYY-MM-DD" (trailing parts may be blank).
 function parseBirthDate(v){
   const m=String(v||'').match(/^(\d{4})?(?:-(\d{2}))?(?:-(\d{2}))?/);
   return { y:(m&&m[1])||'', m:(m&&m[2])||'', d:(m&&m[3])||'' };
 }
-// Age from a birth date. Returns { age, approx } — approx is true when the month
-// (or day) is missing, so the true age could be off by up to a year.
-function researcherAgeInfo(v){
-  const p=parseBirthDate(v); const y=Number(p.y); if(!y) return null;
-  const now=new Date(), curY=now.getFullYear(), curM=now.getMonth()+1, curD=now.getDate();
-  let age=curY-y, approx=false;
-  if(p.m){ const m=Number(p.m); if(p.d){ const d=Number(p.d); if(curM<m||(curM===m&&curD<d)) age--; } else { approx=true; if(curM<m) age--; } }
-  else approx=true;
+// Localised display of a partial "YYYY-MM-DD" date (any trailing part may be blank).
+function researcherFormatDate(v){
+  const p=parseBirthDate(v); if(!p.y) return String(v||'');
+  if(lang==='ja') return p.y+'年'+(p.m?Number(p.m)+'月'+(p.d?Number(p.d)+'日':''):'');
+  return [p.y,p.m,p.d].filter(Boolean).join('-');
+}
+// Age from a birth date, as of `refDate` (a "YYYY-MM-DD" death date) or today when
+// omitted. Returns { age, approx } — approx is true when a month/day is missing, so
+// the true age could be off by up to a year.
+function researcherAgeInfo(v, refDate){
+  const b=parseBirthDate(v), by=Number(b.y); if(!by) return null;
+  let ry,rm,rd,approx=false;
+  if(refDate!=null && String(refDate).trim()!==''){
+    const r=parseBirthDate(refDate); ry=Number(r.y); if(!ry) return null;
+    rm=Number(r.m)||0; rd=Number(r.d)||0; if(!rm) approx=true;
+  } else { const now=new Date(); ry=now.getFullYear(); rm=now.getMonth()+1; rd=now.getDate(); }
+  let age=ry-by; const bm=Number(b.m)||0, bd=Number(b.d)||0;
+  if(!bm) approx=true;
+  else if(rm){
+    if(rm<bm) age--;
+    else if(rm===bm){ if(bd&&rd){ if(rd<bd) age--; } else approx=true; }
+  }
   if(age<0||age>150) return null;
   return { age, approx };
 }
-function researcherAgeLabel(v){
-  const info=researcherAgeInfo(v); if(!info) return '';
+function researcherAgeLabel(v, deathDate){
+  const dead=deathDate!=null && String(deathDate).trim()!=='';
+  const info=researcherAgeInfo(v, dead?deathDate:undefined); if(!info) return '';
+  if(dead) return t(info.approx?'researcherAgeAtDeathApprox':'researcherAgeAtDeath')(info.age);
   return t(info.approx?'researcherAgeApprox':'researcherAge')(info.age);
 }
 function birthDateSelectHtml(v){
@@ -6836,6 +7919,13 @@ function birthDateSelectHtml(v){
     <label class="rDateUnit"><select class="rDateSel" data-birth="y" aria-label="${esc(t('yearLabel'))}">${yearOptionsHtml(p.y,1910)}</select><span>${esc(t('yearLabel'))}</span></label>
     <label class="rDateUnit"><select class="rDateSel" data-birth="m" aria-label="${esc(t('monthLabel'))}">${monthOptionsHtml(p.m)}</select><span>${esc(t('monthLabel'))}</span></label>
     <label class="rDateUnit"><select class="rDateSel" data-birth="d" aria-label="${esc(t('dayLabel'))}">${dayOptionsHtml(p.d)}</select><span>${esc(t('dayLabel'))}</span></label></div>`;
+}
+function deathDateSelectHtml(v){
+  const p=parseBirthDate(v);
+  return `<div class="rDateRow rDeathDateRow" id="rDeathDate">
+    <label class="rDateUnit"><select class="rDateSel" data-death="y" aria-label="${esc(t('yearLabel'))}">${yearOptionsHtml(p.y,1910)}</select><span>${esc(t('yearLabel'))}</span></label>
+    <label class="rDateUnit"><select class="rDateSel" data-death="m" aria-label="${esc(t('monthLabel'))}">${monthOptionsHtml(p.m)}</select><span>${esc(t('monthLabel'))}</span></label>
+    <label class="rDateUnit"><select class="rDateSel" data-death="d" aria-label="${esc(t('dayLabel'))}">${dayOptionsHtml(p.d)}</select><span>${esc(t('dayLabel'))}</span></label></div>`;
 }
 function phdYearSelectHtml(v){
   return `<div class="rDateRow" id="rPhdYear"><select class="rDateSel" data-phdyear aria-label="${esc(t('researcherPhdYear'))}">${yearOptionsHtml(v,1940)}</select></div>`;
@@ -6890,6 +7980,7 @@ function researcherDetailFormHtml(entry, p){
     ${researcherFieldRow(p,'aliases',t('researcherAliases'),'r-aliases',aliases.join('\n'),'textarea')}
     <div class="fRow researcherField"><label>${esc(t('researcherAffiliationsLabel'))}${researcherSourceBadge(p,'currentInstitutions')}</label>${researcherAffiliationsEditorHtml(p)}</div>
     <div class="fRow researcherField"><label>${esc(t('researcherBirthDate'))}${researcherSourceBadge(p,'birthDate')}</label>${birthDateSelectHtml(pv.birthDate||'')}</div>
+    <div class="fRow researcherField"><label>${esc(t('researcherDeathDate'))}${researcherSourceBadge(p,'deathDate')}</label>${deathDateSelectHtml(pv.deathDate||'')}</div>
     <div class="fRow researcherField"><label>${esc(t('researcherPhdYear'))}${researcherSourceBadge(p,'phdYear')}</label>${phdYearSelectHtml(pv.phdYear||'')}</div>
     ${researcherFieldRow(p,'totalCitations',t('researcherTotalCitations'),'r-totalCitations',pv.totalCitations||'')}
     <div class="dSection">${esc(t('researcherImage'))}${researcherSourceBadge(p,'imageUrl')}</div>
@@ -6919,7 +8010,7 @@ function researcherProfileDefaults(entry){
   return {
     id:'', displayName:researcherCanonicalDisplayName({familyName:name.family,givenName:name.given}), familyName:name.family, givenName:name.given, middleName:name.middle, aliases:uniqueResearcherStrings(Array.from(entry.aliases||[])), affiliation:'',
     identifiers:{orcid:'',googleScholar:'',researchGate:'',linkedin:'',x:'',bluesky:'',researchmap:'',openalex:'',scopus:'',researcherId:'',dblp:'',cinii:'',chemstation:''}, website:'',
-    affiliations:[], positions:[], education:[], awards:[], currentInstitutions:[], pastInstitutions:[], birthDate:'', phdYear:'', phdInstitution:'',phdDegree:'', phdAdvisor:'', totalCitations:'', hIndex:'', i10Index:'', worksCount:'', imageUrl:'', imagePositionX:50, imagePositionY:50, imageScale:1, researchFields:[], relatedResearchers:[], fieldSources:{}, enrichment:{}
+    affiliations:[], positions:[], education:[], awards:[], currentInstitutions:[], pastInstitutions:[], birthDate:'', deathDate:'', phdYear:'', phdInstitution:'',phdDegree:'', phdAdvisor:'', totalCitations:'', hIndex:'', i10Index:'', worksCount:'', imageUrl:'', imagePositionX:50, imagePositionY:50, imageScale:1, researchFields:[], relatedResearchers:[], fieldSources:{}, enrichment:{}
   };
 }
 function cloneResearcherProfile(p){ return JSON.parse(JSON.stringify(p)); }
@@ -6948,6 +8039,7 @@ function researcherAiPrompt(draft){
     "middleName": "Middle",
     "aliases": ["Name in another language or script"],
     "birthDate": "YYYY-MM-DD",
+    "deathDate": "YYYY-MM-DD (only if the researcher is deceased; otherwise omit)",
     "phdYear": "YYYY",
     "phdInstitution": "Degree-awarding institution",
     "phdDegree": "Ph.D. in Field",
@@ -6963,7 +8055,7 @@ function researcherAiPrompt(draft){
     "researchFields": [{"name": "Field", "sourceUrls": ["https://example.org/profile"]}],
     "awards": [{"name": "Award", "year": "YYYY", "organization": "Granting organization", "sourceUrls": ["https://example.org/profile"]}],
     "relatedResearchers": [{"name": "Name", "relationship": "collaborator", "sourceUrls": ["https://example.org/profile"]}],
-    "fieldSources": {"displayName": ["https://example.org/profile"], "familyName": ["https://example.org/profile"], "givenName": ["https://example.org/profile"], "aliases": ["https://example.org/profile"], "birthDate": ["https://example.org/profile"], "phdYear": ["https://example.org/cv"], "phdInstitution": ["https://example.org/cv"], "phdDegree": ["https://example.org/cv"], "phdAdvisor": ["https://example.org/cv"], "totalCitations": ["https://scholar.google.com/..."], "hIndex": ["https://scholar.google.com/..."], "i10Index": ["https://scholar.google.com/..."], "worksCount": ["https://scholar.google.com/..."], "identifiers.orcid": ["https://orcid.org/..."]}
+    "fieldSources": {"displayName": ["https://example.org/profile"], "familyName": ["https://example.org/profile"], "givenName": ["https://example.org/profile"], "aliases": ["https://example.org/profile"], "birthDate": ["https://example.org/profile"], "deathDate": ["https://example.org/profile"], "phdYear": ["https://example.org/cv"], "phdInstitution": ["https://example.org/cv"], "phdDegree": ["https://example.org/cv"], "phdAdvisor": ["https://example.org/cv"], "totalCitations": ["https://scholar.google.com/..."], "hIndex": ["https://scholar.google.com/..."], "i10Index": ["https://scholar.google.com/..."], "worksCount": ["https://scholar.google.com/..."], "identifiers.orcid": ["https://orcid.org/..."]}
   }
 }`;
   const candidates=`{
@@ -7095,6 +8187,7 @@ function researcherAiResponseFromText(text){
     if(values.length&&(!strictSources||itemUrls.length||sourceUrls.length)&&setSource('phdAdvisor',itemUrls.length?itemUrls:sourceUrls,true)) p.phdAdvisor=values;
   }
   if(has('birthDate')&&/^\d{4}(?:-(?:0[1-9]|1[0-2])(?:-(?:0[1-9]|[12]\d|3[01]))?)?$/.test(String(raw.birthDate||'').trim())&&setSource('birthDate',sourceUrls)) p.birthDate=String(raw.birthDate).trim();
+  if(has('deathDate')&&/^\d{4}(?:-(?:0[1-9]|1[0-2])(?:-(?:0[1-9]|[12]\d|3[01]))?)?$/.test(String(raw.deathDate||'').trim())&&setSource('deathDate',sourceUrls)) p.deathDate=String(raw.deathDate).trim();
   ['totalCitations','hIndex','i10Index','worksCount'].forEach(k=>{ if(has(k)&&String(raw[k]).match(/\d/)&&setSource(k,sourceUrls)) p[k]=String(raw[k]).replace(/[^0-9]/g,''); });
   ['aliases','researchFields','relatedResearchers'].forEach(k=>{
     const named=researcherAiNamedValues(raw[k]), values=uniqueResearcherStrings(named.map(x=>x.name));
@@ -7173,7 +8266,7 @@ function researcherAiAddsValue(current,next,key){
 }
 function researcherAiPreviewHtml(draft){
   const p=researcherEditorAiState.proposal; if(!p) return researcherEditorAiState.error?`<div class="researcherAiError">${esc(researcherEditorAiState.error)}</div>`:'';
-  const fields=[['displayName','researcherName'],['familyName','researcherFamilyName'],['givenName','researcherGivenName'],['middleName','researcherMiddleName'],['aliases','researcherAliases'],['birthDate','researcherBirthDate'],['phdYear','researcherPhdYear'],['phdInstitution','researcherPhdInstitution'],['phdDegree','researcherPhdDegree'],['phdAdvisor','researcherPhdAdvisor'],['positions','researcherPositionsLabel'],['education','researcherEducationLabel'],['awards','researcherAwards'],['affiliations','researcherAiAffiliations'],['identifiers','researcherIds'],['website','researcherHomepage'],['imageUrl','researcherImageUrl'],['totalCitations','researcherTotalCitations'],['hIndex','researcherHIndex'],['i10Index','researcherI10Index'],['worksCount','researcherWorksCount'],['researchFields','researcherFields'],['relatedResearchers','researcherEditorRelated']]
+  const fields=[['displayName','researcherName'],['familyName','researcherFamilyName'],['givenName','researcherGivenName'],['middleName','researcherMiddleName'],['aliases','researcherAliases'],['birthDate','researcherBirthDate'],['deathDate','researcherDeathDate'],['phdYear','researcherPhdYear'],['phdInstitution','researcherPhdInstitution'],['phdDegree','researcherPhdDegree'],['phdAdvisor','researcherPhdAdvisor'],['positions','researcherPositionsLabel'],['education','researcherEducationLabel'],['awards','researcherAwards'],['affiliations','researcherAiAffiliations'],['identifiers','researcherIds'],['website','researcherHomepage'],['imageUrl','researcherImageUrl'],['totalCitations','researcherTotalCitations'],['hIndex','researcherHIndex'],['i10Index','researcherI10Index'],['worksCount','researcherWorksCount'],['researchFields','researcherFields'],['relatedResearchers','researcherEditorRelated']]
     .filter(([key])=>Object.prototype.hasOwnProperty.call(p,key))
     .filter(([key])=>!researcherAiValuesEqual(researcherAiCurrentValue(draft,key),p[key],key));
   if(!fields.length) return `<div class="researcherAiError">${esc(t('researcherEnrichmentNoChanges'))}</div>`;
@@ -7291,11 +8384,11 @@ function researcherEditorAdvisorHtml(draft){
   return `<div class="researcherFieldPicker"><div class="researcherFieldTags">${names.map((name,i)=>`<span class="researcherTag">${esc(name)}<button type="button" data-editor-advisor-delete="${i}" aria-label="${esc(t('affRemove'))}">×</button></span>`).join('')}</div><div class="researcherFieldAdd"><input id="researcherEditorAdvisorInput" list="researcherEditorRelatedList" placeholder="${esc(t('researcherRelatedPlaceholder'))}"><button type="button" class="tbtn" data-editor-advisor-add>${ic('plus')}${esc(t('researcherFieldAdd'))}</button></div></div>`;
 }
 function researcherEditorSectionHtml(section,draft,entry){
-  const ids=draft.identifiers||{}, birth=parseBirthDate(draft.birthDate), selected=section===researcherEditorSection?' active':'';
+  const ids=draft.identifiers||{}, birth=parseBirthDate(draft.birthDate), death=parseBirthDate(draft.deathDate), selected=section===researcherEditorSection?' active':'';
   const field=(label,control,full='',sourceKey='')=>`<div class="researcherEditorField ${full}"><label>${esc(label)}</label>${control}${sourceKey?researcherEditorFieldSourceHtml(draft,sourceKey):''}</div>`;
   const input=(key,value,type='text')=>`<input type="${type}" data-re-editor="${key}" value="${esc(value||'')}">`;
   const textarea=(key,value)=>`<textarea data-re-editor="${key}">${esc(value||'')}</textarea>`;
-  if(section==='basic') return `<section class="researcherEditorSection${selected}" data-editor-section="basic"><h3>${esc(t('researcherEditorBasic'))}</h3><p class="researcherEditorIntro">${esc(t('researcherNameHelp'))}</p><div class="researcherEditorGrid">${field(t('researcherFamilyName'),input('familyName',draft.familyName),'','familyName')}${field(t('researcherGivenName'),input('givenName',draft.givenName),'','givenName')}${field(t('researcherMiddleName'),input('middleName',draft.middleName),'','middleName')}${field(t('researcherAliases'),textarea('aliases',(draft.aliases||[]).join('\n')),'','aliases')}${field(t('researcherBirthDate'),`<div class="researcherEditorDate"><label><select data-re-editor-birth="y">${yearOptionsHtml(birth.y,1910)}</select>${esc(t('yearLabel'))}</label><label><select data-re-editor-birth="m">${monthOptionsHtml(birth.m)}</select>${esc(t('monthLabel'))}</label><label><select data-re-editor-birth="d">${dayOptionsHtml(birth.d)}</select>${esc(t('dayLabel'))}</label></div>`,'','birthDate')}</div></section>`;
+  if(section==='basic') return `<section class="researcherEditorSection${selected}" data-editor-section="basic"><h3>${esc(t('researcherEditorBasic'))}</h3><p class="researcherEditorIntro">${esc(t('researcherNameHelp'))}</p><div class="researcherEditorGrid">${field(t('researcherFamilyName'),input('familyName',draft.familyName),'','familyName')}${field(t('researcherGivenName'),input('givenName',draft.givenName),'','givenName')}${field(t('researcherMiddleName'),input('middleName',draft.middleName),'','middleName')}${field(t('researcherAliases'),textarea('aliases',(draft.aliases||[]).join('\n')),'','aliases')}${field(t('researcherBirthDate'),`<div class="researcherEditorDate"><label><select data-re-editor-birth="y">${yearOptionsHtml(birth.y,1910)}</select>${esc(t('yearLabel'))}</label><label><select data-re-editor-birth="m">${monthOptionsHtml(birth.m)}</select>${esc(t('monthLabel'))}</label><label><select data-re-editor-birth="d">${dayOptionsHtml(birth.d)}</select>${esc(t('dayLabel'))}</label></div>`,'','birthDate')}${field(t('researcherDeathDate'),`<div class="researcherEditorDate"><label><select data-re-editor-death="y">${yearOptionsHtml(death.y,1910)}</select>${esc(t('yearLabel'))}</label><label><select data-re-editor-death="m">${monthOptionsHtml(death.m)}</select>${esc(t('monthLabel'))}</label><label><select data-re-editor-death="d">${dayOptionsHtml(death.d)}</select>${esc(t('dayLabel'))}</label></div>`,'','deathDate')}</div></section>`;
   if(section==='education') return `<section class="researcherEditorSection${selected}" data-editor-section="education"><h3>${esc(t('researcherEditorEducation'))}</h3><div class="researcherEditorPhd"><h4>${esc(t('researcherCareerPhd'))}</h4><div class="researcherEditorGrid">${field(t('researcherPhdYear'),`<select data-re-editor="phdYear">${yearOptionsHtml(draft.phdYear,1940)}</select>`,'','phdYear')}${field(t('researcherPhdInstitution'),input('phdInstitution',draft.phdInstitution),'','phdInstitution')}${field(t('researcherPhdDegree'),input('phdDegree',draft.phdDegree),'','phdDegree')}${field(t('researcherPhdAdvisor'),researcherEditorAdvisorHtml(draft),'full','phdAdvisor')}</div></div>${researcherEditorEducationHtml(draft)}</section>`;
   if(section==='image'){
     const aspect=researcherImageAspect(draft), zoom=researcherImageZoom(draft), containZoom=researcherImageContainZoom(aspect);
@@ -7319,7 +8412,7 @@ function researcherEditorSectionHtml(section,draft,entry){
   return `<section class="researcherEditorSection${selected}" data-editor-section="related"><h3>${esc(t('researcherEditorRelated'))}</h3><div class="researcherEditorGrid">${field(t('researcherRelated'),researcherEditorRelatedHtml(draft),'full','relatedResearchers')}</div></section>`;
 }
 function researcherEditorHasValue(section,draft){
-  if(section==='basic') return !!(draft.displayName||draft.familyName||draft.givenName||draft.birthDate||(draft.aliases||[]).length);
+  if(section==='basic') return !!(draft.displayName||draft.familyName||draft.givenName||draft.birthDate||draft.deathDate||(draft.aliases||[]).length);
   if(section==='aiimport') return !!(researcherEditorAiState.jsonText||(draft.enrichment&&draft.enrichment.ai));
   if(section==='affiliations') return researcherPositions(draft).some(x=>x.institution||x.start||x.end||x.title||x.organization);
   if(section==='education') return !!(draft.phdYear||draft.phdInstitution||draft.phdDegree||researcherAdvisors(draft).length||researcherEducation(draft).some(x=>x.institution||x.start||x.end||x.program||x.degree));
@@ -7411,6 +8504,11 @@ function researcherEditorSetBirth(){
   const y=host.querySelector('[data-re-editor-birth="y"]')?.value||'', m=host.querySelector('[data-re-editor-birth="m"]')?.value||'', d=host.querySelector('[data-re-editor-birth="d"]')?.value||'';
   researcherEditorDraft.birthDate=y?(y+(m?'-'+m+(d?'-'+d:''):'')):''; markResearcherFieldSource(researcherEditorDraft,'birthDate','manual'); researcherEditorMarkDirty();
 }
+function researcherEditorSetDeath(){
+  const host=$('#researcherEditorContent'); if(!host||!researcherEditorDraft) return;
+  const y=host.querySelector('[data-re-editor-death="y"]')?.value||'', m=host.querySelector('[data-re-editor-death="m"]')?.value||'', d=host.querySelector('[data-re-editor-death="d"]')?.value||'';
+  researcherEditorDraft.deathDate=y?(y+(m?'-'+m+(d?'-'+d:''):'')):''; markResearcherFieldSource(researcherEditorDraft,'deathDate','manual'); researcherEditorMarkDirty();
+}
 function researcherEditorSyncAffiliations(){
   const d=researcherEditorDraft; if(!d) return; (d.affiliations||[]).forEach(a=>{ a.current=!String(a.end||''); }); syncAffiliationLists(d); researcherEditorMarkDirty();
 }
@@ -7477,7 +8575,7 @@ function researcherEntryRelatedHtml(names){
 }
 function researcherDetailSettingsHtml(){
   if(!researcherDetailSettingsOpen) return '';
-  return `<div class="researcherDetailSettings" role="group" aria-label="${esc(t('researcherDisplaySettings'))}"><label><input type="checkbox" data-researcher-detail-pref="sources"${researcherDetailPrefs.sources?' checked':''}>${esc(t('researcherDisplaySources'))}</label><label><input type="checkbox" data-researcher-detail-pref="careerTypes"${researcherDetailPrefs.careerTypes?' checked':''}>${esc(t('researcherDisplayCareerTypes'))}</label><label><input type="checkbox" data-researcher-detail-pref="showHidden"${researcherDetailPrefs.showHidden?' checked':''}>${esc(t('researcherDisplayHiddenCareer'))}</label><label><input type="checkbox" data-researcher-detail-pref="reciprocalRelated"${researcherDetailPrefs.reciprocalRelated?' checked':''}>${esc(t('researcherDisplayReciprocalRelated'))}</label><label class="researcherDetailSettingsAbbrev"><input type="checkbox" data-aff-abbrev-toggle${affAbbrevPrefs.enabled?' checked':''}>${esc(t('researcherDisplayAbbrev'))}<button type="button" class="tbtn researcherAbbrevEditBtn" data-aff-abbrev-edit>${ic('note')}${esc(t('affAbbrevEdit'))}</button></label></div>`;
+  return `<div class="researcherDetailSettings" role="group" aria-label="${esc(t('researcherDisplaySettings'))}"><label><input type="checkbox" data-researcher-detail-pref="sources"${researcherDetailPrefs.sources?' checked':''}>${esc(t('researcherDisplaySources'))}</label><label><input type="checkbox" data-researcher-detail-pref="careerTypes"${researcherDetailPrefs.careerTypes?' checked':''}>${esc(t('researcherDisplayCareerTypes'))}</label><label><input type="checkbox" data-researcher-detail-pref="showHidden"${researcherDetailPrefs.showHidden?' checked':''}>${esc(t('researcherDisplayHiddenCareer'))}</label><label><input type="checkbox" data-researcher-detail-pref="reciprocalRelated"${researcherDetailPrefs.reciprocalRelated?' checked':''}>${esc(t('researcherDisplayReciprocalRelated'))}</label><label><input type="checkbox" data-researcher-detail-pref="coAuthored"${researcherDetailPrefs.coAuthored?' checked':''}>${esc(t('researcherDisplayCoAuthored'))}</label><label class="researcherDetailSettingsAbbrev"><input type="checkbox" data-aff-abbrev-toggle${affAbbrevPrefs.enabled?' checked':''}>${esc(t('researcherDisplayAbbrev'))}<button type="button" class="tbtn researcherAbbrevEditBtn" data-aff-abbrev-edit>${ic('note')}${esc(t('affAbbrevEdit'))}</button></label></div>`;
 }
 function researcherCareerHtml(profile){
   const career=researcherCareerEntries(profile); if(!career.length) return '';
@@ -7490,10 +8588,13 @@ function renderResearcherDetail(){
   const pane=$('#detail'), entry=researcherEntryForDetail(), p=entry&&entry.profile;
   if(!entry){ pane.innerHTML=`<div class="noselect"><span class="ic" data-ic="users"></span>${esc(t('noSelect'))}</div>`; renderIcons(pane); return; }
   const papers=Array.from(entry.paperIds).map(id=>lib.items.find(it=>it.id===id)).filter(Boolean), name=formatResearcherName(entry);
+  const coPapers=researcherDetailPrefs.coAuthored?researcherCoAuthoredPapers(entry):[];
+  const shownPapers=[...papers.map(it=>({it,role:'corr'})),...coPapers.map(it=>({it,role:'co'}))];
   const avatar=p&&p.imageUrl?`<span class="researcherImageFrame"><img class="researcherImage" src="${esc(p.imageUrl)}" alt="" referrerpolicy="no-referrer"${researcherImagePositionStyle(p)}></span>`:`<span class="researcherDetailAvatar">${esc(name.split(/\s+/).map(x=>x[0]).join('').slice(0,2)||'—')}</span>`;
   const fields=researcherLines(p&&p.researchFields), externalLinks=p&&researcherDetailLinksHtml(p);
   const basicRows=[
-    p&&p.birthDate?`<dt>${esc(t('researcherBirthDate'))}</dt><dd>${esc(p.birthDate.replace(/-/g,lang==='ja'?'年':'-').replace(/(\d{2})$/,(_,d)=>lang==='ja'?Number(d)+'日':d))}${researcherAgeLabel(p.birthDate)?`<span class="researcherAge">${esc(researcherAgeLabel(p.birthDate))}</span>`:''}${researcherDetailProfileSourceLinksHtml(p,'birthDate')}</dd>`:'',
+    p&&p.birthDate?`<dt>${esc(t('researcherBirthDate'))}</dt><dd>${esc(researcherFormatDate(p.birthDate))}${(!(p.deathDate&&String(p.deathDate).trim())&&researcherAgeLabel(p.birthDate))?`<span class="researcherAge">${esc(researcherAgeLabel(p.birthDate))}</span>`:''}${researcherDetailProfileSourceLinksHtml(p,'birthDate')}</dd>`:'',
+    p&&p.deathDate?`<dt>${esc(t('researcherDeathDate'))}</dt><dd>${esc(researcherFormatDate(p.deathDate))}${(p.birthDate&&researcherAgeLabel(p.birthDate,p.deathDate))?`<span class="researcherAge">${esc(researcherAgeLabel(p.birthDate,p.deathDate))}</span>`:''}${researcherDetailProfileSourceLinksHtml(p,'deathDate')}</dd>`:'',
     p&&p.totalCitations?`<dt>${esc(t('researcherTotalCitations'))}</dt><dd>${esc(Number(p.totalCitations).toLocaleString())}${researcherDetailProfileSourceLinksHtml(p,'totalCitations')}</dd>`:'',
     p&&p.hIndex?`<dt>${esc(t('researcherHIndex'))}</dt><dd>${esc(Number(p.hIndex).toLocaleString())}${researcherDetailProfileSourceLinksHtml(p,'hIndex')}</dd>`:'',
     p&&p.i10Index?`<dt>${esc(t('researcherI10Index'))}</dt><dd>${esc(Number(p.i10Index).toLocaleString())}${researcherDetailProfileSourceLinksHtml(p,'i10Index')}</dd>`:'',
@@ -7506,7 +8607,7 @@ function renderResearcherDetail(){
     ${(fields.length||researcherDetailHasRelated(p))?`<section class="researcherDetailSection">${fields.length?`<div class="researcherDetailLabel">${esc(t('researcherFields'))}</div><div class="researcherTagList">${fields.map(x=>`<span class="researcherTag">${esc(x)}</span>${researcherDetailNamedSourceLinksHtml(p,'researchFields',x)}`).join('')}</div>${researcherDetailProfileSourceLinksHtml(p,'researchFields')}`:''}${researcherDetailHasRelated(p)?`<div class="researcherDetailLabel" style="margin-top:${fields.length?'11px':'0'}">${esc(t('researcherRelated'))}</div><div class="researcherTagList">${researcherDetailRelatedHtml(p)}${researcherReciprocalRelatedHtml(p)}</div>${researcherDetailProfileSourceLinksHtml(p,'relatedResearchers')}`:''}</section>`:''}
     ${researcherAwards(p).length?`<section class="researcherDetailSection"><div class="researcherDetailLabel">${esc(t('researcherAwards'))}<span class="researcherDetailCount">${researcherAwards(p).length}</span></div><div class="researcherAwardList">${researcherAwards(p).map(x=>`<div class="researcherAward"><time>${esc(x.year||'—')}</time><div><strong>${esc(x.name)}</strong>${x.organization?`<small class="researcherDetailSubline">${esc(x.organization)}</small>`:''}${researcherDetailSourceLinksHtml(x.sourceUrls||x.sourceUrl)}</div></div>`).join('')}</div></section>`:''}
     ${externalLinks?`<section class="researcherDetailSection"><div class="researcherDetailLabel">${esc(t('researcherIds'))}</div><div class="researcherDetailLinks">${externalLinks}</div>${researcherDetailPrefs.sources?['orcid','openalex','googleScholar','researchGate','linkedin','x','bluesky','researchmap','scopus','researcherId','dblp','cinii'].map(id=>researcherDetailProfileSourceLinksHtml(p,`identifiers.${id}`)).join('')+researcherDetailProfileSourceLinksHtml(p,'website'):''}</section>`:''}
-    <section class="researcherDetailSection researcherPublications"><div class="researcherDetailLabel">${esc(t('researcherPublications'))}<span class="researcherDetailCount">${papers.length}</span></div><div class="researcherPaperGroup"><div class="researcherPaperGroupHead">${esc(t('researcherLibraryPapers'))}</div><div class="researcherPaperCards">${papers.map(researcherPaperHtml).join('')||`<div class="researcherMeta">${esc(t('researcherNoPapers'))}</div>`}</div></div></section>
+    <section class="researcherDetailSection researcherPublications"><div class="researcherDetailLabel">${esc(t('researcherPublications'))}<span class="researcherDetailCount">${shownPapers.length}</span></div><div class="researcherPaperGroup"><div class="researcherPaperGroupHead">${esc(t('researcherLibraryPapers'))}</div><div class="researcherPaperCards">${shownPapers.map(({it,role})=>researcherPaperHtml(it,role)).join('')||`<div class="researcherMeta">${esc(t('researcherNoPapers'))}</div>`}</div></div></section>
     `;
   renderIcons(pane);
 }
@@ -7539,7 +8640,7 @@ function createResearcherProfileFromEntry(entry){
   const profile={
     id:uid(), displayName:researcherCanonicalDisplayName({familyName:name.family,givenName:name.given}), familyName:name.family, givenName:name.given, middleName:name.middle, aliases:uniqueResearcherStrings(Array.from(entry.aliases||[])), affiliation:'',
     identifiers:{orcid:'',googleScholar:'',researchGate:'',linkedin:'',x:'',bluesky:'',researchmap:'',openalex:'',scopus:'',researcherId:'',dblp:'',cinii:'',chemstation:''}, website:'',
-    affiliations:[], positions:[], education:[], awards:[], currentInstitutions:[], pastInstitutions:[], birthDate:'', phdYear:'', phdInstitution:'', phdDegree:'', phdAdvisor:'', totalCitations:'', hIndex:'', i10Index:'', worksCount:'', imageUrl:'', imagePositionX:50, imagePositionY:50, imageScale:1, researchFields:[], relatedResearchers:[],
+    affiliations:[], positions:[], education:[], awards:[], currentInstitutions:[], pastInstitutions:[], birthDate:'', deathDate:'', phdYear:'', phdInstitution:'', phdDegree:'', phdAdvisor:'', totalCitations:'', hIndex:'', i10Index:'', worksCount:'', imageUrl:'', imagePositionX:50, imagePositionY:50, imageScale:1, researchFields:[], relatedResearchers:[],
     dateAdded:new Date().toISOString(), dateModified:new Date().toISOString()
   };
   lib.researchers=lib.researchers||[]; lib.researchers.push(profile); selectedResearcherId=profile.id;
@@ -7563,8 +8664,70 @@ function applyResearcherEnrichment(){
   p.dateModified=new Date().toISOString(); researcherEnrichmentPreview=null;
   touch(); renderSidebar(); renderResearcherList(); renderResearcherDetail(); showToast(I18N[lang].researcherEnrichmentUpdatedFrom(researcherSourceLabel(next.source)));
 }
-function researcherImageDataUrl(blob){
+function readBlobDataUrl(blob){
   return new Promise((resolve,reject)=>{ const reader=new FileReader(); reader.onload=()=>resolve(String(reader.result||'')); reader.onerror=()=>reject(reader.error); reader.readAsDataURL(blob); });
+}
+// Researcher photos are stored inline in library.json as data: URLs, and the
+// whole file is rewritten on every save. Pasted screenshots arrived as full-size
+// PNGs (median 220 KB, up to 2.6 MB each; 230 photos = 62 MB of a 74 MB file),
+// so every keystroke-triggered save serialized and wrote ~70 MB. The largest
+// frame is the 168 px editor preview (crop zoom ≤3), so a 384 px short side at
+// 2x DPR is plenty. Aspect ratio is kept, so saved crop/focus values stay valid.
+const RESEARCHER_IMAGE_SHORT_SIDE = 384;
+const RESEARCHER_IMAGE_LONG_SIDE = 768;
+const RESEARCHER_IMAGE_COMPACT_OVER = 48*1024; // data: URL length worth recompressing
+async function shrinkImageDataUrl(src){
+  // SVG is already small and GIF may be animated — leave both alone
+  if(!/^data:image\/(png|jpe?g|webp|bmp)/i.test(src||'')) return src;
+  const img=new Image();
+  img.src=src;
+  await img.decode();
+  const w=img.naturalWidth, h=img.naturalHeight;
+  if(!w||!h) return src;
+  const sc=Math.min(1, RESEARCHER_IMAGE_SHORT_SIDE/Math.min(w,h), RESEARCHER_IMAGE_LONG_SIDE/Math.max(w,h));
+  const canvas=document.createElement('canvas');
+  canvas.width=Math.max(1,Math.round(w*sc)); canvas.height=Math.max(1,Math.round(h*sc));
+  const ctx=canvas.getContext('2d');
+  ctx.imageSmoothingQuality='high';
+  ctx.drawImage(img,0,0,canvas.width,canvas.height);
+  let out=canvas.toDataURL('image/webp',0.86);
+  if(!out.startsWith('data:image/webp')){
+    // no WebP encoder (Safari): JPEG has no alpha, so flatten onto white first
+    ctx.globalCompositeOperation='destination-over'; ctx.fillStyle='#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    out=canvas.toDataURL('image/jpeg',0.86);
+  }
+  return out.length<src.length ? out : src;
+}
+async function researcherImageDataUrl(blob){
+  const src=await readBlobDataUrl(blob);
+  try{ return await shrinkImageDataUrl(src); }
+  catch(e){ console.warn('researcher image not recompressed', e); return src; }
+}
+// One background pass after a library opens: recompress oversized researcher
+// photos saved before shrinking existed, and strip empty fields from old
+// related-paper map snapshots (see leanGraphItem). Yields between photos so the
+// UI stays responsive, and gives up if another library is opened meanwhile.
+async function compactLibraryStorage(target){
+  await new Promise(r=>setTimeout(r, 4000)); // let the first render and user settle
+  if(lib!==target) return;
+  let before=0, after=0, changed=false;
+  for(const p of (target.researchers||[])){
+    const src=p && p.imageUrl;
+    if(typeof src!=='string' || src.length<RESEARCHER_IMAGE_COMPACT_OVER || !src.startsWith('data:')) continue;
+    let out=src;
+    try{ out=await shrinkImageDataUrl(src); }catch(e){ continue; }
+    if(lib!==target) return;
+    if(out!==src && p.imageUrl===src){ before+=src.length; after+=out.length; p.imageUrl=out; changed=true; }
+    await new Promise(r=>setTimeout(r, 0));
+  }
+  Object.values(target.graphCache||{}).forEach(g=>{
+    (g && Array.isArray(g.nodes) ? g.nodes : []).forEach(n=>{
+      if(n && n.item && ('id' in n.item || 'dateAdded' in n.item)){ n.item=leanGraphItem(n.item); changed=true; }
+    });
+  });
+  if(!changed || lib!==target) return;
+  touch();
+  if(before>after) showToast(I18N[lang].storageCompacted(((before-after)/1048576).toFixed(1)));
 }
 // Apply an image blob to the researcher editor draft. Shared by the paste button
 // (navigator.clipboard.read) and the paste-event handler (⌘/Ctrl+V), so the two
@@ -7603,6 +8766,29 @@ function collectionWithDescendants(id){
     lib.collections.filter(c=>c.parent===ids[i]).forEach(c=>ids.push(c.id));
   }
   return ids;
+}
+// Parent collection views normally include the complete subtree. The two
+// additional scopes are display-only: they never change a reference's saved
+// collection memberships.
+function normalizedCollectionScope(scope){
+  return ['all','direct','descendants'].includes(scope) ? scope : 'all';
+}
+function collectionScopeFilter(id, scope){
+  const ids = collectionWithDescendants(id);
+  return { id, scope:normalizedCollectionScope(scope), ids, descendantIds:ids.slice(1) };
+}
+function itemMatchesCollectionScope(it, spec){
+  if(!spec) return true;
+  const memberships = it.collections || [];
+  if(spec.scope==='direct'){
+    return memberships.includes(spec.id) && !memberships.some(id=>spec.descendantIds.includes(id));
+  }
+  if(spec.scope==='descendants') return memberships.some(id=>spec.descendantIds.includes(id));
+  return memberships.some(id=>spec.ids.includes(id));
+}
+function collectionScopeCount(activeItems, id, scope){
+  const spec = collectionScopeFilter(id, scope);
+  return activeItems.reduce((n,it)=>n + (itemMatchesCollectionScope(it, spec) ? 1 : 0), 0);
 }
 function orderedCollections(parent, depth, out){
   depth = depth || 0;
@@ -7734,6 +8920,20 @@ function updateSidebarSectionVisibility(){
   setSectionToggle($('#btnToggleCollections'), collectionsSectionCollapsed);
   setSectionToggle($('#btnToggleTags'), tagsSectionCollapsed);
 }
+// 折り返し表示のオン／オフ。クラスは #collList（作り直されない器）に付けるので、
+// renderSidebar の innerHTML 差し替えでは落ちない。ここで呼ぶのは言語切替のあとに
+// ボタンの title を引き直すためで、リスト自体の再描画は不要。
+function applyCollWrapMode(){
+  const list = $('#collList');
+  if(list) list.classList.toggle('wrapNames', collWrapNames);
+  const btn = $('#btnCollWrapNames');
+  if(!btn) return;
+  const key = collWrapNames ? 'collWrapNamesOff' : 'collWrapNamesOn';
+  btn.title = t(key);
+  btn.setAttribute('aria-label', t(key));
+  btn.setAttribute('aria-pressed', collWrapNames ? 'true' : 'false');
+  btn.style.color = collWrapNames ? 'var(--accent)' : '';
+}
 function updateCollapseAllCollectionsButton(){
   const btn = $('#btnCollapseAllCollections');
   if(!btn) return;
@@ -7782,14 +8982,35 @@ function renderSidebar(){
     trash: lib.items.filter(i=>isItemTrashed(i)).length,
     uncat: activeItems.filter(i=>!i.collections.length).length
   };
+  // Fixed filters, in the order the sidebar reads top to bottom:
+  // すべての文献 / スター付き / 自分の論文 / 未分類 / ゴミ箱. コレクション and タグ
+  // follow as their own sections, and 研究者 (a different view, not a filter)
+  // sits on its own at the very bottom — see #researcherFilter below.
   $('#fixedFilters').innerHTML = `
     <div class="sideItem ${currentView==='items'&&filter.coll==='all'?'active':''}" data-coll="all" data-drop-root="1">${ic('library')}${esc(t('allItems'))}<span class="cnt">${counts.all}</span></div>
-    <div class="sideItem ${currentView==='researchers'?'active':''}" data-view="researchers">${ic('users')}${esc(t('researchers'))}<span class="cnt">${researcherDirectoryEntries().length}</span></div>
     <div class="sideItem ${currentView==='items'&&filter.coll==='starred'?'active':''}" data-coll="starred" data-drop-action="starred">${ic('star')}${esc(t('starred'))}<span class="cnt">${counts.starred}</span></div>
     <div class="sideItem ${currentView==='items'&&filter.coll==='myPublication'?'active':''}" data-coll="myPublication" data-drop-action="myPublication">${ic('check')}${esc(t('myPublication'))}<span class="cnt">${counts.myPublication}</span></div>
+    <div class="sideItem ${currentView==='items'&&filter.coll==='uncat'?'active':''}" data-coll="uncat">${ic('inbox')}${esc(t('uncategorized'))}<span class="cnt">${counts.uncat}</span></div>
     <div class="sideItem ${currentView==='items'&&filter.coll==='trash'?'active':''}" data-coll="trash" data-drop-action="trash">${ic('trash')}${esc(t('trash'))}<span class="cnt">${counts.trash}</span></div>`;
   const searching = !!collSearchQuery.trim();
   const collRows = collectionsForSidebar();
+  // 行の tooltip に出すフルパス。collectionPathLabel() は階層ごとに線形探索する
+  // ので、行数 × 深さ分の探索を避けてここで一度だけ Map を作り、結果を畳み込む。
+  const collById = new Map(lib.collections.map(c=>[c.id, c]));
+  const collPathCache = new Map();
+  const collPathOf = (id)=>{
+    if(collPathCache.has(id)) return collPathCache.get(id);
+    const parts = [], seen = new Set();
+    let cur = collById.get(id);
+    while(cur && !seen.has(cur.id)){            // seen: 親が循環していても止まる
+      seen.add(cur.id);
+      parts.unshift(cur.name);
+      cur = cur.parent ? collById.get(cur.parent) : null;
+    }
+    const label = parts.join(' / ');
+    collPathCache.set(id, label);
+    return label;
+  };
   $('#collList').innerHTML = collRows.map(({c, depth})=>{
     const n = collectionCounts.get(c.id) || 0;
     const hasKids = collectionParents.has(c.id);
@@ -7805,14 +9026,17 @@ function renderSidebar(){
     const folderIc = hasKids
       ? `<span class="collFolderToggle" data-act="toggleColl" data-id="${c.id}" title="${esc(closed ? t('expand') : t('collapse'))}">${folderIcInner}</span>`
       : folderIcInner;
+    const scope = normalizedCollectionScope(filter.coll===c.id ? filter.collScope : 'all');
+    const scopeLabel = t('collectionScope' + ({all:'All',direct:'Direct',descendants:'Descendants'}[scope]));
     // Indent via left-padding rather than a leading spacer element (a 0-width
     // spacer still adds a flex gap, which pushed collection icons out of line).
     // Base 16px indents the top-level folders slightly under the "Collections"
     // header title (which starts ~29px in), so the tree reads as belonging to it;
     // each nesting level adds 10px, capped at three levels so deep trees stay tidy.
     return `<div class="sideItem ${filter.coll===c.id?'active':''} ${selectedCollectionIds.has(c.id)?'collMultiSel':''}" data-coll="${c.id}" data-drop-coll="${c.id}" draggable="true" style="padding-left:${16 + Math.min(depth*10, 30)}px">
-      ${folderIc}<span style="overflow:hidden;text-overflow:ellipsis;flex:1">${esc(c.name)}</span>
+      ${folderIc}<span class="sideName" title="${esc(collPathOf(c.id))}">${esc(c.name)}</span>
       <span class="rowbtns">
+        ${hasKids ? `<button data-act="scope" data-id="${c.id}" title="${esc(t('collectionScopeTip')(scopeLabel))}" aria-label="${esc(t('collectionScope'))}"${filter.coll===c.id && scope!=='all' ? ' class="scopeOn"' : ''}>${ic('sliders')}</button>` : ''}
         <button data-act="sub" data-id="${c.id}" title="${esc(t('newSubCollection'))}">${ic('folderPlus')}</button>
         <button data-act="color" data-id="${c.id}" title="${esc(t('collColor'))}">${ic('palette')}</button>
         <button data-act="ren" data-id="${c.id}">${ic('pencil')}</button>
@@ -7833,7 +9057,7 @@ function renderSidebar(){
     .sort((a,b)=>a[0].localeCompare(b[0]));
   $('#tagList').innerHTML = tags.map(([tg,n])=>
     `<div class="sideItem tagRow ${filter.tags.has(tg)?'active':''}" data-tag="${esc(tg)}" data-drop-tag="${esc(tg)}">
-      ${ic('tag', tagIconStyle(tg))}<span style="overflow:hidden;text-overflow:ellipsis;flex:1">${esc(tg)}</span>
+      ${ic('tag', tagIconStyle(tg))}<span class="sideName" title="${esc(tg)}">${esc(tg)}</span>
       <span class="rowbtns">
         <button data-act="tagcolor" data-tag="${esc(tg)}" title="${esc(t('collColor'))}">${ic('palette')}</button>
         <button data-act="tagren" data-tag="${esc(tg)}" title="${esc(t('renameTag'))}">${ic('pencil')}</button>
@@ -7841,9 +9065,10 @@ function renderSidebar(){
       </span>
       <span class="cnt">${n}</span></div>`
   ).join('') || (tagSearching ? `<div class="collSearchEmpty">${esc(t('searchTagEmpty'))}</div>` : `<span style="color:var(--text3);font-size:12px;padding:0 8px">—</span>`);
-  $('#uncatFilter').innerHTML = `<div class="sideItem ${currentView==='items'&&filter.coll==='uncat'?'active':''}" data-coll="uncat">${ic('inbox')}${esc(t('uncategorized'))}<span class="cnt">${counts.uncat}</span></div>`;
+  $('#researcherFilter').innerHTML = `<div class="sideItem ${currentView==='researchers'?'active':''}" data-view="researchers">${ic('users')}${esc(t('researchers'))}<span class="cnt">${researcherDirectoryEntries().length}</span></div>`;
   updateSidebarSectionVisibility();
   updateCollapseAllCollectionsButton();
+  applyCollWrapMode();
 }
 
 // Fast path: selecting a collection/tag doesn't change any counts, so just
@@ -7899,7 +9124,7 @@ function renderListHeader(){
       const label = d.headerIcon ? ic(d.headerIcon) : esc(t(d.i18n));
       const sort = d.sortable === false ? '' : `<button type="button" class="thsort${k===sortKey?' active':''}" data-sort="${k}" title="${esc(t('sortColumn'))}" aria-label="${esc(t('sortColumn'))}: ${esc(t(d.i18n))}"><span aria-hidden="true">${sortGlyph(k)}</span></button>`;
       const dragAttr = d.sortable === false ? ' draggable="false"' : ' draggable="true"';
-      const resize = d.sortable === false ? '' : `<span class="colresize" data-resize="${k}"></span>`;
+      const resize = d.sortable === false ? '' : `<span class="colresize" data-resize="${k}" title="${esc(t('colResizeHint'))}"></span>`;
       const title = d.sortable === false ? esc(t(d.i18n)) : `${esc(t(d.i18n))} — ${esc(t('colHint'))}`;
       const ariaSort = k===sortKey ? ` aria-sort="${sortAsc?'ascending':'descending'}"` : '';
       return `<th class="thmove${alignCls}${pdfCls}${trashCls}${iconCls}${k===sortKey?' sort-active':''}" data-col="${k}"${dragAttr} title="${title}"${ariaSort}>`+
@@ -8142,7 +9367,7 @@ function cardRowHTML(it){
     journal ? `<span class="journal">${journal}</span>` : '',
     year ? `<span>${year}</span>` : '',
   ].filter(Boolean).join(`<span class="dot">·</span>`);
-  return `<div class="cardRow ${it.id===selectedId?'sel':''} ${multiSelectedIds.has(it.id)?'multiSel':''} ${updateClassForItem(it.id)} ${pickClassForItem(it.id)}" data-id="${it.id}" draggable="true">
+  return `<div class="cardRow ${it.id===selectedId?'sel':''} ${multiSelectedIds.has(it.id)?'multiSel':''} ${updateClassForItem(it.id)} ${pickClassForItem(it.id)} ${reviewClassForItem(it)}" data-id="${it.id}" draggable="true">
     <div class="cardAccent"></div>
     <div class="cardBody">
       <div class="cardTitle">${starButtonHTML(it, 'cardStar')}<span class="cardTitleText">${title}</span></div>
@@ -8178,7 +9403,7 @@ function cardThumbInner(it){
   return `<div class="cardNoimg"><span>${init}</span></div>`;
 }
 function galleryCommonCls(it, mod){
-  return `cardRow ${mod} ${it.id===selectedId?'sel':''} ${multiSelectedIds.has(it.id)?'multiSel':''} ${updateClassForItem(it.id)} ${pickClassForItem(it.id)}`;
+  return `cardRow ${mod} ${it.id===selectedId?'sel':''} ${multiSelectedIds.has(it.id)?'multiSel':''} ${updateClassForItem(it.id)} ${pickClassForItem(it.id)} ${reviewClassForItem(it)}`;
 }
 // B2 — compact dense card: image on top, star badge, title / authors / journal · year
 function galleryCardHTML(it){
@@ -8219,7 +9444,10 @@ function magazineCardHTML(it){
   const journal = journalDisplay(it);
   const year = it.year || '';
   const src = esc([journal, authors, year].filter(Boolean).join(' · '));
-  return `<div class="${galleryCommonCls(it,'magCard')}" data-id="${it.id}" draggable="true">
+  // No cover image means the overlaid title sits on the light initials tile, not
+  // on a photo — the scrim has to be stronger there (see .magNoImg in main.css).
+  const mod = 'magCard' + (it.image && it.image.name ? '' : ' magNoImg');
+  return `<div class="${galleryCommonCls(it,mod)}" data-id="${it.id}" draggable="true">
     <div class="magThumb">${cardThumbInner(it)}</div>
     ${it.starred?`<span class="magStarBadge">${ic('star')}</span>`:''}
     <div class="magOv">
@@ -8279,8 +9507,427 @@ function renderKanban(items){
   renderIcons($('#itemKanban'));
 }
 
+/* ---------------------------------------------------------------
+   Notes: a small self-contained Markdown renderer
+   -----------------------------------------------
+   it.notes stays a plain string; it is simply read as Markdown now, so search,
+   CSV export, the Notes column and every importer keep working on it unchanged.
+   Raw HTML is never passed through: the source is escaped first and only our own
+   tags are added afterwards, so a note arriving from RIS/CSV cannot inject markup.
+   Two extensions beyond ordinary Markdown:
+     attachment:NAME  — an image or link into the library's attachments/ folder,
+                        resolved to a blob URL after render by hydrateNoteMedia()
+     [[citekey]]      — a link to another reference in this library, optionally
+                        written as [[citekey|display text]]
+---------------------------------------------------------------- */
+const MD_ALLOWED_SCHEMES = ['http','https','mailto','attachment'];
+// Reverse esc() exactly (it is the only transform applied before this point), so
+// a URL can be scheme-checked as the user actually typed it.
+function mdUnesc(s){
+  return String(s==null?'':s).replace(/&(?:amp|lt|gt|quot|#39);/g, m=>({'&amp;':'&','&lt;':'<','&gt;':'>','&quot;':'"','&#39;':"'"}[m]));
+}
+// '' for anything not on the scheme allowlist (javascript:, data:, …).
+function mdSafeUrl(url){
+  // Browsers strip TAB/LF/CR anywhere in a URL and leading C0 controls before
+  // resolving the scheme, so "java<TAB>script:" and "\x01javascript:" both
+  // navigate. Remove them first, or the allow-list only inspects the disguise.
+  const s = String(url==null?'':url).replace(/[\u0000-\u001f\u007f]/g,'').trim();
+  if(!s) return '';
+  const m = s.match(/^([a-z][a-z0-9+.\-]*):/i);
+  if(m && !MD_ALLOWED_SCHEMES.includes(m[1].toLowerCase())) return '';
+  return s;
+}
+function mdIsAttachmentUrl(u){ return /^attachment:/i.test(u); }
+function mdAttachmentName(u){ return mdUnesc(String(u).slice('attachment:'.length)).trim(); }
+// Emphasis runs last, on text that is already escaped and has links/code lifted
+// out, so ** * _ ~~ can never straddle a tag we generated.
+function mdEmphasis(s){
+  return String(s==null?'':s)
+    .replace(/~~([^~\n]+)~~/g, '<del>$1</del>')
+    .replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/(^|[^\w_])__([^_\n]+)__(?![\w_])/g, '$1<strong>$2</strong>')
+    .replace(/(^|[^\w*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>')
+    .replace(/(^|[^\w_])_([^_\n]+)_(?![\w_])/g, '$1<em>$2</em>');
+}
+// ![alt](url) — "alt|320" sets a max width in px so a figure can be sized inline.
+function mdImageHtml(alt, url){
+  const u = mdSafeUrl(mdUnesc(url).trim());
+  if(!u) return alt;
+  let label = alt, width = '';
+  const wm = alt.match(/^(.*)\|\s*(\d{2,4})\s*$/);
+  if(wm){ label = wm[1].trim(); width = wm[2]; }
+  const style = width ? ` style="max-width:${width}px"` : '';
+  // decoding/loading match the external branch: a note full of pasted screenshots
+  // should never block the pane while it scrolls
+  if(mdIsAttachmentUrl(u)) return `<img class="mdImg" data-md-att="${esc(mdAttachmentName(u))}" alt="${label}" title="${label}" loading="lazy" decoding="async"${style}>`;
+  return `<img class="mdImg" src="${esc(u)}" alt="${label}" title="${label}" loading="lazy" decoding="async"${style}>`;
+}
+function mdLinkHtml(text, url){
+  const u = mdSafeUrl(mdUnesc(url).trim());
+  const body = mdEmphasis(text);
+  if(!u) return body;
+  if(mdIsAttachmentUrl(u)){
+    const name = mdAttachmentName(u);
+    return `<a class="mdAtt" data-md-att-open="${esc(name)}" title="${esc(name)}">${ic('file')}<span>${body||esc(name)}</span></a>`;
+  }
+  return `<a class="mdLink" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${body||esc(u)}</a>`;
+}
+// [[citekey]] / [[citekey|label]] — resolved against the library at render time.
+function mdRefHtml(key, label){
+  const raw = mdUnesc(key).trim();
+  const shown = (label && label.trim()) ? mdEmphasis(label.trim()) : key.trim();
+  const target = raw ? lib.items.find(x=>String(x.citekey||'').trim().toLowerCase()===raw.toLowerCase()) : null;
+  if(target) return `<a class="mdRef" data-md-ref="${esc(target.id)}" title="${esc(target.title||raw)}">${ic('book')}<span>${shown}</span></a>`;
+  return `<span class="mdRef missing" title="${esc(t('noteRefMissing'))}">${ic('alert')}<span>${shown}</span></span>`;
+}
+// Inline pass. Code spans, images, refs and links become NUL-delimited
+// placeholders before emphasis runs, then are restored (repeatedly, since a
+// link's own text may hold placeholders of its own).
+function mdInline(raw){
+  const parts = [];
+  const hold = (html)=>{ parts.push(html); return '\u0000'+(parts.length-1)+'\u0000'; };
+  let s = esc(String(raw==null?'':raw)).replace(/\u0000/g,'');
+  s = s.replace(/`([^`\n]+)`/g, (m,code)=>hold('<code class="mdCode">'+code+'</code>'));
+  s = s.replace(/!\[([^\]\n]*)\]\(\s*((?:[^()\n]|\([^()\n]*\))*?)\s*\)/g, (m,alt,url)=>hold(mdImageHtml(alt,url)));
+  s = s.replace(/\[\[([^\]|\n]+)(?:\|([^\]\n]+))?\]\]/g, (m,key,label)=>hold(mdRefHtml(key,label)));
+  s = s.replace(/\[([^\]\n]*)\]\(\s*((?:[^()\n]|\([^()\n]*\))*?)\s*\)/g, (m,text,url)=>hold(mdLinkHtml(text,url)));
+  // bare URLs, minus any trailing sentence punctuation
+  s = s.replace(/(^|[\s(])((?:https?:\/\/|www\.)[^\s<>()]*[^\s<>().,;:!?])/g,
+    (m,pre,url)=>pre+hold(mdLinkHtml(url, /^www\./i.test(url) ? 'https://'+url : url)));
+  s = mdEmphasis(s);
+  for(let n=0; n<6 && /\u0000\d+\u0000/.test(s); n++){
+    s = s.replace(/\u0000(\d+)\u0000/g, (m,i)=>parts[+i]===undefined ? '' : parts[+i]);
+  }
+  return s;
+}
+const MD_ITEM_RE = /^(\s*)([-*+]|\d+[.)])\s+(.*)$/;
+const mdTabs = (s)=>String(s).replace(/\t/g,'    ');
+// Consecutive list lines -> one <ul>/<ol>; a deeper-indented run recurses and is
+// tucked into the <li> before it. Returns [html, indexAfterTheList].
+function mdListHtml(lines, start){
+  const first = mdTabs(lines[start]).match(MD_ITEM_RE);
+  const base = first[1].length;
+  const ordered = /\d/.test(first[2]);
+  let i = start, html = '';
+  while(i < lines.length){
+    const m = mdTabs(lines[i]).match(MD_ITEM_RE);
+    if(!m) break;
+    const ind = m[1].length;
+    if(ind < base) break;
+    if(ind > base){
+      const sub = [];
+      while(i < lines.length){
+        const mm = mdTabs(lines[i]).match(MD_ITEM_RE);
+        if(!mm || mm[1].length <= base) break;
+        sub.push(mdTabs(lines[i]).slice(base+1));
+        i++;
+      }
+      if(sub.length && html.endsWith('</li>')) html = html.slice(0, -5) + mdListHtml(sub, 0)[0] + '</li>';
+      continue;
+    }
+    if(ordered !== /\d/.test(m[2])) break;
+    let body = m[3], box = '', cls = 'mdLi';
+    const tm = body.match(/^\[([ xX])\]\s+(.*)$/);
+    if(tm){
+      box = `<input type="checkbox" class="mdTask" disabled${/x/i.test(tm[1])?' checked':''}>`;
+      body = tm[2];
+      cls += ' mdTaskLi';
+    }
+    html += `<li class="${cls}">${box}${mdInline(body)}</li>`;
+    i++;
+  }
+  return [`<${ordered?'ol':'ul'} class="mdList">${html}</${ordered?'ol':'ul'}>`, i];
+}
+function mdTableCells(line){
+  let s = line.trim();
+  if(s.startsWith('|')) s = s.slice(1);
+  if(s.endsWith('|')) s = s.slice(0,-1);
+  return s.split('|').map(c=>c.trim());
+}
+function mdToHtml(src){
+  const lines = String(src==null?'':src).replace(/\r\n?/g,'\n').split('\n');
+  const out = [];
+  let i = 0;
+  while(i < lines.length){
+    const line = lines[i];
+    const fence = line.match(/^\s*(```|~~~)/);
+    if(fence){
+      const mark = fence[1], body = [];
+      i++;
+      while(i < lines.length && lines[i].trim().slice(0,3) !== mark){ body.push(lines[i]); i++; }
+      i++;
+      out.push(`<pre class="mdPre"><code>${esc(body.join('\n'))}</code></pre>`);
+      continue;
+    }
+    if(!line.trim()){ i++; continue; }
+    const h = line.match(/^\s{0,3}(#{1,6})\s+(.*)$/);
+    if(h){ const lv = h[1].length; out.push(`<h${lv} class="mdH mdH${lv}">${mdInline(h[2].trim())}</h${lv}>`); i++; continue; }
+    if(/^\s*([-*_])\s*(\1\s*){2,}$/.test(line)){ out.push('<hr class="mdHr">'); i++; continue; }
+    if(line.includes('|') && i+1 < lines.length && /^[\s|:\-]+$/.test(lines[i+1]) && lines[i+1].includes('-') && lines[i+1].includes('|')){
+      const head = mdTableCells(line);
+      const aligns = mdTableCells(lines[i+1]).map(c=> /^:-+:$/.test(c) ? 'center' : /^-+:$/.test(c) ? 'right' : '');
+      i += 2;
+      const rows = [];
+      while(i < lines.length && lines[i].trim() && lines[i].includes('|')){ rows.push(mdTableCells(lines[i])); i++; }
+      const al = (ci)=>aligns[ci] ? ` style="text-align:${aligns[ci]}"` : '';
+      const th = head.map((c,ci)=>`<th${al(ci)}>${mdInline(c)}</th>`).join('');
+      const tb = rows.map(r=>`<tr>${head.map((_,ci)=>`<td${al(ci)}>${mdInline(r[ci]||'')}</td>`).join('')}</tr>`).join('');
+      out.push(`<div class="mdTableWrap"><table class="mdTable"><thead><tr>${th}</tr></thead><tbody>${tb}</tbody></table></div>`);
+      continue;
+    }
+    if(/^\s*>/.test(line)){
+      const body = [];
+      while(i < lines.length && /^\s*>/.test(lines[i])){ body.push(lines[i].replace(/^\s*>\s?/,'')); i++; }
+      out.push(`<blockquote class="mdQuote">${mdToHtml(body.join('\n'))}</blockquote>`);
+      continue;
+    }
+    if(MD_ITEM_RE.test(mdTabs(line))){
+      const [html, next] = mdListHtml(lines, i);
+      out.push(html);
+      i = next > i ? next : i+1;
+      continue;
+    }
+    const para = [];
+    while(i < lines.length){
+      const l = lines[i];
+      if(!l.trim()) break;
+      if(/^\s{0,3}#{1,6}\s/.test(l) || /^\s*>/.test(l) || /^\s*(```|~~~)/.test(l)) break;
+      if(MD_ITEM_RE.test(mdTabs(l)) || /^\s*([-*_])\s*(\1\s*){2,}$/.test(l)) break;
+      para.push(l); i++;
+    }
+    if(!para.length){ i++; continue; }
+    out.push(`<p class="mdP">${para.map(l=>mdInline(l)).join('<br>')}</p>`);
+  }
+  return out.join('');
+}
+// Markdown flattened back to one line of plain text — for the Notes column and
+// its tooltip, where the markup would only be noise.
+function stripMd(src){
+  return String(src==null?'':src)
+    .replace(/^\s*(?:```|~~~).*$/gm, ' ')
+    .replace(/!\[([^\]\n]*)\]\(\s*(?:[^()\n]|\([^()\n]*\))*?\s*\)/g, (m,alt)=>String(alt).replace(/\|\s*\d{2,4}\s*$/, ''))
+    .replace(/\[\[([^\]|\n]+)(?:\|([^\]\n]+))?\]\]/g, (m,k,l)=>l||k)
+    .replace(/\[([^\]\n]*)\]\(\s*(?:[^()\n]|\([^()\n]*\))*?\s*\)/g, '$1')
+    .replace(/^\s{0,3}#{1,6}\s+/gm, '')
+    .replace(/^\s*>\s?/gm, '')
+    .replace(/^(\s*)([-*+]|\d+[.)])\s+(\[[ xX]\]\s*)?/gm, '')
+    .replace(/^[\s|:*_-]*[-*_|][\s|:*_-]*$/gm, ' ')
+    .replace(/`([^`\n]+)`/g, '$1')
+    .replace(/~~([^~\n]+)~~/g, '$1')
+    .replace(/\*\*([^*\n]+)\*\*/g, '$1')
+    .replace(/(^|[^\w_])__([^_\n]+)__(?![\w_])/g, '$1$2')
+    .replace(/(^|[^\w*])\*([^*\n]+)\*(?!\*)/g, '$1$2')
+    .replace(/(^|[^\w_])_([^_\n]+)_(?![\w_])/g, '$1$2')
+    .replace(/\|/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+// The Notes column flattens every note on every list render, so the result is
+// memoized on the note text itself (a changed note simply misses the cache).
+const stripMdCache = new Map();
+function stripMdCached(src){
+  const key = String(src==null?'':src);
+  if(!key) return '';
+  let flat = stripMdCache.get(key);
+  if(flat === undefined){
+    if(stripMdCache.size > 4000) stripMdCache.clear();
+    flat = stripMd(key);
+    stripMdCache.set(key, flat);
+  }
+  return flat;
+}
+// Every attachment a note points at, so generated names stay unique across
+// figures, PDFs and note images alike.
+function noteAttachmentNames(src){
+  const out = [];
+  const re = /(?:!\[[^\]\n]*\]|\[[^\]\n]*\])\(\s*attachment:([^)\n]+)\)/gi;
+  let m;
+  while((m = re.exec(String(src==null?'':src)))) { const n = m[1].trim(); if(n) out.push(n); }
+  return out;
+}
+function noteCitekeys(src){
+  const out = [];
+  const re = /\[\[([^\]|\n]+)(?:\|[^\]\n]+)?\]\]/g;
+  let m;
+  while((m = re.exec(String(src==null?'':src)))) { const k = m[1].trim(); if(k) out.push(k); }
+  return out;
+}
+// References whose notes link here with [[citekey]].
+function notesBacklinkItems(it){
+  const key = String(it && it.citekey || '').trim().toLowerCase();
+  if(!key) return [];
+  return lib.items.filter(x => x.id !== it.id && !isItemTrashed(x) &&
+    noteCitekeys(x.notes).some(k => k.toLowerCase() === key));
+}
+// attachment: images carry only a name until now; resolve them through the same
+// object-URL cache the figure preview uses.
+function hydrateNoteMedia(root){
+  if(!root) return;
+  root.querySelectorAll('img[data-md-att]:not([src])').forEach(img=>{
+    loadItemImagePreview(img, img.dataset.mdAtt);
+  });
+}
+
+/* ---- note editor: Markdown source, formatting toolbar, live preview ----
+   The textarea still carries data-f="notes", so the ordinary detail-pane input
+   handler keeps saving it; the toolbar only rewrites the textarea's value and
+   then commits it the same way by hand. */
+let noteEditorPreview = localStorage.getItem('refshelf.noteEditorPreview') === '1';
+let notePreviewTimer = null;
+// The note box is drag-resizable; remember where the user left it.
+let noteAreaHeight = Math.min(1200, Math.max(90, +localStorage.getItem('refshelf.noteAreaHeight') || 260));
+function rememberNoteAreaHeight(area){
+  // offsetHeight is 0 for an unlaid-out element (a hidden window, say) — never
+  // persist that, or the box would come back collapsed to its minimum
+  if(!area || !area.offsetHeight) return;
+  const h = Math.min(1200, Math.max(90, Math.round(area.offsetHeight)));
+  if(Math.abs(h - noteAreaHeight) < 2) return;
+  noteAreaHeight = h;
+  try{ localStorage.setItem('refshelf.noteAreaHeight', String(h)); }catch(_e){}
+}
+const NOTE_WRAPS = { bold:['**','**'], italic:['*','*'], strike:['~~','~~'], code:['`','`'] };
+const NOTE_PREFIXES = { heading:'## ', list:'- ', tasklist:'- [ ] ', quote:'> ' };
+const NOTE_TOOLBAR = [
+  ['bold','bold','mdBold','⌘/Ctrl+B'], ['italic','italic','mdItalic','⌘/Ctrl+I'],
+  ['strike','strike','mdStrike',''], ['code','code','mdCode',''],
+  '|',
+  ['heading','heading','mdHeading',''], ['list','listBullet','mdList',''],
+  ['tasklist','listCheck','mdTaskList',''], ['quote','quote','mdQuote',''],
+  '|',
+  ['link','link','mdLink','⌘/Ctrl+K'], ['image','image','mdImage',''],
+  ['ref','book','mdRefInsert',''], ['table','table','mdTable',''],
+];
+function noteEditorHtml(it){
+  const btns = NOTE_TOOLBAR.map(b=>{
+    if(b==='|') return '<span class="noteTbSep"></span>';
+    const [act, icon, key, hint] = b;
+    const label = t(key) + (hint ? ' (' + hint + ')' : '');
+    return `<button type="button" class="noteTbBtn" data-note-tb="${act}" title="${esc(label)}" aria-label="${esc(t(key))}">${ic(icon)}</button>`;
+  }).join('');
+  return `<div class="fRow noteRow">
+    <label>${esc(t('notes'))}</label>
+    <div class="noteEditor${noteEditorPreview?' previewOn':''}">
+      <div class="noteToolbar">${btns}
+        <button type="button" class="noteTbBtn notePreviewBtn${noteEditorPreview?' active':''}" data-note-tb="preview" title="${esc(t('mdPreview'))}" aria-pressed="${noteEditorPreview}">${ic('eye')}</button>
+      </div>
+      <textarea data-f="notes" class="noteArea" placeholder="${esc(t('notesPlaceholder'))}" spellcheck="false" style="height:${noteAreaHeight}px">${esc(it.notes||'')}</textarea>
+      <div class="noteLivePreview mdBody"${noteEditorPreview?'':' hidden'}>${noteEditorPreview?mdToHtml(it.notes):''}</div>
+      <div class="noteHint">${esc(t('notesHint'))}</div>
+    </div>
+  </div>`;
+}
+function noteAreaEl(){ return document.querySelector('#detail textarea[data-f="notes"]'); }
+// Save a value the toolbar wrote directly (no 'input' event fires for those).
+function commitNoteArea(area){
+  const it = lib.items.find(x=>x.id===selectedId);
+  if(!it || !area) return;
+  it.notes = area.value;
+  touch(it, {typing:true});
+  clearTimeout(notePreviewTimer);
+  notePreviewTimer = setTimeout(updateNotePreview, 120);
+  if(noteEditAffectsList()){
+    clearTimeout(renderListDebounce._t);
+    renderListDebounce._t = setTimeout(()=>{ renderList(); renderSidebar(); }, 400);
+  }
+}
+function updateNotePreview(){
+  const wrap = document.querySelector('#detail .noteLivePreview');
+  if(!wrap || wrap.hidden) return; // closed preview: nothing to lay out
+  const it = lib.items.find(x=>x.id===selectedId);
+  wrap.innerHTML = it ? mdToHtml(it.notes) : '';
+  hydrateNoteMedia(wrap);
+}
+function insertAtCursor(area, text){
+  const s = area.selectionStart, e = area.selectionEnd;
+  area.value = area.value.slice(0,s) + text + area.value.slice(e);
+  const c = s + text.length;
+  area.setSelectionRange(c, c);
+}
+// Toolbar / shortcut formatting. Wrapping toggles off when the selection is
+// already wrapped; prefixes toggle off when every line already carries them.
+function applyNoteMarkdown(area, act){
+  if(!area) return;
+  const s = area.selectionStart, e = area.selectionEnd, v = area.value, sel = v.slice(s, e);
+  if(NOTE_WRAPS[act]){
+    const [a, b] = NOTE_WRAPS[act];
+    if(sel.length >= a.length + b.length && sel.startsWith(a) && sel.endsWith(b)){
+      const inner = sel.slice(a.length, sel.length - b.length);
+      area.value = v.slice(0,s) + inner + v.slice(e);
+      area.setSelectionRange(s, s + inner.length);
+    }else if(v.slice(Math.max(0, s - a.length), s) === a && v.slice(e, e + b.length) === b){
+      // markers sit just outside the selection — the state wrapping leaves behind,
+      // so pressing the same button again unwraps instead of doubling up
+      area.value = v.slice(0, s - a.length) + sel + v.slice(e + b.length);
+      area.setSelectionRange(s - a.length, s - a.length + sel.length);
+    }else{
+      area.value = v.slice(0,s) + a + sel + b + v.slice(e);
+      area.setSelectionRange(s + a.length, s + a.length + sel.length);
+    }
+  }else if(NOTE_PREFIXES[act]){
+    const p = NOTE_PREFIXES[act];
+    const ls = v.lastIndexOf('\n', s-1) + 1;
+    const nl = v.indexOf('\n', e);
+    const le = nl === -1 ? v.length : nl;
+    const rows = v.slice(ls, le).split('\n');
+    const on = rows.every(l => !l.trim() || l.startsWith(p));
+    const next = rows.map(l => !l.trim() ? l : (on ? l.slice(p.length) : p + l)).join('\n');
+    area.value = v.slice(0,ls) + next + v.slice(le);
+    area.setSelectionRange(ls, ls + next.length);
+  }else if(act === 'link'){
+    const isUrl = /^(?:https?:\/\/|www\.)\S+$/i.test(sel.trim());
+    const text = isUrl ? '' : sel;
+    const url = isUrl ? sel.trim() : '';
+    area.value = v.slice(0,s) + '[' + text + '](' + url + ')' + v.slice(e);
+    // park the caret in whichever slot is still empty
+    const caret = isUrl ? s + 1 : s + text.length + 3;
+    area.setSelectionRange(caret, caret);
+  }else if(act === 'ref'){
+    area.value = v.slice(0,s) + '[[' + sel + ']]' + v.slice(e);
+    area.setSelectionRange(s + 2, s + 2 + sel.length);
+  }else if(act === 'table'){
+    const atLineStart = s === 0 || v[s-1] === '\n';
+    const snippet = (atLineStart ? '' : '\n') + '| ' + t('mdTableCol') + ' 1 | ' + t('mdTableCol') + ' 2 |\n|---|---|\n|  |  |\n';
+    insertAtCursor(area, snippet);
+  }else{
+    return;
+  }
+  area.focus();
+  commitNoteArea(area);
+}
+// Enter inside a list continues it; Enter on an empty item ends it.
+function noteEnterContinuesList(area){
+  if(area.selectionStart !== area.selectionEnd) return false;
+  const s = area.selectionStart, v = area.value;
+  const ls = v.lastIndexOf('\n', s-1) + 1;
+  const m = v.slice(ls, s).match(/^(\s*)([-*+]|(\d+)([.)]))\s+(\[[ xX]\]\s+)?(.*)$/);
+  if(!m) return false;
+  const indent = m[1], marker = m[2], num = m[3], delim = m[4], box = m[5], body = m[6];
+  if(!body.trim()){
+    area.value = v.slice(0, ls) + v.slice(s);
+    area.setSelectionRange(ls, ls);
+    commitNoteArea(area);
+    return true;
+  }
+  const ins = '\n' + (num ? indent + (+num + 1) + delim + ' ' : indent + marker + ' ') + (box ? '[ ] ' : '');
+  area.value = v.slice(0,s) + ins + v.slice(s);
+  area.setSelectionRange(s + ins.length, s + ins.length);
+  commitNoteArea(area);
+  return true;
+}
+// Store an image for a note and drop a Markdown reference to it at the caret.
+async function insertNoteImage(item, area, blob, srcName){
+  const name = await storeNoteAttachment(item, blob, srcName);
+  if(!name) return;
+  const alt = String(srcName||'').replace(/\.[^.]+$/,'').replace(/[\[\]|]/g,' ').trim() || t('imageSection');
+  const atLineStart = area.selectionStart === 0 || area.value[area.selectionStart-1] === '\n';
+  insertAtCursor(area, (atLineStart ? '' : '\n') + '![' + alt + '](attachment:' + name + ')\n');
+  area.focus();
+  commitNoteArea(area);
+  showToast(t('noteImageAdded'));
+}
+
 function fieldRow(label, id, value, type){
-  if(type==='textarea') return `<div class="fRow"><label>${esc(label)}</label><textarea data-f="${id}">${esc(value)}</textarea></div>`;
+  if(type==='textarea') return `<div class="fRow"><label>${esc(label)}</label><textarea rows="1" data-f="${id}">${esc(value)}</textarea></div>`;
   return `<div class="fRow"><label>${esc(label)}</label><input type="text" data-f="${id}" value="${esc(value)}"></div>`;
 }
 function selectRow(label, id, value, options){
@@ -8448,11 +10095,19 @@ function wireTagEditor(pane){
   });
 }
 // A removable collection chip for the detail-pane collection editor (design B).
+// Deep paths wrap between levels (like the read-view chip) so the leaf — the
+// part that matters most — is never truncated by the chip's max-width.
 function collEditChipHtml(id){
   const c = lib.collections.find(x=>x.id===id);
   if(!c) return '';
   const label = collectionPathLabel(id) || c.name;
-  return `<span class="tagEditChip" ${collectionChipStyle(c)}>${ic('folder')}<span class="tagEditChipName">${esc(label)}</span>` +
+  const parts = collectionPathParts(id);
+  if(!parts.length) parts.push(c.name);
+  const segs = parts.map((name, i)=>{
+    const last = i===parts.length-1;
+    return `<span class="refCollSeg${last?' leaf':''}">${esc(name)}${last?'':'<span class="refCollSep">/</span>'}</span>`;
+  }).join('');
+  return `<span class="tagEditChip collEditChip" ${collectionChipStyle(c)} title="${esc(label)}">${ic('folder')}<span class="refCollPath">${segs}</span>` +
     `<button type="button" class="tagEditChipX" data-act="removecoll" data-id="${esc(id)}" aria-label="${esc(t('collRemove'))}: ${esc(label)}">${ic('x')}</button></span>`;
 }
 // Collections editor for the detail pane — same design-B widget as tags, so a
@@ -8509,13 +10164,28 @@ function wireCollectionEditor(pane){
     const q = raw.toLowerCase();
     const cur = new Set(currentColls());
     const all = lib.collections
-      .map(c=>({ id:c.id, label:collectionPathLabel(c.id) || c.name }))
+      .map(c=>{
+        const parts = collectionPathParts(c.id);
+        return {
+          id: c.id,
+          label: parts.join(' / ') || c.name,
+          leaf: parts[parts.length-1] || c.name,
+          parents: parts.slice(0, -1).join(' / '),
+        };
+      })
       .filter(o=>!cur.has(o.id))
       .filter(o=>!q || o.label.toLowerCase().includes(q))
       .sort((a,b)=>a.label.localeCompare(b.label))
       .slice(0, 60);
+    // Two lines per row: the parent path above (dimmed, clipped from the LEFT so
+    // the nearest parents stay visible) and the collection's own name below, so a
+    // deeply nested collection is still identifiable in the narrow detail pane.
     let html = all.map(o=>
-      `<div class="tagSuggestItem" data-act="pickcoll" data-id="${esc(o.id)}">${ic('folder')}<span>${esc(o.label)}</span></div>`
+      `<div class="tagSuggestItem collSuggestItem" data-act="pickcoll" data-id="${esc(o.id)}" title="${esc(o.label)}">${ic('folder')}` +
+      `<span class="collSuggestText">` +
+        (o.parents ? `<span class="collSuggestPath"><bdi>${esc(o.parents)}</bdi></span>` : '') +
+        `<span class="collSuggestLeaf">${esc(o.leaf)}</span>` +
+      `</span></div>`
     ).join('');
     const exists = raw && lib.collections.some(c=>(c.name||'').toLowerCase()===q);
     if(raw && !exists){
@@ -8576,6 +10246,10 @@ function citationPrefsControls(){
         <option value="first" ${citationPrefs.authorScope==='first'?'selected':''}>${esc(t('authorScopeFirst'))}</option>
         <option value="corresponding" ${citationPrefs.authorScope==='corresponding'?'selected':''}>${esc(t('authorScopeCorresponding'))}</option>
       </select></div>
+      <div class="fRow"><label>${esc(t('citPageStyle'))}</label><select data-pref="pageStyle">
+        <option value="full" ${citationPrefs.pageStyle!=='first'?'selected':''}>${esc(t('citPageStyleFull'))}</option>
+        <option value="first" ${citationPrefs.pageStyle==='first'?'selected':''}>${esc(t('citPageStyleFirst'))}</option>
+      </select></div>
       <label class="checkline"><input type="checkbox" data-pref="includeTitle" ${citationPrefs.includeTitle!==false?'checked':''}> ${esc(t('includeTitle'))}</label>
       <label class="checkline"><input type="checkbox" data-pref="includeUrl" ${citationPrefs.includeUrl!==false?'checked':''}> ${esc(t('includeUrl'))}</label>
     </div>`;
@@ -8588,26 +10262,44 @@ function openCitationPrefsDialog(){
 // Controls for the citations-dialog's own format (bound to citDialogPrefs via
 // data-citpref, kept independent of the detail-pane preview).
 function citDialogPrefsControls(){
+  // The citation-format rows below the picker only apply to the 引用文 layout, so
+  // they are dropped entirely while the card layout is selected.
+  const citeMode = citDialogPrefs.layout === 'cite';
   return `
     <div class="inlineOpts">
+      <div class="fRow"><label>${esc(t('citLayout'))}</label><select data-citpref="layout">
+        <option value="card" ${citeMode?'':'selected'}>${esc(t('citLayoutCard'))}</option>
+        <option value="cite" ${citeMode?'selected':''}>${esc(t('citLayoutCite'))}</option>
+      </select></div>
+      ${!citeMode ? '' : `
       <div class="fRow"><label>${esc(t('citationStyle'))}</label><select data-citpref="style">${citationStyleOptions(citDialogPrefs.style)}</select></div>
       <div class="fRow"><label>${esc(t('authorScope'))}</label><select data-citpref="authorScope">
         <option value="all" ${citDialogPrefs.authorScope==='all'?'selected':''}>${esc(t('authorScopeAll'))}</option>
         <option value="first" ${citDialogPrefs.authorScope==='first'?'selected':''}>${esc(t('authorScopeFirst'))}</option>
         <option value="corresponding" ${citDialogPrefs.authorScope==='corresponding'?'selected':''}>${esc(t('authorScopeCorresponding'))}</option>
       </select></div>
+      <div class="fRow"><label>${esc(t('citPageStyle'))}</label><select data-citpref="pageStyle">
+        <option value="full" ${citDialogPrefs.pageStyle!=='first'?'selected':''}>${esc(t('citPageStyleFull'))}</option>
+        <option value="first" ${citDialogPrefs.pageStyle==='first'?'selected':''}>${esc(t('citPageStyleFirst'))}</option>
+      </select></div>
       <label class="checkline"><input type="checkbox" data-citpref="includeTitle" ${citDialogPrefs.includeTitle!==false?'checked':''}> ${esc(t('includeTitle'))}</label>
-      <label class="checkline"><input type="checkbox" data-citpref="includeUrl" ${citDialogPrefs.includeUrl!==false?'checked':''}> ${esc(t('includeUrl'))}</label>
+      <label class="checkline"><input type="checkbox" data-citpref="includeUrl" ${citDialogPrefs.includeUrl!==false?'checked':''}> ${esc(t('includeUrl'))}</label>`}
     </div>`;
 }
-function collectionPathLabel(id){
+// The ancestor chain of a collection, root first. collectionPathLabel() joins it,
+// but the collection editor needs the parts separately so it can show the leaf
+// name on its own line (a deep path truncates away the part that matters most).
+function collectionPathParts(id){
   const names = [];
   let cur = lib.collections.find(c=>c.id===id);
   while(cur){
     names.unshift(cur.name);
     cur = cur.parent ? lib.collections.find(c=>c.id===cur.parent) : null;
   }
-  return names.join(' / ');
+  return names;
+}
+function collectionPathLabel(id){
+  return collectionPathParts(id).join(' / ');
 }
 function detailCollectionsDisplay(it){
   const rows = (it.collections||[]).map(id=>{
@@ -8626,6 +10318,7 @@ function detailCollectionsDisplay(it){
 // button, which controls which read-view blocks appear and in what order — a
 // global preference stored in referenceDetailPrefs.
 function renderDetail(){
+  hideDetailTooltip();
   commitNavState();
   const pane = $('#detail');
   const it = lib.items.find(x=>x.id===selectedId);
@@ -8634,29 +10327,86 @@ function renderDetail(){
     (detailEditMode ? detailEditBodyHtml(it) : detailReadBodyHtml(it));
   if(detailEditMode){
     // long text fields: show full content (auto-grow instead of inner scrolling)
-    pane.querySelectorAll('textarea[data-f="title"], textarea[data-f="authors"], textarea[data-f="abstract"], textarea[data-f="notes"]').forEach(el=>{
+    pane.querySelectorAll('textarea[data-f="title"], textarea[data-f="authors"], textarea[data-f="abstract"]').forEach(el=>{
       el.classList.add('autogrow');
       autoGrow(el);
     });
-    wireTagEditor(pane);
     wireCollectionEditor(pane);
+    wireTagEditor(pane);
   }
   if(it.image && it.image.name){ const im = pane.querySelector('[data-fig-img]'); if(im) loadItemImagePreview(im, it.image.name); }
+  hydrateNoteMedia(pane);
   updateCitePreview();
 }
+function detailTooltipAttrs(label){
+  return `data-detail-tooltip="${esc(label)}" aria-label="${esc(label)}"`;
+}
+let detailTooltipTimer = null;
+let detailTooltipTarget = null;
+function detailTooltipElement(){ return document.getElementById('detailTooltip'); }
+function detailTooltipTargetFrom(node){
+  return node instanceof Element ? node.closest('[data-detail-tooltip]') : null;
+}
+function hideDetailTooltip(){
+  clearTimeout(detailTooltipTimer);
+  detailTooltipTimer = null;
+  if(detailTooltipTarget) detailTooltipTarget.removeAttribute('aria-describedby');
+  detailTooltipTarget = null;
+  const tip = detailTooltipElement();
+  if(tip) tip.hidden = true;
+}
+function showDetailTooltip(target){
+  const tip = detailTooltipElement();
+  const label = target && target.dataset.detailTooltip;
+  if(!tip || !target || !label) return;
+  if(detailTooltipTarget && detailTooltipTarget!==target) hideDetailTooltip();
+  detailTooltipTarget = target;
+  tip.textContent = label;
+  tip.hidden = false;
+  target.setAttribute('aria-describedby', 'detailTooltip');
+  const r = target.getBoundingClientRect();
+  const gap = 7;
+  const width = tip.offsetWidth;
+  let left = r.left + (r.width - width) / 2;
+  left = Math.max(8, Math.min(left, window.innerWidth - width - 8));
+  let top = r.top - tip.offsetHeight - gap;
+  if(top < 8) top = r.bottom + gap;
+  tip.style.left = `${Math.round(left)}px`;
+  tip.style.top = `${Math.round(top)}px`;
+}
+document.addEventListener('pointerover', e=>{
+  const target = detailTooltipTargetFrom(e.target);
+  if(!target || detailTooltipTargetFrom(e.relatedTarget)===target) return;
+  hideDetailTooltip();
+  detailTooltipTimer = setTimeout(()=>showDetailTooltip(target), 250);
+});
+document.addEventListener('pointerout', e=>{
+  const target = detailTooltipTargetFrom(e.target);
+  if(target && detailTooltipTargetFrom(e.relatedTarget)!==target) hideDetailTooltip();
+});
+document.addEventListener('focusin', e=>{
+  const target = detailTooltipTargetFrom(e.target);
+  if(target) showDetailTooltip(target);
+});
+document.addEventListener('focusout', e=>{
+  const target = detailTooltipTargetFrom(e.target);
+  if(target && detailTooltipTargetFrom(e.relatedTarget)!==target) hideDetailTooltip();
+});
+document.addEventListener('pointerdown', hideDetailTooltip, true);
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') hideDetailTooltip(); });
 // Shared action bar (both read and edit modes). When referenceDetailPrefs.iconOnly
-// is on, labels are hidden via CSS (.dActions.compactIcons) and every button's
-// title carries its name so the icon still identifies itself on hover.
+// is on, labels are hidden via CSS (.dActions.compactIcons); the app tooltip and
+// aria-label keep every action identifiable without relying on browser title UI.
 function detailActionsHtml(it){
   const compact = referenceDetailPrefs.iconOnly ? ' compactIcons' : '';
   return `<div class="dActions${compact}">
-      <button class="tbtn detailEditBtn${detailEditMode?' active':''}" data-act="toggleEdit" title="${esc(t('detailEditHint'))}" aria-pressed="${detailEditMode}">${ic('note')}<span class="tbtnLabel">${esc(t('detailEdit'))}</span></button>
-      ${it.url||it.doi ? `<button class="tbtn" data-act="openlink" title="${esc(t('openLink'))}">${ic('link')}<span class="tbtnLabel">${esc(t('openLink'))}</span></button>` : ''}
-      <button class="tbtn" data-act="citations" title="${esc(t('citations'))}">${ic('citations')}<span class="tbtnLabel">${esc(t('citations'))}</span></button>
-      <button class="tbtn" data-act="graph" title="${esc(t('graphView'))}">${ic('graph')}<span class="tbtnLabel">${esc(t('graphView'))}</span></button>
-      <button class="tbtn" data-act="researcherMap" title="${esc(t('researcherMap'))}">${ic('users')}<span class="tbtnLabel">${esc(t('researcherMap'))}</span></button>
-      <button class="tbtn" data-act="updateThis" title="${esc(t('updateThisItemHint'))}">${ic('retry')}<span class="tbtnLabel">${esc(t('updateThisItem'))}</span></button>
-      <button class="tbtn detailSettingsBtn${referenceDetailSettingsOpen?' active':''}" data-act="detailSettings" title="${esc(t('detailDisplaySettingsHint'))}" aria-expanded="${referenceDetailSettingsOpen}">${ic('sliders')}<span class="tbtnLabel">${esc(t('detailDisplaySettings'))}</span></button>
+      <button class="tbtn detailEditBtn${detailEditMode?' active':''}" data-act="toggleEdit" ${detailTooltipAttrs(t('detailEditHint'))} aria-pressed="${detailEditMode}">${ic('note')}<span class="tbtnLabel">${esc(t('detailEdit'))}</span></button>
+      ${it.url||it.doi ? `<button class="tbtn" data-act="openlink" ${detailTooltipAttrs(t('openLink'))}>${ic('link')}<span class="tbtnLabel">${esc(t('openLink'))}</span></button>` : ''}
+      <button class="tbtn" data-act="citations" ${detailTooltipAttrs(t('citations'))}>${ic('citations')}<span class="tbtnLabel">${esc(t('citations'))}</span></button>
+      <button class="tbtn" data-act="graph" ${detailTooltipAttrs(t('graphView'))}>${ic('graph')}<span class="tbtnLabel">${esc(t('graphView'))}</span></button>
+      <button class="tbtn" data-act="researcherMap" ${detailTooltipAttrs(t('researcherMap'))}>${ic('users')}<span class="tbtnLabel">${esc(t('researcherMap'))}</span></button>
+      <button class="tbtn" data-act="updateThis" ${detailTooltipAttrs(t('updateThisItemHint'))}>${ic('retry')}<span class="tbtnLabel">${esc(t('updateThisItem'))}</span></button>
+      <button class="tbtn detailSettingsBtn${referenceDetailSettingsOpen?' active':''}" data-act="detailSettings" ${detailTooltipAttrs(t('detailDisplaySettingsHint'))} aria-expanded="${referenceDetailSettingsOpen}">${ic('sliders')}<span class="tbtnLabel">${esc(t('detailDisplaySettings'))}</span></button>
     </div>`;
 }
 // Citation preview card, shared by the read-view 'cite' block and the edit form.
@@ -8668,8 +10418,8 @@ function detailCitePreviewHtml(extraClass, dataBlock){
       <div class="cpHead">
         <span>${esc(t('citePreview'))}</span>
         <span class="cpActions">
-          <span class="cpCopy" data-act="copycite" title="${esc(t('copy'))}">${ic('copy')}<span class="tbtnLabel">${esc(t('copy'))}</span></span>
-          <button class="cpIconBtn" data-act="citeprefs" title="${esc(t('citationSettings'))}" aria-label="${esc(t('citationSettings'))}">${ic('gear')}<span class="tbtnLabel">${esc(t('citationSettings'))}</span></button>
+          <button type="button" class="cpCopy" data-act="copycite" ${detailTooltipAttrs(t('copy'))}>${ic('copy')}<span class="tbtnLabel">${esc(t('copy'))}</span></button>
+          <button class="cpIconBtn" data-act="citeprefs" ${detailTooltipAttrs(t('citationSettings'))}>${ic('gear')}<span class="tbtnLabel">${esc(t('citationSettings'))}</span></button>
         </span>
       </div>
       <div class="cpText" id="citePreviewText"></div>
@@ -8685,11 +10435,12 @@ function referenceBlockHasData(it, key){
     case 'attachments': return (it.attachments||[]).length>0;
     case 'organize': return (it.tags||[]).length>0 || (it.collections||[]).length>0;
     case 'notes': return !!String(it.notes||'').trim();
+    case 'backlinks': return notesBacklinkItems(it).length>0;
   }
   return false;
 }
 function referenceBlockLabel(key){
-  return ({image:t('imageSection'), authors:t('refAuthors'), cite:t('citePreview'), abstract:t('abstract'), attachments:t('attachments'), organize:t('organize'), notes:t('notes')})[key] || key;
+  return ({image:t('imageSection'), authors:t('refAuthors'), cite:t('citePreview'), abstract:t('abstract'), attachments:t('attachments'), organize:t('organize'), notes:t('notes'), backlinks:t('noteBacklinks')})[key] || key;
 }
 // The researcher directory entry an author name resolves to, if any (a
 // corresponding author elsewhere, or a registered profile). Used to decide
@@ -8728,8 +10479,12 @@ function detailReadBlockHtml(it, key){
     case 'abstract':
       return `<section class="refBlock refSection" data-block="abstract"><div class="refLabel">${esc(t('abstract'))}</div><div class="refProse">${esc(it.abstract)}</div></section>`;
     case 'attachments': {
-      const atts = (it.attachments||[]).map((a,idx)=>
-        `<button class="refAtt" data-open-att="${idx}" title="${esc(a.name)}">${ic('file')}<span class="aname">${esc(a.name)}</span><span class="go">${ic('arrowUpRight')}</span></button>`).join('');
+      const roBase = attachmentBaseName(it);
+      const atts = (it.attachments||[]).map((a,idx)=>{
+        const r = attachmentRoleOf(a.name, roBase);
+        const tag = r.role ? `<span class="attRoleTag${r.role==='main'?' isMain':''}">${esc(attachmentRoleText(r.role, r.label))}</span>` : '';
+        return `<button class="refAtt" data-open-att="${idx}" title="${esc(a.name)}">${ic('file')}<span class="aname">${esc(a.name)}</span>${tag}<span class="go">${ic('arrowUpRight')}</span></button>`;
+      }).join('');
       return `<section class="refBlock refSection" data-block="attachments"><div class="refLabel">${esc(t('attachments'))}<span class="refCount">${(it.attachments||[]).length}</span></div>${atts}</section>`;
     }
     case 'organize': {
@@ -8744,15 +10499,28 @@ function detailReadBlockHtml(it, key){
       return `<section class="refBlock refSection" data-block="organize"><div class="refLabel">${esc(t('organize'))}</div>${tags}${colls}</section>`;
     }
     case 'notes':
-      return `<section class="refBlock refSection" data-block="notes"><div class="refLabel">${esc(t('notes'))}</div><div class="refNote">${esc(it.notes)}</div></section>`;
+      return `<section class="refBlock refSection" data-block="notes"><div class="refLabel">${esc(t('notes'))}</div><div class="refNote mdBody">${mdToHtml(it.notes)}</div></section>`;
+    case 'backlinks': {
+      const refs = notesBacklinkItems(it);
+      const rows = refs.map(r=>`<button class="refAtt" data-goto-item="${esc(r.id)}" title="${esc(r.title||'')}">${ic('note')}<span class="aname">${esc(r.title||t('newItem'))}</span><span class="go">${ic('arrowUpRight')}</span></button>`).join('');
+      return `<section class="refBlock refSection" data-block="backlinks"><div class="refLabel">${esc(t('noteBacklinks'))}<span class="refCount">${refs.length}</span></div>${rows}</section>`;
+    }
   }
   return '';
 }
 function collReadChipHtml(id){
   const c = lib.collections.find(x=>x.id===id);
   if(!c) return '';
-  const label = collectionPathLabel(id) || c.name;
-  return `<span class="refChip" ${collectionChipStyle(c)}>${ic('folder')}<span class="refChipName">${esc(label)}</span></span>`;
+  // Deep paths wrap instead of truncating: each level is an unbreakable unit
+  // (unless it alone exceeds the width), so lines break between levels, and the
+  // leaf — the part that matters most — is never cut off.
+  const parts = collectionPathParts(id);
+  if(!parts.length) parts.push(c.name);
+  const segs = parts.map((name, i)=>{
+    const last = i===parts.length-1;
+    return `<span class="refCollSeg${last?' leaf':''}">${esc(name)}${last?'':'<span class="refCollSep">/</span>'}</span>`;
+  }).join('');
+  return `<span class="refChip refCollChip" ${collectionChipStyle(c)} title="${esc(parts.join(' / '))}">${ic('folder')}<span class="refCollPath">${segs}</span></span>`;
 }
 function detailReadBodyHtml(it){
   const blocks = referenceDetailPrefs.order
@@ -8783,10 +10551,21 @@ function referenceDetailSettingsPanelHtml(it){
 // The classic editable form (unchanged fields), minus the shared action bar.
 function detailEditBodyHtml(it){
   const journalFix = fixSuggestionForItem(it);
-  const atts = (it.attachments||[]).map((a,idx)=>
-    `<div class="attRow">${ic('file')}<span class="aname" data-open-att="${idx}" title="${esc(a.name)}">${esc(a.name)}</span>
+  const attBase = attachmentBaseName(it);
+  const atts = (it.attachments||[]).map((a,idx)=>{
+    // The role is read back out of the file name, so the picker always shows
+    // what the folder really holds — a legacy "-2" file simply shows "—".
+    const r = attachmentRoleOf(a.name, attBase);
+    const keeps = r.role && !(r.role==='main') && !(r.role==='si' && !/\d/.test(r.label))
+      ? `<option value="keep" selected>${esc(attachmentRoleText(r.role, r.label))}</option>` : '';
+    const none = r.role ? '' : `<option value="keep" selected>&mdash;</option>`;
+    const sel = `<select class="attRoleSel" data-att-role="${idx}" title="${esc(t('attRoleChangeTitle'))}">${none}${keeps}`
+      + `<option value="main"${r.role==='main'?' selected':''}>${esc(t('attRoleMain'))}</option>`
+      + `<option value="si"${(r.role==='si' && !/\d/.test(r.label))?' selected':''}>${esc(t('attRoleSI'))}</option></select>`;
+    return `<div class="attRow">${ic('file')}<span class="aname" data-open-att="${idx}" title="${esc(a.name)}">${esc(a.name)}</span>${sel}
      <button class="attOpen" data-open-att="${idx}" title="${esc(t('openAttachment'))}">${ic('link')}${esc(t('openAttachment'))}</button>
-     <button class="attDel" data-del-att="${idx}" title="✕">${ic('x')}</button></div>`).join('');
+     <button class="attDel" data-del-att="${idx}" title="✕">${ic('x')}</button></div>`;
+  }).join('');
   return `
     ${detailCitePreviewHtml()}
     <div class="dSection">${esc(t('info'))}</div>
@@ -8829,12 +10608,16 @@ function detailEditBodyHtml(it){
     ${atts}
     <button class="tbtn" data-act="addpdf" style="font-size:12.5px">${ic('paperclip')}${esc(t('addPdf'))}</button>
     <div class="dSection">${esc(t('organize'))}</div>
-    ${renderTagEditor(it)}
     ${renderCollectionEditor(it)}
-    ${fieldRow(t('notes'),'notes',it.notes,'textarea')}
+    ${renderTagEditor(it)}
+    ${noteEditorHtml(it)}
     <div style="margin-top:16px">${isItemTrashed(it) ? `<button class="tbtn" data-act="restoreItem">${ic('arrowUpRight')}${esc(t('restoreItem'))}</button> <button class="tbtn danger" data-act="deleteForever">${ic('trash')}${esc(t('deleteForever'))}</button>` : `<button class="tbtn danger" data-act="delitem">${ic('trash')}${esc(t('deleteItem'))}</button>`}</div>
   `;
 }
+// Sizing a textarea to its content forces a synchronous layout of the element,
+// which is why the note box (which can hold tens of thousands of pixels of text)
+// scrolls instead of auto-growing. Title/authors/abstract stay short enough for
+// this to be cheap.
 function autoGrow(el){
   el.style.height = 'auto';
   el.style.height = (el.scrollHeight + 2) + 'px';
@@ -9258,7 +11041,7 @@ function removeCollections(collIdSet){
   collIdSet.forEach(id=>{
     selectedCollectionIds.delete(id);
     if(collectionSelectAnchorId===id) collectionSelectAnchorId = null;
-    if(filter.coll===id) filter.coll = 'all';
+    if(filter.coll===id){ filter.coll = 'all'; filter.collScope = 'all'; }
   });
 }
 // mode: 'keep' (delete collections, keep items), 'trash' (delete collections
@@ -9333,22 +11116,445 @@ function updateEmptyTrashButton(){
   btn.style.display = show ? 'inline-flex' : 'none';
   if(count) count.textContent = show ? I18N[lang].trashInfoCount(n) : '';
 }
-async function attachFiles(item, fileList){
-  // Names waiting for post-save deletion are also reserved. Otherwise an
-  // immediate replacement could be deleted by the earlier operation.
-  const taken = new Set([...lib.items.flatMap(i=>(i.attachments||[]).map(a=>a.name)), ...pendingAttachmentDeletes]);
-  for(const file of fileList){
-    const base = (item.citekey || genCitekey(item)).replace(/[^\w.\-]/g,'_') || 'file';
-    const ext = (file.name.match(/\.[a-zA-Z0-9]+$/)||['.pdf'])[0];
+/* ---- attachment roles (main text / SI) --------------------------------
+   attachments/ is a flat folder, so the *file name* is what carries the role:
+     <citekey>.pdf          the paper itself
+     <citekey>_SI.pdf       Supporting / Supplementary Information
+     <citekey>_SI2.pdf      a second SI
+     <citekey>_<label>.pdf  anything else (_correction, …)
+   The Research Wiki's serve.py reads exactly this convention (<citekey>.pdf
+   plus <citekey>_*.ext), so it must not drift. The role is always *derived
+   from the name* and never stored in library.json: the folder stays the one
+   source of truth and the JSON stays lean.
+   The old "-2" suffix carried no role at all, and, worse, the first file
+   dropped became the main text whatever it held — drop the SI first and it
+   took the paper's name. attachFiles() now looks inside each PDF before it
+   names it, and asks whenever it cannot tell (see attachRoleDecisions). */
+function attachmentBaseName(item){
+  return (item.citekey || genCitekey(item)).replace(/[^\w.\-]/g,'_') || 'file';
+}
+// '' means "no role encoded in this name" (a legacy -2 file, or a foreign name).
+function attachmentRoleOf(name, base){
+  const n = String(name || '');
+  const dot = n.lastIndexOf('.');
+  const stem = dot > 0 ? n.slice(0, dot) : n;
+  if(stem === base) return { role:'main', label:'' };
+  if(base && stem.startsWith(base + '_')){
+    const suffix = stem.slice(base.length + 1);
+    if(/^SI\d*$/i.test(suffix)) return { role:'si', label:suffix };
+    if(suffix) return { role:'other', label:suffix };
+  }
+  return { role:'', label:'' };
+}
+function attachmentRoleText(role, label){
+  if(role === 'main') return t('attRoleMain');
+  if(role === 'si') return label ? label.toUpperCase() : t('attRoleSI');
+  if(role === 'other') return label || t('attRoleOther');
+  return '';
+}
+// The name a file should get for `role`, skipping anything already in use.
+function roleAttachmentName(base, role, ext, taken, label){
+  if(role === 'main'){
+    let name = base + ext, n = 1;
+    while(taken.has(name)) name = `${base}-${++n}${ext}`;
+    return name;
+  }
+  const suffix = role === 'si'
+    ? 'SI'
+    : (String(label || '').replace(/[^\w.\-]/g,'_').replace(/^_+|_+$/g,'') || 'file');
+  let name = `${base}_${suffix}${ext}`, n = 1;
+  while(taken.has(name)) name = `${base}_${suffix}${++n}${ext}`;
+  return name;
+}
+
+/* ---- looking inside a PDF ----
+   No PDF library is bundled (the app is a plain static site), so this is a
+   deliberately small reader: inflate the first few content streams and read
+   the text literals out of them. Subset-encoded fonts come back as mojibake,
+   which is fine — an unreadable PDF simply produces no evidence and the user
+   is asked instead of being guessed at. */
+const PDF_SNIFF_BYTES = 4 * 1024 * 1024;   // enough to reach page 1's streams
+const PDF_SNIFF_STREAMS = 6;               // page 1 is normally within these
+const PDF_INFLATE_CAP = 4 * 1024 * 1024;
+const PDF_SNIFF_LEAD = 260;                // chars of leading text that count
+const SI_NAME_RE = /(?:^|[^a-z])(?:esi|si|suppinfo|supp|suppl|supporting|supplementary|supplemental)(?:[^a-z]|$)/i;
+const MAIN_NAME_RE = /(?:^|[^a-z])(?:main|manuscript|article|maintext|fulltext|paper)(?:[^a-z]|$)/i;
+// Matched against text with every space removed, because PDFs routinely split
+// a heading into kerned fragments ("Suppor ting Inf or mation").
+const SI_COMPACT_RE = /(?:electronic)?supp(?:orting|lementary|lemental)(?:information|materials?|data|figures?|info)/;
+function bytesToLatin1(u8){
+  let s = '';
+  for(let i=0;i<u8.length;i+=8192) s += String.fromCharCode.apply(null, u8.subarray(i, i+8192));
+  return s;
+}
+// A PDF stream is followed by an end-of-line and "endstream", which the strict
+// DecompressionStream reports as trailing junk *after* it has already handed
+// over the real bytes — so keep whatever arrived and swallow that last error.
+async function inflatePartial(u8, raw){
+  const ds = new DecompressionStream(raw ? 'deflate-raw' : 'deflate');
+  const w = ds.writable.getWriter();
+  w.write(u8).catch(()=>{});
+  w.close().catch(()=>{});
+  const rd = ds.readable.getReader();
+  const parts = []; let n = 0;
+  try{
+    for(;;){
+      const { done, value } = await rd.read();
+      if(done) break;
+      parts.push(value); n += value.length;
+      if(n >= PDF_INFLATE_CAP){ rd.cancel().catch(()=>{}); break; }
+    }
+  }catch(_e){ /* trailing junk or a truncated tail — keep what arrived */ }
+  if(!n) throw new Error('inflate failed');
+  const out = new Uint8Array(n);
+  let o = 0;
+  for(const p of parts){ out.set(p, o); o += p.length; }
+  return out;
+}
+async function pdfTextSamples(head){
+  const out = [];
+  const re = /stream\r?\n/g;
+  let m;
+  while((m = re.exec(head)) && out.length < PDF_SNIFF_STREAMS){
+    const s = m.index + m[0].length;
+    const e = head.indexOf('endstream', s);
+    if(e < 0) break;
+    re.lastIndex = e + 9;                 // past "endstream", which itself ends in "stream"
+    let len = e - s;
+    while(len > 0 && '\r\n \t\0'.indexOf(head[s + len - 1]) >= 0) len--;
+    if(len < 8 || len > 2 * 1024 * 1024) continue;
+    const u8 = new Uint8Array(len);
+    for(let i=0;i<len;i++) u8[i] = head.charCodeAt(s + i) & 0xff;
+    let dec = null;
+    try{ dec = await inflatePartial(u8, false); }
+    catch(_e){ try{ dec = await inflatePartial(u8, true); }catch(_e2){ continue; } }
+    const txt = bytesToLatin1(dec);
+    if(!/Tj|TJ/.test(txt)) continue;
+    const lit = txt.match(/\((?:\\.|[^\\()])*\)/g);
+    if(!lit) continue;
+    const joined = lit.map(x=>x.slice(1,-1).replace(/\\([()\\])/g,'$1')).join('');
+    if(joined.trim()) out.push(joined.slice(0, 2000));
+  }
+  return out;
+}
+// ACS stamps every download with "Downloaded from pubs.acs.org/<path>", drawn
+// in a subset font whose codes are ASCII shifted by a constant — which is why
+// those PDFs look like mojibake above. Trying the shifts recovers the path,
+// and the path names the file outright: article-pdf is the paper,
+// article-supplement is the SI. The decode is accepted only when that exact
+// sentence comes back, so a wrong shift yields no evidence rather than a
+// wrong answer.
+function acsWatermarkRole(sample){
+  const codes = [];
+  for(let i=0;i+1<sample.length;i+=2) codes.push((sample.charCodeAt(i) << 8) | sample.charCodeAt(i+1));
+  if(codes.length < 20) return '';
+  for(let k=0;k<=96;k++){
+    let head6 = '';
+    for(let i=0;i<6;i++){ const c = codes[i] + k; head6 += (c>=32 && c<127) ? String.fromCharCode(c) : '?'; }
+    if(head6 !== 'Downlo') continue;
+    let s = '';
+    for(const c0 of codes){ const c = c0 + k; if(c>=32 && c<127) s += String.fromCharCode(c); }
+    if(!/Downloaded\s*from\s*pubs\.?\s*acs\.?\s*org/i.test(s)) continue;
+    if(/article-supplement|_si_\d/i.test(s)) return 'si';
+    if(/article-pdf/i.test(s)) return 'main';
+    return '';
+  }
+  return '';
+}
+// Page count from the page tree's /Count, scanned over the raw bytes of the
+// whole file (the tree root is often near the end) without building a string.
+function pdfPageCount(u8){
+  let best = 0;
+  for(let i=0,n=u8.length-6;i<n;i++){
+    if(u8[i]!==0x2f||u8[i+1]!==0x43||u8[i+2]!==0x6f||u8[i+3]!==0x75||u8[i+4]!==0x6e||u8[i+5]!==0x74) continue;
+    let j = i + 6;
+    while(j<u8.length && (u8[j]===32||u8[j]===10||u8[j]===13||u8[j]===9)) j++;
+    let v = 0, d = 0;
+    while(j<u8.length && u8[j]>=48 && u8[j]<=57){ v = v*10 + (u8[j]-48); j++; d++; }
+    if(d && v > best) best = v;
+  }
+  return best;
+}
+function isPdfFile(file){
+  return /pdf/i.test(file.type || '') || /\.pdf$/i.test(file.name || '');
+}
+// { role:'main'|'si'|'unknown', strong, pages, text, evidence:[…] }
+async function sniffPdfRole(file){
+  const res = { role:'unknown', strong:false, pages:0, text:'', evidence:[] };
+  const nameSi = SI_NAME_RE.test(file.name || '');
+  const nameMain = MAIN_NAME_RE.test(file.name || '');
+  if(nameSi && !nameMain){ res.role = 'si'; res.strong = true; res.evidence.push('name'); }
+  else if(nameMain && !nameSi){ res.role = 'main'; res.strong = true; res.evidence.push('name'); }
+  let samples = [];
+  try{
+    res.pages = pdfPageCount(new Uint8Array(await file.arrayBuffer()));
+    const head = bytesToLatin1(new Uint8Array(await file.slice(0, Math.min(file.size, PDF_SNIFF_BYTES)).arrayBuffer()));
+    samples = await pdfTextSamples(head);
+  }catch(_e){ return res; }
+  const lead = (samples[0] || '') + ' ' + (samples[1] || '');
+  res.text = lead.replace(/([a-z])([A-Z])/g,'$1 $2').replace(/[^\x20-\x7e]+/g,' ').replace(/\s+/g,' ').trim().slice(0, 160);
+  let wm = '';
+  for(const s of samples){ wm = acsWatermarkRole(s); if(wm) break; }
+  if(wm){
+    res.evidence.push('watermark');
+    if(res.role !== 'unknown' && res.role !== wm) res.strong = false;   // name disagrees → ask
+    else { res.role = wm; res.strong = true; }
+    return res;
+  }
+  // Only the *leading* text counts: an article's own first page often points
+  // at its supporting information further down, which would read as an SI.
+  const compact = lead.replace(/\s/g,'').replace(/[^\x20-\x7e]/g,'').toLowerCase().slice(0, PDF_SNIFF_LEAD);
+  if(SI_COMPACT_RE.test(compact)){
+    res.evidence.push('text');
+    if(res.role === 'main') res.strong = false;                          // name disagrees → ask
+    else { res.role = 'si'; res.strong = true; }
+  }
+  return res;
+}
+function sniffEvidenceText(sniff){
+  if(!sniff || !sniff.evidence.length) return t('attRoleEvNone');
+  return sniff.evidence.map(e=>({name:t('attRoleEvName'), text:t('attRoleEvText'), watermark:t('attRoleEvWatermark')})[e] || e).join(' / ');
+}
+function attRoleSizeText(bytes){
+  if(!bytes) return '';
+  const mb = bytes / (1024*1024);
+  return mb >= 1 ? mb.toFixed(1) + ' MB' : Math.max(1, Math.round(bytes/1024)) + ' KB';
+}
+
+/* ---- "which one is the paper?" dialog ----
+   Shown whenever the answer is not obvious: several PDFs at once, a verdict
+   the reader is not sure of, or a second PDF landing on an item that already
+   has a main text. Silently committing a wrong guess would be worse than the
+   old behaviour, so this is the default rather than the exception. */
+let attachRolePending = null;   // { entries, base, mainTaken, resolve }
+function attachRoleRowHtml(entry, i, mainTaken){
+  const s = entry.sniff;
+  const meta = [s && s.pages ? I18N[lang].attRolePages(s.pages) : '', attRoleSizeText(entry.file.size)].filter(Boolean).join(' · ');
+  const opt = (value, label, extra)=>
+    `<label class="attRoleOpt${entry.role===value?' on':''}"><input type="radio" name="attRole${i}" value="${value}"${entry.role===value?' checked':''}${extra||''}><span>${esc(label)}</span></label>`;
+  return `<div class="attRoleRow" data-row="${i}">
+    <div class="attRoleTop">${ic('file')}<span class="attRoleFile" title="${esc(entry.file.name)}">${esc(entry.file.name)}</span>${meta?`<span class="attRoleMeta">${esc(meta)}</span>`:''}</div>
+    <div class="attRoleChoice">
+      ${opt('main', t('attRoleMain'))}
+      ${opt('si', t('attRoleSI'))}
+      ${opt('other', t('attRoleOther'))}
+      <input class="attRoleLabel" type="text" data-label="${i}" value="${esc(entry.label||'')}" placeholder="${esc(t('attRoleOtherPh'))}"${entry.role==='other'?'':' hidden'}>
+    </div>
+    <div class="attRoleWhy">${esc(sniffEvidenceText(s))}${s && s.text ? ` — <span class="attRoleQuote">${esc(s.text.slice(0,90))}</span>` : ''}</div>
+    <div class="attRoleName" data-name="${i}"></div>
+  </div>`;
+}
+// Recomputed on every change so the row always shows the name it will really
+// get — including the _SI2 that a second SI falls through to.
+function refreshAttRoleNames(){
+  if(!attachRolePending) return;
+  const { entries, base } = attachRolePending;
+  const taken = new Set(takenAttachmentNames());
+  entries.forEach((entry, i)=>{
+    const ext = (entry.file.name.match(/\.[a-zA-Z0-9]+$/) || ['.pdf'])[0].toLowerCase();
+    const name = roleAttachmentName(base, entry.role, ext, taken, entry.label);
+    taken.add(name);
+    entry.target = name;
+    const el = $(`#attRoleList [data-name="${i}"]`);
+    if(el) el.textContent = '→ ' + name;
+  });
+}
+function askAttachmentRoles(item, entries, mainTaken){
+  const dlg = $('#dlgAttachRoles');
+  const list = $('#attRoleList');
+  if(!dlg || !list) return Promise.resolve(entries);   // markup missing: take the guesses
+  const base = attachmentBaseName(item);
+  attachRolePending = { entries, base, mainTaken, resolve:null };
+  const hint = $('#attRoleTakenHint');
+  if(hint){
+    hint.textContent = mainTaken ? I18N[lang].attRoleMainTaken(mainTaken) : '';
+    hint.hidden = !mainTaken;
+  }
+  list.innerHTML = entries.map((e,i)=>attachRoleRowHtml(e, i, mainTaken)).join('');
+  refreshAttRoleNames();
+  if(!dlg.open) dlg.showModal();
+  return new Promise(resolve=>{
+    attachRolePending.resolve = resolve;
+  });
+}
+function closeAttachRoleDialog(result){
+  const pending = attachRolePending;
+  attachRolePending = null;
+  const dlg = $('#dlgAttachRoles');
+  if(dlg && dlg.open) dlg.close();
+  if(pending && pending.resolve) pending.resolve(result);
+}
+function bindAttachRoleDialog(){
+  const dlg = $('#dlgAttachRoles');
+  if(!dlg) return;
+  dlg.addEventListener('change', e=>{
+    if(!attachRolePending) return;
+    const radio = e.target.closest('input[type="radio"]');
+    if(radio){
+      const row = radio.closest('.attRoleRow');
+      const i = +row.dataset.row;
+      attachRolePending.entries[i].role = radio.value;
+      // Exactly one file can be the main text; picking it demotes the previous one.
+      if(radio.value === 'main'){
+        attachRolePending.entries.forEach((en, j)=>{
+          if(j !== i && en.role === 'main') en.role = 'si';
+        });
+      }
+      const list = $('#attRoleList');
+      list.innerHTML = attachRolePending.entries.map((en,j)=>attachRoleRowHtml(en, j, attachRolePending.mainTaken)).join('');
+      refreshAttRoleNames();
+      return;
+    }
+    const label = e.target.closest('.attRoleLabel');
+    if(label){
+      attachRolePending.entries[+label.dataset.label].label = label.value;
+      refreshAttRoleNames();
+    }
+  });
+  dlg.addEventListener('input', e=>{
+    const label = e.target.closest('.attRoleLabel');
+    if(label && attachRolePending){
+      attachRolePending.entries[+label.dataset.label].label = label.value;
+      refreshAttRoleNames();
+    }
+  });
+  $('#btnAttRoleSave')?.addEventListener('click', ()=>{
+    closeAttachRoleDialog(attachRolePending ? attachRolePending.entries : null);
+  });
+  // Esc and the × both land here, and both mean "do not attach".
+  dlg.addEventListener('close', ()=>{ if(attachRolePending) closeAttachRoleDialog(null); });
+}
+
+// opts.quiet — background attach (connector auto-PDF): never opens the role
+// dialog, never toasts, and leaves redrawing to the caller's final renderAll().
+// A file fetched from an open-access link for this DOI *is* the paper, so the
+// unsure-single-PDF case is filed as the main text instead of asking mid-import.
+async function attachFiles(item, fileList, opts){
+  opts = opts || {};
+  const files = Array.from(fileList || []);
+  if(!files.length) return;
+  const base = attachmentBaseName(item);
+  const pdfs = files.filter(isPdfFile);
+  // Non-PDFs keep the old behaviour: nothing to read inside them, and the
+  // figure/note images already have their own naming.
+  const entries = [];
+  for(const file of pdfs){
+    const sniff = await sniffPdfRole(file).catch(()=>null);
+    entries.push({ file, sniff, role: (sniff && sniff.role !== 'unknown') ? sniff.role : 'main', label:'' });
+  }
+  // A drop can only contain one paper, so keep the best-evidenced candidate as
+  // the main text and offer the rest as SI. Without this, two files that both
+  // guessed "main" would both come up pre-selected as the paper.
+  const mains = entries.filter(e=>e.role === 'main');
+  if(mains.length > 1){
+    const keep = mains.find(e=>e.sniff && e.sniff.strong) || mains[0];
+    entries.forEach(e=>{ if(e.role === 'main' && e !== keep) e.role = 'si'; });
+  }
+  let decided = entries;
+  const existing = (item.attachments || []).map(a=>a.name);
+  const mainTaken = existing.find(n=>attachmentRoleOf(n, base).role === 'main') || '';
+  if(entries.length){
+    const unsure = entries.some(e=>!e.sniff || !e.sniff.strong);
+    // Ask unless there is exactly one PDF whose role is clear and free to take.
+    const needAsk = entries.length > 1
+      || !!mainTaken
+      || (unsure && entries[0].role === 'si');
+    if(needAsk && opts.quiet){
+      entries.forEach(e=>{ if(!e.sniff || !e.sniff.strong) e.role = 'main'; });
+    }else if(needAsk){
+      decided = await askAttachmentRoles(item, entries, mainTaken);
+      if(!decided) return;                       // cancelled: nothing is written
+    }
+  }
+  // Names queued for post-save deletion are reserved too, so an immediate
+  // replacement is not deleted by the earlier operation.
+  const taken = takenAttachmentNames();
+  let siToast = '', promoteName = '';
+  for(const entry of decided){
+    if(entry.role === 'other' && !String(entry.label||'').trim()) entry.role = 'si';
+    const ext = (entry.file.name.match(/\.[a-zA-Z0-9]+$/) || ['.pdf'])[0].toLowerCase();
+    const name = roleAttachmentName(base, entry.role, ext, taken, entry.label);
+    taken.add(name);
+    await backend.putAttachment(name, entry.file);
+    item.attachments.push({ name });
+    if(entry.role === 'main') promoteName = name;
+    else if(!siToast) siToast = name;
+  }
+  for(const file of files){
+    if(isPdfFile(file)) continue;
+    const ext = (file.name.match(/\.[a-zA-Z0-9]+$/) || ['.pdf'])[0];
     let name = base + ext, n = 1;
     while(taken.has(name)){ name = `${base}-${++n}${ext}`; }
     taken.add(name);
     await backend.putAttachment(name, file);
     item.attachments.push({ name });
   }
-  touch(item); renderList(); renderDetail();
-  showToast(t('pdfAttached'));
+  touch(item);
+  if(!opts.quiet){ renderList(); renderDetail(); }
+  // The item already had a main text and the user said this new file is the
+  // paper: it landed on a collision name, so hand it to the same swap the
+  // attachment list uses. The displaced file becomes the SI.
+  if(promoteName && mainTaken){
+    const idx = (item.attachments || []).findIndex(a=>a.name === promoteName);
+    if(idx >= 0){ await setAttachmentRole(item, idx, 'main'); return; }
+  }
+  if(opts.quiet) return;
+  // A file quietly filed as something other than the paper always says so.
+  showToast(siToast ? I18N[lang].attRoleSavedAsSi(siToast) : t('pdfAttached'));
 }
+/* ---- changing a role after the fact ----
+   backend has no rename, so a move is get → put(new) → library.json → delete.
+   saveNow() already deletes pendingAttachmentDeletes *after* the JSON no
+   longer mentions them, which is exactly the safe order: a crash can leave an
+   orphan file behind, never a library.json entry pointing at nothing. */
+async function moveAttachment(item, idx, newName){
+  const att = (item.attachments || [])[idx];
+  if(!att || att.name === newName) return false;
+  const oldName = att.name;
+  const file = await backend.getAttachment(oldName);
+  await backend.putAttachment(newName, file);
+  att.name = newName;
+  pendingAttachmentDeletes.add(oldName);
+  imagePreviewCache.delete(oldName);
+  touch(item);
+  await saveNow();
+  return true;
+}
+async function setAttachmentRole(item, idx, role, label){
+  if(!backend || backend.kind === 'mem'){ showToast(t('attRoleNoLibrary'), true); return; }
+  const att = (item.attachments || [])[idx];
+  if(!att) return;
+  const base = attachmentBaseName(item);
+  const ext = (att.name.match(/\.[a-zA-Z0-9]+$/) || ['.pdf'])[0].toLowerCase();
+  const current = attachmentRoleOf(att.name, base);
+  if(current.role === role && role !== 'other') return;
+  // Another attachment of this item may be sitting on the name we want. That
+  // is the swap case (the SI holds the paper's name) — the two trade roles.
+  const rivalIdx = (item.attachments || []).findIndex((a,j)=>j !== idx && attachmentRoleOf(a.name, base).role === role);
+  try{
+    if(rivalIdx >= 0){
+      const tmp = roleAttachmentName(base, 'other', ext, takenAttachmentNames(), 'tmp');
+      await moveAttachment(item, rivalIdx, tmp);
+      const want = roleAttachmentName(base, role, ext, takenAttachmentNames(), label);
+      await moveAttachment(item, idx, want);
+      // The displaced file inherits the role the target just gave up. A file
+      // with no role at all (a legacy -2) becomes the SI.
+      const backRole = current.role || 'si';
+      const backName = roleAttachmentName(base, backRole, ext, takenAttachmentNames(), current.label);
+      await moveAttachment(item, rivalIdx, backName);
+      showToast(t('attRoleSwapped'));
+    }else{
+      const want = roleAttachmentName(base, role, ext, takenAttachmentNames(), label);
+      const from = att.name;
+      await moveAttachment(item, idx, want);
+      showToast(I18N[lang].attRoleRenamed(from, want));
+    }
+  }catch(e){
+    showToast(t('attRoleRenameFail') + (e && e.message ? ': ' + e.message : ''), true);
+  }
+  renderList(); renderDetail();
+}
+
 async function openAttachment(name){
   try{
     const file = await backend.getAttachment(name);
@@ -9378,7 +11584,178 @@ async function loadItemImagePreview(imgEl, name){
       imagePreviewCache.set(name, url);
     }
     imgEl.src = url;
-  }catch(e){ imgEl.closest('.figBox')?.classList.add('figMissing'); }
+  }catch(e){
+    imgEl.closest('.figBox')?.classList.add('figMissing');
+    imgEl.classList.add('mdImgMissing');
+  }
+}
+/* ---- image viewer (lightbox) ----
+   Every image in the detail pane (the figure block, the edit-view preview and
+   note images) opens here instead of in a new tab, so a small figure can be
+   read without leaving the app. The <img> is laid out to fit the stage, so
+   scale 1 always means "the whole picture is visible"; the wheel and the
+   toolbar zoom in from there and dragging pans. The percentage shown is
+   against the file's real pixel size, not against the fitted size, so 100%
+   really is one image pixel per CSS pixel. View-only — nothing is saved. */
+const IMG_VIEW_MAX = 12;
+const imgView = { scale:1, tx:0, ty:0, moved:false, drag:null };
+// How much the fitted image is already shrunk: scale*fitRatio = real size.
+function imgViewFitRatio(img){
+  return img && img.naturalWidth && img.offsetWidth ? img.offsetWidth / img.naturalWidth : 1;
+}
+// Scale (relative to fit) at which one image pixel covers one CSS pixel.
+function imgViewNaturalScale(img){
+  const r = imgViewFitRatio(img);
+  return r > 0 ? 1 / r : 1;
+}
+function applyImgViewTransform(){
+  const img = $('#imgViewImg'), stage = $('#imgViewStage');
+  if(!img || !stage) return;
+  const s = imgView.scale;
+  // Never let the picture be dragged past its own edges. At fit there is no
+  // slack at all, so it always snaps back to the middle of the stage.
+  const slackX = Math.max(0, (img.offsetWidth * s - stage.clientWidth) / 2);
+  const slackY = Math.max(0, (img.offsetHeight * s - stage.clientHeight) / 2);
+  imgView.tx = Math.max(-slackX, Math.min(slackX, imgView.tx));
+  imgView.ty = Math.max(-slackY, Math.min(slackY, imgView.ty));
+  img.style.transform = `translate(${imgView.tx}px, ${imgView.ty}px) scale(${s})`;
+  stage.classList.toggle('zoomed', s > 1.001);
+  const pct = $('#imgViewPct');
+  if(pct) pct.textContent = Math.round(s * imgViewFitRatio(img) * 100) + '%';
+}
+// Zoom to `next`, keeping whatever is under `anchor` (client coords, optional)
+// pinned in place. The image is centred in the stage, so its transform origin
+// and the stage centre are the same point.
+function setImgViewScale(next, anchor){
+  const img = $('#imgViewImg'), stage = $('#imgViewStage');
+  if(!img || !stage) return;
+  const s = imgView.scale;
+  const to = Math.max(1, Math.min(IMG_VIEW_MAX, next));
+  if(to === s) return;
+  if(anchor){
+    const r = stage.getBoundingClientRect();
+    const mx = anchor.clientX - (r.left + r.width / 2);
+    const my = anchor.clientY - (r.top + r.height / 2);
+    imgView.tx = mx - (mx - imgView.tx) * to / s;
+    imgView.ty = my - (my - imgView.ty) * to / s;
+  }else{
+    imgView.tx *= to / s;
+    imgView.ty *= to / s;
+  }
+  imgView.scale = to;
+  applyImgViewTransform();
+}
+function openImageViewer(src, title){
+  const dlg = $('#dlgImageViewer'), img = $('#imgViewImg');
+  if(!dlg || !img || !src) return;
+  imgView.scale = 1; imgView.tx = 0; imgView.ty = 0; imgView.drag = null;
+  img.style.transform = '';
+  img.alt = title || t('imageViewer');
+  img.src = src;
+  const head = $('#imgViewTitle');
+  if(head) head.textContent = title || '';
+  if(!dlg.open) dlg.showModal();
+  // The stage has no size until the dialog is on screen, and neither does the
+  // image until it has decoded, so the first transform waits for both.
+  if(img.complete && img.naturalWidth) applyImgViewTransform();
+  else img.addEventListener('load', applyImgViewTransform, { once:true });
+}
+// Label for the viewer: the reference's title, plus a note image's own alt text
+// when it has one (the figure block's alt is just the generic section name).
+function detailImageTitle(img){
+  const it = lib.items.find(x=>x.id===selectedId);
+  const base = (it && it.title || '').trim();
+  const alt = (img.getAttribute('alt') || '').trim();
+  if(img.classList.contains('mdImg') && alt) return base ? `${base} — ${alt}` : alt;
+  return base || t('imageViewer');
+}
+function wireImageViewer(){
+  const dlg = $('#dlgImageViewer');
+  if(!dlg) return;
+  const stage = $('#imgViewStage'), img = $('#imgViewImg');
+  dlg.addEventListener('click', (e)=>{
+    const b = e.target.closest('[data-img-view]');
+    if(!b) return;
+    const act = b.dataset.imgView;
+    if(act === 'in') setImgViewScale(imgView.scale * 1.4);
+    else if(act === 'out') setImgViewScale(imgView.scale / 1.4);
+    else if(act === 'reset'){ imgView.tx = 0; imgView.ty = 0; imgView.scale = 1; applyImgViewTransform(); }
+    else if(act === 'newtab' && img.src) window.open(img.src, '_blank', 'noopener,noreferrer');
+  });
+  stage.addEventListener('wheel', (e)=>{
+    e.preventDefault();
+    setImgViewScale(imgView.scale * Math.exp(-e.deltaY * 0.0022), e);
+  }, { passive:false });
+  stage.addEventListener('dblclick', (e)=>{
+    const nat = imgViewNaturalScale(img);
+    // Toggle between "whole picture" and one-pixel-per-pixel; when the image is
+    // smaller than the stage those are the same, so step in instead.
+    if(nat <= 1.01) setImgViewScale(imgView.scale > 1.01 ? 1 : 2, e);
+    else setImgViewScale(Math.abs(imgView.scale - nat) < 0.01 ? 1 : nat, e);
+  });
+  stage.addEventListener('pointerdown', (e)=>{
+    if(e.button !== 0 || imgView.scale <= 1.001) return;
+    imgView.drag = { x:e.clientX, y:e.clientY };
+    imgView.moved = false;
+    stage.classList.add('panning');
+    stage.setPointerCapture(e.pointerId);
+  });
+  stage.addEventListener('pointermove', (e)=>{
+    if(!imgView.drag) return;
+    imgView.tx += e.clientX - imgView.drag.x;
+    imgView.ty += e.clientY - imgView.drag.y;
+    imgView.drag = { x:e.clientX, y:e.clientY };
+    imgView.moved = true;
+    applyImgViewTransform();
+  });
+  const endDrag = (e)=>{
+    if(!imgView.drag) return;
+    imgView.drag = null;
+    stage.classList.remove('panning');
+    try{ stage.releasePointerCapture(e.pointerId); }catch(_e){}
+  };
+  stage.addEventListener('pointerup', endDrag);
+  stage.addEventListener('pointercancel', endDrag);
+  // A click on the empty part of the stage closes, the way a lightbox backdrop
+  // does — but not when it is the tail end of a pan.
+  stage.addEventListener('click', (e)=>{
+    if(e.target === stage && !imgView.moved) dlg.close();
+    imgView.moved = false;
+  });
+  // close() queues its event, so a close-then-reopen in the same tick would
+  // land here *after* the new picture was set — only drop it if still closed.
+  dlg.addEventListener('close', ()=>{ if(!dlg.open) img.removeAttribute('src'); });
+}
+// Every attachment name already in use — PDFs, figures, note images, and names
+// queued for deletion alike — so a newly generated one never collides.
+function takenAttachmentNames(){
+  const taken = new Set(pendingAttachmentDeletes);
+  lib.items.forEach(i=>{
+    (i.attachments||[]).forEach(a=>{ if(a.name) taken.add(a.name); });
+    if(i.image && i.image.name) taken.add(i.image.name);
+    noteAttachmentNames(i.notes).forEach(n=>taken.add(n));
+  });
+  return taken;
+}
+function uniqueAttachmentName(base, ext){
+  const taken = takenAttachmentNames();
+  let name = base + ext, n = 1;
+  while(taken.has(name)){ name = `${base}-${++n}${ext}`; }
+  return name;
+}
+// A note image is stored exactly like a figure (a file in attachments/), but it
+// is referenced only from the note's Markdown, so nothing is written on the item.
+async function storeNoteAttachment(item, blob, srcName){
+  if(!item || !blob) return '';
+  if(!backend){ showToast(t('imageNeedsLibrary'), true); return ''; }
+  if(!/^image\//.test(blob.type || '') && !/\.(png|jpe?g|webp|gif|svg|bmp|tiff?)$/i.test(srcName||'')){
+    showToast(t('imageNotImage'), true); return '';
+  }
+  const base = ((item.citekey || genCitekey(item)).replace(/[^\w.\-]/g,'_') || 'note') + '-note';
+  const name = uniqueAttachmentName(base, imageExtFromType(blob.type, srcName));
+  try{ await backend.putAttachment(name, blob); }
+  catch(e){ showToast(t('saveFail') + ': ' + e.message, true); return ''; }
+  return name;
 }
 async function setItemImage(item, blob, srcName){
   if(!item || !blob) return;
@@ -9386,14 +11763,8 @@ async function setItemImage(item, blob, srcName){
   if(!/^image\//.test(blob.type || '') && !/\.(png|jpe?g|webp|gif|svg|bmp|tiff?)$/i.test(srcName||'')){
     showToast(t('imageNotImage'), true); return;
   }
-  const taken = new Set([
-    ...lib.items.flatMap(i=>[...(i.attachments||[]).map(a=>a.name), (i.image && i.image.name) || ''].filter(Boolean)),
-    ...pendingAttachmentDeletes,
-  ]);
   const base = ((item.citekey || genCitekey(item)).replace(/[^\w.\-]/g,'_') || 'fig') + '-fig';
-  const ext = imageExtFromType(blob.type, srcName);
-  let name = base + ext, n = 1;
-  while(taken.has(name)){ name = `${base}-${++n}${ext}`; }
+  const name = uniqueAttachmentName(base, imageExtFromType(blob.type, srcName));
   try{ await backend.putAttachment(name, blob); }
   catch(e){ showToast(t('saveFail') + ': ' + e.message, true); return; }
   if(item.image && item.image.name){ pendingAttachmentDeletes.add(item.image.name); imagePreviewCache.delete(item.image.name); }
@@ -9439,7 +11810,10 @@ async function openAccessPdfUrls(item){
   }
   return Array.from(new Set(urls));
 }
-async function tryAutoAttachPdf(item){
+// opts.quiet is passed straight through to attachFiles (see its note): used by
+// the connector import so a background fetch never opens a modal or re-renders.
+async function tryAutoAttachPdf(item, opts){
+  opts = opts || {};
   if(!backend || (item.attachments||[]).length) return false;
   const urls = await openAccessPdfUrls(item);
   for(const url of urls){
@@ -9450,8 +11824,8 @@ async function tryAutoAttachPdf(item){
       const blob = await r.blob();
       if(!ct.includes('pdf') && blob.type !== 'application/pdf') continue;
       const file = new File([blob], ((item.citekey || genCitekey(item)) + '.pdf'), {type:'application/pdf'});
-      await attachFiles(item, [file]);
-      showToast(t('pdfAutoAttached'));
+      await attachFiles(item, [file], {quiet:!!opts.quiet});
+      if(!opts.quiet) showToast(t('pdfAutoAttached'));
       return true;
     }catch(e){ /* try next URL */ }
   }
@@ -9463,8 +11837,11 @@ async function tryAutoAttachPdf(item){
 ---------------------------------------------------------------- */
 async function startWithBackend(be, opts){
   const fresh = !!(opts && opts.fresh);
+  const token = opts && opts.token;      // see "Boot state" below
+  const step = (opts && opts.onStep) || null;
   let data = null;
   if(!fresh){
+    if(step){ step('read'); await bootPaint(); }
     try{ data = await be.load(); }
     catch(e){ console.error(e); showToast(t('libLoadFail') + ': ' + e.message, true); return false; }
   }
@@ -9472,6 +11849,7 @@ async function startWithBackend(be, opts){
     showToast(t('invalidLibrary'), true);
     return false;
   }
+  if(step) step('parse');
   const nextLib = data
     ? Object.assign({version:APP_VERSION, items:[], collections:[], tags:[], tagColors:{}, journalDict:[], researchers:[], ignoredDuplicates:[]}, data)
     : { version:APP_VERSION, items:[], collections:[], tags:[], tagColors:{}, journalDict:[], researchers:[], ignoredDuplicates:[] };
@@ -9499,6 +11877,8 @@ async function startWithBackend(be, opts){
     console.error(e); showToast(t('saveFail') + ': ' + e.message, true); return false;
   }
   // Commit the new destination and data together only after load/validation/save succeeded.
+  // A newer start attempt (the user picked a folder by hand) invalidates this one.
+  if(!bootAlive(token)) return false;
   clearTimeout(saveTimer); saveTimer = null;
   backend = be;
   lib = nextLib;
@@ -9521,8 +11901,9 @@ async function startWithBackend(be, opts){
   collapsedCollectionIds = new Set(collapsibleCollectionIds());
   collectionsSectionCollapsed = true;
   tagsSectionCollapsed = true;
-  filter = { query:'', coll:'all', tags:new Set(), cols:{}, advanced:{ terms:'', mode:'and', field:'all', yearFrom:'', yearTo:'' } };
+  filter = { query:'', coll:'all', collScope:'all', tags:new Set(), cols:{}, advanced:emptyAdvanced() };
   $('#searchBox').value = '';
+  updateAdvancedSearchButton();
   updateSearchAddUI(false);
   const libLabel = $('#libName');
   const libPath = be.path || be.fullPath || be.name || '';
@@ -9530,47 +11911,119 @@ async function startWithBackend(be, opts){
   libLabel.innerHTML = be.kind==='mem' ? '' : ic('folder') + '<span class="libNameText">' + esc(shortLibPath) + '</span>';
   libLabel.title = be.kind==='mem' ? t('demoLib') : libPath;
   $('#changeFolderWrap').style.display = HAS_FS ? '' : 'none';
+  if(step){ step('render'); await bootPaint(); } // paint the last step before renderAll blocks
   $('#startScreen').style.display = 'none';
   if(be.kind==='mem') showToast(t('demoWarn'));
   dirty = false; updateSaveDot();
   renderAll();
+  compactLibraryStorage(nextLib);
+  return true;
+}
+/* Boot state -------------------------------------------------------------
+   The start screen has to say which of three things is happening, because
+   restoring the last library can take seconds and used to look exactly like
+   "waiting for you to pick a folder":
+     checking  - asking IndexedDB / Chrome whether the last folder is usable
+     restoring - reading that folder (the three steps below)
+     idle      - nothing opens on its own; the user picks
+   AUTORESTORE_FLAG remembers whether the previous boot auto-restored, so the
+   first paint can go straight to "restoring" instead of flashing "checking"
+   (localStorage is synchronous, the IndexedDB lookup is not).
+   bootToken is a generation counter: a start attempt commits only while it is
+   still the newest one, so a folder the user picks by hand always beats an
+   auto-restore that is still in flight.                                    */
+const AUTORESTORE_FLAG = 'refshelf.autoRestored';
+const BOOT_STEPS = ['read','parse','render'];
+let bootToken = 0;
+let bootCheckTimer = null;
+let lastDirHandle = null;
+function newBootToken(){ return ++bootToken; }
+function bootAlive(token){ return token == null || token === bootToken; }
+function setBootState(state, path){
+  clearTimeout(bootCheckTimer); bootCheckTimer = null;
+  const card = $('#startCard');
+  if(!card) return;
+  card.dataset.boot = state;
+  const pathEl = $('#bootPath');
+  if(pathEl){
+    // folder name only, like the top bar — a full path either wraps or needs
+    // right-to-left truncation, which reorders the slashes
+    const full = state==='restoring' ? String(path||'') : '';
+    pathEl.textContent = full ? (full.split('/').filter(Boolean).pop() || full) : '';
+    pathEl.title = full;
+  }
+  if(state!=='restoring') setBootStep(null);
+}
+function setBootStep(step){
+  const at = BOOT_STEPS.indexOf(step);
+  document.querySelectorAll('#bootSteps li').forEach(li=>{
+    const i = BOOT_STEPS.indexOf(li.dataset.bootStep);
+    li.classList.toggle('active', at>=0 && i===at);
+    li.classList.toggle('done', at>=0 && i<at);
+  });
+}
+// Let the step we just marked actually paint before the next blocking chunk.
+function bootPaint(){ return new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))); }
+// Give up on auto-restore and show the normal chooser.
+function showManualStart(){
+  if(lastDirHandle){
+    const lastPath = lastDirHandle.path || lastDirHandle.fullPath || lastDirHandle.name || '';
+    $('#btnOpenLast').style.display = '';
+    $('#lastLibName').innerHTML = ic('folder') + ' ' + esc(lastPath);
+    $('#lastLibName').title = lastPath;
+  }
+  setBootState('idle');
+}
+
+// Switching libraries mid-import aborts the run and leaves the rest of the
+// papers queued in the extension, so say so rather than losing them silently.
+function blockedByConnectorImport(){
+  if(!connectorJob) return false;
+  showToast(t('connectorBusy'), true);
   return true;
 }
 async function pickFolder(){
+  if(blockedByConnectorImport()) return;
+  const token = newBootToken();
   try{
     if(!await ensureSavedBeforeSwitch()) return;
     const dir = await window.showDirectoryPicker({ mode:'readwrite' });
-    if(await startWithBackend(fsBackend(dir))) await idbSet('lastDir', dir);
+    if(await startWithBackend(fsBackend(dir), {token})) await idbSet('lastDir', dir);
   }catch(e){
     if(e && e.name==='AbortError') return;
     console.error(e); showToast(t('permDenied'), true);
   }
 }
 async function newLibrary(){
+  if(blockedByConnectorImport()) return;
+  const token = newBootToken();
   try{
     if(!await ensureSavedBeforeSwitch()) return;
     const dir = await window.showDirectoryPicker({ mode:'readwrite' });
     if(await dirHasLibrary(dir)){
       // folder already holds a library — creating a fresh one would overwrite it
       if(!confirm(t('newLibOverwriteConfirm'))){
-        if(await startWithBackend(fsBackend(dir))) await idbSet('lastDir', dir); // fall back to just opening it
+        if(await startWithBackend(fsBackend(dir), {token})) await idbSet('lastDir', dir); // fall back to just opening it
         return;
       }
     }
-    if(await startWithBackend(fsBackend(dir), { fresh:true })) await idbSet('lastDir', dir);
+    if(await startWithBackend(fsBackend(dir), { fresh:true, token })) await idbSet('lastDir', dir);
   }catch(e){
     if(e && e.name==='AbortError') return;
     console.error(e); showToast(t('permDenied'), true);
   }
 }
 async function openLast(){
+  const token = newBootToken();
   const dir = await idbGet('lastDir');
   if(!dir) return;
   try{
     const perm = await dir.requestPermission({ mode:'readwrite' });
     if(perm !== 'granted'){ showToast(t('permDenied'), true); return; }
-    await startWithBackend(fsBackend(dir));
-  }catch(e){ console.error(e); showToast(t('libLoadFail'), true); }
+    setBootState('restoring', dir.path || dir.fullPath || dir.name || '');
+    const ok = await startWithBackend(fsBackend(dir), { token, onStep:setBootStep });
+    if(!ok && bootAlive(token)) showManualStart();   // don't leave the spinner up
+  }catch(e){ console.error(e); showToast(t('libLoadFail'), true); showManualStart(); }
 }
 async function canAutoOpenDir(dir){
   if(!dir || !dir.queryPermission) return false;
@@ -9663,6 +12116,11 @@ $('#btnTheme').addEventListener('click', toggleTheme);
 
 // start screen
 $('#btnOpenFolder').addEventListener('click', pickFolder);
+$('#btnBootPick').addEventListener('click', ()=>{
+  newBootToken();   // abandon the auto-restore still in flight
+  showManualStart();
+  pickFolder();
+});
 $('#btnOpenLast').addEventListener('click', openLast);
 bindMenu('#btnChangeFolder','#menuChangeFolder');
 $('#miOpenFolder').addEventListener('click', ()=>{ closeMenus(); pickFolder(); });
@@ -9812,6 +12270,12 @@ const MANUAL = {
         '空のフォルダを選ぶと新しいライブラリが作られ、すでに使ったことのあるフォルダを選ぶとその中身がそのまま読み込まれます。',
         '2回目からはホーム画面に「前回のライブラリを開く」[[ic:clock]] ボタンが表示され、フォルダ選択と許可の確認を省略してワンクリックで再開できます。',
       ]},
+      {sub:'画面の幅を変える'},
+      {ul:[
+        '左のサイドバー・中央の一覧・右の詳細パネルは、境界にマウスを合わせてドラッグすると幅を変えられます。設定はこのブラウザに記憶され、次に開いたときも同じ幅になります。',
+        '境界をダブルクリックすると、既定の幅（ウィンドウ幅に合わせて自動調整）に戻ります。',
+        '一覧の列幅も同じで、見出しの境界をドラッグすると幅を変えられ、ダブルクリックで既定に戻ります。',
+      ]},
       {sub:'データはどこに保存される？'},
       {ul:[
         '文献の情報（タイトル・著者・年など）は、選んだフォルダの中に「library.json」というファイルとして自動保存されます。保存ボタンを押す必要はありません（保存状態は画面右上に表示されます）。',
@@ -9826,7 +12290,7 @@ const MANUAL = {
         '文献情報の自動取得のときだけ、CrossRef・OpenAlex などの公開データベースに接続します。それ以外の操作はすべてパソコンの中で完結します。',
       ]},
     ]},
-    { h:'インポート・エクスポート', tab:'インポート・エクスポート', icon:'download', blocks:[
+    { h:'文献の取込・出力', tab:'文献の取込・出力', icon:'download', blocks:[
       {p:'他の文献管理ソフトからのデータの取り込み（インポート）と、他のソフトへの書き出し・バックアップ（エクスポート）をまとめて説明します。'},
       {sub:'他のソフトから移行する（インポート）'},
       {p:'Zotero・Mendeley・Paperpile など、他の文献管理ソフトからのデータ移行に対応しています。移行元でファイルを「書き出し（エクスポート）」し、Paper Library の「追加」[[ic:plus]] →「インポート」[[ic:download]] から読み込みます。'},
@@ -9871,7 +12335,7 @@ const MANUAL = {
         '同じライブラリを同じブラウザで複数のタブに開くのも避けてください。閲覧するだけなら問題ありませんが、片方のタブで追加・編集して保存すると、もう片方のタブで保存したときにその変更が上書きされて消えることがあります。',
       ]},
     ]},
-    { h:'文献を追加・削除する', blocks:[
+    { h:'文献の追加・削除', blocks:[
       {p:'文献の登録方法は「自動取得」「手動入力」「他のソフトからの取り込み」の3つです。削除した文献はすぐには消えず、いったん「ゴミ箱」に移動します。'},
       {sub:'URL などから自動取得'},
       {ul:[
@@ -9891,7 +12355,7 @@ const MANUAL = {
       {sub:'他のソフトから移行する（インポート）'},
       {ul:[
         'Zotero・Mendeley・Paperpile などから書き出したファイル（BibTeX .bib / RIS .ris / CSV / JSON / Zotero RDF .rdf）を「追加」メニューの「インポート」[[ic:download]] から読み込めます。',
-        '対応形式や Paperpile・Zotero からの具体的な移行手順、およびエクスポート・バックアップについては、前の「インポート・エクスポート」タブ [[ic:download]] を参照してください。',
+        '対応形式や Paperpile・Zotero からの具体的な移行手順、およびエクスポート・バックアップについては、前の「文献の取込・出力」タブ [[ic:download]] を参照してください。',
       ]},
       {sub:'削除する（ゴミ箱）'},
       {ul:[
@@ -9901,16 +12365,206 @@ const MANUAL = {
         '完全に消すには、一覧の「完全に削除」、または上部の「完全に削除」（全件）を押します。この操作は元に戻せません。',
       ]},
     ]},
+    { h:'文献の検索・並べ替え', blocks:[
+      {ul:[
+        '上部の検索欄 [[ic:search]]：タイトル・著者・雑誌名・DOI・タグなどをまとめて検索できます。',
+        '「詳細検索」：「著者に◯◯を含み、2020年以降」のような、条件を組み合わせた検索ができます。',
+        '並べ替え：表の見出し（「年」「タイトル」など）にマウスを重ね、表示される ▲／▼ ボタンを押します。もう一度押すと昇順・降順が切り替わります。',
+        '列のカスタマイズ：見出しをドラッグすると列の順番を変更、見出しの右端をドラッグすると幅を変更できます。下部バーの「列」メニューで表示する項目を選べます。',
+        '絞り込み [[ic:funnel]]：列の見出しにある漏斗アイコンから、その列の値で絞り込めます。',
+        '表示の切替：下部バーの「表示」メニューで、表 [[ic:table]]、カード [[ic:rows]]、文献棚 [[ic:book]]、カンバンを切り替えられます。検索やコレクションの絞り込みは、どの表示にも反映されます。',
+        '文献棚：最近追加、スター、読書中、PDFあり、各コレクションを横方向の棚として表示します。「最近追加」は日数を入力して対象期間を変更できます。文献をクリックすると通常どおり詳細パネルが開きます。',
+        'カンバン：文献を「未読」「読書中」「読了」の3列で管理します。カードを別の列へドラッグすると状態が保存されます。読書状態は詳細パネルからも変更できます。',
+        'レビュー論文の色分け：下部バーの「表示設定」[[ic:sliders]] で「レビュー論文を色分け」を ON にすると、レビュー論文が紫色で示されます（カード表示・文献棚・カンバンは先頭の縦線、ギャラリー表示は枠線。表表示とマガジン表示は対象外）。既定は OFF です。対象になるのは、「種類」が Review・Minireview の文献と、Chem. Soc. Rev.・Chem. Rev.・Acc. Chem. Res.・Coord. Chem. Rev.・Nature Reviews 系・Annual Review 系などのレビュー誌に掲載された文献です。同じメニューの「Perspective・Account も含める」を ON にすると、「種類」が Perspective・Account の文献も同じ色になります。',
+      ]},
+    ]},
+    { h:'文献の整理・編集', blocks:[
+      {sub:'コレクション・タグで整理する'},
+      {p:'文献は「コレクション」（フォルダのようなもの）と「タグ」で分類できます。'},
+      {ul:[
+        'コレクション：左パネルの「＋」[[ic:plus]] ボタンで作成し、文献をドラッグ＆ドロップで入れます。コレクションの中にコレクションを作って階層化もできます。',
+        '1つの文献を複数のコレクションに入れることもできます（同じ文献が両方から見えるだけで、二重登録にはなりません）。',
+        'タグ [[ic:tag]]：詳細パネルの入力欄では、入力に応じて既存タグの候補が出るので、クリックで選ぶか新規入力で付けられます。左パネルのタグ見出しの「＋」[[ic:plus]] で事前にタグを作成、虫眼鏡 [[ic:search]] で絞り込みもできます。文献を左パネルのタグにドラッグ＆ドロップして付けることもでき、行の [[ic:palette]] で色、[[ic:pencil]] で名前変更ができます。',
+        'タグの絞り込みは既定で1つだけ選択されます（⌘／Ctrl／Shift＋クリックで複数選択の AND 絞り込み）。',
+        'スター [[ic:star]]：重要な文献に星を付けると、左パネルの「スター付き」からすぐに呼び出せます。',
+        '自分の論文 [[ic:check]]：自分が著者の文献に印を付けておける項目です。文献を左パネルの「自分の論文」にドラッグ＆ドロップすると印が付き、以後は左パネルの「自分の論文」からすぐに一覧できます。',
+        'まとめて操作：⌘（Windows では Ctrl）を押しながらクリックで複数選択、Shift＋クリックで範囲選択して、まとめてドラッグできます。',
+        '矩形選択：一覧の空いているところからドラッグすると、四角い枠に入った文献をまとめて選べます。行の上から枠を引きたいときは [[code:Alt]]（Mac は [[code:Option]]）を押しながらドラッグします。⌘／Ctrl／Shift を足すと、いまの選択に追加できます。',
+      ]},
+      {sub:'詳細パネルで閲覧・編集する'},
+      {p:'文献をクリックすると、右側に詳細パネルが開き、まずは閲覧表示になります。上部の「編集」[[ic:note]] を押すと入力フォームに切り替わり、もう一度押すと閲覧表示に戻ります。（「追加」→「手動追加」で作った文献は、最初から編集表示で開きます。）'},
+      {ul:[
+        '閲覧表示：画像・著者・引用プレビュー・要旨・添付・タグ／コレクション・メモが表示されます（内容が空の項目は自動で隠れます）。',
+        '編集表示：タイトル・著者・雑誌・年・巻／号／ページ・カテゴリ・読書状態（未読／読書中／読了）・出版社・DOI・引用キー・URL・責任著者・要旨・画像・添付・タグ／コレクション・メモを入力できます。編集した内容は自動で保存されます。',
+        '著者名の「*」は責任著者を表します。研究者として照合できる著者名はクリックでき、その研究者のページ [[ic:users]] へ移動できます。',
+        '削除するには、編集表示の一番下の「ゴミ箱に移動」[[ic:trash]] を押します（確認が表示されます）。',
+      ]},
+      {sub:'上部ツールバーのボタン'},
+      {ul:[
+        '編集 [[ic:note]]：閲覧表示と編集表示を切り替えます。',
+        'リンクを開く [[ic:link]]：DOI や URL をブラウザで開きます（DOI／URL がある文献にのみ表示）。',
+        '引用関係 [[ic:citations]]：この文献が引用している文献・この文献を引用している文献を一覧します（詳しくは「文献を見つける」タブ）。',
+        '論文相関図 [[ic:graph]]：引用関係で繋がる関連論文をマップ表示します（詳しくは「文献を見つける」タブ）。',
+        '研究者マップ [[ic:users]]：責任著者を中心にした共同研究ネットワークを表示します（詳しくは「研究者機能」タブ）。',
+        'この文献を更新 [[ic:retry]]：この文献の書誌情報（被引用数など）を最新の値に取得し直します。',
+        '表示設定 [[ic:sliders]]：詳細パネルの見せ方を調整します（下記）。',
+      ]},
+      {sub:'引用をコピーする'},
+      {ul:[
+        '引用をコピー [[ic:copy]]：引用プレビュー内のボタンで、論文リスト用の書式（著者・雑誌・年など）をクリップボードにコピーします。',
+        '引用設定 [[ic:gear]]：スタイルや著者の書き方を変更できます。「ページ」で「全ページ（13937–13945）」と「最初のページのみ（13937）」を切り替えられます（表示だけの設定で、保存されているページ番号や BibTeX・RIS・CSV の書き出しは変わりません）。',
+      ]},
+      {sub:'表示設定'},
+      {ul:[
+        '表示設定 [[ic:sliders]] では、各項目（画像・著者・引用・要旨・添付・整理・メモ）の表示 ON／OFF を切り替え、⋮⋮ のドラッグ（または ↑↓）で並び順を変更できます。データのない項目は自動で隠れます。',
+        'このほか、画像の枠線の有無、責任著者への「*」印の有無、ボタンをアイコンのみで表示するか、を切り替えられます。',
+      ]},
+      {sub:'PDF を添付する'},
+      {fig:'pdf'},
+      {ul:[
+        'PDF の添付 [[ic:paperclip]]：PDF ファイルを一覧の文献の行、または詳細パネルにドラッグ＆ドロップします。編集表示の「PDF を添付」ボタンからファイルを選ぶこともできます。',
+        '添付した PDF は、クリックするとブラウザ内で開きます。',
+      ]},
+    ]},
+    { h:'情報の更新', tab:'情報の更新', blocks:[
+      {ul:[
+        '被引用数を更新 [[ic:citations]]：下部バーのボタンで、各文献が何回引用されているかの最新値をインターネットから取得します。',
+        '責任著者を更新 [[ic:users]]：論文の責任著者（corresponding author）の情報を取得します。',
+        '責任著者の自動更新は、OpenAlex への負荷を抑えるため一度に最大25件ずつ処理します。さらに更新したい場合は、もう一度実行してください。',
+        'どちらも「表示中の全件を自動で」または「文献を選んで」実行できます。',
+        '重複候補・空データ・修正候補 [[ic:alert]]：同じ論文の二重登録や情報の欠けを自動で見つけて、下部バーにバッジで知らせます。クリックすると内容を確認して整理できます。',
+        '修正候補では、Angew. Chem. Int. Ed. Engl. / Engle. / Eng. Ed. のような旧・誤略称を検出し、1998年以降の文献では Angew. Chem. Int. Ed. への修正を提案します。',
+        '更新ログ：情報の自動取得に失敗した場合はここに記録され、あとから再試行 [[ic:retry]] できます。',
+      ]},
+      {sub:'雑誌名の辞書'},
+      {p:'雑誌名の表記ゆれ（取得された略称・別名）を、正しい正式名・略称に対応づける辞書を自分で編集できます。ここに追加した対応は、修正候補と一覧の雑誌名表示に反映されます。'},
+      {ul:[
+        '「取得される表記・別名」に、実際に登録された雑誌名（例：[[code:Adv. Sci. (Weinh.)]]）を入れます。大文字・小文字や記号の違いは無視して照合されます。',
+        '「正式名」は雑誌欄に入れたい正式名称、「略称」は一覧に表示したい略称です。どちらか一方だけでも登録できます。',
+        '辞書は library.json に保存されるので、バックアップや別のパソコンへの移行でもそのまま引き継がれます。標準の辞書より優先されるため、既定の対応を上書きすることもできます。',
+        '同じ雑誌名（別名）をもう一度追加すると、既存の登録が上書きされます。',
+      ]},
+      {dict:'雑誌名の辞書を開く'},
+    ]},
+    { h:'メモを書く（Markdown）', tab:'メモ', icon:'note', blocks:[
+      {p:'各文献のメモは Markdown で書けます。編集 [[ic:note]] を開くと「メモ」欄にツールバーが付いていて、見出し・箇条書き・チェックリスト・引用・表・リンク・画像を入れられます。書いた内容は、詳細パネルの読み取り表示で整形されて表示されます。'},
+      {sub:'使える書き方'},
+      {ul:[
+        '[[code:**太字**]] / [[code:*斜体*]] / [[code:~~取り消し線~~]] / [[code:`コード`]]',
+        '[[code:# 見出し]]（[[code:#]] の数で大きさが変わります）',
+        '[[code:- 箇条書き]]（半角スペース2つ分の字下げで入れ子にできます）と [[code:- [ ] チェックリスト]]',
+        '[[code:> 引用]]、[[code:---]] の区切り線、[[code:```]] で囲んだコードブロック',
+        '表：[[code:| 条件 | 収率 |]] の次の行に [[code:|---|---|]] を書きます',
+        'リンク：[[code:[表示文字](https://…)]]。URL をそのまま書いても自動でリンクになります。',
+      ]},
+      {sub:'画像を入れる'},
+      {ul:[
+        'メモ欄に画像を貼り付ける（⌘/Ctrl+V）か、ドラッグ＆ドロップすると挿入されます。ツールバーの [[ic:image]] からファイルを選ぶこともできます。',
+        '画像は library.json ではなく attachments/ フォルダに保存され、メモには [[code:![説明](attachment:ファイル名)]] の形で書かれます。ライブラリフォルダごとコピーすれば画像も一緒に移動します。',
+        '[[code:![説明|300](attachment:ファイル名)]] のように幅（px）を書くと、表示サイズを指定できます。',
+        'メモから画像の行を消しても、ファイル自体は attachments/ に残ります（書き間違いで実ファイルが消えないようにするためです）。',
+      ]},
+      {sub:'ほかの文献にリンクする'},
+      {ul:[
+        '[[code:[[引用キー]]]] と書くと、その引用キーを持つ文献へのリンクになります。クリックするとその文献に移動します。',
+        '[[code:[[引用キー|表示したい文字]]]] のように書くと、表示名を変えられます。',
+        'リンクされた側の詳細パネルには「この文献を参照しているメモ」が表示されるので、どのメモから参照されているかを逆にたどれます。',
+        '引用キーが見つからないときは灰色で表示されるので、書き間違いに気付けます。',
+      ]},
+      {sub:'そのほか'},
+      {ul:[
+        'ツールバー右端の [[ic:eye]] でプレビューを開くと、書きながら仕上がりを確認できます。',
+        '⌘/Ctrl+B で太字、⌘/Ctrl+I で斜体、⌘/Ctrl+K でリンクを挿入できます。箇条書きの途中で Enter を押すと、次の項目が自動で作られます。',
+        'メモ欄は高さ固定で中だけスクロールします。右下の角をドラッグすれば高さを変えられ、次回以降もその高さで開きます。',
+        'メモはこれまでどおり検索の対象になり、CSV 書き出しにもそのまま含まれます。一覧の「メモ」列には、記号を外した本文だけが表示されます。',
+      ]},
+    ]},
+    { h:'文献を見つける（論文相関図・引用関係）', tab:'文献を見つける', blocks:[
+      {p:'手持ちの文献を起点に関連論文を探す機能として、「論文相関図」と「引用関係」の2つがあります。'},
+      {sub:'論文相関図（関連論文マップ）'},
+      {p:'論文相関図は、選んだ文献と引用関係で繋がる論文を地図のように表示する機能です。関連する論文や、読み落としている重要な論文を探すのに便利です。'},
+      {fig:'graph'},
+      {ul:[
+        '開き方：文献を選んで、詳細パネルの「論文相関図」[[ic:graph]] ボタンを押します。',
+        '丸1つが1本の論文です。丸の大きさは被引用数（よく引用される論文ほど大きい）、色は出版年を表します。',
+        'ラベルの著者：丸の下のラベルには既定でラストオーサー（責任著者になりやすい最終著者）が表示されます。ツールバーの「著者」で「ファーストオーサー」に切り替えられます。',
+        '関連の強い論文ほど近くに配置されます（同じ論文を参照している度合いなどから計算しています）。',
+        '操作：背景をドラッグすると移動、マウスホイールで拡大・縮小、丸をドラッグすると配置を調整できます。',
+        '丸をクリックすると右側に詳細が表示されます。ライブラリに未登録の論文はその場で「追加」でき、登録済みの論文には緑の印が付きます。',
+        'フィルター [[ic:funnel]]：ツールバーの「フィルター」で、出版年・被引用数・雑誌・著者名・登録状態（登録済み／未登録）、および登録済みの論文についてはタグ・コレクションで絞り込めます。条件に合わない論文は「非表示」または「薄く表示」を選べます（中心の種論文は常に表示されます）。',
+        'データは公開データベース OpenAlex から取得します。一度表示した論文相関図は保存されるので、2回目からは通信なしですぐに開けます（ヘッダーの「再取得」で最新に更新）。',
+        '短時間に多くの論文相関図を表示すると、OpenAlex の1日あたりの利用上限に達することがあります。その場合は時間をおいてから再試行してください。',
+      ]},
+      {sub:'引用関係（引用・被引用の一覧）'},
+      {p:'引用関係は、その文献が「引用している文献」と「引用されている文献」を一覧できる機能です。関連文献をたどって、新しい論文を見つけるのに役立ちます。'},
+      {ul:[
+        '開き方：文献を選んで、詳細パネルの「引用関係」[[ic:citations]] ボタンを押します。',
+        '「引用している文献」（参考文献）と「引用されている文献」（被引用）の2つのリストが表示されます。データは OpenAlex から取得します。',
+        '各文献は「追加」[[ic:plus]] でライブラリに取り込めます（登録済みのものには「登録済み」と表示されます）。タイトル・著者・雑誌での絞り込みや並べ替えもできます。',
+        '表示のしかた：右下の「表示スタイル設定」[[ic:sliders]] で「カード」と「引用文」を切り替えられます。既定の「カード」は、タイトル・著者・雑誌名（略称）のチップ・年・巻・ページを分けて並べる見せ方です。「引用文」を選ぶと、ACS / Nature などの引用スタイルで1行に整形して表示します。',
+      ]},
+    ]},
+    { h:'研究者を管理する', tab:'研究者機能', icon:'users', blocks:[
+      {p:'左パネルの「研究者」からは、論文の著者や責任著者を、所属・学歴・受賞歴などを持つ独立した研究者プロフィールとして管理できます。責任著者として登録した文献とは自動で紐付きます。'},
+      {sub:'研究者を登録する'},
+      {ul:[
+        '研究者ビューでは、画面左上の入力欄が「研究者名 / URL を入力」に変わります。その右の ▾ を押すと「研究者を追加」（手動追加／論文著者から）と「研究者をインポート」（JSON／CSV／AI調査JSON）のメニューが開きます。',
+        '「手動追加」[[ic:plus]] では、姓・名（英字）を入力します。論文との自動照合には姓・名・ミドルネームが使われます。表示名はこの3つから自動的に決まるため、表示名だけを直接入力する欄はありません。',
+        '同じ画面で、所属・別表記（1行に1件）・ORCID・OpenAlex・researchmap・Chem-Station・Website も入力できます（あとから編集画面でも追加・変更できます）。所属欄は登録済みの機関名が候補として出ます。',
+        '「保存」を押すと「登録内容を確認」画面に進みます。ここで「一致する論文著者にも紐付ける」にチェックを入れると、ライブラリ内の同名の著者がいる文献にもこの研究者が自動でリンクされます。同名のプロフィールが既にある場合は「一致する既存プロフィール」が表示され、「新しいプロフィールとして登録」か既存プロフィールへの紐付けかを選べます。',
+        '「論文著者から」[[ic:users]] では、ライブラリ内の文献の著者一覧から、まだ研究者として登録していない人をまとめて選んで登録できます。論文名・著者名・コレクション・タグでの絞り込み、論文数順の並べ替え、「表示中をすべて選択」が使えます。',
+        '画面上部の入力欄（研究者ビューでは「研究者名 / URL を入力」）に名前や ORCID・OpenAlex などの URL を入れて「手動追加」を押すと、その内容が入った状態で手動追加の画面が開きます。',
+      ]},
+      {sub:'経歴・外部プロフィールを編集する'},
+      {ul:[
+        '研究者を開いて「編集」を押すと、基本情報・AIから取り込む・職歴・学歴・受賞歴・研究情報・外部プロフィール・画像・関連研究者の9つのタブで編集できます。',
+        '文献の詳細パネルと違い、研究者プロフィールの編集は自動保存ではありません。最後に「保存」を押してください（保存せずに閉じようとすると確認が表示されます）。',
+        '所属機関の欄は、入力すると候補が出る辞書式の入力欄です。辞書は「所属（機関）辞書」から自分で追加・編集できます。',
+        '外部プロフィールには ORCID・OpenAlex・Google Scholar・ResearchGate・LinkedIn・X・Bluesky・Wikipedia・researchmap・Chem-Station・Scopus Author ID・ResearcherID・DBLP・CiNii などの ID・URL を登録できます。',
+      ]},
+      {sub:'AI に調べてもらって取り込む'},
+      {ul:[
+        '編集画面の「AIから取り込む」タブでは、その研究者を調べるための文章（プロンプト）を自動生成できます。「プロンプトをコピー」した文章を、お使いの AI（Claude や ChatGPT など）に貼り付けて調べてもらいます。',
+        'AI が返した回答（JSON）を「クリップボードから貼り付け」または「JSONファイルを選択」で読み込み、「内容を確認」を押します。API キーなどは不要です。',
+        '取得できた項目が一覧表示されるので、反映したいものだけチェックして「選択項目を編集内容へ反映」を押します。反映しただけではまだ保存されないので、続けて「保存」を押してください。',
+        '同姓同名などで AI が本人を確定できなかった場合は候補一覧が表示されます。正しい候補を選んで「この候補で再調査用プロンプトをコピー」から調べ直せます。',
+        '複数の研究者をまとめて登録したい場合は、「研究者を追加」メニューの「インポート」→「AI調査JSON」から、同じ形式の JSON ファイルを一括で読み込めます。',
+      ]},
+      {sub:'文献との連携'},
+      {ul:[
+        '文献の「責任著者」欄に登録された研究者は、そのプロフィールの「責任著者の文献」に自動で一覧表示されます。責任著者の自動取得は、「情報の更新」タブの「責任著者を更新」から行います。',
+      ]},
+      {sub:'研究者マップ・アカデミックツリー'},
+      {ul:[
+        '文献の詳細パネルの「研究者マップ」[[ic:users]] ボタンから、その文献の責任著者を中心にした共同研究ネットワークを表示できます。丸の大きさは責任著者としての論文数、線は共著関係を表します。ライブラリ内の責任著者情報から作成され、「深度」スライダーで中心研究者からたどる深さを変えられます。',
+        '研究者マップは研究者ビューの表示切替とは別の画面です。表示切替の「地図」は世界地図なので、混同しないよう注意してください。',
+        'マップでノードを選ぶと「アカデミックツリーで見る」から PhD 指導関係などの系譜図に切り替えられます。研究者ビューの表示切替から「ツリー」を選んで直接開くこともできます。',
+        '系譜（PhD 指導教員・所属研究室の PI など）は、各研究者プロフィールの「学歴」「職歴」タブで登録します。',
+        'ツリー下部の「表示」ボタンを押すと、配置・向き・線・形をまとめて切り替えられます。「線」では関係の線を「曲線」と「直角」から選べます。「直角」は家系図のように縦横の線で描き、同じ指導教員から伸びる線は1本の横棒にまとまります（「世代」レイアウトのときに選べます）。',
+        '同じパネルの「形」で、系譜の描き方を選べます。「合流」は1人の研究者を必ず1つの箱で表すため、共通の指導教員がいることが線の合流として読み取れます。「家系図」は経路ごとに枝を分けて描くので線が一切交差しませんが、複数の経路からたどれる研究者は複数の箱に分かれて表示されます（その箱には「2か所」のように表示箇所の数が付きます。カーソルを合わせると同じ人物の箱が強調されます）。子孫が描かれるのは中心研究者に近い側の箱だけで、もう一方は点線枠になり、その先は省略されます。',
+      ]},
+      {sub:'世界地図（「地図」表示）'},
+      {ul:[
+        '研究者ビューの表示切替から「地図」を選ぶと、研究者の所属機関を世界地図上にピンでプロットします。ピンの大きさと中の数字は、その拠点の研究者数です。',
+        '拡大するとピンが顔写真に変わります。重なった円をクリックすると、その拠点の研究者一覧が表示されます。',
+        '「プロットする所属」で「現在の所属」か「すべての所属歴」かを選べます。「研究機関をプロット」に切り替えると、研究者の分布に代えて研究機関の分布を表示します。',
+        '地図の中心（アジア中心／ヨーロッパ中心）やグリッド線（経緯線）、ピン・顔写真の大きさも調整できます。機関の位置が登録されていない場合は、緯度・経度を自分で設定できます。',
+      ]},
+      {sub:'並べ替え・絞り込み・インポート'},
+      {ul:[
+        '研究者一覧は、表示切替から「表表示」「グリッド」「プロフィール」「リスト」「地図」「ツリー」「ランキング」の7種類に切り替えられます。',
+        '「ランキング」ではランキング基準を選べます（ライブラリ内の文献数〔責任著者のみ／共著を含む〕・ライブラリ内の被引用数・外部プロフィールの総引用数／h-index／i10-index／文献数）。「フィルター」での絞り込み、「列」での表示項目の選択もできます。',
+        '他で用意したデータをまとめて登録するには、「研究者を追加」メニューの「インポート」から JSON・CSV・AI調査JSON を読み込みます。',
+      ]},
+    ]},
     { h:'Chrome 拡張機能で保存する', tab:'Chrome拡張機能', blocks:[
       {p:'Paper Library Connector は、論文ページを開いたまま文献を保存するための付属拡張機能です。Google Chrome 専用で、Safari・Firefox・Edge など他のブラウザでは動作しません（Chromium 系ブラウザでも動作は保証されません）。保存した文献は、Paper Library を開いたときに自動でライブラリへ取り込まれます。'},
       {sub:'インストール（Google Chrome）'},
-      {dl:'拡張機能をダウンロード（ZIP）'},
+      {p:'手順は「①ダウンロード → ②フォルダに置く → ③Chrome で読み込む」の3段階です。上の仮想画面では、実際の chrome://extensions の画面を操作しながら流れを確認できます。'},
+      {dl:'拡張機能をダウンロード（.zip）'},
       {ul:[
-        'Google Chrome で作業してください。上のボタンで ZIP をダウンロードし、解凍します。解凍してできた「paper-library-connector」フォルダは、あとで消したり動かしたりしない場所に置いてください（おすすめ：Windows は「ドキュメント\\PaperLibrary\\」、Mac は「書類/PaperLibrary/」など、普段片づけない固定のフォルダ。ダウンロードフォルダやデスクトップに置いたままだと、掃除のときに誤って消しやすいので避けてください）。',
-        'Chrome のアドレスバーに chrome://extensions と入力して開き、右上の「デベロッパーモード」を ON にします（chrome:// のページはリンクからは開けないため、アドレスバーに貼り付けて移動してください）。',
-        '「パッケージ化されていない拡張機能を読み込む」を押し、先ほど置いた「paper-library-connector」フォルダを選びます。',
-        '大切：読み込んだあとも Chrome はこのフォルダを直接参照し続けます。フォルダを削除・移動・名前変更すると拡張機能が動かなくなるので、そのままの場所に残しておいてください（消してしまった場合は、もう一度解凍して同じ場所に置き、この手順をやり直せば復活します）。',
-        'GitHub Pages など https:// の Paper Library で使う場合は、このまま利用できます。ローカルの index.html を file:// で開いて使う場合だけ、拡張機能の「詳細」画面で「ファイルの URL へのアクセスを許可する」を ON にしてください。',
+        '解凍してできた「paper-library-connector」フォルダは、あとで消したり動かしたりしない場所に置いてください（おすすめ：Windows は「ドキュメント\\PaperLibrary\\」、Mac は「書類/PaperLibrary/」など、ふだん動かさない固定のフォルダ。ダウンロードフォルダやデスクトップに置いたままだと、掃除のときに誤って消しやすいので避けてください）。',
+        '重要：読み込んだあとも Chrome はこのフォルダを直接参照し続けます。フォルダを削除・移動・名前変更すると拡張機能が動かなくなるので、そのままの場所に残しておいてください（消してしまった場合は、もう一度解凍して同じ場所に置き、読み込みをやり直せば復活します）。',
         '拡張機能を使う前に、一度 Paper Library をライブラリフォルダを開いた状態で表示しておいてください（保存先ライブラリとコレクション一覧を拡張機能に知らせるためです）。',
       ]},
       {sub:'ツールバーに固定（ピン留め）する'},
@@ -9959,112 +12613,6 @@ const MANUAL = {
         '候補の「登録」を押すと、その文献が「論文を追加する」タブに読み込まれるので、コレクション・タグを選んで保存します。「開く」を押すとその論文のページを新しいタブで開きます。',
       ]},
     ]},
-    { h:'研究者を管理する', tab:'研究者', icon:'users', blocks:[
-      {p:'左パネルの「研究者」からは、論文の著者や責任著者を、所属・学歴・受賞歴などを持つ独立した研究者プロフィールとして管理できます。責任著者として登録した文献とは自動で紐付きます。'},
-      {sub:'研究者を登録する'},
-      {ul:[
-        '研究者ビューで「追加」[[ic:plus]] →「手動登録」を開き、姓・名（英字）を入力します。論文との自動照合には姓・名・ミドルネームが使われます。所属や ORCID・OpenAlex・researchmap などの外部プロフィールも同じ画面でまとめて入力できます（あとから編集画面でも追加・変更できます）。',
-        '登録内容の確認画面で「一致する論文著者にも紐付ける」にチェックを入れると、ライブラリ内の同名の著者がいる文献にもこの研究者が自動でリンクされます。',
-        '「追加」→「論文著者から」では、ライブラリ内の文献の著者一覧から、まだ研究者として登録していない人をまとめて選んで登録できます。',
-      ]},
-      {sub:'経歴・外部プロフィールを編集する'},
-      {ul:[
-        '研究者を開いて「編集」を押すと、基本情報・職歴・学歴・受賞歴・研究情報・外部プロフィール・画像・関連研究者をタブで編集できます。',
-        '所属機関の欄は、入力すると候補が出る辞書式の入力欄です。辞書は「所属（機関）辞書」から自分で追加・編集できます。',
-        '外部プロフィールには ORCID・OpenAlex・Google Scholar・ResearchGate・LinkedIn・X・Bluesky・Wikipedia・researchmap・Chem-Station・Scopus Author ID・ResearcherID・DBLP・CiNii などの ID・URL を登録できます。',
-      ]},
-      {sub:'AI に調べてもらって取り込む'},
-      {ul:[
-        '編集画面の「AIから取り込む」タブでは、その研究者を調べるための文章（プロンプト）を自動生成できます。「プロンプトをコピー」した文章を、お使いの AI（Claude や ChatGPT など）に貼り付けて調べてもらいます。',
-        'AI が返した回答（JSON）を「クリップボードから貼り付け」または「JSONファイルを選択」で読み込み、内容を確認してから反映します。API キーなどは不要です。',
-        '複数の研究者をまとめて登録したい場合は、「研究者を追加」メニューの「インポート」→「AI調査JSON」から、同じ形式の JSON ファイルを一括で読み込めます。',
-      ]},
-      {sub:'文献との連携'},
-      {ul:[
-        '文献の「責任著者」欄に登録された研究者は、そのプロフィールの「責任著者の文献」に自動で一覧表示されます。責任著者の自動取得は、「情報の更新・メンテナンス」タブの「責任著者を更新」から行います。',
-      ]},
-      {sub:'研究者マップ・アカデミックツリー'},
-      {ul:[
-        '文献の詳細パネルの「研究者マップ」[[ic:users]] ボタンから、その文献の責任著者を中心にした共同研究ネットワークを表示できます。丸の大きさは責任著者としての論文数、線は共著関係を表します。',
-        'マップでノードを選ぶと「アカデミックツリーで見る」から PhD 指導関係などの系譜図に切り替えられます。研究者ビューの表示切替から「ツリー」を選んで直接開くこともできます。',
-        '系譜（PhD 指導教員・所属研究室の PI など）は、各研究者プロフィールの「学歴」「職歴」タブで登録します。',
-      ]},
-      {sub:'並べ替え・絞り込み・インポート'},
-      {ul:[
-        '研究者一覧は、表示切替から「ランキング」を選ぶと文献数・被引用数・h指数などの指標で並べ替えて確認できます。「フィルター」での絞り込み、「列」での表示項目の選択もできます。',
-        '他で用意したデータをまとめて登録するには、「研究者を追加」メニューの「インポート」から JSON・CSV・AI調査JSON を読み込みます。',
-      ]},
-    ]},
-    { h:'整理・編集する', blocks:[
-      {sub:'コレクション・タグで整理する'},
-      {p:'文献は「コレクション」（フォルダのようなもの）と「タグ」で分類できます。'},
-      {ul:[
-        'コレクション：左パネルの「＋」[[ic:plus]] ボタンで作成し、文献をドラッグ＆ドロップで入れます。コレクションの中にコレクションを作って階層化もできます。',
-        '1つの文献を複数のコレクションに入れることもできます（同じ文献が両方から見えるだけで、二重登録にはなりません）。',
-        'タグ [[ic:tag]]：詳細パネルの入力欄では、入力に応じて既存タグの候補が出るので、クリックで選ぶか新規入力で付けられます。左パネルのタグ見出しの「＋」[[ic:plus]] で事前にタグを作成、虫眼鏡 [[ic:search]] で絞り込みもできます。文献を左パネルのタグにドラッグ＆ドロップして付けることもでき、行の [[ic:palette]] で色、[[ic:pencil]] で名前変更ができます。',
-        'タグの絞り込みは既定で1つだけ選択されます（⌘／Ctrl／Shift＋クリックで複数選択の AND 絞り込み）。',
-        'スター [[ic:star]]：重要な文献に星を付けると、左パネルの「スター」からすぐに呼び出せます。',
-        '自分の論文 [[ic:check]]：自分が著者の文献に印を付けておける項目です。文献を左パネルの「自分の論文」にドラッグ＆ドロップすると印が付き、以後は左パネルの「自分の論文」からすぐに一覧できます。',
-        'まとめて操作：⌘（Windows では Ctrl）を押しながらクリックで複数選択、Shift＋クリックで範囲選択して、まとめてドラッグできます。',
-      ]},
-      {sub:'詳細パネルで編集する・PDF を添付する'},
-      {p:'文献をクリックすると、右側に詳細パネルが開きます。'},
-      {fig:'pdf'},
-      {ul:[
-        '書誌情報・アブストラクト・メモなどを確認・編集できます。編集した内容は自動で保存されます。',
-        'PDF の添付 [[ic:paperclip]]：PDF ファイルを一覧の文献の行、または詳細パネルにドラッグ＆ドロップします。詳細パネルの「PDF を添付」ボタンからファイルを選ぶこともできます。',
-        '添付した PDF は、クリックするとブラウザ内で開きます。',
-        '引用をコピー [[ic:quote]]：論文リスト用の書式（著者・雑誌・年など）でコピーできます。歯車アイコン [[ic:gear]] の「引用設定」でスタイルや著者の書き方を変更できます。',
-        '論文相関図 [[ic:graph]]：引用関係で繋がる関連論文をマップ表示します。詳しくは「論文相関図」タブをご覧ください。',
-      ]},
-    ]},
-    { h:'探す・並べ替える', blocks:[
-      {ul:[
-        '上部の検索欄 [[ic:search]]：タイトル・著者・雑誌名・DOI・タグなどをまとめて検索できます。',
-        '「詳細検索」：「著者に◯◯を含み、2020年以降」のような、条件を組み合わせた検索ができます。',
-        '並べ替え：表の見出し（「年」「タイトル」など）にマウスを重ね、表示される ▲／▼ ボタンを押します。もう一度押すと昇順・降順が切り替わります。',
-        '列のカスタマイズ：見出しをドラッグすると列の順番を変更、見出しの右端をドラッグすると幅を変更できます。下部バーの「列」メニューで表示する項目を選べます。',
-        '絞り込み [[ic:funnel]]：列の見出しにある漏斗アイコンから、その列の値で絞り込めます。',
-        '表示の切替：下部バーの「表示」メニューで、表 [[ic:table]]、カード [[ic:rows]]、文献棚 [[ic:book]]、カンバンを切り替えられます。検索やコレクションの絞り込みは、どの表示にも反映されます。',
-        '文献棚：最近追加、スター、読書中、PDFあり、各コレクションを横方向の棚として表示します。「最近追加」は日数を入力して対象期間を変更できます。文献をクリックすると通常どおり詳細パネルが開きます。',
-        'カンバン：文献を「未読」「読書中」「読了」の3列で管理します。カードを別の列へドラッグすると状態が保存されます。読書状態は詳細パネルからも変更できます。',
-      ]},
-    ]},
-    { h:'論文相関図（関連論文マップ）', tab:'論文相関図', blocks:[
-      {p:'論文相関図は、選んだ文献と引用関係で繋がる論文を地図のように表示する機能です。関連する論文や、読み落としている重要な論文を探すのに便利です。'},
-      {fig:'graph'},
-      {ul:[
-        '開き方：文献を選んで、詳細パネルの「論文相関図」[[ic:graph]] ボタンを押します。',
-        '丸1つが1本の論文です。丸の大きさは被引用数（よく引用される論文ほど大きい）、色は出版年を表します。',
-        'ラベルの著者：丸の下のラベルには既定でラストオーサー（責任著者になりやすい最終著者）が表示されます。ツールバーの「著者」で「ファーストオーサー」に切り替えられます。',
-        '関連の強い論文ほど近くに配置されます（同じ論文を参照している度合いなどから計算しています）。',
-        '操作：背景をドラッグすると移動、マウスホイールで拡大・縮小、丸をドラッグすると配置を調整できます。',
-        '丸をクリックすると右側に詳細が表示されます。ライブラリに未登録の論文はその場で「追加」でき、登録済みの論文には緑の印が付きます。',
-        'フィルター [[ic:funnel]]：ツールバーの「フィルター」で、出版年・被引用数・雑誌・著者名・登録状態（登録済み／未登録）、および登録済みの論文についてはタグ・コレクションで絞り込めます。条件に合わない論文は「非表示」または「薄く表示」を選べます（中心の種論文は常に表示されます）。',
-        'データは公開データベース OpenAlex から取得します。一度表示した論文相関図は保存されるので、2回目からは通信なしですぐに開けます（ヘッダーの「再取得」で最新に更新）。',
-        '短時間に多くの論文相関図を表示すると、OpenAlex の1日あたりの利用上限に達することがあります。その場合は時間をおいてから再試行してください。',
-      ]},
-    ]},
-    { h:'情報の更新・メンテナンス', tab:'更新・メンテナンス', blocks:[
-      {ul:[
-        '被引用数を更新 [[ic:citations]]：下部バーのボタンで、各文献が何回引用されているかの最新値をインターネットから取得します。',
-        '責任著者を更新 [[ic:users]]：論文の責任著者（corresponding author）の情報を取得します。',
-        '責任著者の自動更新は、OpenAlex への負荷を抑えるため一度に最大25件ずつ処理します。さらに更新したい場合は、もう一度実行してください。',
-        'どちらも「表示中の全件を自動で」または「文献を選んで」実行できます。',
-        '重複候補・空データ・修正候補 [[ic:alert]]：同じ論文の二重登録や情報の欠けを自動で見つけて、下部バーにバッジで知らせます。クリックすると内容を確認して整理できます。',
-        '修正候補では、Angew. Chem. Int. Ed. Engl. / Engle. / Eng. Ed. のような旧・誤略称を検出し、1998年以降の文献では Angew. Chem. Int. Ed. への修正を提案します。',
-        '更新ログ：情報の自動取得に失敗した場合はここに記録され、あとから再試行 [[ic:retry]] できます。',
-      ]},
-      {sub:'雑誌名の辞書'},
-      {p:'雑誌名の表記ゆれ（取得された略称・別名）を、正しい正式名・略称に対応づける辞書を自分で編集できます。ここに追加した対応は、修正候補と一覧の雑誌名表示に反映されます。'},
-      {ul:[
-        '「取得される表記・別名」に、実際に登録された雑誌名（例：[[code:Adv. Sci. (Weinh.)]]）を入れます。大文字・小文字や記号の違いは無視して照合されます。',
-        '「正式名」は雑誌欄に入れたい正式名称、「略称」は一覧に表示したい略称です。どちらか一方だけでも登録できます。',
-        '辞書は library.json に保存されるので、バックアップや別のパソコンへの移行でもそのまま引き継がれます。標準の辞書より優先されるため、既定の対応を上書きすることもできます。',
-        '同じ雑誌名（別名）をもう一度追加すると、既存の登録が上書きされます。',
-      ]},
-      {dict:'雑誌名の辞書を開く'},
-    ]},
     { h:'Word アドインで引用する', tab:'Word アドイン', blocks:[
       {p:'Paper Library の Word アドインを入れると、Word のリボンに「Paper Library」タブが追加され、文献を検索してカーソル位置に引用文献を挿入できます。番号付き引用 [1] と末尾の文献リストが自動で連動し、雑誌名の斜体や年の太字もそのまま入ります。'},
       {fig:'wordaddin'},
@@ -10110,6 +12658,12 @@ const MANUAL = {
         'If the browser asks for permission to edit files, choose “Allow” — this is needed for automatic saving.',
         'Choosing an empty folder creates a new library, and choosing a folder you used before loads its contents as-is.',
         'From the second time on, the home screen shows an “Open the last library” [[ic:clock]] button, skipping the folder picker and permission prompt so you can resume with one click.',
+      ]},
+      {sub:'Resizing the panes'},
+      {ul:[
+        'Drag the boundary between the sidebar, the list and the detail pane to change their widths. The sizes are remembered in this browser and come back next time.',
+        'Double-click a boundary to return it to the default width, which adapts to the window size again.',
+        'Table columns work the same way: drag a header boundary to resize it, double-click it to restore the default.',
       ]},
       {sub:'Where is my data stored?'},
       {ul:[
@@ -10200,16 +12754,206 @@ const MANUAL = {
         'To remove it for good, press “Delete forever” in the list, or “Delete forever” (all) at the top. This cannot be undone.',
       ]},
     ]},
+    { h:'Searching & sorting', blocks:[
+      {ul:[
+        'The search box [[ic:search]] at the top matches titles, authors, journals, DOIs, tags, and more, all at once.',
+        '“Advanced search” combines conditions, e.g. “author contains X, published after 2020”.',
+        'Sorting: hover a table header (“Year”, “Title”, …) and click the ▲/▼ control that appears; click it again to reverse the order.',
+        'Customizing columns: drag headers to reorder, drag a header’s right edge to resize, and choose visible columns from the “Columns” menu in the bottom bar.',
+        'Filtering [[ic:funnel]]: the funnel icon in each column header filters by that column’s values.',
+        'View switching: use the “View” menu in the bottom bar to choose table [[ic:table]], cards [[ic:rows]], literature shelves [[ic:book]], or Kanban. Search and collection filters apply to every view.',
+        'Literature shelves: shows recently added, starred, currently reading, PDF-attached, and collection-specific shelves in horizontal rows. Enter a number of days to control the “Recently added” period. Click a paper to open its usual detail pane.',
+        'Kanban: manages papers in three columns — Unread, Reading, and Read. Drag a card to another column to save its status; the same status can be changed in the detail pane.',
+        'Highlighting reviews: turn on “Highlight review articles” in the “Display” menu [[ic:sliders]] in the bottom bar to mark review articles in purple — the leading bar in the card, shelf and Kanban views, the card border in the gallery view (the table and magazine views are not marked). It is off by default. A reference counts as a review when its Category is Review or Minireview, or when it ran in a review-only journal such as Chem. Soc. Rev., Chem. Rev., Acc. Chem. Res., Coord. Chem. Rev., or any Nature Reviews / Annual Review title. Turn on “Include Perspective / Account” in the same menu to give those two categories the same colour.',
+      ]},
+    ]},
+    { h:'Organizing & editing', blocks:[
+      {sub:'Organize with collections & tags'},
+      {p:'References can be organized with collections (like folders) and tags.'},
+      {ul:[
+        'Collections: create one with the “+” [[ic:plus]] button in the left pane and drag & drop references into it. Collections can be nested inside each other.',
+        'A reference can belong to several collections at once (it simply appears in both — it is not duplicated).',
+        'Tags [[ic:tag]]: in the detail pane, the tag box suggests existing tags as you type — click one or type a new name. Use the “+” [[ic:plus]] on the Tags header in the left pane to create tags up-front, and the magnifier [[ic:search]] to filter them. You can also drag & drop references onto a tag in the left pane, and each row’s [[ic:palette]] sets a colour and [[ic:pencil]] renames it.',
+        'Tag filtering selects one tag by default (Cmd/Ctrl/Shift-click to select several as an AND filter).',
+        'Stars [[ic:star]]: mark important references with a star and find them instantly under “Starred” in the left pane.',
+        'My publications [[ic:check]]: mark references you authored. Drag a reference onto “My publications” in the left pane to mark it, then find it there any time.',
+        'Bulk actions: Cmd-click (Ctrl on Windows) for multi-select, Shift-click for range select, then drag them together.',
+        'Rubber-band selection: drag from an empty spot in the list to select everything the box touches. To start the box on a row, hold [[code:Alt]] ([[code:Option]] on a Mac). Add Cmd/Ctrl/Shift to add to the current selection.',
+      ]},
+      {sub:'View & edit in the detail pane'},
+      {p:'Clicking a reference opens the detail pane on the right in read view. Press “Edit” [[ic:note]] at the top to switch to the input form, and press it again to return to read view. (References created with “Add” → “Add manually” open straight in edit view.)'},
+      {ul:[
+        'Read view shows the image, authors, citation preview, abstract, attachments, tags / collections, and notes (empty items are hidden automatically).',
+        'Edit view lets you enter the title, authors, journal, year, volume / issue / pages, category, reading status (Unread / Reading / Read), publisher, DOI, cite key, URL, corresponding authors, abstract, image, attachments, tags / collections, and notes. Edits are saved automatically.',
+        'A “*” next to an author marks a corresponding author. Author names that resolve to a researcher are clickable and jump to that researcher’s page [[ic:users]].',
+        'To delete, press “Move to Trash” [[ic:trash]] at the bottom of edit view (a confirmation appears).',
+      ]},
+      {sub:'Top toolbar buttons'},
+      {ul:[
+        'Edit [[ic:note]]: switch between read view and edit view.',
+        'Open link [[ic:link]]: open the DOI or URL in the browser (shown only when a DOI / URL exists).',
+        'Citation relations [[ic:citations]]: list the references this paper cites and the papers that cite it (see the “Find references” tab).',
+        'Paper graph [[ic:graph]]: maps related papers connected through citations (see the “Find references” tab).',
+        'Researcher map [[ic:users]]: shows the co-authorship network around the corresponding authors (see the “Researchers” tab).',
+        'Update this reference [[ic:retry]]: re-fetches this reference’s bibliographic data (cited-by counts, etc.) with the latest values.',
+        'Display settings [[ic:sliders]]: adjust how the detail pane is shown (below).',
+      ]},
+      {sub:'Copy a citation'},
+      {ul:[
+        'Copy citation [[ic:copy]]: the button inside the citation preview copies a formatted citation (authors, journal, year, …) to the clipboard.',
+        'Citation settings [[ic:gear]]: change the style and author formatting. “Pages” switches between the full range (13937–13945) and the first page only (13937) — a display setting, so the stored page numbers and the BibTeX / RIS / CSV exports are unchanged.',
+      ]},
+      {sub:'Display settings'},
+      {ul:[
+        'In Display settings [[ic:sliders]], toggle each item (image, authors, citation, abstract, attachments, organize, notes) on/off, and drag ⋮⋮ (or use ↑↓) to reorder them. Items with no data are hidden automatically.',
+        'You can also toggle the image border, the “*” mark on corresponding authors, and whether buttons show icons only.',
+      ]},
+      {sub:'Attach PDFs'},
+      {fig:'pdf'},
+      {ul:[
+        'Attaching PDFs [[ic:paperclip]]: drag & drop a PDF onto a reference row in the list, or onto the detail pane. You can also pick a file with the “Attach PDF” button in edit view.',
+        'Attached PDFs open right in the browser when clicked.',
+      ]},
+    ]},
+    { h:'Updating information', blocks:[
+      {ul:[
+        'Update cited-by counts [[ic:citations]]: a bottom-bar button fetches the latest citation counts from the internet.',
+        'Update corresponding authors [[ic:users]]: fetches corresponding-author information for your papers.',
+        'Corresponding-author refresh processes at most 25 items at a time to reduce OpenAlex load. Run it again if you need to continue.',
+        'Both can run on “all shown items” automatically or only on items you pick.',
+        'Duplicates / empty records / fix suggestions [[ic:alert]]: double registrations and missing fields are detected automatically and flagged with badges in the bottom bar. Click a badge to review and clean up.',
+        'Fix suggestions also detect old or mistyped Angewandte abbreviations such as Angew. Chem. Int. Ed. Engl. / Engle. / Eng. Ed., and suggest Angew. Chem. Int. Ed. for papers from 1998 onward.',
+        'Update log: failed fetches are recorded here and can be retried [[ic:retry]] later.',
+      ]},
+      {sub:'Journal name dictionary'},
+      {p:'You can edit your own dictionary that maps journal-name variants (fetched abbreviations or aliases) to the correct full name and abbreviation. Entries you add feed the fix suggestions and the journal name shown in the list.'},
+      {ul:[
+        'In “Fetched form / alias”, enter the journal name as it was actually saved (e.g. [[code:Adv. Sci. (Weinh.)]]). Matching ignores differences in case and punctuation.',
+        '“Full name” is what you want in the journal field; “Abbreviation” is what you want shown in the list. Either one alone is enough.',
+        'The dictionary is stored in library.json, so it carries over through backups and to other computers. It takes precedence over the built-in dictionary, so you can override the defaults too.',
+        'Adding the same journal name (alias) again overwrites the existing entry.',
+      ]},
+      {dict:'Open the journal name dictionary'},
+    ]},
+    { h:'Writing notes (Markdown)', tab:'Notes', icon:'note', blocks:[
+      {p:'Each reference\'s note is written in Markdown. Open the editor [[ic:note]] and the Notes field carries a toolbar for headings, lists, checklists, quotes, tables, links and images. What you write is rendered in the detail pane\'s read view.'},
+      {sub:'Syntax'},
+      {ul:[
+        '[[code:**bold**]] / [[code:*italic*]] / [[code:~~strikethrough~~]] / [[code:`code`]]',
+        '[[code:# Heading]] — the number of [[code:#]] sets the level',
+        '[[code:- bullet]] (indent by two spaces to nest) and [[code:- [ ] checklist]]',
+        '[[code:> quote]], a [[code:---]] rule, and code blocks fenced with [[code:```]]',
+        'Tables: write [[code:|---|---|]] on the line after [[code:| Condition | Yield |]]',
+        'Links: [[code:[text](https://…)]]. A bare URL becomes a link on its own.',
+      ]},
+      {sub:'Adding images'},
+      {ul:[
+        'Paste an image into the note (⌘/Ctrl+V) or drop one onto it. You can also pick a file with [[ic:image]] on the toolbar.',
+        'Images are stored in the attachments/ folder — not in library.json — and written into the note as [[code:![caption](attachment:filename)]]. Copy the library folder and the images travel with it.',
+        'Write a width in px, as in [[code:![caption|300](attachment:filename)]], to size the image.',
+        'Deleting an image line from a note leaves the file itself in attachments/, so a mistyped edit can never destroy the original.',
+      ]},
+      {sub:'Linking to another reference'},
+      {ul:[
+        'Write [[code:[[citekey]]]] to link to the reference with that citation key; clicking it opens that reference.',
+        'Write [[code:[[citekey|display text]]]] to change the visible text.',
+        'The reference on the receiving end shows a “Notes linking here” block, so you can walk the link backwards to whichever notes mention it.',
+        'A citation key that matches nothing is shown greyed out, so typos are easy to spot.',
+      ]},
+      {sub:'Also worth knowing'},
+      {ul:[
+        'The [[ic:eye]] button at the right of the toolbar opens a live preview so you can check the result as you write.',
+        '⌘/Ctrl+B is bold, ⌘/Ctrl+I is italic and ⌘/Ctrl+K inserts a link. Pressing Enter inside a list starts the next item for you.',
+        'The note box has a fixed height and scrolls internally. Drag its bottom-right corner to resize it; it reopens at that height next time.',
+        'Notes are still searched as before and still exported to CSV verbatim. The Notes column in the list shows the text with the markup stripped out.',
+      ]},
+    ]},
+    { h:'Finding references (paper graph & citations)', tab:'Finding references', blocks:[
+      {p:'Two features help you discover related work starting from a reference you already have: the “Paper graph” and “Citation relations”.'},
+      {sub:'Paper graph (related-papers map)'},
+      {p:'The paper graph lays out papers connected to the selected reference through citations, like a map. It is handy for discovering related work and important papers you may have missed.'},
+      {fig:'graph'},
+      {ul:[
+        'How to open: select a reference and press the “Paper graph” [[ic:graph]] button in the detail pane.',
+        'Each circle is one paper. Its size reflects the citation count (heavily cited papers are bigger) and its color reflects the publication year.',
+        'Label author: by default the label under each circle shows the last author (often the corresponding/PI). Switch to the first author with the “Author” selector in the toolbar.',
+        'Strongly related papers are placed close together (computed from how many references they share, among other signals).',
+        'Controls: drag the background to pan, use the mouse wheel to zoom, and drag circles to adjust the layout.',
+        'Click a circle to see its details on the right. Papers not yet in your library can be added on the spot; papers already registered get a green mark.',
+        'Filter [[ic:funnel]]: the “Filter” button lets you narrow the map by year, citation count, journal, author name, registration status (registered / unregistered), and — for registered papers — tag and collection. Non-matching papers can be hidden or dimmed (the central seed paper is always shown).',
+        'Data comes from the public OpenAlex database. Once shown, a graph is cached, so reopening it needs no network access (use “Refetch” in the header to refresh).',
+        'Opening many graphs in a short time can hit OpenAlex’s daily usage limit. If that happens, wait a while and retry.',
+      ]},
+      {sub:'Citation relations (references & cited-by)'},
+      {p:'Citation relations lists the papers a reference cites and the papers that cite it, so you can follow the citation trail to new work.'},
+      {ul:[
+        'How to open: select a reference and press the “Citation relations” [[ic:citations]] button in the detail pane.',
+        'Two lists are shown — “References” (papers this one cites) and “Cited by” (papers citing this one). Data comes from OpenAlex.',
+        'Add any paper to your library with “Add” [[ic:plus]] (registered ones are marked as already in the library). You can also filter and sort the lists by title, author, or journal.',
+        'List style: “Display style” [[ic:sliders]] at the bottom right switches between “Cards” and “Formatted citation”. Cards (the default) lay out the title, authors, a journal-abbreviation chip, the year and the volume/pages separately; the citation option formats each entry as a single line in the chosen style (ACS, Nature, …).',
+      ]},
+    ]},
+    { h:'Managing researchers', tab:'Researchers', icon:'users', blocks:[
+      {p:'“Researchers” in the left panel manages paper authors and corresponding authors as standalone researcher profiles, with affiliations, education, awards, and more. They link automatically to references where they are registered as the corresponding author.'},
+      {sub:'Registering a researcher'},
+      {ul:[
+        'In the Researchers view the box at the top left changes to “Researcher name / URL”. Pressing the ▾ beside it opens a menu with “Add researchers” (Manual entry / From paper authors) and “Import researchers” (JSON / CSV / AI research JSON).',
+        'Under “Manual entry” [[ic:plus]], enter the family and given name (Latin script) — these, plus a middle name, are used to match against paper authors. The display name is derived from those three, so there is no separate display-name field.',
+        'The same screen also takes an affiliation, name variants (one per line), ORCID, OpenAlex, researchmap, Chem-Station, and a website (all can be added or changed later from the editor). The affiliation field suggests institutions you have already registered.',
+        'Pressing “Save” moves on to the “Review registrations” screen. Ticking “Also link matching paper authors” there automatically links this researcher to references in your library that have a same-named author. Where a profile of the same name already exists, “Matching existing profile” appears so you can choose between “Create a new profile” and linking to the existing one.',
+        '“From paper authors” [[ic:users]] lets you pick, from the author lists of your library’s references, anyone not yet registered as a researcher, and register several at once. Filter by paper, author, collection, or tag, sort by paper count, and use “Select all shown”.',
+        'Typing a name or an ORCID/OpenAlex URL into the box at the top of the screen (“Researcher name / URL” in the Researchers view) and pressing “Manual entry” opens the manual-entry screen pre-filled with what you entered.',
+      ]},
+      {sub:'Editing career and external profiles'},
+      {ul:[
+        'Open a researcher and press “Edit” to fill in Basic information, Import from AI, Career, Education, Awards, Research information, External profiles, Image, and Related researchers — nine tabs in all.',
+        'Unlike the reference detail pane, researcher profile edits are not auto-saved. Press “Save” when you are done (closing with unsaved changes shows a confirmation).',
+        'The affiliation field is dictionary-backed and suggests matches as you type. Edit or add to that dictionary from “Institution dictionary”.',
+        'External profiles can hold IDs/URLs for ORCID, OpenAlex, Google Scholar, ResearchGate, LinkedIn, X, Bluesky, Wikipedia, researchmap, Chem-Station, Scopus Author ID, ResearcherID, DBLP, CiNii, and more.',
+      ]},
+      {sub:'Researching with AI'},
+      {ul:[
+        'The editor’s “Import from AI” tab generates a research prompt for that researcher. Use “Copy prompt” and paste it into any AI (Claude, ChatGPT, etc.) to have it research them.',
+        'Load the AI’s answer (JSON) via “Paste from clipboard” or “Choose JSON file”, then press “Review contents”. No API key is needed.',
+        'The fields it found are listed so you can tick only the ones you want and press “Apply selected fields to draft”. Applying does not save on its own — press “Save” afterwards to commit.',
+        'If the AI could not pin down the person (similar names, thin evidence), a candidate list appears instead. Pick the right one and use “Copy a follow-up prompt for this candidate” to research again.',
+        'To register several researchers at once this way, use “Add” → “Import” → “AI research JSON” with a file in the same format.',
+      ]},
+      {sub:'Linking to references'},
+      {ul:[
+        'A researcher registered in a reference’s “Corresponding authors” field automatically appears under “Corresponding-author references” on their profile. Corresponding authors are fetched automatically from the “Updating info” tab’s “Update corresponding authors”.',
+      ]},
+      {sub:'Researcher map & academic tree'},
+      {ul:[
+        'The “Researcher Map” [[ic:users]] button in a reference’s detail pane shows the collaboration network centred on that reference’s corresponding authors. Circle size reflects corresponding-author paper count, and lines represent co-authorship. It is built from the corresponding-author data in your library, and the “Depth” slider changes how far out from the centre it traces.',
+        'The Researcher Map is a separate screen from the researcher view’s view switch. Do not confuse it with the “Map” view, which is a world map.',
+        'Selecting a node on the map offers “View in academic tree” for PhD-advising genealogies and similar relations. You can also open the tree directly by switching the researcher view to “Tree”.',
+        'Genealogy relations (PhD advisor, host-lab PI, etc.) are entered under each researcher profile’s “Education” and “Career” tabs.',
+        'The “Display” button below the tree opens a panel holding the layout, orientation, lines and shape. “Lines” draws relations either as curves or as elbows. Elbow lines use the right angles of a printed family tree, with everyone advised by the same researcher hanging off one shared crossbar (available on the “Generation” layout).',
+        '“Shape”, in the same panel, chooses how the genealogy is built. “Merged” gives each researcher exactly one box, so a shared advisor reads as two lines meeting. “Family tree” gives every path its own branch, so no line ever crosses another — but a researcher several paths lead to is split across several boxes, each marked with how many places it appears in (“2 places” and so on). Hovering one highlights the others. Only the copy nearest the centre researcher grows a line of descendants; the others are drawn dashed and stop there.',
+      ]},
+      {sub:'World map (the “Map” view)'},
+      {ul:[
+        'Switching the researcher view to “Map” plots researchers’ institutions as pins on a world map. The pin size and the number inside it are the researcher count at that location.',
+        'Zooming in turns the pins into portraits. Clicking an overlapping circle lists the researchers at that location.',
+        '“Institutions to plot” switches between current affiliations and the full affiliation history. “Plot institutions” shows the distribution of institutions instead of researchers.',
+        'You can also adjust the map centre (Asia-centred / Europe-centred), the graticule, and the pin and portrait sizes. When an institution has no registered position, you can set its latitude and longitude yourself.',
+      ]},
+      {sub:'Sorting, filtering & import'},
+      {ul:[
+        'The researcher list can be switched between seven views: “Table view”, “Grid”, “Profile”, “List”, “Map”, “Tree”, and “Ranking”.',
+        '“Ranking” lets you choose the ranking metric (library references as corresponding author or including co-authored papers, library citations, or total citations / h-index / i10-index / works count from external profiles). Use “Filter” to narrow the list and “Columns” to choose which fields are shown.',
+        'To register data prepared elsewhere in bulk, use “Add” → “Import” to load JSON, CSV, or an AI research JSON file.',
+      ]},
+    ]},
     { h:'Save with the Chrome extension', tab:'Chrome extension', blocks:[
       {p:'Paper Library Connector is the bundled extension for saving references from paper pages directly from the toolbar. It is for Google Chrome only — it does not work in Safari, Firefox, or Edge (other Chromium browsers are not supported either). Saved papers are imported automatically when Paper Library is open.'},
       {sub:'Install (Google Chrome)'},
-      {dl:'Download the extension (ZIP)'},
+      {p:'There are three stages: “① Download → ② Place the folder → ③ Load it in Chrome”. The virtual screen above walks through the real chrome://extensions screen so you can see the flow.'},
+      {dl:'Download the extension (.zip)'},
       {ul:[
-        'Work in Google Chrome. Download the ZIP with the button above and unzip it. Put the resulting “paper-library-connector” folder somewhere permanent that you will not delete or move later (recommended: a fixed folder such as Documents\\PaperLibrary\\ on Windows or Documents/PaperLibrary/ on Mac — avoid leaving it in Downloads or on the Desktop, where it is easy to clean up by mistake).',
-        'Type chrome://extensions into the Chrome address bar to open it, then turn on “Developer mode” at the top right (chrome:// pages cannot be opened from a link, so paste it into the address bar).',
-        'Click “Load unpacked” and select the “paper-library-connector” folder you placed above.',
-        'Important: after loading, Chrome keeps referencing this folder directly. Deleting, moving, or renaming it disables the extension, so leave it where it is (if you do remove it, just unzip again into the same place and repeat these steps to restore it).',
-        'If you use Paper Library from GitHub Pages or another https:// page, no extra switch is needed. If you open a local index.html via file://, open the extension’s “Details” page and enable “Allow access to file URLs”.',
+        'Put the resulting “paper-library-connector” folder somewhere permanent that you will not delete or move later (recommended: a fixed folder such as Documents\\PaperLibrary\\ on Windows or Documents/PaperLibrary/ on Mac — avoid leaving it in Downloads or on the Desktop, where it is easy to clean up by mistake).',
+        'Important: after loading, Chrome keeps referencing this folder directly. Deleting, moving, or renaming it disables the extension, so leave it where it is (if you do remove it, just unzip again into the same place and repeat the load-unpacked step to restore it).',
         'Before first use, open Paper Library once with your library folder open, so the extension learns your library name and collection list.',
       ]},
       {sub:'Pin it to the toolbar'},
@@ -10258,112 +13002,6 @@ const MANUAL = {
         'Press “Register” on a candidate to load it into the “Add a paper” tab, where you choose collections/tags and save. Press “Open” to open that paper’s page in a new tab.',
       ]},
     ]},
-    { h:'Managing researchers', tab:'Researchers', icon:'users', blocks:[
-      {p:'“Researchers” in the left panel manages paper authors and corresponding authors as standalone researcher profiles, with affiliations, education, awards, and more. They link automatically to references where they are registered as the corresponding author.'},
-      {sub:'Registering a researcher'},
-      {ul:[
-        'In the Researchers view, open “Add” [[ic:plus]] → “Manual entry” and enter the family and given name (Latin script) — these, plus a middle name, are used to match against paper authors. Affiliation and external profiles (ORCID, OpenAlex, researchmap, etc.) can be entered on the same screen (or added later from the editor).',
-        'On the review screen, ticking “Also link matching paper authors” automatically links this researcher to references in your library that have a same-named author.',
-        '“Add” → “From paper authors” lets you pick, from the author lists of your library’s references, anyone not yet registered as a researcher, and register several at once.',
-      ]},
-      {sub:'Editing career and external profiles'},
-      {ul:[
-        'Open a researcher and press “Edit” to fill in Basic information, Career, Education, Awards, Research information, External profiles, Image, and Related researchers, each on its own tab.',
-        'The affiliation field is dictionary-backed and suggests matches as you type. Edit or add to that dictionary from “Institution dictionary”.',
-        'External profiles can hold IDs/URLs for ORCID, OpenAlex, Google Scholar, ResearchGate, LinkedIn, X, Bluesky, Wikipedia, researchmap, Chem-Station, Scopus Author ID, ResearcherID, DBLP, CiNii, and more.',
-      ]},
-      {sub:'Researching with AI'},
-      {ul:[
-        'The editor’s “Import from AI” tab generates a research prompt for that researcher. Use “Copy prompt” and paste it into any AI (Claude, ChatGPT, etc.) to have it research them.',
-        'Load the AI’s answer (JSON) via “Paste from clipboard” or “Choose JSON file”, review it, then apply it. No API key is needed.',
-        'To register several researchers at once this way, use “Add” → “Import” → “AI research JSON” with a file in the same format.',
-      ]},
-      {sub:'Linking to references'},
-      {ul:[
-        'A researcher registered in a reference’s “Corresponding authors” field automatically appears under “Corresponding-author references” on their profile. Corresponding authors are fetched automatically from the “Updating & maintenance” tab’s “Update corresponding authors”.',
-      ]},
-      {sub:'Researcher map & academic tree'},
-      {ul:[
-        'The “Researcher Map” [[ic:users]] button in a reference’s detail pane shows the collaboration network centred on that reference’s corresponding authors. Circle size reflects corresponding-author paper count, and lines represent co-authorship.',
-        'Selecting a node on the map offers “View in academic tree” for PhD-advising genealogies and similar relations. You can also open the tree directly by switching the researcher view to “Tree”.',
-        'Genealogy relations (PhD advisor, host-lab PI, etc.) are entered under each researcher profile’s “Education” and “Career” tabs.',
-      ]},
-      {sub:'Sorting, filtering & import'},
-      {ul:[
-        'Switch the researcher view to “Ranking” to sort by metrics such as paper count, citations, or h-index. Use “Filter” to narrow the list and “Columns” to choose which fields are shown.',
-        'To register data prepared elsewhere in bulk, use “Add” → “Import” to load JSON, CSV, or an AI research JSON file.',
-      ]},
-    ]},
-    { h:'Organizing & editing', blocks:[
-      {sub:'Organize with collections & tags'},
-      {p:'References can be organized with collections (like folders) and tags.'},
-      {ul:[
-        'Collections: create one with the “+” [[ic:plus]] button in the left pane and drag & drop references into it. Collections can be nested inside each other.',
-        'A reference can belong to several collections at once (it simply appears in both — it is not duplicated).',
-        'Tags [[ic:tag]]: in the detail pane, the tag box suggests existing tags as you type — click one or type a new name. Use the “+” [[ic:plus]] on the Tags header in the left pane to create tags up-front, and the magnifier [[ic:search]] to filter them. You can also drag & drop references onto a tag in the left pane, and each row’s [[ic:palette]] sets a colour and [[ic:pencil]] renames it.',
-        'Tag filtering selects one tag by default (Cmd/Ctrl/Shift-click to select several as an AND filter).',
-        'Stars [[ic:star]]: mark important references with a star and find them instantly under “Starred” in the left pane.',
-        'My publications [[ic:check]]: mark references you authored. Drag a reference onto “My publications” in the left pane to mark it, then find it there any time.',
-        'Bulk actions: Cmd-click (Ctrl on Windows) for multi-select, Shift-click for range select, then drag them together.',
-      ]},
-      {sub:'Edit in the detail pane & attach PDFs'},
-      {p:'Clicking a reference opens the detail pane on the right.'},
-      {fig:'pdf'},
-      {ul:[
-        'You can view and edit bibliographic info, the abstract, notes, and more. Edits are saved automatically.',
-        'Attaching PDFs [[ic:paperclip]]: drag & drop a PDF onto a reference row in the list, or onto the detail pane. You can also pick a file with the “Attach PDF” button in the detail pane.',
-        'Attached PDFs open right in the browser when clicked.',
-        'Copy citation [[ic:quote]]: copies a formatted citation (authors, journal, year, …). The gear icon [[ic:gear]] opens Citation settings for style and author formatting.',
-        'Paper graph [[ic:graph]]: maps related papers connected through citations — see the “Paper graph” tab for details.',
-      ]},
-    ]},
-    { h:'Searching & sorting', blocks:[
-      {ul:[
-        'The search box [[ic:search]] at the top matches titles, authors, journals, DOIs, tags, and more, all at once.',
-        '“Advanced search” combines conditions, e.g. “author contains X, published after 2020”.',
-        'Sorting: hover a table header (“Year”, “Title”, …) and click the ▲/▼ control that appears; click it again to reverse the order.',
-        'Customizing columns: drag headers to reorder, drag a header’s right edge to resize, and choose visible columns from the “Columns” menu in the bottom bar.',
-        'Filtering [[ic:funnel]]: the funnel icon in each column header filters by that column’s values.',
-        'View switching: use the “View” menu in the bottom bar to choose table [[ic:table]], cards [[ic:rows]], literature shelves [[ic:book]], or Kanban. Search and collection filters apply to every view.',
-        'Literature shelves: shows recently added, starred, currently reading, PDF-attached, and collection-specific shelves in horizontal rows. Enter a number of days to control the “Recently added” period. Click a paper to open its usual detail pane.',
-        'Kanban: manages papers in three columns — Unread, Reading, and Read. Drag a card to another column to save its status; the same status can be changed in the detail pane.',
-      ]},
-    ]},
-    { h:'Paper graph (related-papers map)', tab:'Paper graph', blocks:[
-      {p:'The paper graph lays out papers connected to the selected reference through citations, like a map. It is handy for discovering related work and important papers you may have missed.'},
-      {fig:'graph'},
-      {ul:[
-        'How to open: select a reference and press the “Paper graph” [[ic:graph]] button in the detail pane.',
-        'Each circle is one paper. Its size reflects the citation count (heavily cited papers are bigger) and its color reflects the publication year.',
-        'Label author: by default the label under each circle shows the last author (often the corresponding/PI). Switch to the first author with the “Author” selector in the toolbar.',
-        'Strongly related papers are placed close together (computed from how many references they share, among other signals).',
-        'Controls: drag the background to pan, use the mouse wheel to zoom, and drag circles to adjust the layout.',
-        'Click a circle to see its details on the right. Papers not yet in your library can be added on the spot; papers already registered get a green mark.',
-        'Filter [[ic:funnel]]: the “Filter” button lets you narrow the map by year, citation count, journal, author name, registration status (registered / unregistered), and — for registered papers — tag and collection. Non-matching papers can be hidden or dimmed (the central seed paper is always shown).',
-        'Data comes from the public OpenAlex database. Once shown, a graph is cached, so reopening it needs no network access (use “Refetch” in the header to refresh).',
-        'Opening many graphs in a short time can hit OpenAlex’s daily usage limit. If that happens, wait a while and retry.',
-      ]},
-    ]},
-    { h:'Updating & maintenance', blocks:[
-      {ul:[
-        'Update cited-by counts [[ic:citations]]: a bottom-bar button fetches the latest citation counts from the internet.',
-        'Update corresponding authors [[ic:users]]: fetches corresponding-author information for your papers.',
-        'Corresponding-author refresh processes at most 25 items at a time to reduce OpenAlex load. Run it again if you need to continue.',
-        'Both can run on “all shown items” automatically or only on items you pick.',
-        'Duplicates / empty records / fix suggestions [[ic:alert]]: double registrations and missing fields are detected automatically and flagged with badges in the bottom bar. Click a badge to review and clean up.',
-        'Fix suggestions also detect old or mistyped Angewandte abbreviations such as Angew. Chem. Int. Ed. Engl. / Engle. / Eng. Ed., and suggest Angew. Chem. Int. Ed. for papers from 1998 onward.',
-        'Update log: failed fetches are recorded here and can be retried [[ic:retry]] later.',
-      ]},
-      {sub:'Journal name dictionary'},
-      {p:'You can edit your own dictionary that maps journal-name variants (fetched abbreviations or aliases) to the correct full name and abbreviation. Entries you add feed the fix suggestions and the journal name shown in the list.'},
-      {ul:[
-        'In “Fetched form / alias”, enter the journal name as it was actually saved (e.g. [[code:Adv. Sci. (Weinh.)]]). Matching ignores differences in case and punctuation.',
-        '“Full name” is what you want in the journal field; “Abbreviation” is what you want shown in the list. Either one alone is enough.',
-        'The dictionary is stored in library.json, so it carries over through backups and to other computers. It takes precedence over the built-in dictionary, so you can override the defaults too.',
-        'Adding the same journal name (alias) again overwrites the existing entry.',
-      ]},
-      {dict:'Open the journal name dictionary'},
-    ]},
     { h:'Cite in Word (Word add-in)', tab:'Word add-in', blocks:[
       {p:'The Paper Library Word add-in adds a “Paper Library” tab to the Word ribbon. From that tab, you can search your references and insert citations at the cursor. Numbered citations [1] and the bibliography at the end stay in sync automatically, and italic journal names and bold years are preserved.'},
       {fig:'wordaddin'},
@@ -10411,19 +13049,19 @@ function openManual(initial){
     // is shown as non-clickable code (the text says to paste it into the bar)
     .replace(/\bchrome:\/\/extensions\b/g, '<code class="manual-code">chrome://extensions</code>')
     // inline monospaced snippets: [[code:...]] (content is already HTML-escaped by esc)
-    .replace(/\[\[code:([^\]]+)\]\]/g, (_, s) => `<code class="manual-code">${s}</code>`)
+    .replace(/\[\[code:(.+?)\]\](?!\])/g, (_, s) => `<code class="manual-code">${s}</code>`)
     .replace(/\[\[ic:(\w+)\]\]/g, (_, n) => ic(n));
   const tabIcon = s => s.icon || (((s.blocks || []).some(b => b.contact)) ? 'message' : ({
     storage:'folderOpen',
     add:'plus',
-    connector:'book',
+    connector:'puzzle',
     organize:'folder',
     search:'search',
     pdf:'paperclip',
     graph:'graph',
     maintain:'retry',
     settings:'gear',
-    wordaddin:'book',
+    wordaddin:'quote',
   }[((s.blocks || []).find(b => b.fig) || {}).fig] || 'book'));
   const tabs = $('#manualTabs');
   tabs.innerHTML = secs.map((s,i)=>`<button data-mtab="${i}">${ic(tabIcon(s))}<span>${esc(s.tab || s.h)}</span></button>`).join('');
@@ -10492,6 +13130,28 @@ function builtinJournalRows(){
   rows.sort((a,b)=>(a.abbr||a.full).toLowerCase().localeCompare((b.abbr||b.full).toLowerCase()));
   return (builtinJournalRowsCache = rows);
 }
+// Journal names in this library that no dictionary entry covers — the list that
+// used to require an external script to produce. Grouped by normalizeJournalKey so
+// "Nanoscale Adv" and "Nanoscale Adv." count as one row, and sorted by how many
+// references use them so the ones worth registering come first.
+function unmappedJournalRows(){
+  const by = new Map();
+  (lib.items || []).forEach(it=>{
+    if(it.trashed) return;
+    if(!String(it.journal || it.journalAbbr || '').trim()) return;
+    if(mappedJournalAbbr(it.journal) || mappedJournalAbbr(it.journalAbbr)) return;
+    // Group by what the reader actually sees, not by the stored field: an item
+    // holding the full name and one holding the abbreviation display the same
+    // string and must be one row, while a genuine 表記ゆれ stays two rows.
+    const name = journalDisplay(it);
+    const key = normalizeJournalKey(name);
+    if(!key) return;
+    const row = by.get(key) || { name, count: 0 };
+    row.count++;
+    by.set(key, row);
+  });
+  return [...by.values()].sort((a,b)=> b.count - a.count || a.name.localeCompare(b.name));
+}
 // One merged table: the user's own entries (tinted, deletable) first, then the
 // built-in journals. Clicking a built-in row with variants expands them.
 function renderJournalDictTable(){
@@ -10501,9 +13161,31 @@ function renderJournalDictTable(){
   const userEntries = Array.isArray(lib.journalDict) ? lib.journalDict : [];
   const builtins = builtinJournalRows();
   const cnt = $('#dictCount');
-  if(cnt) cnt.textContent = t('journalDictCount')(userEntries.length, builtins.length);
   const hit = s => !q || String(s).toLowerCase().includes(q);
   const dash = '—';
+  const btn = $('#dictUnmapped');
+  if(btn){
+    const n = unmappedJournalRows().length;
+    btn.textContent = `${t('journalDictUnmapped')} (${n})`;
+    btn.setAttribute('aria-pressed', dictShowUnmapped ? 'true' : 'false');
+    btn.classList.toggle('on', dictShowUnmapped);
+  }
+  if(dictShowUnmapped){
+    const rows = unmappedJournalRows().filter(r=>hit(r.name));
+    const items = rows.reduce((n,r)=>n+r.count, 0);
+    if(cnt) cnt.textContent = t('journalDictUnmappedCount')(rows.length, items);
+    list.innerHTML = `<p class="dictNote">${esc(t('journalDictUnmappedHint'))}</p>`
+      + (rows.length
+        ? rows.map(r=>`<div class="dictRow dictMiss" data-dict-miss="${esc(r.name)}">
+            <div class="dictCell dictAlias">${esc(r.name)}</div>
+            <div class="dictCell">${dash}</div>
+            <div class="dictCell dictAbbr">${dash}</div>
+            <span class="dictAct dictMissN">${esc(t('journalDictUnmappedItems')(r.count))}</span>
+          </div>`).join('')
+        : `<div class="dictEmpty">${esc(t('journalDictUnmappedNone'))}</div>`);
+    return;
+  }
+  if(cnt) cnt.textContent = t('journalDictCount')(userEntries.length, builtins.length);
   const userRows = userEntries
     .map((e,i)=>({e,i}))
     .filter(({e})=> hit((e.match||'') + ' ' + (e.full||'') + ' ' + (e.abbr||'')))
@@ -10532,9 +13214,11 @@ function renderJournalDictTable(){
     </div>`;
   list.innerHTML = header + ((userRows + builtinRows) || `<div class="dictEmpty">${esc(t('journalDictBuiltinEmpty'))}</div>`);
 }
+let dictShowUnmapped = false;
 function openJournalDictDialog(){
   $('#dictMatch').value=''; $('#dictFull').value=''; $('#dictAbbr').value='';
   if($('#dictSearch')) $('#dictSearch').value='';
+  dictShowUnmapped = false;
   renderJournalDictTable();
   $('#dlgJournalDict').showModal();
   $('#dictMatch').focus();
@@ -10561,6 +13245,10 @@ function addJournalDictEntry(){
 }
 $('#dictAdd').addEventListener('click', addJournalDictEntry);
 $('#dictSearch').addEventListener('input', renderJournalDictTable);
+$('#dictUnmapped').addEventListener('click', ()=>{
+  dictShowUnmapped = !dictShowUnmapped;
+  renderJournalDictTable();
+});
 $('#dlgJournalDict').addEventListener('keydown', (e)=>{
   if(e.key==='Enter' && ['dictMatch','dictFull','dictAbbr'].includes(e.target.id)){
     e.preventDefault(); addJournalDictEntry();
@@ -10579,6 +13267,14 @@ $('#dictList').addEventListener('click', (e)=>{
     renderJournalDictTable();
     renderList(); renderDetail(); updateAlerts();
     showToast(t('journalDictRemoved'));
+    return;
+  }
+  // An unregistered name goes straight into the add form, ready to fill in.
+  const miss = e.target.closest('[data-dict-miss]');
+  if(miss){
+    $('#dictMatch').value = miss.dataset.dictMiss;
+    $('#dictFull').value = ''; $('#dictAbbr').value = '';
+    $('#dictFull').focus();
     return;
   }
   // Selecting a built-in row that has spelling variants expands them.
@@ -10600,12 +13296,13 @@ function closeJournalDict(){
 $('#dictClose').addEventListener('click', closeJournalDict);
 
 document.querySelectorAll('dialog [data-close]').forEach(b=>b.addEventListener('click', ()=>b.closest('dialog').close()));
+bindAttachRoleDialog();
 function openDuplicatesFromAlert(){
   const cands = findLibraryDuplicateCandidates(80);
   if(!cands.length){ showToast(t('duplicateNone')); updateAlerts(); return; }
   openDuplicateDialog(cands);
 }
-$('#duplicateBody').addEventListener('click', async (e)=>{
+busyClick($('#duplicateBody'), async (e)=>{
   const row = e.target.closest('[data-dup]');
   if(!row) return;
   const cand = duplicateDialogCandidates[+row.dataset.dup];
@@ -10648,10 +13345,10 @@ $('#duplicateBody').addEventListener('click', async (e)=>{
     updateAlerts();
   }
 });
-$('#btnEmptyTrash').addEventListener('click', async ()=>{
+busyClick($('#btnEmptyTrash'), async ()=>{
   await emptyTrashForever();
 });
-$('#btnRestoreAllTrash').addEventListener('click', async ()=>{
+busyClick($('#btnRestoreAllTrash'), async ()=>{
   await restoreAllTrash();
 });
 $('#btnCollDelKeep').addEventListener('click', ()=>{ $('#dlgDeleteColl').close(); performCollDelete('keep'); });
@@ -10662,7 +13359,7 @@ function openEmptyRecordsFromAlert(){
   if(!empties.length){ showToast(t('emptyRecordsNone')); updateAlerts(); return; }
   openEmptyRecordsDialog();
 }
-$('#emptyRecordsBody').addEventListener('click', async (e)=>{
+busyClick($('#emptyRecordsBody'), async (e)=>{
   const open = e.target.closest('[data-empty-open]');
   if(open){
     selectItem(open.dataset.emptyOpen);
@@ -10676,7 +13373,7 @@ $('#emptyRecordsBody').addEventListener('click', async (e)=>{
     renderEmptyRecordsDialog();
   }
 });
-$('#btnDeleteAllEmpty').addEventListener('click', async ()=>{
+busyClick($('#btnDeleteAllEmpty'), async ()=>{
   const ids = findEmptyRecords().map(it=>it.id);
   if(!ids.length){ renderEmptyRecordsDialog([]); return; }
   if(!confirm(I18N[lang].confirmDeleteEmpty(ids.length))) return;
@@ -10829,7 +13526,7 @@ function researcherCandidateProfile(c){
   // complete structured profile instead of reducing it to compact fields.
   if(c.aiProposal){
     const ai=c.aiProposal;
-    ['middleName','birthDate','phdYear','phdInstitution','phdDegree','phdAdvisor','i10Index','positions','education','awards','affiliations','relatedResearchers'].forEach(key=>{if(ai[key]!==undefined)profile[key]=JSON.parse(JSON.stringify(ai[key]));});
+    ['middleName','birthDate','deathDate','phdYear','phdInstitution','phdDegree','phdAdvisor','i10Index','positions','education','awards','affiliations','relatedResearchers'].forEach(key=>{if(ai[key]!==undefined)profile[key]=JSON.parse(JSON.stringify(ai[key]));});
     profile.fieldSources=JSON.parse(JSON.stringify(ai.fieldSources||profile.fieldSources));
     profile.enrichment={...(profile.enrichment||{}),ai:{urls:ai.sourceUrls||[],retrievedAt:ai.retrievedAt,fields:Object.keys(ai).filter(key=>!['source','sourceUrl','sourceUrls','retrievedAt','fieldSources'].includes(key))}};
   }
@@ -10985,7 +13682,7 @@ function researcherPaperAuthorCandidates(){
   }).sort((a,b)=>b.paperCount-a.paperCount||researcherCandidateName(a).localeCompare(researcherCandidateName(b),lang));
 }
 function showResearcherPaperAuthors(){const candidates=researcherPaperAuthorCandidates();if(!candidates.length){showToast(t('researcherIntakeNone'),true);return;}showResearcherReview(candidates,{title:t('researcherIntakeSelect'),searchable:true});}
-function researcherCsvRows(text){const rows=[];let row=[],cell='',quoted=false;for(let i=0;i<text.length;i++){const ch=text[i];if(ch==='"'){if(quoted&&text[i+1]==='"'){cell+='"';i++;}else quoted=!quoted;}else if(ch===','&&!quoted){row.push(cell);cell='';}else if((ch==='\n'||ch==='\r')&&!quoted){if(ch==='\r'&&text[i+1]==='\n')i++;row.push(cell);if(row.some(x=>x.trim()))rows.push(row);row=[];cell='';}else cell+=ch;}row.push(cell);if(row.some(x=>x.trim()))rows.push(row);return rows;}
+function researcherCsvRows(text){text=stripCsvBom(text);const rows=[];let row=[],cell='',quoted=false;for(let i=0;i<text.length;i++){const ch=text[i];if(ch==='"'){if(quoted&&text[i+1]==='"'){cell+='"';i++;}else quoted=!quoted;}else if(ch===','&&!quoted){row.push(cell);cell='';}else if((ch==='\n'||ch==='\r')&&!quoted){if(ch==='\r'&&text[i+1]==='\n')i++;row.push(cell);if(row.some(x=>x.trim()))rows.push(row);row=[];cell='';}else cell+=ch;}row.push(cell);if(row.some(x=>x.trim()))rows.push(row);return rows;}
 function researcherImportCandidates(text,name){if(/\.json$/i.test(name)){const parsed=JSON.parse(text),rows=Array.isArray(parsed)?parsed:(Array.isArray(parsed?.researchers)?parsed.researchers:[]);if(!rows.length)throw new Error('empty');return rows.map(row=>({displayName:row.displayName||row.name||'',familyName:row.familyName||row.family||'',givenName:row.givenName||row.given||'',aliases:row.aliases||[],identifiers:row.identifiers||{orcid:row.orcid||'',openalex:row.openalex||'',researchmap:row.researchmap||''},currentInstitutions:row.currentInstitutions||(row.affiliation?[row.affiliation]:[]),website:row.website||row.homepage||'',researchFields:row.researchFields||[],source:'import'})).filter(c=>researcherCandidateName(c)||Object.values(c.identifiers).some(Boolean));}const rows=researcherCsvRows(text);if(rows.length<2)throw new Error('empty');const headers=rows.shift().map(x=>x.trim().toLowerCase()),read=(row,names)=>{const i=headers.findIndex(x=>names.includes(x));return i<0?'':String(row[i]||'').trim();};return rows.map(row=>({displayName:read(row,['name','display name','displayname','researcher']),familyName:read(row,['family name','familyname','family']),givenName:read(row,['given name','givenname','given']),aliases:read(row,['aliases','alias']).split(/\s*;\s*|\r?\n/).filter(Boolean),identifiers:{orcid:read(row,['orcid']),openalex:read(row,['openalex']),researchmap:read(row,['researchmap'])},currentInstitutions:read(row,['affiliation','institution','current institutions']).split(/\s*;\s*|\r?\n/).filter(Boolean),website:read(row,['website','homepage']),researchFields:read(row,['research fields','fields']).split(/\s*;\s*|\r?\n/).filter(Boolean),source:'import'})).filter(c=>researcherCandidateName(c)||Object.values(c.identifiers).some(Boolean));}
 function openResearcherImport(kind){const input=$('#fileResearcherImport');input.accept=kind==='json'?'.json,application/json,text/plain':'.csv,text/csv,text/plain';input.click();closeMenus();}
 $('#fileResearcherImport').addEventListener('change',async e=>{const file=e.target.files?.[0];e.target.value='';if(!file)return;try{const candidates=researcherImportCandidates(await file.text(),file.name);showToast(t('researcherIntakeImported')(candidates.length));showResearcherReview(candidates);}catch(err){showToast(String(err?.message||err),true);}});
@@ -11070,33 +13767,112 @@ $('#searchBox').addEventListener('keydown', (e)=>{
   if(isAddable($('#searchBox').value.trim())){ e.preventDefault(); quickAddFromSearch(); }
 });
 $('#btnSearchAdd').addEventListener('click', quickAddFromSearch);
+// ---- advanced search dialog: one editable row per condition ----
+// The dialog always keeps one blank row at the bottom so there is somewhere to
+// type without pressing "条件を追加" first; blank rows are dropped on apply.
+function advRowHTML(row, i){
+  const fieldOpts = ADV_FIELDS.map(f=>
+    `<option value="${f.v}"${f.v===row.field?' selected':''}>${esc(t(f.i18n))}</option>`).join('');
+  const opOpts = ADV_OPS.map(op=>
+    `<option value="${op}"${op===row.op?' selected':''}>${esc(t(ADV_OP_I18N[op]))}</option>`).join('');
+  return `<div class="advRow" data-adv-row="${i}">
+    <select class="advRowField" data-adv-part="field">${fieldOpts}</select>
+    <select class="advRowOp" data-adv-part="op">${opOpts}</select>
+    <input type="text" class="advRowValue" data-adv-part="value" value="${esc(row.value||'')}" placeholder="${esc(t('advValuePh'))}">
+    <button type="button" class="advRowDel" data-adv-del="${i}" title="${esc(t('advRemoveCondition'))}" aria-label="${esc(t('advRemoveCondition'))}">${ic('x')}</button>
+  </div>`;
+}
+// Working copy while the dialog is open, so Cancel (Esc) leaves the live
+// filter untouched — only "適用" writes back to filter.advanced.
+let advDraft = emptyAdvanced();
+function renderAdvRows(focusIndex){
+  if(!advDraft.rows.length) advDraft.rows = [newAdvRow()];
+  const wrap = $('#advRows');
+  wrap.innerHTML = advDraft.rows.map((row, i)=>advRowHTML(row, i)).join('');
+  renderIcons(wrap);
+  // the delete button is pointless while a single blank row is all there is
+  const onlyBlank = advDraft.rows.length === 1;
+  wrap.querySelectorAll('.advRowDel').forEach(b=>{ b.disabled = onlyBlank; });
+  if(focusIndex != null){
+    const el = wrap.querySelector(`[data-adv-row="${focusIndex}"] .advRowValue`);
+    if(el) el.focus();
+  }
+}
+function readAdvDraftFromDom(){
+  $('#advRows').querySelectorAll('.advRow').forEach(el=>{
+    const i = +el.dataset.advRow;
+    if(!advDraft.rows[i]) return;
+    el.querySelectorAll('[data-adv-part]').forEach(p=>{ advDraft.rows[i][p.dataset.advPart] = p.value; });
+  });
+  advDraft.mode = $('#advMode').value;
+  advDraft.yearFrom = $('#advYearFrom').value.trim();
+  advDraft.yearTo = $('#advYearTo').value.trim();
+}
+// Tint the toolbar button while conditions are in effect — once the modal is
+// closed there is nothing else on screen saying the list is being narrowed.
+function updateAdvancedSearchButton(){
+  const btn = $('#btnAdvancedSearch');
+  if(!btn) return;
+  const on = advancedSearchActive();
+  btn.classList.toggle('advOn', on);
+  btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+}
 $('#btnAdvancedSearch').addEventListener('click', ()=>{
   const adv = filter.advanced || {};
-  $('#advTerms').value = adv.terms || '';
-  $('#advMode').value = adv.mode || 'and';
-  $('#advField').value = adv.field || 'all';
-  $('#advYearFrom').value = adv.yearFrom || '';
-  $('#advYearTo').value = adv.yearTo || '';
+  advDraft = {
+    rows: (adv.rows || []).map(r=>Object.assign(newAdvRow(), r)),
+    mode: adv.mode || 'and',
+    yearFrom: adv.yearFrom || '',
+    yearTo: adv.yearTo || '',
+  };
+  if(!advDraft.rows.length || !advRowIsEmpty(advDraft.rows[advDraft.rows.length-1])) advDraft.rows.push(newAdvRow());
+  $('#advMode').value = advDraft.mode;
+  $('#advYearFrom').value = advDraft.yearFrom;
+  $('#advYearTo').value = advDraft.yearTo;
+  renderAdvRows();
   $('#dlgAdvancedSearch').showModal();
-  $('#advTerms').focus();
+  const first = $('#advRows .advRowValue');
+  if(first) first.focus();
+});
+$('#btnAdvAddRow').addEventListener('click', ()=>{
+  readAdvDraftFromDom();
+  advDraft.rows.push(newAdvRow());
+  renderAdvRows(advDraft.rows.length - 1);
+});
+$('#advRows').addEventListener('click', (e)=>{
+  const del = e.target.closest('[data-adv-del]');
+  if(!del || del.disabled) return;
+  readAdvDraftFromDom();
+  advDraft.rows.splice(+del.dataset.advDel, 1);
+  if(!advDraft.rows.length) advDraft.rows.push(newAdvRow());
+  renderAdvRows();
+});
+// Enter anywhere in the dialog applies, so a one-condition search stays a
+// type-and-go interaction.
+$('#dlgAdvancedSearch').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter' && e.target.tagName === 'INPUT'){ e.preventDefault(); $('#btnAdvApply').click(); }
 });
 $('#btnAdvApply').addEventListener('click', ()=>{
+  readAdvDraftFromDom();
   filter.advanced = {
-    terms: $('#advTerms').value.trim(),
-    mode: $('#advMode').value,
-    field: $('#advField').value,
-    yearFrom: $('#advYearFrom').value.trim(),
-    yearTo: $('#advYearTo').value.trim(),
+    rows: advDraft.rows.filter(r=>!advRowIsEmpty(r)).map(r=>({field:r.field, op:r.op, value:String(r.value).trim()})),
+    mode: advDraft.mode,
+    yearFrom: advDraft.yearFrom,
+    yearTo: advDraft.yearTo,
   };
   $('#dlgAdvancedSearch').close();
+  updateAdvancedSearchButton();
   renderList();
 });
 $('#btnAdvClear').addEventListener('click', ()=>{
-  filter.advanced = { terms:'', mode:'and', field:'all', yearFrom:'', yearTo:'' };
-  $('#advTerms').value = '';
+  filter.advanced = emptyAdvanced();
+  advDraft = emptyAdvanced();
+  $('#advMode').value = 'and';
   $('#advYearFrom').value = '';
   $('#advYearTo').value = '';
+  renderAdvRows();
   $('#dlgAdvancedSearch').close();
+  updateAdvancedSearchButton();
   renderList();
 });
 // Move the item-list selection by delta (+1 down / -1 up), keeping the row
@@ -11123,6 +13899,7 @@ function openShortcutsHelp(){
     [`${cmd} Z`, '取り消す（クリック・画面切り替え・データ変更）'],
     [`${cmd} ⇧ Z  /  ${cmd} Y`, 'やり直す'],
     ['↑ ↓  /  J K', '文献リストの選択を上下に移動'],
+    ['ドラッグ  /  Alt ドラッグ', '矩形選択（空きスペースからドラッグ。行の上から引くときは Alt を押しながら）'],
     [`${cmd} N`, '追加バーにフォーカス（※ブラウザが横取りする場合あり）'],
     ['Esc', 'ポップアップ・選択の解除'],
     ['?', 'このショートカット一覧を表示'],
@@ -11131,6 +13908,7 @@ function openShortcutsHelp(){
     [`${cmd} Z`, 'Undo (clicks, view switches, data changes)'],
     [`${cmd} ⇧ Z  /  ${cmd} Y`, 'Redo'],
     ['↑ ↓  /  J K', 'Move selection through the item list'],
+    ['Drag  /  Alt drag', 'Rubber-band selection (drag from empty space; hold Alt to start on a row)'],
     [`${cmd} N`, 'Focus the add bar (may be intercepted by the browser)'],
     ['Esc', 'Dismiss popups / clear selection'],
     ['?', 'Show this shortcut list'],
@@ -11226,11 +14004,18 @@ $('#btnCollapseAllCollections').addEventListener('click', (e)=>{
   });
   renderSidebar();
 });
+$('#btnCollWrapNames').addEventListener('click', (e)=>{
+  e.stopPropagation();
+  collWrapNames = !collWrapNames;
+  localStorage.setItem('refshelf.collWrapNames', collWrapNames ? '1' : '0');
+  applyCollWrapMode();
+});
+applyCollWrapMode();   // ライブラリを開く前でもボタンの状態と title を合わせておく
 $('#btnToggleTags').addEventListener('click', (e)=>{
   e.stopPropagation();
   toggleSidebarSection('tags');
 });
-$('#sidebar').addEventListener('click', async (e)=>{
+busyClick($('#sidebar'), async (e)=>{
   const viewEl = e.target.closest('[data-view]');
   if(viewEl){
     currentView = viewEl.dataset.view || 'items';
@@ -11256,6 +14041,7 @@ $('#sidebar').addEventListener('click', async (e)=>{
   const actBtn = e.target.closest('[data-act]');
   if(actBtn){
     e.stopPropagation();
+    if(actBtn.dataset.act!=='scope') $('#collScopePop').classList.remove('open');
     const c = lib.collections.find(x=>x.id===actBtn.dataset.id);
     if(!c) return;
     if(actBtn.dataset.act==='toggleColl'){
@@ -11269,6 +14055,8 @@ $('#sidebar').addEventListener('click', async (e)=>{
         lib.collections.push({ id: uid(), name: name.trim(), parent: c.id });
         touch(); renderSidebar(); renderDetail();
       }
+    }else if(actBtn.dataset.act==='scope'){
+      openCollectionScopePop(c, actBtn);
     }else if(actBtn.dataset.act==='color'){
       openCollColorPop(c, actBtn);
     }else if(actBtn.dataset.act==='ren'){
@@ -11286,6 +14074,7 @@ $('#sidebar').addEventListener('click', async (e)=>{
   }
   const collEl = e.target.closest('[data-coll]');
   if(collEl){
+    $('#collScopePop').classList.remove('open');
     const leavingResearchers=currentView==='researchers';
     currentView = 'items';
     const cid = collEl.dataset.coll;
@@ -11297,7 +14086,9 @@ $('#sidebar').addEventListener('click', async (e)=>{
       selectedCollectionIds = new Set([cid]);
       collectionSelectAnchorId = cid;
     }
-    filter.coll = cid; updateSidebarSelection();
+    filter.coll = cid;
+    filter.collScope = 'all';
+    updateSidebarSelection();
     if(leavingResearchers) renderWorkspace(); else renderList({skipBadges:true});
     return;
   }
@@ -11457,7 +14248,10 @@ $('#sidebar').addEventListener('drop', (e)=>{
     if(!draggedCollIds.length) draggedCollIds = [draggedCollId];
     const changed = moveCollectionsToParent(draggedCollIds, cid);
     if(changed){
-      if(draggedCollIds.includes(filter.coll)) filter.coll = cid || 'all';
+      if(draggedCollIds.includes(filter.coll)){
+        filter.coll = cid || 'all';
+        filter.collScope = 'all';
+      }
       selectedCollectionIds = new Set(draggedCollIds);
       if(cid) collapsedCollectionIds.delete(cid);
       touch();
@@ -11627,6 +14421,43 @@ function openCollColorPop(coll, anchorEl){
     touch(); renderSidebar(); renderList();
   };
 }
+function openCollectionScopePop(coll, anchorEl){
+  const pop = $('#collScopePop');
+  const activeItems = lib.items.filter(i=>!isItemTrashed(i));
+  const selectedScope = filter.coll===coll.id ? normalizedCollectionScope(filter.collScope) : 'all';
+  const choices = [
+    ['all', 'collectionScopeAll'],
+    ['direct', 'collectionScopeDirect'],
+    ['descendants', 'collectionScopeDescendants'],
+  ];
+  pop.innerHTML = `<div class="scopePopTitle">${esc(t('collectionScopeTitle')(coll.name))}</div>` +
+    choices.map(([scope,key])=>{
+      const selected = scope===selectedScope;
+      const count = collectionScopeCount(activeItems, coll.id, scope);
+      return `<button class="scopePopOption${selected?' selected':''}" data-coll-scope="${scope}" data-coll-id="${coll.id}" role="menuitemradio" aria-checked="${selected}">
+        <span class="scopePopMark">${selected ? '●' : '○'}</span><span>${esc(t(key))}</span><span class="scopePopCount">${count}</span>
+      </button>`;
+    }).join('');
+  const r = anchorEl.getBoundingClientRect();
+  pop.style.left = Math.min(r.left, window.innerWidth - 250) + 'px';
+  pop.style.top = (r.bottom + 6) + 'px';
+  pop.classList.add('open');
+  pop.onclick = (e)=>{
+    e.stopPropagation();
+    const option = e.target.closest('[data-coll-scope]');
+    if(!option) return;
+    const id = option.dataset.collId;
+    if(!validFilterCollectionId(id)) return;
+    currentView = 'items';
+    filter.coll = id;
+    filter.collScope = normalizedCollectionScope(option.dataset.collScope);
+    selectedCollectionIds = new Set([id]);
+    collectionSelectAnchorId = id;
+    pop.classList.remove('open');
+    renderSidebar();
+    renderList({skipBadges:true});
+  };
+}
 // Rename a tag everywhere it appears: on every reference, in the known-tag list
 // and in the colour map. The filter follows the rename so the view is preserved.
 function renameTag(oldName){
@@ -11699,6 +14530,7 @@ function openTagColorPop(tag, anchorEl){
   };
 }
 document.addEventListener('click', (e)=>{
+  if(!e.target.closest('#collScopePop') && !e.target.closest('[data-act="scope"]')) $('#collScopePop').classList.remove('open');
   if(!e.target.closest('#collColorPop') && !e.target.closest('[data-act="color"]')) $('#collColorPop').classList.remove('open');
   if(!e.target.closest('#tagColorPop') && !e.target.closest('[data-act="tagcolor"]')) $('#tagColorPop').classList.remove('open');
   if(!e.target.closest('#colFilterPop') && !e.target.closest('.thfilter')) $('#colFilterPop').classList.remove('open');
@@ -11775,7 +14607,7 @@ function updateListViewButton(){
   const viewMenu = $('#btnCardViewMenu');
   if(viewMenu){
     viewMenu.closest('.menuwrap').style.display = '';
-    const viewIcon=isShelves?'book':isKanban?'kanban':GALLERY_VIEWS.includes(listView)?'image':isCards?'rows':'table';
+    const viewIcon=isShelves?'book':isKanban?'kanban':listView==='magazine'?'masonry':listView==='gallery'?'image':isCards?'rows':'table';
     viewMenu.innerHTML=`${ic(viewIcon)}<span data-i18n="viewStyle">${esc(t('viewStyle'))}</span>${ic('chevron')}`;
     // The leading icon already reflects the active view, so no accent tint here.
     viewMenu.style.color='';
@@ -11823,6 +14655,19 @@ function updateListViewButton(){
   document.querySelectorAll('#galleryColsMenu [data-gallery-fit]').forEach(el=>el.classList.toggle('viewActive', el.dataset.galleryFit===galleryFit));
   const corrSection=$('#galleryCorrSection');
   if(corrSection) corrSection.style.display=isCards?'':'none';               // corresponding-author mark: cards
+  // review highlight: every card-style view that shows it (cards / shelves /
+  // kanban paint the accent bar, gallery the card border). The table has no
+  // card to tint and the magazine card is all image, so both are left out.
+  const reviewSection=$('#reviewMarkSection');
+  if(reviewSection) reviewSection.style.display=(isCards||isShelves||isKanban||listView==='gallery')?'':'none';
+  const reviewCb=$('#cardViewReviewMark');
+  if(reviewCb) reviewCb.checked=reviewMarkEnabled;
+  const reviewWideCb=$('#cardViewReviewMarkWide');
+  if(reviewWideCb){
+    reviewWideCb.checked=reviewMarkWide;
+    reviewWideCb.disabled=!reviewMarkEnabled;
+    reviewWideCb.closest('.menuCheck').classList.toggle('menuCheckOff',!reviewMarkEnabled);
+  }
   const lbl = $('#cardViewColsMenuLabel');
   if(lbl){
     const next = cardCols === '2' ? 1 : 2;
@@ -11969,6 +14814,14 @@ $('#galleryColsMenu').addEventListener('change', (e)=>{
     iconOnlyToolbar = !!e.target.checked;
     localStorage.setItem('refshelf.iconOnlyToolbar', iconOnlyToolbar ? '1' : '0');
     applyIconOnly();
+  }else if(e.target && (e.target.id === 'cardViewReviewMark' || e.target.id === 'cardViewReviewMarkWide')){
+    // the .isReview class is only emitted while the toggle is on, and the "wide"
+    // option changes which items qualify, so both need a re-render
+    if(e.target.id === 'cardViewReviewMark') reviewMarkEnabled = !!e.target.checked;
+    else reviewMarkWide = !!e.target.checked;
+    saveReviewMarkPrefs();
+    renderList();
+    updateListViewButton();
   }
 });
 $('#cardViewMenu').addEventListener('click', (e)=>{
@@ -12100,6 +14953,29 @@ $('#itemRows').addEventListener('dragstart', (e)=>{
   e.dataTransfer.setData('application/x-paper-library-items', JSON.stringify(ids));
   e.dataTransfer.effectAllowed = 'copyMove';
 });
+// ブラウザ既定のドラッグ画像はほぼ不透明なので、ギャラリーのような大きなカードだと
+// 掴んだ瞬間に左パネルのコレクションが隠れて「どこに落とすのか」が見えなくなる。
+// クローンを薄くして（透明度は CSS の .dragGhostHost>* 側）setDragImage に渡す。
+// クローンは画面外（.dragGhostHost）に置く：display:none だとラスタライズされない。
+function setTranslucentDragImage(e, el){
+  try{
+    const r = el.getBoundingClientRect();
+    if(!r.width || !r.height) return;
+    const host = document.createElement('div');
+    host.className = 'dragGhostHost';
+    const ghost = el.cloneNode(true);
+    ghost.style.width = r.width + 'px';
+    ghost.style.height = r.height + 'px';
+    host.appendChild(ghost);
+    // 元の親に挿す（position:fixed なのでレイアウトには影響しない）。body 直下だと
+    // #itemCards.galFit / .nowrap のような祖先つきセレクタが効かず、ゴーストだけ
+    // 見た目が変わってしまうため。
+    (el.parentNode || document.body).appendChild(host);
+    e.dataTransfer.setDragImage(host, e.clientX - r.left, e.clientY - r.top);
+    // スナップショットはこのハンドラを抜けた直後に撮られるので、次のタスクで捨てる
+    setTimeout(()=>host.remove(), 0);
+  }catch(_){}
+}
 $('#itemCards').addEventListener('dragstart', (e)=>{
   const row = e.target.closest('.cardRow');
   if(!row) return;
@@ -12107,6 +14983,7 @@ $('#itemCards').addEventListener('dragstart', (e)=>{
   e.dataTransfer.setData('text/plain', row.dataset.id);
   e.dataTransfer.setData('application/x-paper-library-items', JSON.stringify(ids));
   e.dataTransfer.effectAllowed = 'copyMove';
+  setTranslucentDragImage(e, row);
 });
 function handleCompactViewClick(e){
   const paper=e.target.closest('.shelfPaper,.kanbanPaper');
@@ -12129,6 +15006,7 @@ function startCompactPaperDrag(e){
   e.dataTransfer.setData('text/plain',paper.dataset.id);
   e.dataTransfer.setData('application/x-paper-library-items',JSON.stringify(ids));
   e.dataTransfer.effectAllowed='copyMove';
+  setTranslucentDragImage(e,paper);
   paper.classList.add('dragging');
 }
 $('#itemShelves').addEventListener('click',handleCompactViewClick);
@@ -12164,6 +15042,157 @@ $('#itemKanban').addEventListener('drop',e=>{
 $('#itemKanban').addEventListener('dragend',()=>{
   $('#itemKanban').querySelectorAll('.dragging,.dragOver').forEach(x=>x.classList.remove('dragging','dragOver'));
 });
+/* ---------- 矩形選択（ラバーバンド） ----------
+   中央パネルの空きスペースからドラッグすると半透明の矩形が出て、重なった文献を
+   まとめて選びます。行の上から始めるドラッグは既存のドラッグ&ドロップ
+   （コレクション／タグ／ゴミ箱への移動）なので、行の上から矩形を引きたいときは
+   Alt(Option) を押しながらドラッグします。Cmd/Ctrl/Shift を併用すると、いま
+   選ばれているものに追加します。表示形式（テーブル／カード／ギャラリー／本棚／
+   カンバン）はどれでも同じように使えます。
+
+   当たり判定は「コンテンツ座標」（= クライアント座標 + スクロール量）で行い、
+   各行の矩形はドラッグ開始時に一度だけキャッシュします。毎フレーム
+   getBoundingClientRect を呼ぶと 1500 件で同期レイアウトが刺さるためで、
+   キャッシュを取り直すのはスクロールが動いて行数が変わったとき（末尾の追加
+   読み込みが走ったとき）だけです。 */
+const MARQUEE_ROW_SEL = '#itemRows tr.row, #itemCards .cardRow, .shelfPaper, .kanbanPaper';
+// ボタン類・ヘッダ・入力欄の上からは始めない（既存のクリック操作を殺さないため）
+const MARQUEE_NO_START_SEL = 'button, a, input, textarea, select, label, [contenteditable="true"], thead, .rowbtns, .colresize';
+const MARQUEE_THRESHOLD = 5;   // これ未満の移動は「ただのクリック」として無視する
+const MARQUEE_EDGE = 30;       // パネル端からこの距離までポインタが寄ったら自動スクロール
+const MARQUEE_SCROLL_MAX = 36; // 1 フレームあたりの自動スクロール量の上限(px)
+let marquee = null;
+function marqueeContentPoint(e){
+  const sc = $('#listScroller'), r = sc.getBoundingClientRect();
+  return { x: e.clientX - r.left + sc.scrollLeft, y: e.clientY - r.top + sc.scrollTop };
+}
+function marqueeRows(){ return $('#listScroller').querySelectorAll(MARQUEE_ROW_SEL); }
+function marqueeCacheRects(m){
+  const sc = $('#listScroller'), r = sc.getBoundingClientRect();
+  const dx = sc.scrollLeft - r.left, dy = sc.scrollTop - r.top;
+  const els = marqueeRows();
+  m.count = els.length;
+  m.rects = Array.from(els, el=>{
+    const b = el.getBoundingClientRect();
+    return { id: el.dataset.id, l: b.left + dx, t: b.top + dy, r: b.right + dx, b: b.bottom + dy };
+  });
+}
+// multiSelectedIds を drag 中も常に正とする（途中で renderList が走っても矛盾しない）
+function marqueeApply(hits){
+  const prev = multiSelectedIds;
+  const next = new Set(marquee.base);
+  hits.forEach(id=>next.add(id));
+  const changed = new Set();
+  prev.forEach(id=>{ if(!next.has(id)) changed.add(id); });
+  next.forEach(id=>{ if(!prev.has(id)) changed.add(id); });
+  multiSelectedIds = next;
+  if(changed.size) updateMultiSelectionMarks(changed);
+}
+function marqueeUpdate(){
+  const m = marquee;
+  if(!m || !m.active) return;
+  const sc = $('#listScroller'), r = sc.getBoundingClientRect();
+  // 追加読み込みで行が増えたときだけ取り直す（スクロールが動いたときにしか起きない）
+  if(sc.scrollTop !== m.lastScrollTop){
+    m.lastScrollTop = sc.scrollTop;
+    if(marqueeRows().length !== m.count) marqueeCacheRects(m);
+  }
+  const x1 = Math.min(m.x0, m.x), y1 = Math.min(m.y0, m.y);
+  const x2 = Math.max(m.x0, m.x), y2 = Math.max(m.y0, m.y);
+  // 画面座標に戻し、リストの見えている範囲でクリップして描く
+  const vl = Math.max(x1 - sc.scrollLeft + r.left, r.left), vt = Math.max(y1 - sc.scrollTop + r.top, r.top);
+  const vr = Math.min(x2 - sc.scrollLeft + r.left, r.right), vb = Math.min(y2 - sc.scrollTop + r.top, r.bottom);
+  m.box.style.left = vl + 'px';
+  m.box.style.top = vt + 'px';
+  m.box.style.width = Math.max(0, vr - vl) + 'px';
+  m.box.style.height = Math.max(0, vb - vt) + 'px';
+  const hits = new Set();
+  for(const q of m.rects){ if(q.l < x2 && q.r > x1 && q.t < y2 && q.b > y1) hits.add(q.id); }
+  marqueeApply(hits);
+}
+// ポインタがパネルの上端／下端に寄っている間はスクロールしながら矩形を伸ばす
+function marqueeAutoScroll(){
+  const m = marquee;
+  if(!m || !m.active) return;
+  const sc = $('#listScroller'), r = sc.getBoundingClientRect();
+  let dy = 0;
+  if(m.clientY < r.top + MARQUEE_EDGE) dy = -((r.top + MARQUEE_EDGE) - m.clientY);
+  else if(m.clientY > r.bottom - MARQUEE_EDGE) dy = m.clientY - (r.bottom - MARQUEE_EDGE);
+  if(dy){
+    const before = sc.scrollTop;
+    sc.scrollTop = before + Math.max(-MARQUEE_SCROLL_MAX, Math.min(MARQUEE_SCROLL_MAX, Math.round(dy / 2)));
+    if(sc.scrollTop !== before){
+      m.x = m.clientX - r.left + sc.scrollLeft;
+      m.y = m.clientY - r.top + sc.scrollTop;
+      marqueeUpdate();
+    }
+  }
+  m.raf = requestAnimationFrame(marqueeAutoScroll);
+}
+function marqueeMove(e){
+  const m = marquee;
+  if(!m) return;
+  m.clientX = e.clientX; m.clientY = e.clientY;
+  const p = marqueeContentPoint(e);
+  m.x = p.x; m.y = p.y;
+  if(!m.active){
+    if(Math.abs(m.x - m.x0) < MARQUEE_THRESHOLD && Math.abs(m.y - m.y0) < MARQUEE_THRESHOLD) return;
+    m.active = true;
+    m.box = document.createElement('div');
+    m.box.className = 'marqueeBox';
+    document.body.appendChild(m.box);
+    document.body.classList.add('marqueeing');
+    m.raf = requestAnimationFrame(marqueeAutoScroll);
+  }
+  e.preventDefault();   // ドラッグ中にテキストが選択されるのを抑える
+  marqueeUpdate();
+}
+function marqueeEnd(){
+  const m = marquee;
+  marquee = null;
+  window.removeEventListener('mousemove', marqueeMove, true);
+  window.removeEventListener('mouseup', marqueeEnd, true);
+  window.removeEventListener('blur', marqueeEnd);
+  if(!m) return;
+  if(m.raf) cancelAnimationFrame(m.raf);
+  if(m.box) m.box.remove();
+  document.body.classList.remove('marqueeing');
+  if(!m.active) return;   // 閾値未満＝ただのクリック。既存の click 処理に任せる
+  // Alt+ドラッグを行の上で始めた場合、離した直後の click が選択を 1 件に戻して
+  // しまうので、その 1 回だけ握りつぶす。
+  const swallow = ev=>{ ev.stopPropagation(); ev.preventDefault(); };
+  window.addEventListener('click', swallow, true);
+  setTimeout(()=>window.removeEventListener('click', swallow, true), 0);
+  // 詳細パネルに出す「主」選択：元の選択が残っていればそれ、無ければ先頭の 1 件
+  const prev = selectedId;
+  const first = m.rects.find(q=>multiSelectedIds.has(q.id));
+  selectedId = (prev && multiSelectedIds.has(prev)) ? prev : (first ? first.id : null);
+  multiSelectAnchorId = selectedId;
+  updateSelectionMarks(prev, selectedId);
+  renderDetail();
+}
+$('#listScroller').addEventListener('mousedown', (e)=>{
+  if(e.button !== 0 || pickMode || currentView !== 'items') return;
+  if(e.target.closest(MARQUEE_NO_START_SEL)) return;
+  // 行の上は既存のドラッグ&ドロップが優先。Alt(Option) を押していれば矩形選択。
+  if(e.target.closest(MARQUEE_ROW_SEL) && !e.altKey) return;
+  const p = marqueeContentPoint(e);
+  marquee = {
+    x0:p.x, y0:p.y, x:p.x, y:p.y, clientX:e.clientX, clientY:e.clientY,
+    active:false, box:null, raf:0, rects:[], count:0,
+    lastScrollTop: $('#listScroller').scrollTop,
+    // 修飾キー付きなら今の選択に足す。無しなら矩形の中身だけにする。
+    base: (e.metaKey || e.ctrlKey || e.shiftKey) ? new Set(multiSelectedIds) : new Set()
+  };
+  marqueeCacheRects(marquee);
+  window.addEventListener('mousemove', marqueeMove, true);
+  window.addEventListener('mouseup', marqueeEnd, true);
+  // ウィンドウ外でボタンを離すと mouseup が来ないことがあるので、フォーカスが
+  // 外れたら畳む（矩形が残って dragstart を止め続けるのを防ぐ）
+  window.addEventListener('blur', marqueeEnd);
+});
+// 矩形選択中はネイティブのドラッグ&ドロップを起こさせない（Alt+行から始めた場合）
+document.addEventListener('dragstart', (e)=>{ if(marquee) e.preventDefault(); }, true);
 // header: sort only from the dedicated control (headers are re-rendered)
 $('#itemHead').addEventListener('click', (e)=>{
   if(colResizing || e.target.closest('.colresize')) return;
@@ -12394,6 +15423,114 @@ $('#itemHead').addEventListener('dragend', ()=>{
 });
 
 // header: drag right edge to resize
+/* ---------------------------------------------------------------
+   Resizable panes
+   ---------------
+   #main is a flex row (sidebar | centre | detail) where the centre absorbs
+   whatever is left, so only the two outer widths are ever stored. A stored
+   width becomes a custom property; with none set, the CSS falls back to the
+   original viewport-relative clamp — which is what a double-click restores.
+---------------------------------------------------------------- */
+const PANE_LIMITS = {
+  sidebar: { min:120, max:460, css:'--sidebarW', store:'refshelf.sidebarWidth', el:'#sidebar', sign: 1 },
+  detail:  { min:220, max:760, css:'--detailW',  store:'refshelf.detailWidth',  el:'#detail',  sign:-1 },
+};
+const PANE_CENTER_MIN = 360;
+const paneWidths = { sidebar:0, detail:0 }; // 0 = no override, use the CSS default
+for(const key of Object.keys(PANE_LIMITS)){
+  const stored = +localStorage.getItem(PANE_LIMITS[key].store) || 0;
+  if(stored) paneWidths[key] = Math.min(PANE_LIMITS[key].max, Math.max(PANE_LIMITS[key].min, Math.round(stored)));
+}
+function centerPaneEl(){
+  const list = $('#listPane');
+  return (list && !list.hidden) ? list : $('#researcherPane');
+}
+function setPaneWidth(key, px){
+  const lim = PANE_LIMITS[key];
+  if(!px){
+    paneWidths[key] = 0;
+    document.documentElement.style.removeProperty(lim.css);
+    return;
+  }
+  paneWidths[key] = Math.round(Math.min(lim.max, Math.max(lim.min, px)));
+  document.documentElement.style.setProperty(lim.css, paneWidths[key] + 'px');
+}
+function savePaneWidths(){
+  try{
+    for(const key of Object.keys(PANE_LIMITS)){
+      if(paneWidths[key]) localStorage.setItem(PANE_LIMITS[key].store, String(paneWidths[key]));
+      else localStorage.removeItem(PANE_LIMITS[key].store);
+    }
+  }catch(_e){}
+}
+// Re-apply the chosen widths, then let them give way — only as far as needed —
+// when the window is too narrow to leave the centre usable. The stored choice is
+// never rewritten, so widening the window brings it straight back.
+function reflowPanes(){
+  for(const key of Object.keys(PANE_LIMITS)){
+    const lim = PANE_LIMITS[key];
+    if(paneWidths[key]) document.documentElement.style.setProperty(lim.css, paneWidths[key] + 'px');
+    else document.documentElement.style.removeProperty(lim.css);
+  }
+  const centre = centerPaneEl();
+  if(!centre) return;
+  for(const key of ['detail','sidebar']){
+    if(!paneWidths[key]) continue;
+    const deficit = PANE_CENTER_MIN - centre.getBoundingClientRect().width;
+    if(deficit <= 0) return;
+    const lim = PANE_LIMITS[key];
+    const now = $(lim.el).getBoundingClientRect().width;
+    document.documentElement.style.setProperty(lim.css, Math.round(Math.max(lim.min, now - deficit)) + 'px');
+  }
+}
+let paneDrag = null;
+$('#main').addEventListener('pointerdown', (e)=>{
+  const handle = e.target.closest('.paneResizer');
+  if(!handle) return;
+  const key = handle.dataset.paneResize;
+  const lim = PANE_LIMITS[key];
+  const centre = centerPaneEl();
+  if(!lim || !centre) return;
+  e.preventDefault();
+  paneDrag = {
+    key, handle, sign: lim.sign,
+    startX: e.clientX,
+    startW: $(lim.el).getBoundingClientRect().width,
+    centreW: centre.getBoundingClientRect().width,
+  };
+  handle.classList.add('dragging');
+  try{ handle.setPointerCapture(e.pointerId); }catch(_e){}
+  document.body.classList.add('pane-resizing');
+});
+$('#main').addEventListener('pointermove', (e)=>{
+  if(!paneDrag) return;
+  const lim = PANE_LIMITS[paneDrag.key];
+  // the centre absorbs the delta one-for-one, so its floor caps this pane exactly
+  const ceiling = Math.min(lim.max, paneDrag.startW + paneDrag.centreW - PANE_CENTER_MIN);
+  const want = paneDrag.startW + (e.clientX - paneDrag.startX) * paneDrag.sign;
+  setPaneWidth(paneDrag.key, Math.max(lim.min, Math.min(ceiling, want)));
+});
+function endPaneDrag(){
+  if(!paneDrag) return;
+  paneDrag.handle.classList.remove('dragging');
+  paneDrag = null;
+  document.body.classList.remove('pane-resizing');
+  savePaneWidths();
+}
+$('#main').addEventListener('pointerup', endPaneDrag);
+$('#main').addEventListener('pointercancel', endPaneDrag);
+// Double-click a boundary to drop back to the responsive default.
+$('#main').addEventListener('dblclick', (e)=>{
+  const handle = e.target.closest('.paneResizer');
+  if(!handle) return;
+  e.preventDefault();
+  setPaneWidth(handle.dataset.paneResize, 0);
+  savePaneWidths();
+  reflowPanes();
+});
+window.addEventListener('resize', reflowPanes);
+reflowPanes();
+
 let colResizing = null;
 $('#itemHead').addEventListener('dblclick', (e)=>{
   const handle = e.target.closest('.colresize');
@@ -12420,6 +15557,15 @@ $('#itemHead').addEventListener('pointermove', (e)=>{
   const colEl = $('#itemCols').children[keys.indexOf(colResizing.key)];
   if(colEl) colEl.style.width = w + 'px';
   $('#itemTable').style.width = keys.reduce((s,k)=>s + colWidth(k), 0) + 'px';
+});
+// Same gesture as the pane boundaries: double-click restores the default width.
+$('#itemHead').addEventListener('dblclick', (e)=>{
+  const handle = e.target.closest('.colresize');
+  if(!handle) return;
+  e.preventDefault(); e.stopPropagation();
+  delete columnConfig.widths[handle.dataset.resize];
+  saveColumns();
+  renderList();
 });
 $('#itemHead').addEventListener('pointerup', (e)=>{
   if(!colResizing) return;
@@ -12470,38 +15616,139 @@ $('#colMenu').addEventListener('click', (e)=>{
 // The main button updates everything (cited-by + corresponding + category) for
 // the visible items; the caret menu offers the same over a hand-picked set, or a
 // single field only.
+// ---- bulk update job ------------------------------------------------------
+// Only one update run at a time. They share the row highlights, the fetch log
+// and the 更新 button, so two overlapping runs (a second click, the menu, a
+// per-item 更新 or a log retry mid-run) used to wipe each other's state. The
+// run shows its progress on the button, the caret turns into 中止, and a run
+// stops by itself when another library is opened (its items belong to the old one).
+let bulkJob = null;
+// Returns {job, owner}. A nested call (refreshAll → cited → corresponding)
+// passes opts.job and reuses the outer run instead of starting a new one.
+function acquireBulkJob(opts){
+  if(opts && opts.job) return { job:opts.job, owner:false };
+  if(bulkJob){ showToast(t('bulkBusy'), true); return null; }
+  bulkJob = { lib, cancelled:false, phase:'', done:0, total:0, processed:0 };
+  updateBulkUI();
+  return { job:bulkJob, owner:true };
+}
+function releaseBulkJob(lease){
+  if(!lease || !lease.owner || bulkJob!==lease.job) return;
+  const job = bulkJob;
+  bulkJob = null;
+  updateBulkUI();
+  // the item in flight when 中止 was pressed still finishes, so every started item counts
+  if(job.cancelled) showToast(I18N[lang].bulkCancelled(job.processed + job.done));
+}
+function bulkPhase(job, phaseKey, total){ job.processed += job.done; job.phase = phaseKey; job.done = 0; job.total = total; updateBulkUI(); }
+// call at the top of each item; false = stop the loop
+function bulkNext(job){
+  if(job.cancelled || lib!==job.lib) return false;
+  // runs only touch() at the end; save the progress so far every 50 items so
+  // closing the tab (or a crash) mid-run does not lose everything fetched
+  if(job.done && job.done % 50 === 0) touch();
+  job.done++;
+  updateBulkUI();
+  return true;
+}
+function bulkStopped(job){ return job.cancelled || lib!==job.lib; }
+function updateBulkUI(){
+  const btn = $('#btnRefreshAll'), caret = $('#btnRefreshAllCaret'), cancel = $('#btnRefreshCancel');
+  if(!btn) return;
+  const job = bulkJob;
+  const label = btn.querySelector('span[data-i18n]');
+  btn.disabled = !!job;
+  btn.classList.toggle('busy', !!job);
+  if(job){
+    btn.setAttribute('aria-busy', 'true');
+    const text = (job.phase ? t(job.phase) : t('refreshAll')) + (job.total > 1 ? ` ${job.done}/${job.total}` : '');
+    if(label) label.textContent = text;
+    btn.title = text;
+  }else{
+    btn.removeAttribute('aria-busy');
+    if(label) label.textContent = t('refreshAll');
+    btn.title = '';
+  }
+  if(caret) caret.hidden = !!job;
+  if(cancel) cancel.hidden = !job;
+  if(job) closeMenus();
+}
+$('#btnRefreshCancel').addEventListener('click', ()=>{
+  if(!bulkJob) return;
+  bulkJob.cancelled = true;
+  const cancel = $('#btnRefreshCancel'); if(cancel) cancel.hidden = true; // stops after the item in flight
+});
 $('#btnRefreshAll').addEventListener('click', ()=>refreshAll());
 bindMenu('#btnRefreshAllCaret','#menuRefreshAll');
 function refreshFnForKind(kind){
   return kind==='cited' ? refreshCitedByCounts
     : kind==='corresponding' ? refreshCorrespondingAuthors
     : kind==='category' ? refreshCategories
+    : kind==='pages' ? refreshPages
     : refreshAll;
 }
 // Update cited-by, corresponding authors and category in one pass. Category is
 // filled opportunistically inside the two OpenAlex passes above (no extra calls).
 async function refreshAll(explicitItems, opts){
-  await refreshCitedByCounts(explicitItems, opts);
-  await refreshCorrespondingAuthors(explicitItems, opts);
+  const lease = acquireBulkJob(opts);
+  if(!lease) return;
+  try{
+    const o = Object.assign({}, opts, { job:lease.job });
+    await refreshCitedByCounts(explicitItems, o);
+    if(!bulkStopped(lease.job)) await refreshCorrespondingAuthors(explicitItems, o);
+  }finally{ releaseBulkJob(lease); }
 }
 // Category-only bulk fill for items that don't have one yet.
-async function refreshCategories(explicitItems){
+async function refreshCategories(explicitItems, opts){
   const items = (explicitItems || visibleItems()).filter(it=>(it.doi || it.arxiv) && !it.category);
   if(!items.length){ showToast(t('citeNotFound'), false); return; }
-  const btn = $('#btnRefreshAll'); btn.disabled = true;
-  clearUpdateStates();
-  let updated = 0;
-  for(const it of items){
-    setItemUpdateState(it, 'running');
-    try{ if(await enrichCategory(it)) updated++; }catch(e){ /* skip */ }
-    setItemUpdateState(it, it.category ? 'ok' : 'none');
-    refreshRowCells(it);
-  }
-  if(updated) touch();
-  clearUpdateStates();
-  renderList(); renderDetail();
-  btn.disabled = false;
-  showToast(I18N[lang].refreshedCategory(updated));
+  const lease = acquireBulkJob(opts);
+  if(!lease) return;
+  const job = lease.job;
+  try{
+    bulkPhase(job, 'refreshingCategory', items.length);
+    clearUpdateStates();
+    let updated = 0;
+    for(const it of items){
+      if(!bulkNext(job)) break;
+      setItemUpdateState(it, 'running');
+      try{ if(await enrichCategory(it)) updated++; }catch(e){ /* skip */ }
+      setItemUpdateState(it, it.category ? 'ok' : 'none');
+      refreshRowCells(it);
+    }
+    if(lib!==job.lib) return;
+    if(updated) touch();
+    clearUpdateStates();
+    renderList(); renderDetail();
+    showToast(I18N[lang].refreshedCategory(updated));
+  }finally{ releaseBulkJob(lease); }
+}
+// Pages-only bulk fill for items that don't have any. Article-number journals
+// are the usual reason a record has none (see enrichPages).
+async function refreshPages(explicitItems, opts){
+  const items = (explicitItems || visibleItems()).filter(it=>(it.doi || it.arxiv) && !it.pages);
+  if(!items.length){ showToast(t('citeNotFound'), false); return; }
+  const lease = acquireBulkJob(opts);
+  if(!lease) return;
+  const job = lease.job;
+  try{
+    bulkPhase(job, 'refreshingPages', items.length);
+    clearUpdateStates();
+    let updated = 0;
+    for(const it of items){
+      if(!bulkNext(job)) break;
+      setItemUpdateState(it, 'running');
+      await nextFrame();
+      try{ if(await enrichPages(it)) updated++; }catch(e){ /* skip */ }
+      setItemUpdateState(it, it.pages ? 'ok' : 'none');
+      refreshRowCells(it);
+    }
+    if(lib!==job.lib) return;
+    if(updated) touch();
+    clearUpdateStates();
+    renderList(); renderDetail();
+    showToast(I18N[lang].refreshedPages(updated));
+  }finally{ releaseBulkJob(lease); }
 }
 $('#menuRefreshAll').addEventListener('click', (e)=>{
   const b = e.target.closest('[data-refresh-mode]');
@@ -12516,8 +15763,9 @@ $('#btnPickClear').addEventListener('click', ()=>{
   Array.from(pickedIds).forEach(id=>setPicked(id, false));
   updatePickBar();
 });
-$('#btnPickConfirm').addEventListener('click', async ()=>{
+busyClick($('#btnPickConfirm'), async ()=>{
   if(!pickedIds.size || !pickMode) return;
+  if(bulkJob){ showToast(t('bulkBusy'), true); return; }
   const kind = pickMode;
   const items = lib.items.filter(it=>pickedIds.has(it.id));
   const n = items.length;
@@ -12551,13 +15799,14 @@ async function refreshCitedByCounts(explicitItems, opts){
   const items = (opts.force || explicitItems) ? all : all.filter(it=>!isFresh(it.citedByAt));
   const skipped = all.length - items.length;
   if(!items.length){ showToast(skipped ? I18N[lang].allFresh(skipped) : t('citeNotFound'), false); return; }
-  const btn = $('#btnRefreshAll');
-  btn.disabled = true;
+  const lease = acquireBulkJob(opts);
+  if(!lease) return;
+  const job = lease.job;
+  try{
+  bulkPhase(job, 'refreshingCited', items.length);
   clearUpdateStates();
   renderAlerts();
   if($('#dlgFetchLog').open) renderFetchLog();
-  const label = btn.querySelector('span[data-i18n]'); const orig = label ? label.textContent : '';
-  if(label) label.textContent = t('refreshingCited');
   let s2Updated = 0, oaUpdated = 0, rateLimited = false, oaTitleBudget = 5;
   const updatedIds = new Set();
   const stillFailed = [];
@@ -12568,6 +15817,7 @@ async function refreshCitedByCounts(explicitItems, opts){
   try{ counts = await s2BatchCitedBy(items); }
   catch(e){ console.warn('Semantic Scholar cited-by refresh failed', e); }
   for(const it of items){
+    if(!bulkNext(job)) break;
     setItemUpdateState(it, 'running');
     logUpdateProgress(it, 'cited', 'running', `${t('logRunning')} · Semantic Scholar`);
     await nextFrame(); // let the highlight paint before this row resolves
@@ -12615,6 +15865,7 @@ async function refreshCitedByCounts(explicitItems, opts){
     }
     refreshRowCells(it);
   }
+  if(lib!==job.lib) return;
   const updated = updatedIds.size;
 
   stillFailed.forEach(it=>{
@@ -12627,13 +15878,13 @@ async function refreshCitedByCounts(explicitItems, opts){
   if(updated || stillFailed.length) touch();
   clearUpdateStates();
   renderList(); renderDetail();
-  if(label) label.textContent = orig; btn.disabled = false;
   const failed = stillFailed.length;
   if(failed){
     showToast(I18N[lang].refreshedCitedPartial(updated, failed), !updated);
   }else{
     showToast(s2Updated ? I18N[lang].refreshedCitedS2(updated, s2Updated) : I18N[lang].refreshedCited(updated));
   }
+  }finally{ releaseBulkJob(lease); }
 }
 async function refreshCorrespondingAuthors(explicitItems, opts){
   opts = opts || {};
@@ -12645,15 +15896,17 @@ async function refreshCorrespondingAuthors(explicitItems, opts){
   // just like an explicit selection
   const items = fresh;
   if(!items.length){ showToast(all.length ? t('recentlyCheckedNoCorresponding') : t('noCorrespondingTargets')); return; }
-  const btn = $('#btnRefreshAll');
-  btn.disabled = true;
+  const lease = acquireBulkJob(opts);
+  if(!lease) return;
+  const job = lease.job;
+  try{
+  bulkPhase(job, 'refreshingCorresponding', items.length);
   clearUpdateStates();
   renderAlerts();
   if($('#dlgFetchLog').open) renderFetchLog();
-  const label = btn.querySelector('span[data-i18n]'); const orig = label ? label.textContent : '';
-  if(label) label.textContent = t('refreshingCorresponding');
   let updated = 0, failed = 0, checked = 0, rateLimited = false;
   for(const it of items){
+    if(!bulkNext(job)) break;
     try{
       setItemUpdateState(it, 'running');
       logUpdateProgress(it, 'corresponding', 'running');
@@ -12694,12 +15947,13 @@ async function refreshCorrespondingAuthors(explicitItems, opts){
     }
     refreshRowCells(it); // show this row's result live before moving on
   }
+  if(lib!==job.lib) return;
   if(updated || checked || failed) touch();
   clearUpdateStates();
   renderList(); renderDetail();
-  if(label) label.textContent = orig; btn.disabled = false;
   if(failed) showToast(I18N[lang].refreshedCorrespondingPartial(updated, failed), !updated);
   else showToast(I18N[lang].refreshedCorresponding(updated));
+  }finally{ releaseBulkJob(lease); }
 }
 
 // detail pane: field editing (event delegation)
@@ -12723,22 +15977,23 @@ $('#detail').addEventListener('input', (e)=>{
     else if(e.target.hasAttribute('data-aff-end')) a.end=e.target.value;
     else if(e.target.hasAttribute('data-aff-role')){ a.current=e.target.value==='current'; if(a.current) a.end=''; }
     syncAffiliationLists(p); markResearcherFieldSource(p,'currentInstitutions','manual');
-    p.dateModified=new Date().toISOString(); touch();
+    p.dateModified=new Date().toISOString(); touch(null, {typing:true});
     if(e.target.hasAttribute('data-aff-role')) renderResearcherAffEditor(); // swap end-year vs “present”
     clearTimeout(renderListDebounce._t); renderListDebounce._t=setTimeout(()=>{ renderResearcherList(); renderSidebar(); },300);
     return;
   }
   // researcher: birth date (year/month/day selects) & PhD year
-  if(currentView==='researchers' && (e.target.hasAttribute('data-birth')||e.target.hasAttribute('data-phdyear'))){
+  if(currentView==='researchers' && (e.target.hasAttribute('data-birth')||e.target.hasAttribute('data-death')||e.target.hasAttribute('data-phdyear'))){
     const p=ensureResearcherProfileForDetail(); if(!p) return;
     if(e.target.hasAttribute('data-phdyear')){ p.phdYear=e.target.value; markResearcherFieldSource(p,'phdYear','manual'); }
     else {
+      const kind=e.target.hasAttribute('data-death')?'death':'birth', field=kind==='death'?'deathDate':'birthDate';
       const host=e.target.closest('.rDateRow');
-      const y=host.querySelector('[data-birth="y"]').value, m=host.querySelector('[data-birth="m"]').value, d=host.querySelector('[data-birth="d"]').value;
-      let s=y; if(y&&m){ s+='-'+m; if(d) s+='-'+d; } p.birthDate=s;
-      markResearcherFieldSource(p,'birthDate','manual');
+      const y=host.querySelector(`[data-${kind}="y"]`).value, m=host.querySelector(`[data-${kind}="m"]`).value, d=host.querySelector(`[data-${kind}="d"]`).value;
+      let s=y; if(y&&m){ s+='-'+m; if(d) s+='-'+d; } p[field]=s;
+      markResearcherFieldSource(p,field,'manual');
     }
-    p.dateModified=new Date().toISOString(); touch();
+    p.dateModified=new Date().toISOString(); touch(null, {typing:true});
     clearTimeout(renderListDebounce._t); renderListDebounce._t=setTimeout(()=>{ renderResearcherList(); renderSidebar(); },300);
     return;
   }
@@ -12774,7 +16029,7 @@ $('#detail').addEventListener('input', (e)=>{
     else if(f==='r-chemstation') p.identifiers.chemstation=e.target.value.trim();
     markResearcherFieldSource(p,researcherSourceKeyForInput(f),'manual');
     p.dateModified=new Date().toISOString();
-    touch();
+    touch(null, {typing:true});
     clearTimeout(renderListDebounce._t);
     renderListDebounce._t=setTimeout(()=>{ renderResearcherList(); renderSidebar(); },300);
     return;
@@ -12801,12 +16056,27 @@ $('#detail').addEventListener('input', (e)=>{
     case 'correspondingAuthors': it.correspondingAuthors = v; it.correspondingStatus = v.trim() ? '' : it.correspondingStatus; break;
     default: it[f] = v;
   }
-  touch(it);
+  touch(it, {typing:true});
+  if(f==='notes'){ clearTimeout(notePreviewTimer); notePreviewTimer = setTimeout(updateNotePreview, 200); }
   updateCitePreview();
-  clearTimeout(renderListDebounce._t);
-  renderListDebounce._t = setTimeout(()=>{ renderList(); renderSidebar(); }, 400);
+  if(f!=='notes' || noteEditAffectsList()){
+    clearTimeout(renderListDebounce._t);
+    renderListDebounce._t = setTimeout(()=>{ renderList(); renderSidebar(); }, 400);
+  }
 });
 function renderListDebounce(){}
+// A note reaches the item list only through the Notes column (hidden by
+// default), the search box, a Notes column filter, sorting by notes, or an
+// advanced-search row that reads notes. With none of those in play a note edit
+// changes nothing on screen, and re-rendering a large list on every typing
+// pause costs far more than it is worth.
+function noteEditAffectsList(){
+  if(!(columnConfig.hidden || []).includes('notes')) return true;
+  if(sortKey === 'notes') return true;
+  if(String(filter.query || '').trim()) return true;
+  if(filter.cols && String(filter.cols.notes || '').trim()) return true;
+  return activeAdvRows(filter.advanced).some(r => r.field === 'notes' || r.field === 'all');
+}
 
 // Researcher profiles are edited in a staged dialog. The detail pane deliberately
 // remains read-only, so Cancel/Esc can discard the draft without touching library data.
@@ -12841,6 +16111,14 @@ $('#detail').addEventListener('click',e=>{
   if(e.target.closest('[data-aff-abbrev-edit]')){ openAffAbbrevEditor(); return; }
 });
 $('#detail').addEventListener('change',e=>{
+  const roleIdx=e.target&&e.target.dataset&&e.target.dataset.attRole;
+  if(roleIdx!==undefined){
+    const role=e.target.value;
+    const it=lib.items.find(x=>x.id===selectedId);
+    if(it && role!=='keep') setAttachmentRole(it, +roleIdx, role);
+    else renderDetail();
+    return;
+  }
   const visKey=e.target&&e.target.dataset&&e.target.dataset.detailVis;
   if(visKey){ referenceDetailPrefs.visible[visKey]=!!e.target.checked; saveReferenceDetailPrefs(); renderDetail(); return; }
   const prefKey=e.target&&e.target.dataset&&e.target.dataset.detailPref;
@@ -12912,6 +16190,7 @@ $('#researcherEditorContent').addEventListener('input',e=>{
     applyResearcherCropPreview();
   }
   if(e.target.hasAttribute('data-re-editor-birth')) researcherEditorSetBirth();
+  if(e.target.hasAttribute('data-re-editor-death')) researcherEditorSetDeath();
   const positionRow=e.target.closest('[data-editor-position-row]');
   if(positionRow&&researcherEditorDraft&&!e.target.hasAttribute('data-editor-record-related-input')){
     const x=ensureResearcherPositions(researcherEditorDraft)[+positionRow.dataset.editorPositionRow]; if(!x) return;
@@ -12944,6 +16223,7 @@ $('#researcherEditorContent').addEventListener('input',e=>{
 $('#researcherEditorContent').addEventListener('change',e=>{
   if(e.target.hasAttribute('data-re-editor')) researcherEditorSetValue(e.target.dataset.reEditor,e.target.value);
   if(e.target.hasAttribute('data-re-editor-birth')) researcherEditorSetBirth();
+  if(e.target.hasAttribute('data-re-editor-death')) researcherEditorSetDeath();
   const positionRow=e.target.closest('[data-editor-position-row]');
   if(positionRow&&researcherEditorDraft&&(e.target.hasAttribute('data-editor-position-start')||e.target.hasAttribute('data-editor-position-end'))){
     const x=ensureResearcherPositions(researcherEditorDraft)[+positionRow.dataset.editorPositionRow]; if(!x) return;
@@ -12981,7 +16261,7 @@ $('#researcherEditorContent').addEventListener('input',e=>{
   if(el.id==='researcherEditorAdvisorInput'){ if(matches(knownRelatedResearchers())) el.closest('.researcherFieldPicker')?.querySelector('[data-editor-advisor-add]')?.click(); return; }
   if(el.id==='researcherEditorResearchFieldInput'){ if(matches(knownResearchFields())) el.closest('.researcherFieldPicker')?.querySelector('[data-editor-field-add]')?.click(); return; }
 });
-$('#researcherEditorContent').addEventListener('click',async e=>{
+busyClick($('#researcherEditorContent'), async e=>{
   const srcToggle=e.target.closest('[data-editor-src-toggle]');
   if(srcToggle){ const key=srcToggle.dataset.editorSrcToggle; if(researcherEditorSourceOpen.has(key)) researcherEditorSourceOpen.delete(key); else researcherEditorSourceOpen.add(key); renderResearcherEditor(); return; }
   const addAiUrl=e.target.closest('[data-editor-ai-url-add]');
@@ -13094,9 +16374,86 @@ $('#detail').addEventListener('paste',async e=>{
   for(const item of items){
     if(item.kind==='file'&&String(item.type||'').startsWith('image/')){
       const blob=item.getAsFile();
-      if(blob){ e.preventDefault(); await setItemImage(it, blob); return; }
+      if(!blob) continue;
+      e.preventDefault();
+      // pasting into the note editor adds the image to the note; anywhere else
+      // in the pane it still replaces the reference figure
+      const area=e.target&&e.target.closest&&e.target.closest('textarea[data-f="notes"]');
+      if(area) await insertNoteImage(it, area, blob, '');
+      else await setItemImage(it, blob);
+      return;
     }
   }
+});
+
+/* ---- note editor wiring: toolbar, shortcuts, in-note links ---- */
+// Pressing a toolbar button must not steal the textarea's selection.
+$('#detail').addEventListener('mousedown', (e)=>{
+  if(e.target.closest('.noteTbBtn')) e.preventDefault();
+});
+// The note box is drag-resizable; keep whatever height the user settles on.
+$('#detail').addEventListener('mouseup', (e)=>{
+  const area = e.target.closest && e.target.closest('textarea[data-f="notes"]');
+  if(area) rememberNoteAreaHeight(area);
+});
+$('#detail').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.noteTbBtn');
+  if(btn){
+    e.preventDefault();
+    const act = btn.dataset.noteTb;
+    if(act === 'preview'){
+      noteEditorPreview = !noteEditorPreview;
+      try{ localStorage.setItem('refshelf.noteEditorPreview', noteEditorPreview ? '1' : '0'); }catch(_e){}
+      const box = btn.closest('.noteEditor');
+      if(box){
+        box.classList.toggle('previewOn', noteEditorPreview);
+        btn.classList.toggle('active', noteEditorPreview);
+        btn.setAttribute('aria-pressed', String(noteEditorPreview));
+        const pv = box.querySelector('.noteLivePreview');
+        if(pv){ pv.hidden = !noteEditorPreview; if(noteEditorPreview) updateNotePreview(); }
+      }
+      return;
+    }
+    if(act === 'image'){ $('#fileNoteImage').click(); return; }
+    applyNoteMarkdown(noteAreaEl(), act);
+    return;
+  }
+  // [[citekey]] links and the backlinks block jump to the referenced item
+  const ref = e.target.closest('[data-md-ref],[data-goto-item]');
+  if(ref){
+    e.preventDefault();
+    const id = ref.dataset.mdRef || ref.dataset.gotoItem;
+    if(lib.items.some(x=>x.id===id)){ currentView='items'; selectedId=id; detailEditMode=false; renderAll(); }
+    return;
+  }
+  const att = e.target.closest('[data-md-att-open]');
+  if(att){ e.preventDefault(); openAttachment(att.dataset.mdAttOpen); return; }
+  // Any picture in the detail pane — note image, figure block, or the preview in
+  // the edit view — opens in the built-in viewer so it can be enlarged in place.
+  const img = e.target.closest('.mdBody img.mdImg, img.refFig, img.figPreview');
+  if(img && img.getAttribute('src')) openImageViewer(img.src, detailImageTitle(img));
+});
+wireImageViewer();
+$('#detail').addEventListener('keydown', (e)=>{
+  const area = e.target.closest && e.target.closest('textarea[data-f="notes"]');
+  if(!area) return;
+  if((e.metaKey || e.ctrlKey) && !e.altKey){
+    const act = ({b:'bold', i:'italic', k:'link'})[String(e.key).toLowerCase()];
+    if(act){ e.preventDefault(); applyNoteMarkdown(area, act); return; }
+  }
+  // Enter continues a list — but never while an IME conversion is open.
+  if(e.key === 'Enter' && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey && !e.isComposing){
+    if(noteEnterContinuesList(area)) e.preventDefault();
+  }
+});
+$('#fileNoteImage').addEventListener('change', async ()=>{
+  const input = $('#fileNoteImage');
+  const files = Array.from(input.files || []);
+  input.value = '';
+  const it = lib.items.find(x=>x.id===selectedId);
+  const area = noteAreaEl();
+  if(!it || !area) return;
+  for(const f of files) await insertNoteImage(it, area, f, f.name);
 });
 
 $('#fileResearcherAiJson').addEventListener('change',async e=>{
@@ -13120,7 +16477,7 @@ $('#dlgCitationPrefs').addEventListener('change', updateCitationPrefFromEvent);
 $('#detail').addEventListener('change', (e)=>{
   if(updateCitationPrefFromEvent(e)) return;
 });
-$('#detail').addEventListener('click', async (e)=>{
+busyClick($('#detail'), async (e)=>{
   if(currentView==='researchers'){
     const paper=e.target.closest('[data-researcher-paper]');
     if(paper){ currentView='items'; selectedId=paper.dataset.researcherPaper; renderAll(); return; }
@@ -13192,9 +16549,15 @@ $('#detail').addEventListener('click', async (e)=>{
 // Per-item update: refresh cited-by + corresponding authors for exactly one item,
 // bypassing the freshness cache (the user explicitly asked for this one).
 async function updateSingleItem(it){
-  await refreshCitedByCounts([it], {force:true});
-  await refreshCorrespondingAuthors([it], {force:true});
-  if(await enrichCategory(it)){ touch(); refreshRowCells(it); renderDetail(); }
+  const lease = acquireBulkJob();
+  if(!lease) return;
+  try{
+    await refreshCitedByCounts([it], {force:true, job:lease.job});
+    if(bulkStopped(lease.job)) return;
+    await refreshCorrespondingAuthors([it], {force:true, job:lease.job});
+    if(bulkStopped(lease.job)) return;
+    if(await enrichCategory(it)){ touch(); refreshRowCells(it); renderDetail(); }
+  }finally{ releaseBulkJob(lease); }
 }
 $('#filePdf').addEventListener('change', async ()=>{
   const it = lib.items.find(x=>x.id===selectedId);
@@ -13368,15 +16731,25 @@ $('#researcherLeaderboardControlsSlot').addEventListener('click', e=>{
 });
 /* ---- academic-tree controls (bottom status bar) ---- */
 $('#researcherTreeControlsSlot').addEventListener('click', e=>{
-  const layout=e.target.closest('[data-tree-layout]');
-  if(layout){
-    researcherTreeLayoutMode=layout.dataset.treeLayout;
-    saveResearcherTreePrefs(); renderResearcherList(); return;
+  const look=e.target.closest('[data-tree-layout],[data-tree-orient],[data-tree-line],[data-tree-shape]');
+  if(look){
+    const reopen=!!$('#researcherTreeDisplayMenu')?.classList.contains('open');
+    const d=look.dataset;
+    if(d.treeLayout!=null) researcherTreeLayoutMode=d.treeLayout;
+    else if(d.treeOrient!=null) researcherTreeOrientation=d.treeOrient;
+    else if(d.treeLine!=null) researcherTreeEdgeStyle=d.treeLine;
+    else researcherTreeShape=d.treeShape;
+    saveResearcherTreePrefs(); renderResearcherList();
+    if(reopen) reopenResearcherTreeDisplayMenu();
+    return;
   }
-  const orient=e.target.closest('[data-tree-orient]');
-  if(orient){ researcherTreeOrientation=orient.dataset.treeOrient; saveResearcherTreePrefs(); renderResearcherList(); return; }
   const scope=e.target.closest('[data-tree-scope]');
   if(scope){ researcherTreeScope=scope.dataset.treeScope; saveResearcherTreePrefs(); renderResearcherList(); return; }
+  const button=e.target.closest('#btnResearcherTreeDisplay'); if(!button) return;
+  e.stopPropagation();
+  const menu=$('#researcherTreeDisplayMenu'), was=menu.classList.contains('open');
+  closeMenus();
+  if(!was){ menu.classList.add('open'); positionFloatingMenu(button,menu); }
 });
 $('#researcherTreeControlsSlot').addEventListener('input', e=>{
   if(!e.target.closest('#researcherTreeDepthRange')) return;
@@ -13413,6 +16786,12 @@ $('#researcherList').addEventListener('pointermove',e=>{
   const table=$('#researcherTable'); if(table) table.style.width=Math.max(1000,keys.reduce((sum,k)=>sum+researcherColWidth(k),0))+'px';
 });
 $('#researcherList').addEventListener('pointerup',()=>{ if(!researcherColResizing) return; researcherColResizing=null; document.body.classList.remove('col-resizing'); saveResearcherColumns(); });
+$('#researcherList').addEventListener('dblclick',(e)=>{
+  const handle=e.target.closest('.colresize'); if(!handle) return;
+  e.preventDefault(); e.stopPropagation();
+  delete researcherColumnConfig.widths[handle.dataset.researcherResize];
+  saveResearcherColumns(); renderResearcherList();
+});
 $('#researcherList').addEventListener('dragstart',e=>{
   const th=e.target.closest('th.thmove'); if(!th||e.target.closest('.colresize')) return;
   researcherColDragKey=th.dataset.researcherCol; e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('application/x-refshelf-researcher-col',researcherColDragKey); th.classList.add('col-drag');
@@ -13522,26 +16901,79 @@ function citListView(listName){
   }
   return rows;
 }
-function isInLibrary(it){
-  if(it.doi) return lib.items.some(x=>x.doi && x.doi===it.doi);
-  if(it.arxiv) return lib.items.some(x=>x.arxiv===it.arxiv);
-  const key = (it.title||'').toLowerCase().trim();
-  return key && lib.items.some(x=>(x.title||'').toLowerCase().trim()===key);
+// The library item a fetched record (OpenAlex / CrossRef / cache) refers to.
+// DOIs are compared normalized: OpenAlex, CrossRef, publisher meta tags and
+// hand entry disagree on case and on the https://doi.org/ prefix, so an exact
+// string test missed papers that had just been imported. A DOI or arXiv miss
+// still falls back to the title, which covers records saved without an ID.
+const _libDoiNorm = new Map();
+function libDoiKey(doi){
+  if(!doi) return '';
+  let v = _libDoiNorm.get(doi);
+  if(v === undefined){ v = normDoi(doi); if(_libDoiNorm.size > 20000) _libDoiNorm.clear(); _libDoiNorm.set(doi, v); }
+  return v;
 }
+function libArxivKey(id){ return String(id||'').trim().toLowerCase().replace(/^arxiv:/,'').replace(/v\d+$/,''); }
+// Lookup index for findLibraryItem. A linear scan cost 3 passes over the whole
+// library per call, and the paper map calls it per node on every render (also
+// on every pointermove while dragging a node): 42 nodes × 1000 items × a
+// toLowerCase each. Rebuilt lazily whenever the library changes — every edit
+// goes through touch(), which bumps changeVersion; loading another library
+// swaps lib / lib.items. The item-count check catches pushes that forgot touch().
+let _libLookup = null;
+function libLookupIndex(){
+  const items = lib.items;
+  const c = _libLookup;
+  if(c && c.lib===lib && c.items===items && c.len===items.length && c.ver===changeVersion) return c;
+  const doi = new Map(), arxiv = new Map(), title = new Map();
+  // first match wins, as with Array#find
+  for(const x of items){
+    const d = x.doi && libDoiKey(x.doi); if(d && !doi.has(d)) doi.set(d, x);
+    const a = x.arxiv && libArxivKey(x.arxiv); if(a && !arxiv.has(a)) arxiv.set(a, x);
+    const k = (x.title||'').toLowerCase().trim(); if(k && !title.has(k)) title.set(k, x);
+  }
+  _libLookup = { lib, items, len:items.length, ver:changeVersion, doi, arxiv, title };
+  return _libLookup;
+}
+function findLibraryItem(it){
+  if(!it) return null;
+  const ix = libLookupIndex();
+  const d = libDoiKey(it.doi);
+  if(d){
+    const m = ix.doi.get(d); if(m) return m;
+    // the same paper stored as the other language edition (see doiTwin), so a
+    // registered Angew. Chem. counts as the Int. Ed. being in the library
+    const tw = doiTwin(d);
+    if(tw){ const m2 = ix.doi.get(tw); if(m2) return m2; }
+  }
+  const a = libArxivKey(it.arxiv);
+  if(a){ const m = ix.arxiv.get(a); if(m) return m; }
+  const key = (it.title||'').toLowerCase().trim();
+  return key ? ix.title.get(key) || null : null;
+}
+function isInLibrary(it){ return !!findLibraryItem(it); }
 function citRowHTML(it, listName, idx){
-  // Format each entry with this dialog's own citation settings (citDialogPrefs),
-  // independent of the detail-pane preview, so entries read like "K. Kawabata et
-  // al., J. Am. Chem. Soc. 2016, 138, …".
-  const cite = itemToCitationHtml(it, citDialogPrefs)
-    || esc(it.title || t('newItem'));
   const inLib = isInLibrary(it);
   const linkBtn = (it.doi || it.url)
     ? `<button data-cit-open="${listName}:${idx}" title="${esc(t('openLink'))}">${ic('link')}</button>` : '';
   const addBtn = inLib
     ? `<button class="cIn" disabled>${ic('check')}${esc(t('citeInLib'))}</button>`
     : `<button class="cAdd" data-cit-add="${listName}:${idx}">${ic('plus')}${esc(t('citeAdd'))}</button>`;
+  // Two layouts, switched from this dialog's own 表示スタイル設定 (citDialogPrefs.layout):
+  //  card — title / authors / 雑誌チップ + 年・巻・ページ (default; matches the Word
+  //         add-in's reference cards, and the chip shows the journal *abbreviation*)
+  //  cite — one formatted citation line in the chosen style (the previous behaviour).
+  // The citation-format controls (style / authors / title / URL) only bite in 'cite'.
+  const body = citDialogPrefs.layout === 'cite'
+    ? `<div class="cCite">${itemToCitationHtml(it, citDialogPrefs) || esc(it.title || t('newItem'))}</div>`
+    : (()=>{
+        const authors = authorsShort(it.authors || []);
+        return `<div class="ct">${esc(it.title || t('newItem'))}</div>`
+          + (authors ? `<div class="cm">${esc(authors)}</div>` : '')
+          + `<div class="cJm">${journalYearHtml(it, {detail:true})}</div>`;
+      })();
   return `<div class="citRow">
-    <div class="cbody"><div class="cCite">${cite}</div></div>
+    <div class="cbody">${body}</div>
     <div class="cbtns">${linkBtn}${addBtn}</div>
   </div>`;
 }
@@ -13617,6 +17049,8 @@ $('#citSettingsPanel').addEventListener('change', (e)=>{
   if(!key) return;
   citDialogPrefs[key] = (key==='includeTitle' || key==='includeUrl') ? e.target.checked : e.target.value;
   localStorage.setItem('refshelf.citDialogPrefs', JSON.stringify(citDialogPrefs));
+  // switching the layout shows/hides the citation-format rows, so rebuild the panel
+  if(key==='layout'){ $('#citSettingsBody').innerHTML = citDialogPrefsControls(); renderIcons($('#citSettingsBody')); }
   renderCitList('ref'); renderCitList('cited');
 });
 $('#dlgCitations').addEventListener('cancel', (e)=>{
@@ -14095,8 +17529,8 @@ function researcherMapSortedPapers(papers){
   return (papers||[]).slice().sort((a,b)=>(parseInt(b.year,10)||0)-(parseInt(a.year,10)||0) || String(a.title||'').localeCompare(String(b.title||'')));
 }
 function researcherMapPaperHtml(it){
-  const meta=[it.year,journalDisplay(it)].filter(Boolean).join(' · ');
-  return `<div class="rmPaper"><div class="rmPaperTitle">${esc(it.title||t('newItem'))}</div>${meta?`<div class="rmPaperMeta">${esc(meta)}</div>`:''}<button class="rmPaperOpen" data-rm-paper="${esc(it.id)}" title="${esc(t('researcherMapOpenPaper'))}">${ic('arrowUpRight')}</button></div>`;
+  const meta=journalYearHtml(it);
+  return `<div class="rmPaper"><div class="rmPaperTitle">${esc(it.title||t('newItem'))}</div>${meta?`<div class="rmPaperMeta">${meta}</div>`:''}<button class="rmPaperOpen" data-rm-paper="${esc(it.id)}" title="${esc(t('researcherMapOpenPaper'))}">${ic('arrowUpRight')}</button></div>`;
 }
 function renderResearcherMapSide(){
   const g=researcherMapState, side=$('#researcherMapSide'), active=researcherMapActive();
@@ -14419,12 +17853,12 @@ async function buildGraphData(seedItem, onProgress){
   const seedRefs = new Set(refIds);
 
   // ---- candidate pool (light select: reference lists drive the scoring) ----
-  const POOL_SELECT = 'id,referenced_works,cited_by_count';
+  const POOL_SELECT = 'id,referenced_works,cited_by_count,doi';
   const pool = new Map();   // id -> { refs:Set, cited }
   const addPool = (w)=>{
     const id = oaId(w.id);
     if(!id || id===seedId || pool.has(id)) return;
-    pool.set(id, { refs:new Set((w.referenced_works||[]).map(oaId)), cited:w.cited_by_count||0 });
+    pool.set(id, { refs:new Set((w.referenced_works||[]).map(oaId)), cited:w.cited_by_count||0, doi:normDoi(w.doi||'') });
   };
   // citing works — one list query; optional (skipped if rate-limited)
   let citingList = [];
@@ -14462,7 +17896,29 @@ async function buildGraphData(seedItem, onProgress){
     scored.push({ id, score: coupling + 0.8*co + 0.08*prominence });
   });
   scored.sort((a,b)=>b.score-a.score);
-  const chosenIds = scored.slice(0, GRAPH_MAX_NODES-1).map(s=>s.id);
+  // Collapse Angewandte's two language editions (see doiTwin). A twin pair has
+  // near-identical reference lists, so both score alike and both used to land in
+  // the map: two of the GRAPH_MAX_NODES slots spent on one paper. Dropping the
+  // German edition here, before the cut, hands that slot to a real neighbour.
+  const seedEditionKey = seedWork.doi ? doiEditionKey(seedWork.doi) : '';
+  const chosenIds = [];
+  const editionSlot = new Map();   // edition key -> index into chosenIds
+  for(const s of scored){
+    if(chosenIds.length >= GRAPH_MAX_NODES-1) break;
+    const p = pool.get(s.id);
+    const key = (p && p.doi) ? doiEditionKey(p.doi) : '';
+    if(key && key===seedEditionKey) continue;   // the seed in its other language
+    if(key){
+      const slot = editionSlot.get(key);
+      if(slot !== undefined){
+        // the better-scoring twin arrived first; keep whichever is the Int. Ed.
+        if(isSecondaryEditionDoi(pool.get(chosenIds[slot]).doi) && !isSecondaryEditionDoi(p.doi)) chosenIds[slot] = s.id;
+        continue;
+      }
+      editionSlot.set(key, chosenIds.length);
+    }
+    chosenIds.push(s.id);
+  }
 
   // ---- full metadata for the chosen candidates only ----
   const works = new Map();  // id -> work (with referenced_works)
@@ -14531,6 +17987,56 @@ function thinEdges(nodes, edges){
   return edges.filter(e=>keep.has(e));
 }
 
+// Hide the German edition of an Angewandte pair (see doiTwin). buildGraphData
+// already drops twins before it picks its nodes; this second pass also cleans
+// graphs that were cached before that rule existed, so old maps stay usable
+// without a refetch. Edges of the dropped node move to the surviving edition,
+// keeping the strongest of any pair that ends up duplicated.
+function collapseTwinNodes(data){
+  const nodes = data.nodes;
+  const editionDoi = (n)=>{
+    const doi = n.item && n.item.doi;
+    return (doi && doiTwin(doi)) ? normDoi(doi) : '';
+  };
+  const keep = new Map();   // edition key -> surviving node index
+  nodes.forEach((n,i)=>{
+    const doi = editionDoi(n);
+    if(!doi) return;
+    const key = doiEditionKey(doi);
+    const prev = keep.get(key);
+    if(prev===undefined){ keep.set(key, i); return; }
+    // the seed always survives; otherwise the International Edition does
+    keep.set(key, nodes[prev].seed ? prev
+      : n.seed ? i
+      : (isSecondaryEditionDoi(editionDoi(nodes[prev])) && !isSecondaryEditionDoi(doi)) ? i : prev);
+  });
+  if(!keep.size) return;
+  const to = nodes.map((n,i)=>{            // old index -> surviving old index
+    const doi = editionDoi(n);
+    return doi ? keep.get(doiEditionKey(doi)) : i;
+  });
+  if(to.every((v,i)=>v===i)) return;       // no twin pair was actually present
+  const idx = new Array(nodes.length).fill(-1);
+  const out = [];
+  nodes.forEach((n,i)=>{ if(to[i]===i){ idx[i] = out.length; out.push(n); } });
+  const merged = new Map();
+  (data.edges||[]).forEach(e=>{
+    let a = idx[to[e.a]], b = idx[to[e.b]];
+    if(a<0 || b<0 || a===b) return;        // both ends collapsed into one node
+    let citeAToB = e.citeAToB, citeBToA = e.citeBToA;
+    if(a > b){ const t0 = a; a = b; b = t0; const c = citeAToB; citeAToB = citeBToA; citeBToA = c; }
+    const k = a + ':' + b;
+    const prev = merged.get(k);
+    if(!prev){ merged.set(k, { a, b, w:e.w, shared:e.shared, direct:e.direct, citeAToB, citeBToA }); return; }
+    prev.w = Math.max(prev.w, e.w);
+    prev.shared = Math.max(prev.shared, e.shared);
+    prev.direct = prev.direct || e.direct;
+    prev.citeAToB = prev.citeAToB || citeAToB;
+    prev.citeBToA = prev.citeBToA || citeBToA;
+  });
+  data.nodes = out;
+  data.edges = [...merged.values()];
+}
 // Keep a stable 100% layout and move only node/label coordinates for the
 // spacing control. Circle radii and font sizes do not scale, so increasing
 // this value creates real whitespace rather than behaving like camera zoom.
@@ -14637,13 +18143,7 @@ function resetGraphFilters(){
 }
 // Locate the library item backing a graph node (same match keys as isInLibrary),
 // so tag / collection / registration filters can read the stored metadata.
-function graphLibItem(it){
-  if(!it) return null;
-  if(it.doi){ const m = lib.items.find(x=>x.doi && x.doi===it.doi); if(m) return m; }
-  if(it.arxiv){ const m = lib.items.find(x=>x.arxiv===it.arxiv); if(m) return m; }
-  const key = (it.title||'').toLowerCase().trim();
-  return key ? lib.items.find(x=>(x.title||'').toLowerCase().trim()===key) : null;
-}
+function graphLibItem(it){ return findLibraryItem(it); }
 function graphFilterActive(){
   const f = graphFilters;
   return !!(f && (f.reg!=='all' || f.yearMin || f.yearMax || f.citedMin || (f.journal && f.journal.length) || f.author || f.tag || f.coll));
@@ -14920,20 +18420,22 @@ function renderGraph(){
     if(e.citeBToA) addFlow(e.b, e.a);
     return flows.join('');
   }).join('');
+  const registeredFlags = g.nodes.map(n=>isInLibrary(n.item));
   const nodeHtml = g.nodes.map((n,i)=>{
     // the seed gets a size floor — a modestly-cited seed must not vanish among
     // the classics it pulled in
     const r = nodeRadii[i];
     const fill = graphYearColor(n.year, minY, maxY);
-    const inLib = isInLibrary(n.item);
-    const registered = !n.seed && inLib;
+    // the seed is marked too: a map opened from the library should say so
+    const registered = registeredFlags[i];
     // Registered nodes: show a green check badge (default) OR the subtle green
     // ring when the badge is toggled off — never both, so the mark stays clean.
     const showBadge = registered && graphShowRegisteredBadge;
     const showRing = registered && !graphShowRegisteredBadge;
     const cls = ['gNode', n.seed?'seed':'', showRing?'inlib':''].filter(Boolean).join(' ');
+    const badgeR = n.seed ? r + 5 : r; // sit on the seed's halo, not inside it
     const badge = showBadge
-      ? `<g class="gRegBadge" transform="translate(${(r*0.72).toFixed(1)},${(-r*0.72).toFixed(1)})"><circle class="gRegBadgeBg" r="5.4"></circle><path class="gRegBadgeMark" d="M-2.4 0 L-0.7 1.9 L2.6 -2"></path></g>`
+      ? `<g class="gRegBadge" transform="translate(${(badgeR*0.72).toFixed(1)},${(-badgeR*0.72).toFixed(1)})"><circle class="gRegBadgeBg" r="5.4"></circle><path class="gRegBadgeMark" d="M-2.4 0 L-0.7 1.9 L2.6 -2"></path></g>`
       : '';
     return `<g class="${cls}" data-node="${i}" transform="translate(${n.x.toFixed(1)},${n.y.toFixed(1)})">`+
       (n.seed ? `<circle class="gSeedHalo" r="${(r+5).toFixed(1)}"></circle>` : '')+
@@ -14949,10 +18451,18 @@ function renderGraph(){
     const sn = svg.querySelector(`[data-node="${seedIdx}"]`);
     if(sn) sn.parentNode.appendChild(sn);
   }
+  graphRegSig = registeredFlags.map(r=>r?'1':'0').join('');
   updateGraphStats();
   updateGraphCitationControls();
   applyHighlight();
   applyGraphFilters();
+}
+// Node drag: pointermove can fire at 120 Hz+, and each renderGraph() rebuilds
+// the whole SVG. Coalesce to one render per frame.
+let graphRenderFrame = 0;
+function scheduleGraphRender(){
+  if(graphRenderFrame) return;
+  graphRenderFrame = requestAnimationFrame(()=>{ graphRenderFrame = 0; renderGraph(); });
 }
 // Dim everything except the selected node and its neighbours.
 // Class toggling only — no re-render, so it is cheap.
@@ -15002,21 +18512,20 @@ function renderGraphSide(){
   const it = n.item;
   const inLib = isInLibrary(it);
   const meta1 = [authorsShort(it.authors)].filter(Boolean).join('');
-  const meta2 = [it.journal, it.year].filter(Boolean).join(' · ');
   const rel = graphSeedRelation(g, g.selIdx);
   const nearest = graphNearestLinks(g, g.selIdx);
   side.innerHTML = `
     ${n.seed ? `<span class="gsSeedBadge">${esc(t('graphSeed'))}</span>` : ''}
     <div class="gsTitle">${esc(it.title)}</div>
     <div class="gsMeta">${esc(meta1)}</div>
-    <div class="gsMeta">${esc(meta2)}</div>
+    <div class="gsMeta">${journalYearHtml(it)}</div>
     <div class="gsMeta">${esc(t('colCitedBy'))}: ${n.cited.toLocaleString()}</div>
     ${rel ? `<div class="gsRel"><b>${esc(t('graphRelToSeed'))}</b><br>${esc(graphRelationText(rel))}</div>` : ''}
     ${nearest.length ? `<div class="gsLinks"><b>${esc(t('graphNearest'))}</b>${nearest.map(x=>`<div class="gsLink">${esc(x.node.label || x.node.item.title || '')} · ${esc(I18N[lang].graphSharedRefs(graphEdgeShared(x.edge)))}</div>`).join('')}</div>` : ''}
     <div class="gsBtns">
       ${(it.doi||it.url) ? `<button class="tbtn" data-gs="open">${ic('link')}${esc(t('graphOpenPage'))}</button>` : ''}
       ${n.seed ? '' : `<button class="tbtn" data-gs="graph">${ic('graph')}${esc(t('graphView'))}</button>`}
-      ${n.seed ? '' : inLib
+      ${inLib
         ? `<span class="gsInLib">${ic('check')}${esc(t('citeInLib'))}</span>`
         : `<button class="tbtn" data-gs="add">${ic('plus')}${esc(t('citeAdd'))}</button>`}
     </div>
@@ -15024,44 +18533,123 @@ function renderGraphSide(){
   `;
 }
 
+// Papers imported while the map is open (connector, DOI search, citation
+// dialog, another map's 追加) must get their check without reopening the map.
+// renderAll() calls this on every library change; it re-renders only when
+// some node's registration actually flipped.
+let graphRegSig = '';
+function graphRegistrationSig(){
+  return graphState ? graphState.nodes.map(n=>isInLibrary(n.item)?'1':'0').join('') : '';
+}
+function refreshGraphRegistration(){
+  const dlg = $('#dlgGraph');
+  if(!graphState || !dlg || !dlg.open) return;
+  const sig = graphRegistrationSig();
+  if(sig === graphRegSig) return;
+  renderGraph();
+  renderGraphSide();
+}
 function graphCacheKey(item){ return item.doi ? 'doi:'+normDoi(item.doi) : item.arxiv ? 'arxiv:'+item.arxiv : 'id:'+item.id; }
-// lean, JSON-serialisable snapshot of a built graph (no Sets / full works)
+// lean, JSON-serialisable snapshot of a built graph (no Sets / full works).
+// The cache lives in library.json, which is rewritten on every save, so node
+// items keep only non-empty fields (newItem() puts the defaults back on read):
+// ~20% of the cache was empty strings, [] and the per-item id/dates.
+const GRAPH_CACHE_DROP = new Set(['id','dateAdded','dateModified']);
+function leanGraphItem(it){
+  const out = {};
+  for(const k in it){
+    const v = it[k];
+    if(GRAPH_CACHE_DROP.has(k) || v==='' || v==null || v===false || (Array.isArray(v) && !v.length)) continue;
+    if(k==='readingStatus' && v==='unread') continue;
+    out[k] = v;
+  }
+  return out;
+}
 function leanGraph(data){
-  return { nodes: data.nodes.map(n=>({ id:n.id, item:n.item, year:n.year, cited:n.cited, seed:!!n.seed, label:n.label, seedRel:n.seedRel||null })), edges: data.edges };
+  return { nodes: data.nodes.map(n=>({ id:n.id, item:leanGraphItem(n.item), year:n.year, cited:n.cited, seed:!!n.seed, label:n.label, seedRel:n.seedRel||null })), edges: data.edges };
 }
 // Generation guard: each open (or refetch) bumps the generation, and a build
 // still in flight for an older generation must not touch state/UI afterwards —
 // otherwise a slow build A can clobber a dialog that meanwhile shows graph B.
 let graphGen = 0;
+// Waiting state. A network build takes several seconds; during it the canvas is
+// covered by a spinner overlay (pointer-events on, so stale nodes cannot be
+// clicked / double-click-hopped) and the toolbar is disabled. When the map hops
+// from one paper to another, the previous map stays visible underneath and
+// "Cancel" / Esc brings it back instead of leaving an empty dialog.
+let graphBusyKey = '';     // cache key being built, '' when idle
+let graphPrevView = null;  // map to restore if a hop is cancelled
+const GRAPH_BUSY_CONTROLS = ['#btnGraphRefetch','#btnGraphRelayout','#btnGraphFit','#btnGraphSettings','#btnGraphFilter'];
+function setGraphLoading(msg, busy){
+  const el = $('#graphLoading');
+  if(!msg){ el.innerHTML = ''; el.classList.remove('busy'); return; }
+  el.classList.toggle('busy', !!busy);
+  el.innerHTML = `<div class="gLoadBox" role="status" aria-live="polite">${busy ? '<span class="gSpinner" aria-hidden="true"></span>' : ''}<span class="gLoadMsg">${esc(msg)}</span>${busy ? `<button type="button" class="tbtn" data-graph-cancel>${esc(t('graphCancel'))}</button>` : ''}</div>`;
+}
+function setGraphBusy(key){
+  graphBusyKey = key || '';
+  const on = !!graphBusyKey;
+  $('#dlgGraph').classList.toggle('gBusy', on);
+  GRAPH_BUSY_CONTROLS.forEach(sel=>{ const b = $(sel); if(b) b.disabled = on; });
+  if(on){ ['#graphFilterPanel','#graphSettingsPanel'].forEach(sel=>{ const p = $(sel); if(p) p.hidden = true; }); }
+}
+function cancelGraphLoad(){
+  if(!graphBusyKey) return;
+  graphGen++; // the in-flight build still caches its result, but will not touch the UI
+  setGraphBusy('');
+  setGraphLoading('');
+  const prev = graphPrevView;
+  graphPrevView = null;
+  if(!prev){ $('#dlgGraph').close(); return; }
+  graphState = prev.state; graphSeedItem = prev.seed;
+  $('#graphHeadTitle').textContent = prev.title;
+  $('#graphCacheNote').textContent = prev.cacheNote;
+  renderGraphSide();
+}
 async function openGraphDialog(item, opts){
   opts = opts || {};
+  const dlg = $('#dlgGraph');
+  const key = graphCacheKey(item);
+  // Repeated clicks on the same paper while its map is still being fetched
+  // would restart the build and spend the OpenAlex budget again — ignore them.
+  if(dlg.open && graphBusyKey===key && !opts.force) return;
   const gen = ++graphGen;
+  // hopping from a map that is on screen: keep it visible until the new one is ready
+  const prev = dlg.open && graphState ? (graphBusyKey && graphPrevView ? graphPrevView : {
+    state:graphState, seed:graphSeedItem,
+    title:$('#graphHeadTitle').textContent, cacheNote:$('#graphCacheNote').textContent
+  }) : null;
+  setGraphBusy('');
+  graphPrevView = null;
   $('#graphHeadTitle').textContent = I18N[lang].graphTitle(item.title || t('newItem'));
-  const svg = $('#graphSvg');
-  svg.innerHTML = '';
-  $('#graphStats').textContent = '';
   $('#graphCacheNote').textContent = '';
-  graphState = null; graphSeedItem = item;
-  populateGraphFilterPanel();
-  const fp = $('#graphFilterPanel'); if(fp) fp.hidden = true;
-  const sp = $('#graphSettingsPanel'); if(sp) sp.hidden = true;
-  renderGraphSide();
-  $('#dlgGraph').showModal();
+  if(!prev){
+    graphSeedItem = item; // so 再取得 retries this paper even if the first build fails
+    $('#graphSvg').innerHTML = '';
+    $('#graphStats').textContent = '';
+    graphState = null;
+    populateGraphFilterPanel();
+    const fp = $('#graphFilterPanel'); if(fp) fp.hidden = true;
+    const sp = $('#graphSettingsPanel'); if(sp) sp.hidden = true;
+    renderGraphSide();
+  }
+  if(!dlg.open) dlg.showModal();
 
   lib.graphCache = lib.graphCache || {};
-  const key = graphCacheKey(item);
   const cached = lib.graphCache[key];
   const cacheUsable = !!(cached && cached.v === GRAPH_CACHE_V && cached.nodes && cached.nodes.length >= 3);
-  const useCached = ()=>({ nodes: cached.nodes.map(n=>Object.assign({}, n)), edges: cached.edges });
+  const useCached = ()=>({ nodes: cached.nodes.map(n=>Object.assign({}, n, { item:newItem(n.item) })), edges: cached.edges });
   let data, fromCache = false;
   if(cacheUsable && !opts.force && isFresh(cached.ts)){
     data = useCached();
     fromCache = true;
   }else{
-    $('#graphLoading').textContent = t('graphLoading1');
+    graphPrevView = prev;
+    setGraphBusy(key);
+    setGraphLoading(t('graphLoading1'), true);
     let err = null;
     try{
-      data = await buildGraphData(item, msg=>{ if(gen===graphGen) $('#graphLoading').textContent = msg; });
+      data = await buildGraphData(item, msg=>{ if(gen===graphGen) setGraphLoading(msg, true); });
     }catch(e){ console.error(e); err = e; }
     if(!err && data.nodes.length < 3) err = { tooFew:true };
     if(!err){
@@ -15081,10 +18669,23 @@ async function openGraphDialog(item, opts){
         touch();
       }
     }
-    if(gen !== graphGen) return; // superseded by a newer open / dialog close
+    if(gen !== graphGen) return; // superseded by a newer open / cancel / dialog close
+    setGraphBusy('');
+    graphPrevView = null;
     if(err){
       const msg = err.tooFew ? t('graphTooFew') : (err.rateLimited ? t('oaBudgetErr') : t('graphNotFound'));
-      if(!cacheUsable){ $('#graphLoading').textContent = msg; return; }
+      if(!cacheUsable){
+        if(prev){
+          // a failed hop: stay on the map the user came from
+          graphState = prev.state; graphSeedItem = prev.seed;
+          $('#graphHeadTitle').textContent = prev.title;
+          $('#graphCacheNote').textContent = prev.cacheNote;
+          setGraphLoading('');
+          renderGraphSide();
+          showToast(msg, true);
+        }else setGraphLoading(msg, false);
+        return;
+      }
       // keep showing the last good graph (even a stale one) instead of wiping it
       data = useCached();
       fromCache = true;
@@ -15093,9 +18694,16 @@ async function openGraphDialog(item, opts){
       showToast(I18N[lang].graphPartial(data.fetchFailed));
     }
   }
-  $('#graphLoading').textContent = t('graphLoading3');
+  setGraphLoading(t('graphLoading3'), false);
   await new Promise(r=>setTimeout(r, 20)); // let the message paint
   if(gen !== graphGen) return;
+  graphSeedItem = item;
+  if(prev){
+    // the previous map stayed up while loading; reset its per-map UI now
+    populateGraphFilterPanel();
+    const fp = $('#graphFilterPanel'); if(fp) fp.hidden = true;
+  }
+  collapseTwinNodes(data);   // fresh builds are already clean; this fixes old caches
   // measure the canvas only now (after the build) — right after showModal()
   // the dialog may not have its final size yet. A tiny/hidden viewport gets
   // sane fallbacks; the ResizeObserver below re-layouts once real dims arrive.
@@ -15106,13 +18714,15 @@ async function openGraphDialog(item, opts){
   graphState = { nodes:data.nodes, edges:data.edges, W, H, view:{x:0,y:0,k:1}, selIdx:null };
   populateGraphJournalOptions();
   fitGraphView();
-  $('#graphLoading').textContent = '';
+  setGraphLoading('');
   $('#graphCacheNote').textContent = fromCache ? I18N[lang].graphCached(cached.ts.slice(0,10)) : '';
   renderGraph();
+  renderGraphSide();
 }
 let graphSeedItem = null;
 // closing the dialog abandons any in-flight build (state stays untouched)
-$('#dlgGraph').addEventListener('close', ()=>{ graphGen++; });
+$('#dlgGraph').addEventListener('close', ()=>{ graphGen++; setGraphBusy(''); graphPrevView = null; setGraphLoading(''); });
+$('#graphLoading').addEventListener('click', (e)=>{ if(e.target.closest('[data-graph-cancel]')) cancelGraphLoad(); });
 
 // interactions: select, pan, zoom, node drag
 (function(){
@@ -15157,7 +18767,7 @@ $('#dlgGraph').addEventListener('close', ()=>{ graphGen++; });
       dragNode.px = e.clientX; dragNode.py = e.clientY;
       moved = true;
       graphState.userView = true;
-      renderGraph();
+      scheduleGraphRender();
     }else if(pan){
       const k = graphState.view.k;
       graphState.view.x = pan.vx - (e.clientX - pan.x)/k;
@@ -15305,6 +18915,8 @@ $('#graphFilterPanel').addEventListener('click', (e)=>{
 });
 // Esc closes an open popover (filter / settings) first, not the whole dialog.
 $('#dlgGraph').addEventListener('cancel', (e)=>{
+  // while a map is loading, Esc cancels the load (and returns to the previous map)
+  if(graphBusyKey){ e.preventDefault(); cancelGraphLoad(); return; }
   const panels = [$('#graphFilterPanel'), $('#graphSettingsPanel')].filter(p=>p && !p.hidden);
   if(panels.length){ e.preventDefault(); panels.forEach(p=>p.hidden = true); }
 });
@@ -15342,7 +18954,7 @@ $('#btnGraphReverse').addEventListener('click', ()=>{
   graphReverseDirection = !graphReverseDirection; graphDirectionChosen = true; saveGraphPrefs(); renderGraph();
 });
 $('#btnGraphRefetch').addEventListener('click', ()=>{
-  if(graphSeedItem) openGraphDialog(graphSeedItem, {force:true}); // bypass cache, hit OpenAlex
+  if(graphSeedItem && !graphBusyKey) openGraphDialog(graphSeedItem, {force:true}); // bypass cache, hit OpenAlex
 });
 $('#graphSide').addEventListener('click', (e)=>{
   const btn = e.target.closest('[data-gs]');
@@ -15374,7 +18986,13 @@ detailEl.addEventListener('drop', async (e)=>{
   const it = lib.items.find(x=>x.id===selectedId);
   if(!it || !e.dataTransfer.files.length) return;
   e.preventDefault();
-  await attachFiles(it, Array.from(e.dataTransfer.files));
+  const files = Array.from(e.dataTransfer.files);
+  const area = e.target && e.target.closest && e.target.closest('textarea[data-f="notes"]');
+  if(area && files.every(f=>/^image\//.test(f.type||''))){
+    for(const f of files) await insertNoteImage(it, area, f, f.name);
+    return;
+  }
+  await attachFiles(it, files);
 });
 
 // drag & drop PDF onto a list row / card
@@ -15458,17 +19076,18 @@ function renderCandidates(items, errbox){
   window.__cands = items;
   box.innerHTML = `<div class="hint">${esc(I18N[lang].searchResults(items.length))}</div>` +
     items.map((it,i)=>{
-      const meta = [authorsShort(it.authors), it.journal, it.year].filter(Boolean).join(' · ');
+      const authors = authorsShort(it.authors);
       return `<div class="candItem" data-cand="${i}">
         <div style="flex:1;min-width:0">
           <div class="ct">${esc(it.title)}</div>
-          <div class="cm">${esc(meta)}${it.doi?` · ${esc(it.doi)}`:''}</div>
+          ${authors?`<div class="cm">${esc(authors)}</div>`:''}
+          <div class="cm">${journalYearHtml(it)}${it.doi?`<span class="jVol">${esc(it.doi)}</span>`:''}</div>
         </div>
         <span class="cadd">${ic('plus')}${esc(t('addThis'))}</span>
       </div>`;
     }).join('');
 }
-$('#idResults').addEventListener('click', async (e)=>{
+busyClick($('#idResults'), async (e)=>{
   const el = e.target.closest('[data-cand]');
   if(!el) return;
   const it = (window.__cands||[])[+el.dataset.cand];
@@ -15536,7 +19155,7 @@ $('#miImportCsv').addEventListener('click', ()=>{ importKind='csv'; $('#fileImpo
 $('#miImportJson').addEventListener('click', ()=>{ importKind='json'; $('#fileImport').accept='.json,application/json,text/plain'; $('#fileImport').click(); closeMenus(); });
 $('#miImportRdf').addEventListener('click', ()=>{ importKind='rdf'; $('#fileImport').accept='.rdf,application/rdf+xml,text/xml,application/xml'; $('#fileImport').click(); closeMenus(); });
 function finishImport(items){
-  items.forEach(it=>{ delete it._importKeywords; });
+  items.forEach(it=>{ delete it._importKeywords; applyCanonicalJournal(it); });
   const res = addItems(items);
   renderAll();
   showDuplicateReviewAfterAdd(res);
@@ -15650,17 +19269,17 @@ function downloadConnectorZip(){
 }
 /* === CONNECTOR_FILES (auto-generated by sync-connector.py — do not edit by hand) === */
 const CONNECTOR_FILES = {
-  "README.md": {text: "# Paper Library Connector\n\nPaper Library 用の Chrome 拡張機能です。論文ページを開いたまま、ツールバーのボタン一つでライブラリに保存できます。\n\nA Chrome extension for Paper Library: save the paper you are viewing to your library with one toolbar click.\n\nこの ZIP は Paper Library 本体（index.html）のマニュアル「文献を追加する」からダウンロードできます。\n\n## インストール / Install\n\n1. ダウンロードした `paper-library-connector.zip` を解凍する\n2. Chrome で `chrome://extensions` を開く\n3. 右上の「デベロッパーモード」を ON にする\n4. 「パッケージ化されていない拡張機能を読み込む」で、解凍してできた `paper-library-connector` フォルダを選ぶ\n5. 拡張機能の「詳細」を開き、**「ファイルの URL へのアクセスを許可する」を ON にする**（`index.html` をファイルとして開いているライブラリと連携するために必須）\n\nEnglish: unzip `paper-library-connector.zip`, open `chrome://extensions`, enable *Developer mode*, click *Load unpacked* and select the unzipped `paper-library-connector` folder, then open the extension's *Details* page and enable **Allow access to file URLs**.\n\n## 使い方 / Usage\n\n- 論文ページ（出版社ページ・arXiv など）でツールバーの本のアイコンをクリック → 入れるコレクションにチェック →「保存」。何も選ばなければ「未分類」（どのコレクションにも入れない状態）で保存されます\n- 保存先ライブラリはポップアップ上部に表示されます。複数のライブラリを Paper Library で開いたことがある場合は、プルダウンで保存先を切り替えられます\n- 雑誌名はポップアップで略語表示されます（例：J. Am. Chem. Soc.）\n- すでにライブラリにある論文のページでは、アイコンに緑の「✓」バッジが付き、ポップアップに所属コレクションが表示されます\n- 送信待ちの論文はオレンジの「…」バッジで表示されます\n- 保存した文献は、Paper Library（`index.html`）をライブラリフォルダを開いた状態で表示した瞬間に自動で取り込まれます。メタデータは CrossRef / arXiv API から自動補完されます\n\n## 仕組み / How it works\n\n- `sniffer.js` — 各ページで DOI / arXiv ID を検出し、ライブラリのミラーと照合してバッジを表示\n- `popup.js` — ページから書誌メタデータ（`citation_*` メタタグ等）を抽出し、保存キューに追加\n- `bridge.js` — Paper Library のページと `chrome.storage` の橋渡し（ライブラリのスナップショット保存・キューの受け渡し）\n- ライブラリ本体（library.json・PDF）には一切触れません。取り込みはすべて Paper Library 本体が行います\n\n画像を取り込む場合は、ページから自動検出した候補のほか、「ファイルから選択」または「クリップボードから貼り付け」で指定できます。画像をコピーした状態で Connector ポップアップ上で Ctrl/Cmd+V を押しても貼り付けできます。\n\n## 注意 / Notes\n\n- お試しモード（フォルダ未選択）のライブラリとは同期しません。フォルダを開いた状態の Paper Library とだけ連携します\n- Paper Library のタブを複数同時に開くと二重取り込みの原因になるため、1 つだけ開いてください\n"},
-  "background.js": {text: "// Badge keeper: content scripts report whether the current page's paper is in\n// the library; we paint the toolbar badge for that tab.\n// '✓' = already in the library (green), '…' = queued, waiting for Paper Library\n// to open (amber), '+' = a recognizable paper that is not saved yet (blue).\nconst BADGE_COLORS = { '✓': '#16a34a', '…': '#d97706', '+': '#2563eb' };\nchrome.runtime.onMessage.addListener((msg, sender) => {\n  if (msg && msg.type === 'badge' && sender.tab && sender.tab.id != null) {\n    const text = msg.text || '';\n    chrome.action.setBadgeText({ tabId: sender.tab.id, text });\n    if (text) {\n      chrome.action.setBadgeBackgroundColor({\n        tabId: sender.tab.id,\n        color: BADGE_COLORS[text] || '#2563eb',\n      });\n      if (chrome.action.setBadgeTextColor) {\n        chrome.action.setBadgeTextColor({ tabId: sender.tab.id, color: '#ffffff' });\n      }\n    }\n  }\n});\n"},
-  "bridge.js": {text: "// Runs on the Paper Library page (file://, localhost, or GitHub Pages): relays messages\n// between the page and chrome.storage — stores each library's snapshot under\n// its id, and feeds queued saves addressed to THIS library into the page.\n(function () {\n  if (!document.querySelector('meta[name=\"refshelf-app\"]')) return;\n\n  let myLibId = '';        // id of the library currently open in this page\n  let deliveringPapers = false;\n\n  function post(msg) {\n    window.postMessage(Object.assign({ source: 'refshelf-connector' }, msg), '*');\n  }\n\n  async function deliverPapers() {\n    if (!myLibId || deliveringPapers) return;\n    const { pending = [] } = await chrome.storage.local.get('pending');\n    // items addressed to this library, plus legacy items with no target\n    const mine = pending.filter(p => !p.targetLib || p.targetLib === myLibId);\n    if (!mine.length) return;\n    deliveringPapers = true;\n    post({ action: 'import', items: mine });\n  }\n\n  function deliver() { deliverPapers(); }\n\n  window.addEventListener('message', async (e) => {\n    const d = e.data;\n    if (e.source !== window || !d || d.source !== 'refshelf-app') return;\n    if (d.action === 'snapshot' && d.snapshot) {\n      // Trial (in-memory) libraries are not mirrored and get no queued saves:\n      // anything imported there would evaporate with the session.\n      if (!d.snapshot.persistent) return;\n      const snap = d.snapshot;\n      myLibId = snap.libraryId || snap.libraryName || 'default';\n      const store = await chrome.storage.local.get(['libraries', 'activeLib']);\n      const libraries = store.libraries || {};\n      libraries[myLibId] = {\n        id: myLibId,\n        name: snap.libraryName || '',\n        collections: snap.collections || [],\n        tags: snap.tags || [],\n        journals: snap.journals || [],\n        saved: snap.saved || {},\n        url: location.href, // so the popup can offer to open this library\n        snapshotAt: Date.now(),\n      };\n      const patch = { libraries, appUrl: location.href };\n      // Default the active (destination) library to whatever is open, until the\n      // user picks a specific one in the popup.\n      if (!store.activeLib || !libraries[store.activeLib]) patch.activeLib = myLibId;\n      await chrome.storage.local.set(patch);\n      deliver();\n    } else if (d.action === 'import-result') {\n      const done = new Set((d.results || []).map(r => r.id));\n      const { pending = [] } = await chrome.storage.local.get('pending');\n      await chrome.storage.local.set({ pending: pending.filter(p => !done.has(p.id)) });\n      deliveringPapers = false;\n      deliver(); // pick up anything that arrived while we were importing\n    }\n  });\n\n  chrome.storage.onChanged.addListener((ch, area) => {\n    if (area === 'local' && ch.pending && (ch.pending.newValue || []).length) deliver();\n  });\n\n  post({ action: 'hello' });\n})();\n"},
+  "README.md": {text: "# Paper Library Connector\n\nPaper Library 用の Chrome 拡張機能です。論文ページを開いたまま、ツールバーのボタン一つでライブラリに保存できます。\n\nA Chrome extension for Paper Library: save the paper you are viewing to your library with one toolbar click.\n\nこの ZIP は Paper Library 本体（index.html）のマニュアル「文献を追加する」からダウンロードできます。\n\n## インストール / Install\n\n1. ダウンロードした `paper-library-connector.zip` を解凍する\n2. Chrome で `chrome://extensions` を開く\n3. 右上の「デベロッパーモード」を ON にする\n4. 「パッケージ化されていない拡張機能を読み込む」で、解凍してできた `paper-library-connector` フォルダを選ぶ\n5. 拡張機能の「詳細」を開き、**「ファイルの URL へのアクセスを許可する」を ON にする**（`index.html` をファイルとして開いているライブラリと連携するために必須）\n\nEnglish: unzip `paper-library-connector.zip`, open `chrome://extensions`, enable *Developer mode*, click *Load unpacked* and select the unzipped `paper-library-connector` folder, then open the extension's *Details* page and enable **Allow access to file URLs**.\n\n## 使い方 / Usage\n\n- 論文ページ（出版社ページ・arXiv など）でツールバーの本のアイコンをクリック → 入れるコレクションにチェック →「保存」。何も選ばなければ「未分類」（どのコレクションにも入れない状態）で保存されます\n- 保存先ライブラリはポップアップ上部に表示されます。複数のライブラリを Paper Library で開いたことがある場合は、プルダウンで保存先を切り替えられます\n- 雑誌名はポップアップで略語表示されます（例：J. Am. Chem. Soc.）\n- すでにライブラリにある論文のページでは、アイコンに緑の「✓」バッジが付き、ポップアップに所属コレクションが表示されます\n- 送信待ちの論文はオレンジの「…」バッジで表示されます\n- Google Scholar のプロフィール・検索結果では、各論文タイトルの横にも Paper Library の本アイコンと状態記号が表示されます。アイコンはページ内SVGで描くため、サイトの画像制限の影響を受けません。緑の「✓」はタイトルと年の完全一致で登録済み、青の「+」は未登録、灰色の「–」はまだライブラリを同期していない状態です\n- 保存した文献は、Paper Library（`index.html`）をライブラリフォルダを開いた状態で表示した瞬間に自動で取り込まれます。メタデータは CrossRef / arXiv API から自動補完されます\n\n## 仕組み / How it works\n\n- `sniffer.js` — 各ページで DOI / arXiv ID を検出し、ライブラリのミラーと照合してバッジを表示。Google Scholar では一覧の各タイトルにも状態を表示\n- `popup.js` — ページから書誌メタデータ（`citation_*` メタタグ等）を抽出し、保存キューに追加\n- `bridge.js` — Paper Library のページと `chrome.storage` の橋渡し（ライブラリのスナップショット保存・キューの受け渡し）\n- ライブラリ本体（library.json・PDF）には一切触れません。取り込みはすべて Paper Library 本体が行います\n\n画像を取り込む場合は、ページから自動検出した候補のほか、「ファイルから選択」または「クリップボードから貼り付け」で指定できます。画像をコピーした状態で Connector ポップアップ上で Ctrl/Cmd+V を押しても貼り付けできます。\n\n## 注意 / Notes\n\n- お試しモード（フォルダ未選択）のライブラリとは同期しません。フォルダを開いた状態の Paper Library とだけ連携します\n- Paper Library のタブを複数同時に開くと二重取り込みの原因になるため、1 つだけ開いてください\n"},
+  "background.js": {text: "// Badge keeper: content scripts report whether the current page's paper is in\n// the library; we paint the toolbar badge for that tab.\n// '✓' = already in the library (green), '…' = queued, waiting for Paper Library\n// to open (amber), '+' = a recognizable paper that is not saved yet (blue).\nconst BADGE_COLORS = { '✓': '#16a34a', '…': '#d97706', '+': '#2563eb' };\nchrome.runtime.onMessage.addListener((msg, sender) => {\n  // The Scholar badge resolved a citation page to the publisher's article and\n  // wants it in a new tab. Opening happens here because the content script's\n  // user gesture has already expired by the time the lookup returns.\n  if (msg && msg.type === 'open') {\n    if (/^https?:\\/\\//i.test(msg.url || '')) chrome.tabs.create({ url: msg.url });\n    return;\n  }\n  if (msg && msg.type === 'badge' && sender.tab && sender.tab.id != null) {\n    const text = msg.text || '';\n    chrome.action.setBadgeText({ tabId: sender.tab.id, text });\n    if (text) {\n      chrome.action.setBadgeBackgroundColor({\n        tabId: sender.tab.id,\n        color: BADGE_COLORS[text] || '#2563eb',\n      });\n      if (chrome.action.setBadgeTextColor) {\n        chrome.action.setBadgeTextColor({ tabId: sender.tab.id, color: '#ffffff' });\n      }\n    }\n  }\n});\n"},
+  "bridge.js": {text: "// Runs on the Paper Library page (file://, localhost, or GitHub Pages): relays messages\n// between the page and chrome.storage — stores each library's snapshot under\n// its id, and feeds queued saves addressed to THIS library into the page.\n(function () {\n  if (!document.querySelector('meta[name=\"refshelf-app\"]')) return;\n\n  let myLibId = '';        // id of the library currently open in this page\n  let deliveringPapers = false;\n\n  function post(msg) {\n    window.postMessage(Object.assign({ source: 'refshelf-connector' }, msg), '*');\n  }\n\n  async function deliverPapers() {\n    if (!myLibId || deliveringPapers) return;\n    const { pending = [] } = await chrome.storage.local.get('pending');\n    // items addressed to this library, plus legacy items with no target\n    const mine = pending.filter(p => !p.targetLib || p.targetLib === myLibId);\n    if (!mine.length) return;\n    deliveringPapers = true;\n    post({ action: 'import', items: mine });\n  }\n\n  function deliver() { deliverPapers(); }\n\n  window.addEventListener('message', async (e) => {\n    const d = e.data;\n    if (e.source !== window || !d || d.source !== 'refshelf-app') return;\n    if (d.action === 'snapshot' && d.snapshot) {\n      // Trial (in-memory) libraries are not mirrored and get no queued saves:\n      // anything imported there would evaporate with the session.\n      if (!d.snapshot.persistent) return;\n      const snap = d.snapshot;\n      myLibId = snap.libraryId || snap.libraryName || 'default';\n      const store = await chrome.storage.local.get(['libraries', 'activeLib']);\n      const libraries = store.libraries || {};\n      libraries[myLibId] = {\n        id: myLibId,\n        name: snap.libraryName || '',\n        collections: snap.collections || [],\n        tags: snap.tags || [],\n        journals: snap.journals || [],\n        saved: snap.saved || {},\n        titleIndex: snap.titleIndex || {},\n        url: location.href, // so the popup can offer to open this library\n        snapshotAt: Date.now(),\n      };\n      const patch = { libraries, appUrl: location.href };\n      // Default the active (destination) library to whatever is open, until the\n      // user picks a specific one in the popup.\n      if (!store.activeLib || !libraries[store.activeLib]) patch.activeLib = myLibId;\n      await chrome.storage.local.set(patch);\n      deliver();\n    } else if (d.action === 'import-result') {\n      const done = new Set((d.results || []).map(r => r.id));\n      const { pending = [] } = await chrome.storage.local.get('pending');\n      await chrome.storage.local.set({ pending: pending.filter(p => !done.has(p.id)) });\n      deliveringPapers = false;\n      deliver(); // pick up anything that arrived while we were importing\n    }\n  });\n\n  chrome.storage.onChanged.addListener((ch, area) => {\n    if (area === 'local' && ch.pending && (ch.pending.newValue || []).length) deliver();\n  });\n\n  post({ action: 'hello' });\n})();\n"},
   "icons/icon128.png": {b64: "iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAADKElEQVR42u3dP2sTYRzA8b6DvAMzOfcFOKSbY1a3Gx2zuxQEcRDNIAhFJG9AqNAOHYSITuJwDgVxym6HFNQqIjzeEx61JE2T6vV6l3y+8KMlpH+S3yd3bZbb2JAkSZIkSZIkSZIkSZIkSZIkSSq5a1u77WI6xWwX0y9mWMw4fezU7fe9cfekU8ywmHH62C9mO93ettH5i94sppsWvZsWHJaYeL92DRa/mRYelph4v90Eoxu/dp0WHV/NWVp0XN5oyUUvmsFVQIiv6mIGSy5+0YwSjggji0eNph+2e1OH7VDBVAKh5MUvmtOnk16tTydp8aEGEyG0Gr74RdMB4PwZp1NNq4TFt9KheVyT5QNQBYSaLh6AMiGEENpxGrR4AP5z4n8eWVr+MPxtmJaf1XzxAJQx93cOx2GqJy9/NGHxAJQxjwYfpvcfnr36EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYA0B5Oky9P10+ddBjQEM0mVn++my7zkAy13O9fSCu+l7tc75WZvpa+oCIC57c97vm65H3CmmOwVktA4Afi94kBacpfu2S/qZwysEMCxjGcX3aCcgWQIyWACklgDaZS/4siCUAGBY5RLOANLe0FwIo0sEkNfy1acZCNl5EP4BQDwUZ57ZFYFwAQAWv0IQxhcAYPHL9Hj/uFdMXkyo+zx4fhRu3cnD9Zt7cwFs3fsabj/9HB6+qP/jSROf+95VLL7VlMWfBWHvzdEMgIP335u0+LMgtKoEkDf0iZrM24/fZgDE25r8mOJOqjzsN/rJen14MgMg3tb0x1XJ6aDpr/44OwfH4dPxzz/Lj5/H21YAQF4FgFV4oiYL33/3ZTIrsvzJALDm4xSw3pP7I3C9p+ffQK9+bwSt4/IrfSOoiW8Fr/Diq38rWJIkSZIkSZIkSZIkSVJN+wWzouI99lKbwgAAAABJRU5ErkJggg=="},
   "icons/icon16.png": {b64: "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAe0lEQVR42mNgGD5AzmF9PBCvB+LzQPweiOuBmN+66RsI1wPxeyA+D8TrgTgemwH7gfg/Mg7LP/w/Z+GP/0AN6Hj/qAGD1YB+aNyDsD8Q30cyABT//tD0AML9KJonb/ngD8T70fGElY//z9j19T82OZAeggYQwP6DIw8BAHNcStl941x5AAAAAElFTkSuQmCC"},
   "icons/icon32.png": {b64: "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAA4klEQVR42mNgGAWjYBRgAXIO6+WB2B6I64G4H4j3A/F7KG2PS5910zd7IN4PxO+hdD8Q10PF5Ym1HGTxfwIY5BB5JIv1oRb+J4DtqeUAMN534sX947f/3CfCYto44Nj51//P3f/zf9QBow4YdcCoA0YdMOoAWjsA1g5YD8T3iXAAqHZcj9QuINkBsMaIPg75eJhD0BwAsjgeR0NFn6hGyeQtH+SBuJ4YnNB05f65a+//X37053/uvE/3idUHsgOfA0AG/ScWn7z5HYxJ0QOyg2oOIBPfp0oUUIDlR5v9owAZAADCXwIiw7wc3wAAAABJRU5ErkJggg=="},
   "icons/icon48.png": {b64: "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAABQElEQVR42u2ZMUoDQRiFc4O5gZ11DpBi0wTLtHbT2c4BLBYDViIBbT1BEFYw/TTp5wamsLQYBZV0f/4Jf5YUYiYzu6uQ9+ArFpbZ98Fu87bXQxAEQZBjycmwKhjNlEzFOMbLtYo9ZzD5VkzJeMYxlVxrpmiy8JSxzJKhPQQRE1HeSHHaw5KxzDRHgBIIsvqH4lpK0aF0LVCLEJELpBb/awHaJqc8BCAAAQhAAAIQgAAEIAABCEAAAhBIF/CyDVUyYBkZuPo792m5L1YgrBR6Z3Lph0FLNqNShi673Y+6Wu2UCPpfBLwUVK0Xup+/FylcPryORxcLe3r2XAsMr7/o/O7TXs0+xqnnHlJcMY6hHG4e32qB26e8s4TQScUImAYetsG9rDY0dV7o1qlAC5jOXqEWiHuFcj/itsDfGQRB/mfWC5TjUOc+S18AAAAASUVORK5CYII="},
-  "manifest.json": {text: "{\n  \"manifest_version\": 3,\n  \"name\": \"Paper Library Connector\",\n  \"version\": \"1.0\",\n  \"description\": \"Save the paper you are viewing to Paper Library and see at a glance whether it is already in your library.\",\n  \"icons\": {\n    \"16\": \"icons/icon16.png\",\n    \"32\": \"icons/icon32.png\",\n    \"48\": \"icons/icon48.png\",\n    \"128\": \"icons/icon128.png\"\n  },\n  \"action\": {\n    \"default_popup\": \"popup.html\",\n    \"default_icon\": {\n      \"16\": \"icons/icon16.png\",\n      \"32\": \"icons/icon32.png\"\n    }\n  },\n  \"background\": {\n    \"service_worker\": \"background.js\"\n  },\n  \"permissions\": [\"storage\", \"scripting\", \"activeTab\", \"tabs\", \"clipboardRead\"],\n  \"content_scripts\": [\n    {\n      \"matches\": [\"http://*/*\", \"https://*/*\"],\n      \"js\": [\"sniffer.js\"],\n      \"run_at\": \"document_idle\"\n    },\n    {\n      \"matches\": [\n        \"file:///*\",\n        \"http://localhost/*\",\n        \"http://127.0.0.1/*\",\n        \"https://t-shiokawa1.github.io/Paper-Library/*\"\n      ],\n      \"js\": [\"bridge.js\"],\n      \"run_at\": \"document_idle\"\n    }\n  ]\n}\n"},
-  "popup.html": {text: "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<style>\n  :root{\n    --bg:#ffffff; --bg2:#f5f6f8; --border:#dcdfe4; --text:#1f2328; --text2:#59636e;\n    --accent:#2563eb; --accent-soft:#eaf1fe; --green:#16a34a; --green-soft:#e7f6ec; --amber:#d97706; --amber-soft:#fdf1e0;\n  }\n  @media (prefers-color-scheme: dark){\n    :root{\n      --bg:#1c2128; --bg2:#22272e; --border:#3a4048; --text:#e6e8eb; --text2:#9aa4af;\n      --accent:#6ba1f7; --accent-soft:#263a5c; --green:#3fbf6f; --green-soft:#1f3a2a; --amber:#e8a44a; --amber-soft:#3d3020;\n    }\n  }\n  html,body{margin:0; padding:0}\n  body{\n    width:460px; background:var(--bg); color:var(--text);\n    font:13px/1.5 -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Hiragino Sans\", \"Noto Sans JP\", sans-serif;\n  }\n  header{display:flex; align-items:center; gap:8px; padding:10px 16px; border-bottom:1px solid var(--border)}\n  header img{width:18px; height:18px}\n  header .name{font-weight:600; font-size:13px}\n  header .libname{margin-left:auto; font-size:11px; color:var(--text2); max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}\n  #body{padding:12px 16px}\n  #paperTitle{font-weight:600; font-size:13.5px; line-height:1.45; margin:0 0 3px}\n  #paperMeta{font-size:11.5px; color:var(--text2); margin:0 0 10px; overflow-wrap:break-word}\n  .chip{\n    display:inline-flex; align-items:center; gap:5px; padding:2px 9px; border-radius:999px;\n    font-size:11.5px; font-weight:600; margin:0 0 10px;\n  }\n  .chip.saved{background:var(--green-soft); color:var(--green)}\n  .chip.queued{background:var(--amber-soft); color:var(--amber)}\n  .chip.new{background:var(--accent-soft); color:var(--accent)}\n  #savedFolders{font-size:11.5px; color:var(--text2); margin:-6px 0 10px}\n  #destLib{\n    font-size:11.5px; color:var(--text2); background:var(--bg2);\n    border:1px solid var(--border); border-radius:8px; padding:6px 9px; margin:0 0 10px;\n  }\n  #destLib .libRow{display:flex; align-items:center; gap:6px}\n  #destLib select{\n    flex:1; min-width:0; font:inherit; font-size:12px; color:var(--text);\n    background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:3px 6px;\n  }\n  .sectionLabel{display:flex; align-items:center; gap:6px; font-size:11px; font-weight:600; color:var(--text2); margin:0 0 5px; text-transform:none}\n  .btnIcon{width:14px; height:14px; flex:none}\n  .tabs{display:flex; border-bottom:1px solid var(--border)}\n  .tab{flex:1; display:inline-flex; align-items:center; justify-content:center; gap:6px; font:inherit; font-size:12.5px; font-weight:600; color:var(--text2); background:transparent; border:none; border-bottom:2px solid transparent; padding:9px 4px; cursor:pointer}\n  .tab:hover{background:var(--bg2)}\n  .tab.active{color:var(--accent); border-bottom-color:var(--accent)}\n  .listTools{display:flex; gap:6px; align-items:center; margin:0 0 6px}\n  .miniSearch{flex:1; min-width:0; font:inherit; font-size:12px; color:var(--text); background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:4px 8px}\n  .miniSearch::placeholder{color:var(--text2)}\n  .miniBtn{flex:none; display:inline-flex; align-items:center; justify-content:center; gap:5px; font:inherit; font-size:11.5px; color:var(--accent); background:var(--accent-soft); border:1px solid var(--border); border-radius:6px; padding:4px 8px; cursor:pointer; white-space:nowrap}\n  .miniBtn:hover{filter:brightness(1.04)}\n  .newForm{display:flex; gap:6px; align-items:center; margin:0 0 8px}\n  .newForm input[type=text]{flex:1; min-width:0; font:inherit; font-size:12px; color:var(--text); background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:4px 8px}\n  .newForm select{flex:none; max-width:150px; min-width:0; font:inherit; font-size:12px; color:var(--text); background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:4px 4px}\n  .addBtn{flex:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; font:inherit; font-size:12px; font-weight:600; color:#fff; background:var(--accent); border:none; border-radius:6px; padding:5px 12px; cursor:pointer}\n  .addBtn:hover{filter:brightness(1.06)}\n  #folders, #tags{\n    max-height:210px; overflow-y:auto; overflow-x:hidden; border:1px solid var(--border); border-radius:8px;\n    padding:5px 4px; margin-bottom:10px; background:var(--bg2);\n  }\n  #tags{max-height:130px}\n  #tags label{display:flex; align-items:center; gap:7px; padding:3px 8px; border-radius:6px; cursor:pointer}\n  #tags label:hover{background:var(--accent-soft)}\n  #folders input, #tags input{margin:0; accent-color:var(--accent)}\n  #folders .none, #tags .none{color:var(--text2); font-size:11.5px; padding:4px 8px}\n  .collRow{display:flex; align-items:center; gap:2px; border-radius:6px}\n  .collRow:hover{background:var(--accent-soft)}\n  .collRow > label{display:flex; align-items:center; gap:7px; padding:3px 6px; flex:1; min-width:0; cursor:pointer}\n  .collRow .cn{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}\n  .collRow .newTag{flex:none; color:var(--accent); font-weight:600; font-size:10px; background:var(--accent-soft); border-radius:4px; padding:0 4px}\n  .twist{width:16px; height:24px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text2); font-size:8px; flex:none; user-select:none; transition:transform .12s}\n  .twist.open{transform:rotate(90deg)}\n  .twist.leaf{cursor:default; visibility:hidden}\n  /* image (graphical abstract) picker */\n  .imgSection{margin:0 0 10px}\n  .imgBox{border:1px solid var(--border); border-radius:8px; background:var(--bg2); padding:8px}\n  .imgPreviewWrap{position:relative; display:flex; align-items:center; justify-content:center; min-height:96px; max-height:200px; background:var(--bg); border:1px solid var(--border); border-radius:6px; overflow:hidden}\n  .imgPreviewWrap img{max-width:100%; max-height:200px; object-fit:contain; display:none}\n  .imgEmpty{font-size:11.5px; color:var(--text2); text-align:center; padding:14px 10px; line-height:1.5}\n  .imgControls{display:flex; align-items:center; gap:6px; margin-top:8px; flex-wrap:wrap}\n  .imgNav{flex:none; display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; font:inherit; font-size:12px; color:var(--text); background:var(--bg); border:1px solid var(--border); border-radius:6px; cursor:pointer}\n  .imgNav:hover:not(:disabled){background:var(--accent-soft)}\n  .imgNav:disabled{opacity:.4; cursor:default}\n  .imgCount{font-size:11px; color:var(--text2); min-width:34px; text-align:center}\n  .imgBtn{flex:none; display:inline-flex; align-items:center; justify-content:center; gap:5px; font:inherit; font-size:11.5px; color:var(--accent); background:var(--accent-soft); border:1px solid var(--border); border-radius:6px; padding:5px 9px; cursor:pointer; white-space:nowrap}\n  .imgBtn:hover{filter:brightness(1.04)}\n  .imgBtn.ghost{color:var(--text2); background:var(--bg)}\n  .imgIncludeRow{display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text2); margin-top:8px; cursor:pointer}\n  .imgIncludeRow input{margin:0; accent-color:var(--accent)}\n  .imgHint{font-size:11px; color:var(--amber); margin-top:6px; line-height:1.45; display:none}\n  .pdfRow{display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text2); margin:0 0 10px; cursor:pointer}\n  .pdfRow input{margin:0; accent-color:var(--accent)}\n  button#save{\n    width:100%; display:inline-flex; align-items:center; justify-content:center; gap:7px;\n    padding:8px 0; border:none; border-radius:8px; background:var(--accent); color:#fff;\n    font-size:13px; font-weight:600; cursor:pointer;\n  }\n  button#save:hover{filter:brightness(1.07)}\n  button#save:disabled{opacity:.5; cursor:default}\n  #note{font-size:11.5px; color:var(--text2); margin:8px 0 0; line-height:1.5}\n  #note.ok{color:var(--green)}\n  #note button{\n    margin-top:6px; padding:5px 10px; border:1px solid var(--accent); border-radius:7px;\n    background:var(--accent-soft); color:var(--accent); font-size:12px; font-weight:600; cursor:pointer;\n  }\n  #note button:hover{filter:brightness(1.03)}\n  #warn{font-size:11.5px; color:var(--amber); margin:0 0 10px; line-height:1.5}\n  .findHint{font-size:11.5px; color:var(--text2); margin:0 0 12px; line-height:1.5}\n  #paneFind .findInput, .findGrid input{width:100%; box-sizing:border-box; font:inherit; font-size:12px; color:var(--text); background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:6px 9px}\n  #paneFind .findInput{margin:0 0 7px}\n  #paneFind input::placeholder{color:var(--text2)}\n  .findGrid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin:0 0 7px}\n  #paneFind > .addBtn{width:100%; padding:8px 0}\n  .findStatus{font-size:11.5px; color:var(--text2); margin:8px 0 0; line-height:1.4}\n  .findResults{margin-top:10px; display:flex; flex-direction:column; gap:8px}\n  .findCand{border:1px solid var(--border); border-radius:8px; padding:8px 10px; background:var(--bg2)}\n  .findCand .ct{font-size:12px; font-weight:600; color:var(--text); line-height:1.35; margin:0 0 2px}\n  .findCand .cm{font-size:11px; color:var(--text2); line-height:1.4; margin:0 0 8px}\n  .findCand .exact{display:inline-block; font-size:10px; font-weight:600; color:var(--green); background:var(--green-soft); border-radius:4px; padding:0 5px; margin-left:6px; white-space:nowrap}\n  .candBtns{display:flex; gap:6px}\n  .candBtns button{flex:1; display:inline-flex; align-items:center; justify-content:center; gap:5px; font:inherit; font-size:11.5px; font-weight:600; border-radius:6px; padding:6px 0; cursor:pointer}\n  .candBtns button:disabled{opacity:.45; cursor:default}\n  .candReg{background:var(--accent); color:#fff; border:none}\n  .candReg:hover{filter:brightness(1.06)}\n  .candOpen{background:var(--bg); color:var(--accent); border:1px solid var(--accent)}\n  .candOpen:hover{filter:brightness(1.03)}\n<\/style>\n<\/head>\n<body>\n<header>\n  <img src=\"icons/icon32.png\" alt=\"\">\n  <span class=\"name\">Paper Library Connector<\/span>\n<\/header>\n<div class=\"tabs\">\n  <button type=\"button\" id=\"tabAdd\" class=\"tab\"><\/button>\n  <button type=\"button\" id=\"tabFind\" class=\"tab\"><\/button>\n<\/div>\n<div id=\"body\">\n  <div id=\"paneAdd\" class=\"pane\">\n    <div id=\"status\"><\/div>\n    <p id=\"paperTitle\"><\/p>\n    <p id=\"paperMeta\"><\/p>\n    <div id=\"savedFolders\"><\/div>\n    <div id=\"warn\" style=\"display:none\"><\/div>\n    <div id=\"destLib\" style=\"display:none\"><\/div>\n    <div class=\"sectionLabel\" id=\"foldersLabel\"><\/div>\n    <div class=\"listTools\">\n      <input type=\"search\" id=\"collSearch\" class=\"miniSearch\">\n      <button type=\"button\" id=\"collExpandAll\" class=\"miniBtn\"><\/button>\n      <button type=\"button\" id=\"collNewBtn\" class=\"miniBtn\"><\/button>\n    <\/div>\n    <div id=\"collNewForm\" class=\"newForm\" style=\"display:none\">\n      <input type=\"text\" id=\"collNewName\">\n      <select id=\"collNewParent\"><\/select>\n      <button type=\"button\" id=\"collNewAdd\" class=\"addBtn\"><\/button>\n    <\/div>\n    <div id=\"folders\"><\/div>\n    <div class=\"sectionLabel\" id=\"tagsLabel\"><\/div>\n    <div class=\"listTools\">\n      <input type=\"search\" id=\"tagSearch\" class=\"miniSearch\">\n      <button type=\"button\" id=\"tagNewBtn\" class=\"miniBtn\"><\/button>\n    <\/div>\n    <div id=\"tagNewForm\" class=\"newForm\" style=\"display:none\">\n      <input type=\"text\" id=\"tagNewName\">\n      <button type=\"button\" id=\"tagNewAdd\" class=\"addBtn\"><\/button>\n    <\/div>\n    <div id=\"tags\"><\/div>\n    <div id=\"imgSection\" class=\"imgSection\" style=\"display:none\">\n      <div class=\"sectionLabel\" id=\"imgLabel\"><\/div>\n      <div class=\"imgBox\">\n        <div class=\"imgPreviewWrap\">\n          <img id=\"imgPreview\" alt=\"\">\n          <div id=\"imgEmpty\" class=\"imgEmpty\"><\/div>\n        <\/div>\n        <div class=\"imgControls\">\n          <button type=\"button\" id=\"imgPrev\" class=\"imgNav\" title=\"\">◀<\/button>\n          <span id=\"imgCount\" class=\"imgCount\"><\/span>\n          <button type=\"button\" id=\"imgNext\" class=\"imgNav\" title=\"\">▶<\/button>\n          <button type=\"button\" id=\"imgPick\" class=\"imgBtn\"><\/button>\n          <button type=\"button\" id=\"imgPaste\" class=\"imgBtn\"><\/button>\n          <button type=\"button\" id=\"imgClear\" class=\"imgBtn ghost\"><\/button>\n          <input type=\"file\" id=\"imgFile\" accept=\"image/*\" style=\"display:none\">\n        <\/div>\n        <div id=\"imgHint\" class=\"imgHint\"><\/div>\n        <label class=\"imgIncludeRow\"><input type=\"checkbox\" id=\"imgInclude\"><span id=\"imgIncludeLabel\"><\/span><\/label>\n      <\/div>\n    <\/div>\n    <label id=\"pdfRow\" class=\"pdfRow\"><input type=\"checkbox\" id=\"fetchPdf\"><span id=\"fetchPdfLabel\"><\/span><\/label>\n    <button id=\"save\"><\/button>\n    <p id=\"note\"><\/p>\n  <\/div>\n  <div id=\"paneFind\" class=\"pane\" style=\"display:none\">\n    <p id=\"findHint\" class=\"findHint\"><\/p>\n    <input type=\"text\" id=\"findJournal\" class=\"findInput\" list=\"findJournalList\" autocomplete=\"off\">\n    <datalist id=\"findJournalList\"><\/datalist>\n    <div class=\"findGrid\">\n      <input type=\"text\" id=\"findYear\" inputmode=\"numeric\">\n      <input type=\"text\" id=\"findVolume\">\n      <input type=\"text\" id=\"findPage\">\n    <\/div>\n    <input type=\"text\" id=\"findExtra\" class=\"findInput\">\n    <button type=\"button\" id=\"findGo\" class=\"addBtn\"><\/button>\n    <div id=\"findStatus\" class=\"findStatus\"><\/div>\n    <div id=\"findResults\" class=\"findResults\"><\/div>\n  <\/div>\n<\/div>\n<script src=\"popup.js\"><\/script>\n<\/body>\n<\/html>\n"},
-  "popup.js": {text: "// Popup: extracts the paper on the active tab, shows saved/queued status and\n// the collection tree for the chosen destination library, and queues the save.\n\n// Small self-contained icon set (no external font/CDN — extension pages can't\n// fetch remote resources). Stroke-only so currentColor picks up each button's\n// own text color in both light and dark.\nfunction svgIcon(inner) {\n  return `<svg class=\"btnIcon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\">${inner}<\/svg>`;\n}\nconst ICON = {\n  plus: svgIcon('<line x1=\"12\" y1=\"5\" x2=\"12\" y2=\"19\"/><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/>'),\n  check: svgIcon('<polyline points=\"20 6 9 17 4 12\"/>'),\n  search: svgIcon('<circle cx=\"11\" cy=\"11\" r=\"7\"/><line x1=\"21\" y1=\"21\" x2=\"16.65\" y2=\"16.65\"/>'),\n  bookmark: svgIcon('<path d=\"M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z\"/>'),\n  chevronsDown: svgIcon('<polyline points=\"7 13 12 18 17 13\"/><polyline points=\"7 6 12 11 17 6\"/>'),\n  chevronsUp: svgIcon('<polyline points=\"17 11 12 6 7 11\"/><polyline points=\"17 18 12 13 7 18\"/>'),\n  externalLink: svgIcon('<path d=\"M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6\"/><polyline points=\"15 3 21 3 21 9\"/><line x1=\"10\" y1=\"14\" x2=\"21\" y2=\"3\"/>'),\n  // same path data as the main app's ICONS.folder / ICONS.tag, for visual parity\n  folder: svgIcon('<path d=\"M4 19.5A1.5 1.5 0 0 1 2.5 18V6A1.5 1.5 0 0 1 4 4.5h4.3a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h6.6A1.5 1.5 0 0 1 21 8.5V18a1.5 1.5 0 0 1-1.5 1.5z\"/>'),\n  tag: svgIcon('<path d=\"M4 4.5h6l9.5 9.5a1.8 1.8 0 0 1 0 2.5l-3.5 3.5a1.8 1.8 0 0 1-2.5 0L4 10.5z\"/><path d=\"M7.5 8h.01\"/>'),\n};\nfunction withIcon(icon, text) { return icon + `<span>${esc(text)}<\/span>`; }\n\nconst JA = (navigator.language || '').toLowerCase().startsWith('ja');\nconst T = JA ? {\n  saved: '✓ ライブラリに保存済み',\n  queued: '… 取り込み待ち',\n  notSaved: '未登録',\n  noPaper: 'このページから論文情報を見つけられませんでした。DOI 付きの論文ページで試してください。',\n  savedIn: (names) => `所属コレクション: ${names}`,\n  savedNoFolder: '所属コレクション: なし（未分類）',\n  destLib: '保存先ライブラリ',\n  folders: '入れるコレクション（複数選択可）',\n  noFolders: 'コレクションはまだありません（未分類として保存されます）',\n  tags: '付けるタグ（複数選択可）',\n  noTags: 'タグはまだありません',\n  searchColl: 'コレクションを検索', searchTag: 'タグを検索', newColl: '＋新規', newTag: '＋新規',\n  collName: '新しいコレクション名', tagName: '新しいタグ名', parentTop: 'トップ（親なし）', addBtn: '追加',\n  expandAll: 'すべて開く', collapseAll: 'すべて閉じる', noMatch: '一致するものがありません', newBadge: '新規',\n  tabAdd: '論文を追加する', tabFind: '論文を探す',\n  findHint: '雑誌・年・巻・ページなどから論文を検索します。見つかった論文は「登録」でライブラリに追加、「開く」でそのページを開きます。',\n  findRegister: '登録', findOpen: '開く',\n  findJournalPh: '雑誌名（略称可）', findYearPh: '年', findVolumePh: '巻', findPagePh: 'ページ',\n  findExtraPh: '著者・タイトル・DOI（任意）', findGo: '検索',\n  findSearching: '検索中…', findNone: '該当する文献が見つかりませんでした', findNeedInput: '雑誌・年・巻・ページ・著者などを入力してください',\n  findError: '検索に失敗しました', findExact: '巻・ページ一致', findPicked: '文献を読み込みました。コレクション／タグを選んで保存してください。',\n  imgLabel: '取り込む画像（グラフィカルアブストラクト）',\n  imgInclude: 'この画像を取り込む',\n  imgPick: 'ファイルから選択',\n  imgPaste: 'クリップボードから貼り付け',\n  imgClear: '画像なし',\n  imgPrevTitle: '前の候補',\n  imgNextTitle: '次の候補',\n  imgLoading: '読み込み中…',\n  imgNone: 'このページから画像を検出できませんでした。「ファイルから選択」で指定できます。',\n  imgCount: (i, n) => `候補 ${i}/${n}`,\n  imgManualLabel: '選択したファイル',\n  imgFetchFail: 'この画像は自動取得できませんでした。プレビューは表示されますが、確実に取り込むには「ファイルから選択」で保存し直してください。',\n  imgPasteNone: 'クリップボードに画像がありません。画像をコピーしてから再度お試しください。',\n  imgPasteFail: 'クリップボード画像を読み取れませんでした。画像をコピーして、Ctrl/Cmd+V でも貼り付けできます。',\n  imgTooLarge: '画像が大きすぎます（8 MB 以下の画像を指定してください）。',\n  fetchPdf: 'オープンアクセスの PDF も自動取得する',\n  saveRoot: 'コレクションに入れずに保存（未分類）',\n  saveTo: (names) => `「${names}」に保存`,\n  addTo: (names) => `「${names}」に追加`,\n  uncat: '未分類',\n  openApp: 'Paper Library を開いて取り込む',\n  // after a save\n  doneOpen: (dest) => `保存しました → ${dest}。開いている Paper Library に取り込まれます。`,\n  doneClosed: (dest) => `保存しました → ${dest}。下のボタンを押すか、次に Paper Library を開くと取り込まれます。`,\n  doneNoUrl: (dest) => `保存しました → ${dest}。次に Paper Library を開くと取り込まれます。`,\n  // when the paper is already queued (popup reopened)\n  pendingOpen: 'この論文は取り込み待ちです。開いている Paper Library に取り込まれます。',\n  pendingClosed: 'この論文は取り込み待ちです。下のボタンを押すか、次に Paper Library を開くと取り込まれます。',\n  pendingNoUrl: 'この論文は取り込み待ちです。次に Paper Library を開くと取り込まれます。',\n  needSync: 'まだライブラリと同期していません。Paper Library をライブラリフォルダを開いた状態で一度表示すると、保存先ライブラリ・コレクション一覧・保存済み判定が使えるようになります（保存自体は今でも可能です）。',\n  restricted: 'このページでは拡張機能が動作できません。',\n} : {\n  saved: '✓ In your library',\n  queued: '… Pending import',\n  notSaved: 'Not in library',\n  noPaper: 'Could not find paper metadata on this page. Try a paper page with a DOI.',\n  savedIn: (names) => `In collections: ${names}`,\n  savedNoFolder: 'In collections: none (uncategorized)',\n  destLib: 'Destination library',\n  folders: 'Put in collections (multi-select)',\n  noFolders: 'No collections yet (saved as uncategorized)',\n  tags: 'Add tags (multi-select)',\n  noTags: 'No tags yet',\n  searchColl: 'Search collections', searchTag: 'Search tags', newColl: '+ New', newTag: '+ New',\n  collName: 'New collection name', tagName: 'New tag name', parentTop: 'Top level', addBtn: 'Add',\n  expandAll: 'Expand all', collapseAll: 'Collapse all', noMatch: 'No matches', newBadge: 'new',\n  tabAdd: 'Add paper', tabFind: 'Find paper',\n  findHint: 'Search for a paper by journal, year, volume, page, etc. Register a match to your library, or just open its page.',\n  findRegister: 'Register', findOpen: 'Open',\n  findJournalPh: 'Journal (abbrev. ok)', findYearPh: 'Year', findVolumePh: 'Vol.', findPagePh: 'Page',\n  findExtraPh: 'Author, title, or DOI (optional)', findGo: 'Search',\n  findSearching: 'Searching…', findNone: 'No matching papers found', findNeedInput: 'Enter a journal, year, volume, page, author, etc.',\n  findError: 'Search failed', findExact: 'vol/page match', findPicked: 'Paper loaded. Pick collections/tags and save.',\n  imgLabel: 'Image to import (graphical abstract)',\n  imgInclude: 'Import this image',\n  imgPick: 'Choose file',\n  imgPaste: 'Paste from clipboard',\n  imgClear: 'No image',\n  imgPrevTitle: 'Previous candidate',\n  imgNextTitle: 'Next candidate',\n  imgLoading: 'Loading…',\n  imgNone: 'No image detected on this page. Use “Choose file” to add one.',\n  imgCount: (i, n) => `Candidate ${i}/${n}`,\n  imgManualLabel: 'Chosen file',\n  imgFetchFail: 'This image could not be fetched automatically. It previews here, but to import it reliably, re-add it with “Choose file”.',\n  imgPasteNone: 'No image is available in the clipboard. Copy an image and try again.',\n  imgPasteFail: 'Could not read an image from the clipboard. Copy an image, then try Ctrl/Cmd+V.',\n  imgTooLarge: 'The image is too large. Choose an image up to 8 MB.',\n  fetchPdf: 'Also fetch the open-access PDF automatically',\n  saveRoot: 'Save without a collection (uncategorized)',\n  saveTo: (names) => `Save to “${names}”`,\n  addTo: (names) => `Add to “${names}”`,\n  uncat: 'uncategorized',\n  openApp: 'Open Paper Library to import',\n  doneOpen: (dest) => `Saved → ${dest}. Importing into the open Paper Library.`,\n  doneClosed: (dest) => `Saved → ${dest}. Press the button below, or it imports next time you open Paper Library.`,\n  doneNoUrl: (dest) => `Saved → ${dest}. It imports next time you open Paper Library.`,\n  pendingOpen: 'This paper is pending import. It will be imported into the open Paper Library.',\n  pendingClosed: 'This paper is pending import. Press the button below, or it imports next time you open Paper Library.',\n  pendingNoUrl: 'This paper is pending import. It imports next time you open Paper Library.',\n  needSync: 'Not synced with your library yet. Open Paper Library once (with your library folder open) to enable the destination-library picker, collection list, and saved-state checks. Saving still works now.',\n  restricted: 'The extension cannot run on this page.',\n};\n\nconst DOI_RE = /10\\.\\d{4,9}\\/[^\\s\"'<>&]+/;\n\n// A few common journals for an instant, offline abbreviation; anything else is\n// refined from CrossRef's short-container-title once it responds.\nconst ABBREV = {\n  'journal of the american chemical society': 'J. Am. Chem. Soc.',\n  'angewandte chemie international edition': 'Angew. Chem. Int. Ed.',\n  'angewandte chemie': 'Angew. Chem.',\n  'chemical science': 'Chem. Sci.',\n  'chemical communications': 'Chem. Commun.',\n  'chemical reviews': 'Chem. Rev.',\n  'chemistry - a european journal': 'Chem. Eur. J.',\n  'chemistry a european journal': 'Chem. Eur. J.',\n  'nature': 'Nature',\n  'nature chemistry': 'Nat. Chem.',\n  'nature communications': 'Nat. Commun.',\n  'nature materials': 'Nat. Mater.',\n  'science': 'Science',\n  'journal of organic chemistry': 'J. Org. Chem.',\n  'organic letters': 'Org. Lett.',\n  'organometallics': 'Organometallics',\n  'inorganic chemistry': 'Inorg. Chem.',\n  'dalton transactions': 'Dalton Trans.',\n  'journal of physical chemistry a': 'J. Phys. Chem. A',\n  'journal of physical chemistry b': 'J. Phys. Chem. B',\n  'journal of physical chemistry c': 'J. Phys. Chem. C',\n  'journal of physical chemistry letters': 'J. Phys. Chem. Lett.',\n  'journal of chemical physics': 'J. Chem. Phys.',\n  'physical review letters': 'Phys. Rev. Lett.',\n  'physical review b': 'Phys. Rev. B',\n  'proceedings of the national academy of sciences': 'Proc. Natl. Acad. Sci. U. S. A.',\n  'advanced materials': 'Adv. Mater.',\n  'acs nano': 'ACS Nano',\n  'journal of the chemical society': 'J. Chem. Soc.',\n};\nfunction abbreviate(journal, journalAbbr) {\n  if (journalAbbr) return journalAbbr;\n  const key = String(journal || '').toLowerCase().replace(/^the\\s+/, '').replace(/[.:]/g, '').replace(/\\s+/g, ' ').trim();\n  return ABBREV[key] || '';\n}\nasync function fetchCrossrefAbbrev(doi) {\n  try {\n    const r = await fetch('https://api.crossref.org/works/' + encodeURIComponent(doi) + '?select=short-container-title');\n    if (!r.ok) return '';\n    const m = (await r.json()).message || {};\n    return (m['short-container-title'] && m['short-container-title'][0]) || '';\n  } catch (e) { return ''; }\n}\n\n// --- \"find a paper by citation\" (journal / year / volume / page / author…) ---\n// The popup can't touch the library folder, so a found paper flows through the\n// same save queue as a page save. CrossRef is CORS-enabled, so no host\n// permission is needed.\nconst CR_SELECT = 'DOI,title,container-title,short-container-title,issued,author,volume,issue,page,type,URL,abstract';\nfunction crossrefToMeta(m) {\n  if (!m) return null;\n  const authors = (m.author || []).map(a => {\n    const fam = String(a.family || '').trim(), giv = String(a.given || '').trim();\n    return fam ? (giv ? fam + ', ' + giv : fam) : String(a.name || '').trim();\n  }).filter(Boolean);\n  const dp = m.issued && m.issued['date-parts'] && m.issued['date-parts'][0];\n  const year = (dp && dp[0]) || '';\n  const abbr = (m['short-container-title'] && m['short-container-title'][0]) || '';\n  const full = (m['container-title'] && m['container-title'][0]) || '';\n  return {\n    url: m.URL || '', doi: String(m.DOI || '').toLowerCase(), arxiv: '',\n    title: (m.title && m.title[0]) || '', authors,\n    // CrossRef only sometimes supplies short-container-title, so results for the\n    // same search would otherwise show a mix of abbreviated and full journal names;\n    // fall back to the offline ABBREV dictionary to keep the \"find\" list consistent.\n    journal: full || abbr, journalAbbr: abbr || abbreviate(full, ''),\n    year: String(year || ''), abstract: String(m.abstract || '').replace(/<[^>]+>/g, '').trim(),\n    image: '', volume: String(m.volume || ''), page: String(m.page || ''),\n  };\n}\nasync function crossrefByDoi(doi) {\n  const r = await fetch('https://api.crossref.org/works/' + encodeURIComponent(doi) + '?select=' + encodeURIComponent(CR_SELECT));\n  if (!r.ok) return null;\n  return crossrefToMeta(((await r.json()) || {}).message);\n}\nconst firstPageOf = (p) => String(p || '').split(/[-–—]/)[0].trim();\nasync function crossrefFindByFields(f) {\n  const parts = [f.journal, f.year, f.volume, f.page, f.extra].map(s => String(s || '').trim()).filter(Boolean);\n  if (!parts.length) return [];\n  const url = 'https://api.crossref.org/works?rows=10&select=' + encodeURIComponent(CR_SELECT) +\n    '&query.bibliographic=' + encodeURIComponent(parts.join(' '));\n  const r = await fetch(url);\n  if (!r.ok) throw new Error('CrossRef HTTP ' + r.status);\n  const items = (((await r.json()).message) || {}).items || [];\n  const cands = items.map(crossrefToMeta).filter(Boolean);\n  // Mark (and float up) exact volume + first-page hits, mirroring the app's\n  // ACS-URL resolver, so a fully specified citation lands on the right paper.\n  const vol = String(f.volume || '').trim(), pg = firstPageOf(f.page);\n  cands.forEach(c => { c._exact = !!(vol && pg && String(c.volume) === vol && firstPageOf(c.page) === pg); });\n  cands.sort((a, b) => (b._exact ? 1 : 0) - (a._exact ? 1 : 0));\n  return cands;\n}\n\n// ACS-style author list: \"Family, F. M.\" joined by \"; \" (matches the app).\nfunction acsAuthors(authors) {\n  return (authors || []).map(a => {\n    const s = String(a).trim();\n    if (!s) return '';\n    let family, given;\n    if (s.includes(',')) { const p = s.split(','); family = p[0].trim(); given = p.slice(1).join(',').trim(); }\n    else { const p = s.split(/\\s+/); family = p.pop() || ''; given = p.join(' '); }\n    const ini = given.split(/[\\s.\\-]+/).filter(Boolean).map(w => w[0].toUpperCase() + '.').join(' ');\n    return ini ? `${family}, ${ini}` : family;\n  }).filter(Boolean);\n}\n// ACS-style meta line: \"Doe, J.; Smith, A. B. Chem. Sci. 2026\" (no DOI).\nfunction acsMetaLine(authors, venue, year, cap) {\n  const names = acsAuthors(authors);\n  let auth = '';\n  if (names.length) {\n    const many = cap && names.length > cap;\n    auth = (many ? names.slice(0, cap) : names).join('; ');\n    if (many) auth += ' et al.';\n    if (!/\\.$/.test(auth)) auth += '.'; // period before the venue\n  }\n  return [auth, venue, year].filter(Boolean).join(' ');\n}\n\n// Injected into the page — must be self-contained.\nfunction extractPageMetadata() {\n  const doiRe = /10\\.\\d{4,9}\\/[^\\s\"'<>&]+/;\n  const one = (n) => {\n    const el = document.querySelector(`meta[name=\"${n}\" i], meta[property=\"${n}\" i]`);\n    return el && el.content ? el.content.trim() : '';\n  };\n  const all = (n) => Array.from(document.querySelectorAll(`meta[name=\"${n}\" i]`))\n    .map(e => (e.content || '').trim()).filter(Boolean);\n  let doi = '';\n  for (const n of ['citation_doi', 'dc.identifier', 'dc.identifier.doi', 'prism.doi', 'doi']) {\n    const m = one(n).match(doiRe);\n    if (m) { doi = m[0]; break; }\n  }\n  if (!doi) {\n    try {\n      const m = decodeURIComponent(location.href).match(doiRe);\n      if (m) doi = m[0].replace(/[.,;)\\]]+$/, '');\n    } catch (e) { /* malformed escape */ }\n  }\n  if (!doi) {\n    const a = document.querySelector('a[href*=\"doi.org/10.\"]');\n    if (a) {\n      const m = decodeURIComponent(a.href).match(doiRe);\n      if (m) doi = m[0];\n    }\n  }\n  let arxiv = one('citation_arxiv_id');\n  if (!arxiv) {\n    const m = location.href.match(/arxiv\\.org\\/(?:abs|pdf)\\/([a-z\\-]+(?:\\.[A-Z]{2})?\\/\\d{7}|\\d{4}\\.\\d{4,5})/i);\n    if (m) arxiv = m[1];\n  }\n  if (!arxiv && doi) {\n    const m = doi.match(/^10\\.48550\\/arxiv\\.(.+)$/i);\n    if (m) { arxiv = m[1]; doi = ''; }\n  }\n  const yr = (one('citation_publication_date') || one('citation_date') ||\n    one('citation_online_date') || one('prism.publicationdate')).match(/\\d{4}/);\n  return {\n    url: location.href.replace(/#.*$/, ''),\n    doi, arxiv,\n    title: one('citation_title') || one('og:title') || document.title || '',\n    authors: all('citation_author'),\n    journal: one('citation_journal_title') || one('og:site_name') || '',\n    journalAbbr: one('citation_journal_abbrev') || '',\n    year: yr ? yr[0] : '',\n    abstract: one('citation_abstract') || one('dcterms.abstract') || one('dc.description') || '',\n    // graphical abstract / TOC image — chemistry publishers expose it as og:image\n    image: one('og:image') || one('citation_image') || one('twitter:image') || '',\n  };\n}\n\n// Injected into the page to fetch the graphical-abstract image from the page's own\n// origin (activeTab grants this on the user's save click). Returns a data URL so the\n// bytes travel through chrome.storage to Paper Library, which writes them to disk.\nasync function fetchImageAsDataUrl(url) {\n  try {\n    const r = await fetch(url);\n    if (!r.ok) return null;\n    const b = await r.blob();\n    if (!/^image\\//.test(b.type || '') || b.size > 8 * 1024 * 1024) return null;\n    return await new Promise((res) => {\n      const fr = new FileReader();\n      fr.onload = () => res({ dataUrl: fr.result, type: b.type });\n      fr.onerror = () => res(null);\n      fr.readAsDataURL(b);\n    });\n  } catch (e) { return null; }\n}\n\n// Injected into the page: collect likely graphical-abstract / TOC image URLs,\n// ranked best-first. Publisher og:image is unreliable (ACS sometimes serves a\n// challenge page; Nature's is often a social card), so we also scan the DOM for\n// real figures and rank by publisher-specific hints and rendered size. The popup\n// then previews each so the user can pick the right one before importing.\nfunction collectImageCandidates() {\n  const abs = (u) => { try { return new URL(u, location.href).href; } catch (e) { return ''; } };\n  const out = [];\n  const seen = new Set();\n  const push = (url, score) => {\n    const u = abs(url);\n    if (!u || !/^https?:/i.test(u) || seen.has(u)) return;\n    seen.add(u); out.push({ url: u, score });\n  };\n  const metaC = (n) => {\n    const el = document.querySelector(`meta[name=\"${n}\" i], meta[property=\"${n}\" i]`);\n    return el && el.content ? el.content.trim() : '';\n  };\n  // DOM figures — most reliable for the actual graphical abstract.\n  Array.from(document.images || []).forEach((img) => {\n    const src = img.currentSrc || img.src || img.getAttribute('data-src') || '';\n    if (!src) return;\n    const w = img.naturalWidth || 0, h = img.naturalHeight || 0;\n    const container = img.closest('figure, .figure, [class*=\"abstract\" i], [class*=\"graphic\" i]');\n    const clsOf = (el) => { const c = el && el.className; return typeof c === 'string' ? c : (c && c.baseVal) || ''; };\n    const hay = (src + ' ' + (img.alt || '') + ' ' + (img.id || '') + ' ' + clsOf(img) + ' ' + clsOf(container) + ' ' + (container ? container.id : '')).toLowerCase();\n    let score = 0;\n    if (/abstract|graphical|\\btoc\\b|scheme|\\bga\\b|synopsis/.test(hay)) score += 1000;\n    if (/\\/asset\\/images\\/|_abstract|mediumimage|largeimage|\\/cms\\/.*asset/.test(hay)) score += 500; // ACS\n    if (/springernature|springer-static|media\\.nature|\\/lw\\d{3}|\\/full\\//.test(hay)) score += 400;    // Nature/Springer\n    if (/wiley|onlinelibrary|\\/asset\\/.*\\.(png|jpe?g|gif)/.test(hay)) score += 250;                    // Wiley\n    if (/logo|icon|sprite|avatar|orcid|badge|button/.test(hay)) score -= 900;\n    if (w && h) {\n      if (w < 80 || h < 80) return;              // decorative / icon-sized\n      score += Math.min((w * h) / 1500, 600);    // bigger rendered image = better\n    }\n    // Keep only images that either loaded at a usable size or match a strong hint.\n    if ((w >= 80 && h >= 80) || score >= 400) push(src, score);\n  });\n  // Meta fallbacks (lower priority than a well-scored DOM figure).\n  push(metaC('citation_image'), 300);\n  push(metaC('og:image'), 260);\n  push(metaC('og:image:secure_url'), 255);\n  push(metaC('twitter:image'), 200);\n  push(metaC('twitter:image:src'), 195);\n  out.sort((a, b) => b.score - a.score);\n  return out.slice(0, 10).map((o) => o.url);\n}\n\n// Fallback when scripting is blocked (PDF viewer, chrome:// pages…).\nfunction metaFromUrl(url, title) {\n  const out = { url: String(url || ''), doi: '', arxiv: '', title: String(title || ''), authors: [], journal: '', journalAbbr: '', year: '', abstract: '' };\n  try {\n    const dec = decodeURIComponent(out.url);\n    const a = dec.match(/arxiv\\.org\\/(?:abs|pdf)\\/([a-z\\-]+(?:\\.[A-Z]{2})?\\/\\d{7}|\\d{4}\\.\\d{4,5})/i);\n    if (a) out.arxiv = a[1];\n    else {\n      const m = dec.match(DOI_RE);\n      if (m) out.doi = m[0].replace(/[.,;)\\]]+$/, '');\n    }\n  } catch (e) { /* ignore */ }\n  return out;\n}\n\nfunction normKeys(meta) {\n  return {\n    doiKey: meta.doi ? 'doi:' + meta.doi.toLowerCase() : '',\n    arxivKey: meta.arxiv ? 'arxiv:' + String(meta.arxiv).toLowerCase().replace(/v\\d+$/, '') : '',\n  };\n}\n\nfunction folderTree(collections) {\n  const byParent = new Map();\n  (collections || []).forEach(c => {\n    const k = c.parent || '';\n    if (!byParent.has(k)) byParent.set(k, []);\n    byParent.get(k).push(c);\n  });\n  for (const arr of byParent.values()) arr.sort((a, b) => a.name.localeCompare(b.name, JA ? 'ja' : 'en'));\n  const out = [];\n  (function walk(parent, depth) {\n    (byParent.get(parent) || []).forEach(c => {\n      out.push({ id: c.id, name: c.name, depth });\n      walk(c.id, depth + 1);\n    });\n  })('', 0);\n  return out;\n}\n\nconst $ = (s) => document.querySelector(s);\nfunction esc(s) {\n  return String(s).replace(/[&<>\"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', \"'\": '&#39;' }[c]));\n}\n\nasync function init() {\n  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });\n  let meta = null;\n  if (tab && /^(https?|file):/.test(tab.url || '')) {\n    try {\n      const res = await chrome.scripting.executeScript({ target: { tabId: tab.id }, func: extractPageMetadata });\n      meta = res && res[0] && res[0].result;\n    } catch (e) { /* injection blocked (PDF viewer etc.) */ }\n  }\n  if (!meta) meta = metaFromUrl(tab && tab.url, tab && tab.title);\n\n  // The \"active paper\" (what Save will queue) is normally the current tab's page,\n  // but the citation search below can replace it with a looked-up paper. These\n  // are recomputed by refreshPaper() whenever the active paper changes.\n  let doiKey = '', arxivKey = '', identifiable = false, activeFromTab = true;\n\n  // ---- graphical-abstract image picker (candidates + preview + manual file) ----\n  // imgCands: URLs found on the page (best first). imgCache: url → dataUrl (or\n  // null once a fetch failed). imgManual: a data URL the user chose from a file.\n  // imgIdx: index into imgCands, or -1 when showing the manual file.\n  let imgCands = [], imgIdx = -1, imgManual = '', imgManualType = '';\n  const imgCache = new Map();\n\n  // Fetch the bytes for a candidate URL as a data URL. Same-origin images (ACS\n  // graphical abstracts, Wiley) resolve through a page-context fetch; CORS-enabled\n  // CDNs (many Nature/Springer images) resolve by drawing into a canvas.\n  async function candidateDataUrl(url) {\n    if (imgCache.has(url)) return imgCache.get(url);\n    let dataUrl = null;\n    if (activeFromTab && tab && tab.id != null && /^https?:/.test(tab.url || '')) {\n      try {\n        const res = await chrome.scripting.executeScript({ target: { tabId: tab.id }, func: fetchImageAsDataUrl, args: [url] });\n        const got = res && res[0] && res[0].result;\n        if (got && got.dataUrl) dataUrl = got.dataUrl;\n      } catch (e) { /* injection blocked / CORS → try canvas */ }\n    }\n    if (!dataUrl) {\n      try {\n        dataUrl = await new Promise((resolve, reject) => {\n          const im = new Image();\n          im.crossOrigin = 'anonymous';\n          im.onload = () => {\n            try {\n              const c = document.createElement('canvas');\n              c.width = im.naturalWidth; c.height = im.naturalHeight;\n              c.getContext('2d').drawImage(im, 0, 0);\n              resolve(c.toDataURL('image/png'));\n            } catch (err) { reject(err); }\n          };\n          im.onerror = reject;\n          im.src = url;\n        });\n      } catch (e) { dataUrl = null; }\n    }\n    imgCache.set(url, dataUrl);\n    return dataUrl;\n  }\n\n  // The data URL that Save will queue (candidate bytes, or the manual file), or ''.\n  function selectedImageData() {\n    if (imgIdx === -1) return imgManual || '';\n    const url = imgCands[imgIdx];\n    return (url && imgCache.get(url)) || '';\n  }\n\n  function setManualImage(blob) {\n    if (!blob || !/^image\\//i.test(blob.type || '')) return false;\n    if (blob.size > 8 * 1024 * 1024) {\n      $('#imgHint').textContent = T.imgTooLarge;\n      $('#imgHint').style.display = 'block';\n      return false;\n    }\n    const fr = new FileReader();\n    fr.onload = () => {\n      imgManual = fr.result;\n      imgManualType = blob.type || 'image/png';\n      imgIdx = -1;\n      showImgAt();\n    };\n    fr.readAsDataURL(blob);\n    return true;\n  }\n\n  async function pasteImageFromClipboard() {\n    try {\n      if (!navigator.clipboard || !navigator.clipboard.read) throw new Error('clipboard-read-unavailable');\n      const items = await navigator.clipboard.read();\n      for (const item of items) {\n        const type = item.types.find(t => /^image\\//i.test(t));\n        if (type) return setManualImage(await item.getType(type));\n      }\n      $('#imgHint').textContent = T.imgPasteNone;\n      $('#imgHint').style.display = 'block';\n      return false;\n    } catch (e) {\n      $('#imgHint').textContent = T.imgPasteFail;\n      $('#imgHint').style.display = 'block';\n      return false;\n    }\n  }\n\n  function renderImgControls() {\n    const total = imgCands.length + (imgManual ? 1 : 0);\n    const onManual = imgIdx === -1 && imgManual;\n    const pos = onManual ? total : (imgIdx >= 0 ? imgIdx + 1 : 0);\n    $('#imgCount').textContent = total ? (onManual ? T.imgManualLabel : T.imgCount(pos, imgCands.length)) : '';\n    const hasNav = imgCands.length > 1 || (imgManual && imgCands.length >= 1);\n    $('#imgPrev').disabled = !hasNav;\n    $('#imgNext').disabled = !hasNav;\n    $('#imgClear').style.display = (imgManual || imgCands.length) ? 'inline-flex' : 'none';\n  }\n\n  async function showImgAt() {\n    const prev = $('#imgPreview'), empty = $('#imgEmpty'), hint = $('#imgHint');\n    hint.style.display = 'none';\n    renderImgControls();\n    if (imgIdx === -1) {\n      // manual file (already a data URL) or nothing\n      if (imgManual) { prev.src = imgManual; prev.style.display = 'block'; empty.style.display = 'none'; }\n      else { prev.style.display = 'none'; empty.style.display = 'block'; empty.textContent = T.imgNone; }\n      $('#imgInclude').checked = !!imgManual;\n      return;\n    }\n    const url = imgCands[imgIdx];\n    empty.style.display = 'none';\n    prev.style.display = 'none';\n    $('#imgEmpty').textContent = T.imgLoading; $('#imgEmpty').style.display = 'block';\n    const dataUrl = await candidateDataUrl(url);\n    // The active candidate may have changed while we awaited; re-check.\n    if (imgIdx < 0 || imgCands[imgIdx] !== url) return;\n    empty.style.display = 'none';\n    // Preview from bytes when we have them, else straight from the URL so the user\n    // can still see (and decide about) images we could not fetch.\n    prev.src = dataUrl || url;\n    prev.style.display = 'block';\n    $('#imgInclude').checked = true;\n    if (!dataUrl) { hint.textContent = T.imgFetchFail; hint.style.display = 'block'; }\n  }\n\n  function imgStep(delta) {\n    // Order: candidates [0..n-1] then the manual file (index -1) if present.\n    const items = imgCands.map((_, i) => i).concat(imgManual ? [-1] : []);\n    if (!items.length) return;\n    const cur = items.indexOf(imgIdx);\n    const next = items[(cur + delta + items.length) % items.length];\n    imgIdx = next;\n    showImgAt();\n  }\n\n  // Detect candidates for the current tab's page and show the first one.\n  async function loadImageCandidates() {\n    imgCands = []; imgIdx = -1; imgManual = ''; imgManualType = ''; imgCache.clear();\n    if (activeFromTab && tab && tab.id != null && /^https?:/.test(tab.url || '')) {\n      try {\n        const res = await chrome.scripting.executeScript({ target: { tabId: tab.id }, func: collectImageCandidates });\n        imgCands = (res && res[0] && res[0].result) || [];\n      } catch (e) { imgCands = []; }\n    }\n    // Fold in the meta og:image the page extraction already found, if new.\n    if (meta.image && !imgCands.includes(meta.image)) imgCands.push(meta.image);\n    if (imgCands.length) imgIdx = 0;\n    else if (imgManual) imgIdx = -1;\n    showImgAt();\n  }\n\n  // ---- title + ACS-style meta line (authors, journal abbrev, year; no DOI) ----\n  function renderHeader() {\n    const venueOf = (journal) => journal || (meta.arxiv ? 'arXiv:' + meta.arxiv : '');\n    const renderMeta = (journal) => {\n      $('#paperMeta').textContent = acsMetaLine(meta.authors, venueOf(journal), meta.year, 10);\n    };\n    $('#paperTitle').textContent = meta.title || meta.doi || meta.arxiv || '';\n    const abbr = abbreviate(meta.journal, meta.journalAbbr);\n    renderMeta(abbr || meta.journal);\n    if (!abbr && meta.doi && meta.journal) {\n      fetchCrossrefAbbrev(meta.doi).then(a => { if (a) renderMeta(a); });\n    }\n  }\n\n  // ---- load libraries (with fallback from the old single-snapshot shape) ----\n  let { libraries = {}, activeLib, pending = [], appUrl = '' } =\n    await chrome.storage.local.get(['libraries', 'activeLib', 'pending', 'appUrl']);\n  if (!Object.keys(libraries).length) {\n    const { snapshot } = await chrome.storage.local.get('snapshot');\n    if (snapshot && snapshot.persistent) {\n      const id = snapshot.libraryId || snapshot.libraryName || 'default';\n      libraries = { [id]: { id, name: snapshot.libraryName || '', collections: snapshot.collections || [], tags: snapshot.tags || [], journals: snapshot.journals || [], saved: snapshot.saved || {} } };\n      if (!activeLib) activeLib = id;\n    }\n  }\n  const libIds = Object.keys(libraries);\n  if (!activeLib || !libraries[activeLib]) activeLib = libIds[0];\n  const currentLib = () => libraries[activeLib] || null;\n\n  // ---- \"open Paper Library to import\" helpers ----\n  // The library folder can only be written by the Paper Library page (browser\n  // security — an extension can't write to your chosen folder). So a save is\n  // captured here and flushed when the page is open; offer to open it.\n  async function appTabState() {\n    const url = (currentLib() && currentLib().url) || appUrl || '';\n    if (!url) return { url: '', open: false };\n    try {\n      const base = url.split('#')[0];\n      const tabs = await chrome.tabs.query({});\n      return { url, open: tabs.some(t => t.url && t.url.split('#')[0] === base) };\n    } catch (e) { return { url, open: false }; }\n  }\n  function setNote(text, url) {\n    $('#note').className = 'ok';\n    $('#note').textContent = text;\n    if (url) {\n      const b = document.createElement('button');\n      b.textContent = T.openApp;\n      b.addEventListener('click', () => { chrome.tabs.create({ url }); window.close(); });\n      $('#note').appendChild(document.createElement('br'));\n      $('#note').appendChild(b);\n    }\n  }\n  async function showImportHint(msgOpen, msgClosed, msgNoUrl) {\n    const { url, open } = await appTabState();\n    if (open) setNote(msgOpen, '');\n    else if (url) setNote(msgClosed, url);\n    else setNote(msgNoUrl, '');\n  }\n\n  if (!libIds.length) { $('#warn').style.display = 'block'; $('#warn').textContent = T.needSync; }\n\n  // ---- destination-library picker ----\n  // Always a real <select> — even with a single known library — so the\n  // destination is a control the user can change, not static text. It fills\n  // in with more options as the extension learns about more libraries (each\n  // Paper Library page you've opened posts its own snapshot).\n  const renderDestLib = () => {\n    if (!libIds.length) { $('#destLib').style.display = 'none'; return; }\n    $('#destLib').style.display = 'block';\n    const opts = libIds.map(id =>\n      `<option value=\"${esc(id)}\"${id === activeLib ? ' selected' : ''}>${esc(libraries[id].name || id)}<\/option>`).join('');\n    $('#destLib').innerHTML = `<div class=\"libRow\"><span>${esc(T.destLib)}:<\/span><select id=\"libSel\">${opts}<\/select><\/div>`;\n    $('#libSel').addEventListener('change', async (e) => {\n      activeLib = e.target.value;\n      await chrome.storage.local.set({ activeLib });\n      renderForLibrary(); // collections/saved-state differ per library\n    });\n  };\n\n  // ---- per-library section (status, collections, tags, save button) ----\n  const collName = (id) => {\n    const lib = currentLib();\n    const c = lib && (lib.collections || []).find(x => x.id === id);\n    return c ? c.name : '';\n  };\n  const btn = $('#save');\n\n  // Selection + UI state (source of truth across re-renders from expand/search/new).\n  let checkedColls = new Set();  // collection ids (existing) or 'new:*' (created here)\n  let checkedTags = new Set();   // tag names\n  let expanded = new Set();      // expanded parent collection ids\n  let newColls = [];             // [{id:'new:N', name, parent}] created in the popup\n  let newTags = [];              // new tag names created in the popup\n  let collSearch = '', tagSearch = '';\n  let newCollSeq = 0;\n\n  // existing collections (+ any created here) as flat {id,name,parent,isNew}\n  const collData = () => {\n    const lib = currentLib();\n    const base = ((lib && lib.collections) || []).map(c => ({ id: c.id, name: c.name, parent: c.parent || '', isNew: false }));\n    const all = base.concat(newColls.map(c => ({ id: c.id, name: c.name, parent: c.parent || '', isNew: true })));\n    const byId = new Map(all.map(c => [c.id, c]));\n    const byParent = new Map();\n    all.forEach(c => { const k = c.parent || ''; if (!byParent.has(k)) byParent.set(k, []); byParent.get(k).push(c); });\n    for (const arr of byParent.values()) arr.sort((a, b) => a.name.localeCompare(b.name, JA ? 'ja' : 'en'));\n    return { all, byId, byParent };\n  };\n  // \"/\"-joined name path (used to create a nested collection on the app side)\n  const collPath = (id, sep) => {\n    const { byId } = collData();\n    const names = []; const seen = new Set(); let cur = byId.get(id);\n    while (cur && !seen.has(cur.id)) { seen.add(cur.id); names.unshift(cur.name); cur = cur.parent ? byId.get(cur.parent) : null; }\n    return names.join(sep || '/');\n  };\n  const hasKids = (byParent, id) => (byParent.get(id) || []).length > 0;\n  const checkedCollNames = () => {\n    const { byId } = collData();\n    return Array.from(checkedColls).map(id => { const c = byId.get(id); return c ? c.name : ''; }).filter(Boolean);\n  };\n\n  function renderFolders() {\n    const { all, byId, byParent } = collData();\n    const box = $('#folders');\n    if (!all.length) { box.innerHTML = `<div class=\"none\">${esc(T.noFolders)}<\/div>`; return; }\n    const q = collSearch.trim().toLowerCase();\n    let show = null, auto = null;\n    if (q) {\n      show = new Set(); auto = new Set();\n      all.forEach(c => {\n        if (!c.name.toLowerCase().includes(q)) return;\n        show.add(c.id);\n        let p = c.parent;\n        while (p) { show.add(p); auto.add(p); const pc = byId.get(p); p = pc ? pc.parent : ''; }\n      });\n    }\n    const rows = [];\n    (function walk(parent, depth) {\n      (byParent.get(parent) || []).forEach(c => {\n        if (q && !show.has(c.id)) return;\n        const kids = hasKids(byParent, c.id);\n        const open = q ? auto.has(c.id) : expanded.has(c.id);\n        const twist = kids\n          ? `<span class=\"twist${open ? ' open' : ''}\" data-toggle=\"${esc(c.id)}\">▶<\/span>`\n          : `<span class=\"twist leaf\">▶<\/span>`;\n        const tag = c.isNew ? `<span class=\"newTag\">${esc(T.newBadge)}<\/span>` : '';\n        rows.push(\n          `<div class=\"collRow\" style=\"padding-left:${depth * 13}px\">${twist}` +\n          `<label><input type=\"checkbox\" value=\"${esc(c.id)}\"${checkedColls.has(c.id) ? ' checked' : ''}>` +\n          `<span class=\"cn\">${esc(c.name)}<\/span>${tag}<\/label><\/div>`);\n        if (open) walk(c.id, depth + 1);\n      });\n    })('', 0);\n    box.innerHTML = rows.length ? rows.join('') : `<div class=\"none\">${esc(T.noMatch)}<\/div>`;\n  }\n\n  function renderTags() {\n    const lib = currentLib();\n    const box = $('#tags');\n    const all = Array.from(new Set(((lib && lib.tags) || []).map(String).concat(newTags)))\n      .sort((a, b) => a.localeCompare(b, JA ? 'ja' : 'en'));\n    if (!all.length) { box.innerHTML = `<div class=\"none\">${esc(T.noTags)}<\/div>`; return; }\n    const q = tagSearch.trim().toLowerCase();\n    const shown = q ? all.filter(n => n.toLowerCase().includes(q)) : all;\n    box.innerHTML = shown.length\n      ? shown.map(name => `<label><input type=\"checkbox\" value=\"${esc(name)}\"${checkedTags.has(name) ? ' checked' : ''}>${esc(name)}<\/label>`).join('')\n      : `<div class=\"none\">${esc(T.noMatch)}<\/div>`;\n  }\n\n  // parent picker options for the \"new collection\" form (existing collections only)\n  function renderCollParentOptions() {\n    const { all } = collData();\n    const opts = [`<option value=\"\">${esc(T.parentTop)}<\/option>`].concat(\n      all.filter(c => !c.isNew)\n        .map(c => ({ id: c.id, label: collPath(c.id, ' / ') }))\n        .sort((a, b) => a.label.localeCompare(b.label, JA ? 'ja' : 'en'))\n        .map(c => `<option value=\"${esc(c.id)}\">${esc(c.label)}<\/option>`));\n    $('#collNewParent').innerHTML = opts.join('');\n  }\n\n  function updateExpandAllLabel() {\n    const { all, byParent } = collData();\n    const anyOpen = all.some(c => hasKids(byParent, c.id) && expanded.has(c.id));\n    $('#collExpandAll').innerHTML = anyOpen ? withIcon(ICON.chevronsUp, T.collapseAll) : withIcon(ICON.chevronsDown, T.expandAll);\n  }\n\n  function renderForLibrary() {\n    // fresh per-library selection / UI state\n    checkedColls = new Set(); checkedTags = new Set(); expanded = new Set();\n    newColls = []; newTags = []; collSearch = ''; tagSearch = '';\n    if ($('#collSearch')) $('#collSearch').value = '';\n    if ($('#tagSearch')) $('#tagSearch').value = '';\n    if ($('#collNewForm')) $('#collNewForm').style.display = 'none';\n    if ($('#tagNewForm')) $('#tagNewForm').style.display = 'none';\n\n    const lib = currentLib();\n    const saved = (lib && lib.saved) || {};\n    const savedColls = (doiKey && saved[doiKey]) || (arxivKey && saved[arxivKey]) || null;\n    const isQueued = pending.some(p => {\n      const k = normKeys(p);\n      return (doiKey && k.doiKey === doiKey) || (arxivKey && k.arxivKey === arxivKey);\n    });\n\n    // status chip\n    $('#savedFolders').textContent = '';\n    if (savedColls) {\n      $('#status').innerHTML = `<span class=\"chip saved\">${esc(T.saved)}<\/span>`;\n      const names = (savedColls || []).map(collName).filter(Boolean);\n      $('#savedFolders').textContent = names.length ? T.savedIn(names.join(', ')) : T.savedNoFolder;\n    } else if (isQueued) {\n      $('#status').innerHTML = `<span class=\"chip queued\">${esc(T.queued)}<\/span>`;\n    } else if (identifiable) {\n      $('#status').innerHTML = `<span class=\"chip new\">${esc(T.notSaved)}<\/span>`;\n    } else {\n      $('#status').innerHTML = '';\n    }\n\n    $('#foldersLabel').innerHTML = withIcon(ICON.folder, T.folders);\n    $('#tagsLabel').innerHTML = withIcon(ICON.tag, T.tags);\n    renderCollParentOptions();\n    renderFolders();\n    renderTags();\n    updateExpandAllLabel();\n    // journals already in this library, offered as suggestions in the \"find\" tab\n    const journalList = $('#findJournalList');\n    if (journalList) journalList.innerHTML = ((lib && lib.journals) || []).map(j => `<option value=\"${esc(j)}\"><\/option>`).join('');\n\n    btn.dataset.saved = savedColls ? '1' : '';\n    updateBtn();\n  }\n\n  const updateBtn = () => {\n    const names = checkedCollNames();\n    const label = !names.length ? T.saveRoot : (btn.dataset.saved ? T.addTo : T.saveTo)(names.join('・'));\n    btn.innerHTML = withIcon(ICON.bookmark, label);\n  };\n\n  // ---- wire the collection / tag controls (delegated; survive re-renders) ----\n  $('#collSearch').placeholder = T.searchColl;\n  $('#tagSearch').placeholder = T.searchTag;\n  $('#collNewBtn').innerHTML = withIcon(ICON.plus, T.newColl);\n  $('#tagNewBtn').innerHTML = withIcon(ICON.plus, T.newTag);\n  $('#collNewName').placeholder = T.collName;\n  $('#tagNewName').placeholder = T.tagName;\n  $('#collNewAdd').innerHTML = withIcon(ICON.check, T.addBtn);\n  $('#tagNewAdd').innerHTML = withIcon(ICON.check, T.addBtn);\n\n  $('#folders').addEventListener('click', (e) => {\n    const tw = e.target.closest('.twist');\n    if (!tw || tw.classList.contains('leaf')) return;\n    if (collSearch.trim()) return; // branches auto-expand while searching\n    const id = tw.dataset.toggle;\n    if (expanded.has(id)) expanded.delete(id); else expanded.add(id);\n    renderFolders();\n    updateExpandAllLabel();\n  });\n  $('#folders').addEventListener('change', (e) => {\n    const cb = e.target.closest('input[type=checkbox]');\n    if (!cb) return;\n    if (cb.checked) checkedColls.add(cb.value); else checkedColls.delete(cb.value);\n    updateBtn();\n  });\n  $('#tags').addEventListener('change', (e) => {\n    const cb = e.target.closest('input[type=checkbox]');\n    if (!cb) return;\n    if (cb.checked) checkedTags.add(cb.value); else checkedTags.delete(cb.value);\n  });\n  $('#collSearch').addEventListener('input', (e) => { collSearch = e.target.value; renderFolders(); });\n  $('#tagSearch').addEventListener('input', (e) => { tagSearch = e.target.value; renderTags(); });\n  $('#collExpandAll').addEventListener('click', () => {\n    const { all, byParent } = collData();\n    const anyOpen = all.some(c => hasKids(byParent, c.id) && expanded.has(c.id));\n    expanded = anyOpen ? new Set() : new Set(all.filter(c => hasKids(byParent, c.id)).map(c => c.id));\n    renderFolders();\n    updateExpandAllLabel();\n  });\n\n  const toggleForm = (formSel, focusSel, onOpen) => {\n    const f = $(formSel);\n    const opening = f.style.display === 'none';\n    f.style.display = opening ? 'flex' : 'none';\n    if (opening) { if (onOpen) onOpen(); $(focusSel).focus(); }\n  };\n  $('#collNewBtn').addEventListener('click', () => toggleForm('#collNewForm', '#collNewName', renderCollParentOptions));\n  $('#tagNewBtn').addEventListener('click', () => toggleForm('#tagNewForm', '#tagNewName'));\n\n  const addNewColl = () => {\n    const name = $('#collNewName').value.trim();\n    if (!name) { $('#collNewName').focus(); return; }\n    const parent = $('#collNewParent').value || '';\n    const id = 'new:' + (++newCollSeq);\n    newColls.push({ id, name, parent });\n    checkedColls.add(id);\n    if (parent) expanded.add(parent);\n    $('#collNewName').value = '';\n    collSearch = ''; $('#collSearch').value = '';\n    renderCollParentOptions();\n    renderFolders();\n    updateExpandAllLabel();\n    updateBtn();\n    $('#collNewName').focus();\n  };\n  $('#collNewAdd').addEventListener('click', addNewColl);\n  $('#collNewName').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addNewColl(); } });\n\n  const addNewTag = () => {\n    const name = $('#tagNewName').value.trim();\n    if (!name) { $('#tagNewName').focus(); return; }\n    if (!newTags.includes(name)) newTags.push(name);\n    checkedTags.add(name);\n    $('#tagNewName').value = '';\n    tagSearch = ''; $('#tagSearch').value = '';\n    renderTags();\n    $('#tagNewName').focus();\n  };\n  $('#tagNewAdd').addEventListener('click', addNewTag);\n  $('#tagNewName').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addNewTag(); } });\n\n  renderDestLib();\n\n  // ---- image picker labels + controls ----\n  $('#imgLabel').textContent = T.imgLabel;\n  $('#imgIncludeLabel').textContent = T.imgInclude;\n  $('#imgPick').textContent = T.imgPick;\n  $('#imgPaste').textContent = T.imgPaste;\n  $('#imgClear').textContent = T.imgClear;\n  $('#imgPrev').title = T.imgPrevTitle;\n  $('#imgNext').title = T.imgNextTitle;\n  $('#fetchPdfLabel').textContent = T.fetchPdf;\n  $('#imgPrev').addEventListener('click', () => imgStep(-1));\n  $('#imgNext').addEventListener('click', () => imgStep(1));\n  $('#imgPick').addEventListener('click', () => $('#imgFile').click());\n  $('#imgPaste').addEventListener('click', pasteImageFromClipboard);\n  $('#imgClear').addEventListener('click', () => {\n    // Drop the current selection; just untick \"import\" so nothing is queued.\n    $('#imgInclude').checked = false;\n    $('#imgPreview').style.display = 'none';\n    $('#imgHint').style.display = 'none';\n    $('#imgEmpty').textContent = T.imgNone; $('#imgEmpty').style.display = 'block';\n  });\n  $('#imgFile').addEventListener('change', (e) => {\n    const file = e.target.files && e.target.files[0];\n    if (!file) return;\n    if (!/^image\\//.test(file.type || '')) return;\n    setManualImage(file);\n    e.target.value = '';\n  });\n  document.addEventListener('paste', (e) => {\n    const item = Array.from((e.clipboardData && e.clipboardData.items) || [])\n      .find(x => x.kind === 'file' && /^image\\//i.test(x.type || ''));\n    if (!item) return;\n    const file = item.getAsFile();\n    if (!file || !setManualImage(file)) return;\n    e.preventDefault();\n  });\n\n  btn.addEventListener('click', async () => {\n    btn.disabled = true;\n    // existing collection ids to file into, plus name-paths for any created here\n    const collIds = Array.from(checkedColls).filter(id => !String(id).startsWith('new:'));\n    const newCollections = Array.from(checkedColls)\n      .filter(id => String(id).startsWith('new:')).map(id => collPath(id)).filter(Boolean);\n    const tagNames = Array.from(checkedTags);\n    // Selected graphical-abstract image (candidate bytes or a chosen file), only\n    // when the user left \"Import this image\" checked.\n    let imageData = '', imageType = '';\n    if ($('#imgInclude') && $('#imgInclude').checked) {\n      imageData = selectedImageData();\n      if (imgIdx === -1) imageType = imgManualType || '';\n    }\n    const fetchPdf = !!($('#fetchPdf') && $('#fetchPdf').checked);\n    const item = {\n      id: (crypto.randomUUID && crypto.randomUUID()) || String(Date.now()) + Math.random().toString(36).slice(2),\n      doi: meta.doi || '', arxiv: meta.arxiv || '', url: meta.url || '',\n      title: meta.title || '', authors: meta.authors || [], journal: meta.journal || '',\n      year: meta.year || '', abstract: meta.abstract || '',\n      collections: collIds, newCollections, tags: tagNames, imageData, imageType, fetchPdf, targetLib: activeLib || '', savedAt: Date.now(),\n    };\n    const { pending: cur = [] } = await chrome.storage.local.get('pending');\n    cur.push(item);\n    await chrome.storage.local.set({ pending: cur });\n    const destColl = checkedCollNames().join('・') || T.uncat;\n    const libLabel = (currentLib() && currentLib().name) || '';\n    const dest = libLabel ? `${libLabel} / ${destColl}` : destColl;\n    $('#status').innerHTML = `<span class=\"chip queued\">${esc(T.queued)}<\/span>`;\n    await showImportHint(T.doneOpen(dest), T.doneClosed(dest), T.doneNoUrl(dest));\n  });\n\n  // Render header/status/note/save-enabled for the active paper — the current\n  // tab's page, or one picked from the citation search. Re-run when it changes.\n  function refreshPaper() {\n    ({ doiKey, arxivKey } = normKeys(meta));\n    identifiable = !!(meta.doi || meta.arxiv || meta.title);\n    renderHeader();\n    // Image picker: candidates come from the current tab's page; a manual file can\n    // be chosen for any paper (including ones picked from the citation search).\n    $('#imgSection').style.display = 'block';\n    loadImageCandidates();\n    renderForLibrary();\n    $('#note').className = ''; $('#note').textContent = '';\n    btn.disabled = !identifiable;\n    if (!identifiable) { $('#note').textContent = T.noPaper; return; }\n    // if already queued (popup reopened before importing), explain how it imports\n    const alreadyQueued = pending.some(p => {\n      const k = normKeys(p);\n      return (doiKey && k.doiKey === doiKey) || (arxivKey && k.arxivKey === arxivKey);\n    });\n    const saved = (currentLib() && currentLib().saved) || {};\n    const savedNow = (doiKey && saved[doiKey]) || (arxivKey && saved[arxivKey]) || null;\n    if (alreadyQueued && !savedNow) showImportHint(T.pendingOpen, T.pendingClosed, T.pendingNoUrl);\n  }\n\n  // ---- tabs: \"add the current page\" vs \"find a paper by citation\" ----\n  $('#tabAdd').innerHTML = withIcon(ICON.plus, T.tabAdd);\n  $('#tabFind').innerHTML = withIcon(ICON.search, T.tabFind);\n  function showTab(name) {\n    const add = name === 'add';\n    $('#paneAdd').style.display = add ? 'block' : 'none';\n    $('#paneFind').style.display = add ? 'none' : 'block';\n    $('#tabAdd').classList.toggle('active', add);\n    $('#tabFind').classList.toggle('active', !add);\n  }\n  $('#tabAdd').addEventListener('click', () => showTab('add'));\n  $('#tabFind').addEventListener('click', () => showTab('find'));\n\n  // ---- find a paper by citation (journal / year / volume / page / author…) ----\n  $('#findHint').textContent = T.findHint;\n  $('#findJournal').placeholder = T.findJournalPh;\n  $('#findYear').placeholder = T.findYearPh;\n  $('#findVolume').placeholder = T.findVolumePh;\n  $('#findPage').placeholder = T.findPagePh;\n  $('#findExtra').placeholder = T.findExtraPh;\n  $('#findGo').innerHTML = withIcon(ICON.search, T.findGo);\n  function renderFindResults(cands) {\n    const box = $('#findResults'); box.innerHTML = '';\n    cands.slice(0, 8).forEach(c => {\n      const card = document.createElement('div');\n      card.className = 'findCand';\n      const venue = [c.journalAbbr || c.journal, c.volume, c.year].filter(Boolean).join(' ');\n      const sub = acsMetaLine(c.authors, venue, '', 6) || venue;\n      const url = c.url || (c.doi ? 'https://doi.org/' + c.doi : '');\n      card.innerHTML = `<div class=\"ct\">${esc(c.title || c.doi || '')}${c._exact ? `<span class=\"exact\">${esc(T.findExact)}<\/span>` : ''}<\/div>` +\n        `<div class=\"cm\">${esc(sub)}<\/div>` +\n        `<div class=\"candBtns\"><button type=\"button\" class=\"candReg\">${withIcon(ICON.bookmark, T.findRegister)}<\/button>` +\n        `<button type=\"button\" class=\"candOpen\"${url ? '' : ' disabled'}>${withIcon(ICON.externalLink, T.findOpen)}<\/button><\/div>`;\n      // Register → load the paper into the \"Add\" tab so collections/tags can be\n      // chosen, then Save queues it exactly like a page save.\n      card.querySelector('.candReg').addEventListener('click', () => {\n        meta = c; activeFromTab = false;\n        refreshPaper();\n        showTab('add');\n        if (!$('#note').textContent) setNote(T.findPicked, '');\n      });\n      const openBtn = card.querySelector('.candOpen');\n      if (url) openBtn.addEventListener('click', () => { chrome.tabs.create({ url }); window.close(); });\n      box.appendChild(card);\n    });\n  }\n  async function runFind() {\n    const f = { journal: $('#findJournal').value, year: $('#findYear').value, volume: $('#findVolume').value, page: $('#findPage').value, extra: $('#findExtra').value };\n    if (!Object.values(f).some(v => String(v).trim())) { $('#findStatus').textContent = T.findNeedInput; return; }\n    $('#findResults').innerHTML = ''; $('#findStatus').textContent = T.findSearching; $('#findGo').disabled = true;\n    try {\n      let cands = [];\n      const doiM = String(f.extra).match(DOI_RE);\n      if (doiM) { const one = await crossrefByDoi(doiM[0].replace(/[.,;)\\]]+$/, '')); if (one) cands = [one]; }\n      if (!cands.length) cands = await crossrefFindByFields(f);\n      $('#findGo').disabled = false;\n      if (!cands.length) { $('#findStatus').textContent = T.findNone; return; }\n      $('#findStatus').textContent = ''; renderFindResults(cands);\n    } catch (e) { console.error(e); $('#findGo').disabled = false; $('#findStatus').textContent = T.findError; }\n  }\n  $('#findGo').addEventListener('click', runFind);\n  ['findJournal', 'findYear', 'findVolume', 'findPage', 'findExtra'].forEach(id => {\n    $('#' + id).addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); runFind(); } });\n  });\n\n  refreshPaper();\n  // Open on the tab that fits the page: a paper page → \"Add\"; anything else → \"Find\".\n  showTab(identifiable ? 'add' : 'find');\n}\n\ninit().catch(e => {\n  console.error(e);\n  $('#note').textContent = T.restricted;\n});\n"},
-  "sniffer.js": {text: "// Runs on every http(s) page: detects the paper's DOI / arXiv id and asks the\n// background worker to show an \"already in library\" badge for this tab.\n(function () {\n  if (document.querySelector('meta[name=\"refshelf-app\"]')) return; // the app itself\n\n  const DOI_RE = /10\\.\\d{4,9}\\/[^\\s\"'<>&]+/;\n\n  function meta(name) {\n    const el = document.querySelector(`meta[name=\"${name}\" i], meta[property=\"${name}\" i]`);\n    return el && el.content ? el.content.trim() : '';\n  }\n\n  function findIds() {\n    let doi = '';\n    for (const n of ['citation_doi', 'dc.identifier', 'dc.identifier.doi', 'prism.doi', 'doi']) {\n      const m = meta(n).match(DOI_RE);\n      if (m) { doi = m[0]; break; }\n    }\n    if (!doi) {\n      try {\n        const m = decodeURIComponent(location.href).match(DOI_RE);\n        if (m) doi = m[0].replace(/[.,;)\\]]+$/, '');\n      } catch (e) { /* malformed escape in URL */ }\n    }\n    if (!doi) {\n      const a = document.querySelector('a[href*=\"doi.org/10.\"]');\n      if (a) {\n        const m = decodeURIComponent(a.href).match(DOI_RE);\n        if (m) doi = m[0];\n      }\n    }\n    let arxiv = meta('citation_arxiv_id');\n    if (!arxiv) {\n      const m = location.href.match(/arxiv\\.org\\/(?:abs|pdf)\\/([a-z\\-]+(?:\\.[A-Z]{2})?\\/\\d{7}|\\d{4}\\.\\d{4,5})/i);\n      if (m) arxiv = m[1];\n    }\n    if (!arxiv && doi) {\n      const m = doi.match(/^10\\.48550\\/arxiv\\.(.+)$/i);\n      if (m) { arxiv = m[1]; doi = ''; }\n    }\n    return {\n      doi: doi.toLowerCase(),\n      arxiv: String(arxiv || '').toLowerCase().replace(/v\\d+$/, ''),\n    };\n  }\n\n  async function update() {\n    const { doi, arxiv } = findIds();\n    let text = '';\n    if (doi || arxiv) {\n      const { libraries = {}, activeLib, pending = [] } =\n        await chrome.storage.local.get(['libraries', 'activeLib', 'pending']);\n      // badge reflects the active (destination) library, matching the popup\n      const lib = libraries[activeLib] || Object.values(libraries)[0] || null;\n      const saved = (lib && lib.saved) || {};\n      const queued = pending.some(p =>\n        (doi && String(p.doi || '').toLowerCase() === doi) ||\n        (arxiv && String(p.arxiv || '').toLowerCase().replace(/v\\d+$/, '') === arxiv));\n      if ((doi && saved['doi:' + doi]) || (arxiv && saved['arxiv:' + arxiv])) text = '✓';\n      else if (queued) text = '…';\n      else text = '+'; // recognizable paper, not yet in the library → prompt to add\n    }\n    try { await chrome.runtime.sendMessage({ type: 'badge', text }); }\n    catch (e) { /* extension reloaded / worker unavailable */ }\n  }\n\n  chrome.storage.onChanged.addListener((ch, area) => {\n    if (area === 'local' && (ch.libraries || ch.activeLib || ch.pending)) update();\n  });\n  update();\n})();\n"},
+  "manifest.json": {text: "{\n  \"manifest_version\": 3,\n  \"name\": \"Paper Library Connector\",\n  \"version\": \"1.8\",\n  \"description\": \"Save the paper you are viewing to Paper Library and see at a glance whether it is already in your library.\",\n  \"icons\": {\n    \"16\": \"icons/icon16.png\",\n    \"32\": \"icons/icon32.png\",\n    \"48\": \"icons/icon48.png\",\n    \"128\": \"icons/icon128.png\"\n  },\n  \"action\": {\n    \"default_popup\": \"popup.html\",\n    \"default_icon\": {\n      \"16\": \"icons/icon16.png\",\n      \"32\": \"icons/icon32.png\"\n    }\n  },\n  \"background\": {\n    \"service_worker\": \"background.js\"\n  },\n  \"permissions\": [\"storage\", \"scripting\", \"activeTab\", \"tabs\", \"clipboardRead\"],\n  \"content_scripts\": [\n    {\n      \"matches\": [\"http://*/*\", \"https://*/*\"],\n      \"js\": [\"sniffer.js\"],\n      \"run_at\": \"document_idle\"\n    },\n    {\n      \"matches\": [\n        \"file:///*\",\n        \"http://localhost/*\",\n        \"http://127.0.0.1/*\",\n        \"https://t-shiokawa1.github.io/Paper-Library/*\"\n      ],\n      \"js\": [\"bridge.js\"],\n      \"run_at\": \"document_idle\"\n    }\n  ]\n}\n"},
+  "popup.html": {text: "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<style>\n  :root{\n    --bg:#ffffff; --bg2:#f5f6f8; --border:#dcdfe4; --text:#1f2328; --text2:#59636e;\n    --accent:#2563eb; --accent-soft:#eaf1fe; --green:#16a34a; --green-soft:#e7f6ec; --amber:#d97706; --amber-soft:#fdf1e0;\n  }\n  @media (prefers-color-scheme: dark){\n    :root{\n      --bg:#1c2128; --bg2:#22272e; --border:#3a4048; --text:#e6e8eb; --text2:#9aa4af;\n      --accent:#6ba1f7; --accent-soft:#263a5c; --green:#3fbf6f; --green-soft:#1f3a2a; --amber:#e8a44a; --amber-soft:#3d3020;\n    }\n  }\n  html,body{margin:0; padding:0}\n  body{\n    width:460px; background:var(--bg); color:var(--text);\n    font:13px/1.5 -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Hiragino Sans\", \"Noto Sans JP\", sans-serif;\n  }\n  #body{padding:12px 16px}\n  #paperTitle{font-weight:600; font-size:13.5px; line-height:1.45; margin:0 0 3px}\n  #paperMeta{font-size:11.5px; color:var(--text2); margin:0 0 10px; overflow-wrap:break-word}\n  #paperMeta .mAuth{color:var(--text2)}\n  #paperMeta .mJournal{color:var(--text); font-style:italic}\n  #paperMeta .mTail{color:var(--text2)}\n  .chip{\n    display:inline-flex; align-items:center; gap:5px; padding:2px 9px; border-radius:999px;\n    font-size:11.5px; font-weight:600; margin:0 0 10px;\n  }\n  .chip.saved{background:var(--green-soft); color:var(--green)}\n  .chip.queued{background:var(--amber-soft); color:var(--amber)}\n  .chip.new{background:var(--accent-soft); color:var(--accent)}\n  #topRow{display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin:0 0 8px; min-height:22px}\n  #topRow .chip{margin:0}\n  #destLib{font-size:11.5px; color:var(--text2); margin-left:auto}\n  #destLib .libRow{display:flex; align-items:center; gap:6px}\n  #destLib select{\n    min-width:0; max-width:180px; font:inherit; font-size:12px; color:var(--text);\n    background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:3px 6px;\n  }\n  .sectionLabel{display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:600; color:var(--text); margin:0 0 5px; text-transform:none}\n  .sectionLabel .btnIcon{color:var(--accent)}\n  .btnIcon{width:14px; height:14px; flex:none}\n  .tabs{display:flex; border-bottom:1px solid var(--border)}\n  .tab{flex:1; display:inline-flex; align-items:center; justify-content:center; gap:6px; font:inherit; font-size:12.5px; font-weight:600; color:var(--text2); background:transparent; border:none; border-bottom:2px solid transparent; padding:9px 4px; cursor:pointer}\n  .tab:hover{background:var(--bg2)}\n  .tab.active{color:var(--accent); border-bottom-color:var(--accent)}\n  /* collections / tags sub-tabs (show one list at a time to keep the popup short) */\n  .subTabs{display:flex; gap:4px; margin:0 0 8px; background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:3px}\n  .subTab{flex:1; display:inline-flex; align-items:center; justify-content:center; gap:6px; font:inherit; font-size:12px; font-weight:600; color:var(--text2); background:transparent; border:none; border-radius:6px; padding:6px 4px; cursor:pointer}\n  .subTab:hover{background:var(--bg)}\n  .subTab.active{color:var(--accent); background:var(--bg); box-shadow:0 1px 2px rgba(0,0,0,.06)}\n  .subTab .btnIcon{color:currentColor}\n  .subTabCount{display:inline-flex; align-items:center; justify-content:center; min-width:16px; height:16px; padding:0 4px; font-size:10px; font-weight:600; color:#fff; background:var(--accent); border-radius:999px}\n  .listTools{display:flex; gap:6px; align-items:center; margin:0 0 6px}\n  .miniSearch{flex:1; min-width:0; font:inherit; font-size:12px; color:var(--text); background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:4px 8px}\n  .miniSearch::placeholder{color:var(--text2)}\n  .miniBtn{flex:none; display:inline-flex; align-items:center; justify-content:center; gap:5px; font:inherit; font-size:11.5px; color:var(--accent); background:var(--accent-soft); border:1px solid var(--border); border-radius:6px; padding:4px 8px; cursor:pointer; white-space:nowrap}\n  .miniBtn:hover{filter:brightness(1.04)}\n  .newForm{display:flex; gap:6px; align-items:center; margin:0 0 8px}\n  .newForm input[type=text]{flex:1; min-width:0; font:inherit; font-size:12px; color:var(--text); background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:4px 8px}\n  .newForm select{flex:none; max-width:150px; min-width:0; font:inherit; font-size:12px; color:var(--text); background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:4px 4px}\n  .addBtn{flex:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; font:inherit; font-size:12px; font-weight:600; color:#fff; background:var(--accent); border:none; border-radius:6px; padding:5px 12px; cursor:pointer}\n  .addBtn:hover{filter:brightness(1.06)}\n  #folders, #tags{\n    max-height:150px; overflow-y:auto; overflow-x:hidden; border:1px solid var(--border); border-radius:8px;\n    padding:5px 4px; margin-bottom:10px; background:var(--bg2);\n  }\n  #tags{max-height:130px}\n  #tags label{display:flex; align-items:center; gap:7px; padding:3px 8px; border-radius:6px; cursor:pointer}\n  #tags label:hover{background:var(--accent-soft)}\n  #folders input, #tags input{margin:0; accent-color:var(--accent)}\n  #folders .none, #tags .none{color:var(--text2); font-size:11.5px; padding:4px 8px}\n  .collRow{display:flex; align-items:center; gap:6px; border-radius:6px; padding:3px 6px}\n  .collRow:hover{background:var(--accent-soft)}\n  .collRow.hasKids{cursor:pointer}\n  .collRow .cn{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}\n  .collRow.hasKids > .cn{cursor:pointer}\n  .collRow .newTag{flex:none; color:var(--accent); font-weight:600; font-size:10px; background:var(--accent-soft); border-radius:4px; padding:0 4px}\n  .twist{width:18px; height:22px; margin:-3px 0; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text2); font-size:8px; flex:none; user-select:none; transition:transform .12s}\n  .twist.open{transform:rotate(90deg)}\n  .twist.leaf{cursor:default; visibility:hidden}\n  /* image (graphical abstract) picker */\n  .imgSection{margin:0 0 10px}\n  .imgBox{border:1px solid var(--border); border-radius:8px; background:var(--bg2); padding:8px}\n  .imgPreviewWrap{position:relative; display:flex; align-items:center; justify-content:center; min-height:96px; max-height:200px; background:var(--bg); border:1px solid var(--border); border-radius:6px; overflow:hidden}\n  .imgPreviewWrap img{max-width:100%; max-height:200px; object-fit:contain; display:none}\n  .imgEmpty{font-size:11.5px; color:var(--text2); text-align:center; padding:14px 10px; line-height:1.5}\n  /* candidate stepper and action buttons sit on their own rows — each row fits\n     the popup's fixed width on its own line instead of the whole group wrapping\n     mid-list (which used to force the paste label to be abbreviated) */\n  .imgControls{display:flex; flex-direction:column; gap:6px; margin-top:8px}\n  .imgNavRow{display:flex; align-items:center; gap:6px}\n  .imgActionRow{display:flex; align-items:center; gap:6px; flex-wrap:wrap}\n  .imgNav{flex:none; display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; font:inherit; font-size:12px; color:var(--text); background:var(--bg); border:1px solid var(--border); border-radius:6px; cursor:pointer}\n  .imgNav:hover:not(:disabled){background:var(--accent-soft)}\n  .imgNav:disabled{opacity:.4; cursor:default}\n  .imgCount{font-size:11px; color:var(--text2); min-width:34px; text-align:center}\n  /* 画像カードの操作は任意の補助操作。淡い青は保存ボタン（唯一の主操作）と\n     コレクション操作の .miniBtn に譲り、静止時は中立。押せることはホバーで示す。 */\n  .imgBtn{flex:none; display:inline-flex; align-items:center; justify-content:center; gap:5px; font:inherit; font-size:11.5px; color:var(--text2); background:var(--bg2); border:1px solid var(--border); border-radius:6px; padding:5px 9px; cursor:pointer; white-space:nowrap}\n  .imgBtn:hover{color:var(--accent); background:var(--accent-soft)}\n  .imgIncludeRow{display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text2); margin-top:8px; cursor:pointer}\n  .imgIncludeRow input{margin:0; accent-color:var(--accent)}\n  .imgHint{font-size:11px; color:var(--amber); margin-top:6px; line-height:1.45; display:none}\n  .pdfRow{display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text2); margin:0 0 10px; cursor:pointer}\n  .pdfRow input{margin:0; accent-color:var(--accent)}\n  /* Save stays pinned to the bottom of the popup, unaffected by scrolling.\n     It lives inside #paneAdd, so it hides automatically on the \"find\" tab. */\n  .saveBar{position:fixed; left:0; right:0; bottom:0; box-sizing:border-box; background:var(--bg); padding:8px 16px; border-top:1px solid var(--border)}\n  #paneAdd{padding-bottom:56px}\n  button#save{\n    width:100%; display:inline-flex; align-items:center; justify-content:center; gap:7px;\n    padding:8px 0; border:none; border-radius:8px; background:var(--accent); color:#fff;\n    font-size:13px; font-weight:600; cursor:pointer;\n  }\n  button#save:hover{filter:brightness(1.07)}\n  button#save:disabled{opacity:.5; cursor:default}\n  #note{font-size:11.5px; color:var(--text2); margin:8px 0 0; line-height:1.5}\n  #note.ok{color:var(--green)}\n  #note button{\n    margin-top:6px; padding:5px 10px; border:1px solid var(--accent); border-radius:7px;\n    background:var(--accent-soft); color:var(--accent); font-size:12px; font-weight:600; cursor:pointer;\n  }\n  #note button:hover{filter:brightness(1.03)}\n  #warn{font-size:11.5px; color:var(--amber); margin:0 0 10px; line-height:1.5}\n  .findHint{font-size:11.5px; color:var(--text2); margin:0 0 12px; line-height:1.5}\n  #paneFind .findInput, .findGrid input{width:100%; box-sizing:border-box; font:inherit; font-size:12px; color:var(--text); background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:6px 9px}\n  #paneFind .findInput{margin:0 0 7px}\n  #paneFind input::placeholder{color:var(--text2)}\n  .findGrid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin:0 0 7px}\n  #paneFind > .addBtn{width:100%; padding:8px 0}\n  .findStatus{font-size:11.5px; color:var(--text2); margin:8px 0 0; line-height:1.4}\n  .findResults{margin-top:10px; display:flex; flex-direction:column; gap:8px}\n  .findCand{border:1px solid var(--border); border-radius:8px; padding:8px 10px; background:var(--bg2)}\n  .findCand .ct{font-size:12px; font-weight:600; color:var(--text); line-height:1.35; margin:0 0 2px}\n  .findCand .cm{font-size:11px; color:var(--text2); line-height:1.4; margin:0 0 8px}\n  .findCand .exact{display:inline-block; font-size:10px; font-weight:600; color:var(--green); background:var(--green-soft); border-radius:4px; padding:0 5px; margin-left:6px; white-space:nowrap}\n  .candBtns{display:flex; gap:6px}\n  .candBtns button{flex:1; display:inline-flex; align-items:center; justify-content:center; gap:5px; font:inherit; font-size:11.5px; font-weight:600; border-radius:6px; padding:6px 0; cursor:pointer}\n  .candBtns button:disabled{opacity:.45; cursor:default}\n  .candReg{background:var(--accent); color:#fff; border:none}\n  .candReg:hover{filter:brightness(1.06)}\n  .candOpen{background:var(--bg); color:var(--accent); border:1px solid var(--accent)}\n  .candOpen:hover{filter:brightness(1.03)}\n<\/style>\n<\/head>\n<body>\n<div class=\"tabs\">\n  <button type=\"button\" id=\"tabAdd\" class=\"tab\"><\/button>\n  <button type=\"button\" id=\"tabFind\" class=\"tab\"><\/button>\n<\/div>\n<div id=\"body\">\n  <div id=\"paneAdd\" class=\"pane\">\n    <div id=\"topRow\">\n      <div id=\"status\"><\/div>\n      <div id=\"destLib\" style=\"display:none\"><\/div>\n    <\/div>\n    <p id=\"paperTitle\"><\/p>\n    <p id=\"paperMeta\"><\/p>\n    <div id=\"warn\" style=\"display:none\"><\/div>\n    <div class=\"subTabs\">\n      <button type=\"button\" id=\"subTabColl\" class=\"subTab active\"><\/button>\n      <button type=\"button\" id=\"subTabTag\" class=\"subTab\"><\/button>\n    <\/div>\n    <div id=\"collPane\" class=\"subPane\">\n      <div class=\"listTools\">\n        <input type=\"search\" id=\"collSearch\" class=\"miniSearch\">\n        <button type=\"button\" id=\"collExpandAll\" class=\"miniBtn\"><\/button>\n        <button type=\"button\" id=\"collNewBtn\" class=\"miniBtn\"><\/button>\n      <\/div>\n      <div id=\"collNewForm\" class=\"newForm\" style=\"display:none\">\n        <input type=\"text\" id=\"collNewName\">\n        <select id=\"collNewParent\"><\/select>\n        <button type=\"button\" id=\"collNewAdd\" class=\"addBtn\"><\/button>\n      <\/div>\n      <div id=\"folders\"><\/div>\n    <\/div>\n    <div id=\"tagPane\" class=\"subPane\" style=\"display:none\">\n      <div class=\"listTools\">\n        <input type=\"search\" id=\"tagSearch\" class=\"miniSearch\">\n        <button type=\"button\" id=\"tagNewBtn\" class=\"miniBtn\"><\/button>\n      <\/div>\n      <div id=\"tagNewForm\" class=\"newForm\" style=\"display:none\">\n        <input type=\"text\" id=\"tagNewName\">\n        <button type=\"button\" id=\"tagNewAdd\" class=\"addBtn\"><\/button>\n      <\/div>\n      <div id=\"tags\"><\/div>\n    <\/div>\n    <div id=\"imgSection\" class=\"imgSection\" style=\"display:none\">\n      <div class=\"sectionLabel\" id=\"imgLabel\"><\/div>\n      <div class=\"imgBox\">\n        <div class=\"imgPreviewWrap\">\n          <img id=\"imgPreview\" alt=\"\">\n          <div id=\"imgEmpty\" class=\"imgEmpty\"><\/div>\n        <\/div>\n        <div class=\"imgControls\">\n          <div class=\"imgNavRow\">\n            <button type=\"button\" id=\"imgPrev\" class=\"imgNav\" title=\"\">◀<\/button>\n            <span id=\"imgCount\" class=\"imgCount\"><\/span>\n            <button type=\"button\" id=\"imgNext\" class=\"imgNav\" title=\"\">▶<\/button>\n          <\/div>\n          <div class=\"imgActionRow\">\n            <button type=\"button\" id=\"imgPick\" class=\"imgBtn\"><\/button>\n            <button type=\"button\" id=\"imgPaste\" class=\"imgBtn\"><\/button>\n            <button type=\"button\" id=\"imgClear\" class=\"imgBtn\"><\/button>\n            <input type=\"file\" id=\"imgFile\" accept=\"image/*\" style=\"display:none\">\n          <\/div>\n        <\/div>\n        <div id=\"imgHint\" class=\"imgHint\"><\/div>\n        <label class=\"imgIncludeRow\"><input type=\"checkbox\" id=\"imgInclude\"><span id=\"imgIncludeLabel\"><\/span><\/label>\n      <\/div>\n    <\/div>\n    <label id=\"pdfRow\" class=\"pdfRow\"><input type=\"checkbox\" id=\"fetchPdf\"><span id=\"fetchPdfLabel\"><\/span><\/label>\n    <p id=\"note\"><\/p>\n    <div class=\"saveBar\"><button id=\"save\"><\/button><\/div>\n  <\/div>\n  <div id=\"paneFind\" class=\"pane\" style=\"display:none\">\n    <p id=\"findHint\" class=\"findHint\"><\/p>\n    <input type=\"text\" id=\"findJournal\" class=\"findInput\" list=\"findJournalList\" autocomplete=\"off\">\n    <datalist id=\"findJournalList\"><\/datalist>\n    <div class=\"findGrid\">\n      <input type=\"text\" id=\"findYear\" inputmode=\"numeric\">\n      <input type=\"text\" id=\"findVolume\">\n      <input type=\"text\" id=\"findPage\">\n    <\/div>\n    <input type=\"text\" id=\"findExtra\" class=\"findInput\">\n    <button type=\"button\" id=\"findGo\" class=\"addBtn\"><\/button>\n    <div id=\"findStatus\" class=\"findStatus\"><\/div>\n    <div id=\"findResults\" class=\"findResults\"><\/div>\n  <\/div>\n<\/div>\n<script src=\"popup.js\"><\/script>\n<\/body>\n<\/html>\n"},
+  "popup.js": {text: "// Popup: extracts the paper on the active tab, shows saved/queued status and\n// the collection tree for the chosen destination library, and queues the save.\n\n// Small self-contained icon set (no external font/CDN — extension pages can't\n// fetch remote resources). Stroke-only so currentColor picks up each button's\n// own text color in both light and dark.\nfunction svgIcon(inner) {\n  return `<svg class=\"btnIcon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\">${inner}<\/svg>`;\n}\nconst ICON = {\n  plus: svgIcon('<line x1=\"12\" y1=\"5\" x2=\"12\" y2=\"19\"/><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/>'),\n  check: svgIcon('<polyline points=\"20 6 9 17 4 12\"/>'),\n  search: svgIcon('<circle cx=\"11\" cy=\"11\" r=\"7\"/><line x1=\"21\" y1=\"21\" x2=\"16.65\" y2=\"16.65\"/>'),\n  bookmark: svgIcon('<path d=\"M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z\"/>'),\n  chevronsDown: svgIcon('<polyline points=\"7 13 12 18 17 13\"/><polyline points=\"7 6 12 11 17 6\"/>'),\n  chevronsUp: svgIcon('<polyline points=\"17 11 12 6 7 11\"/><polyline points=\"17 18 12 13 7 18\"/>'),\n  externalLink: svgIcon('<path d=\"M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6\"/><polyline points=\"15 3 21 3 21 9\"/><line x1=\"10\" y1=\"14\" x2=\"21\" y2=\"3\"/>'),\n  // same path data as the main app's ICONS.folder / ICONS.tag, for visual parity\n  folder: svgIcon('<path d=\"M4 19.5A1.5 1.5 0 0 1 2.5 18V6A1.5 1.5 0 0 1 4 4.5h4.3a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h6.6A1.5 1.5 0 0 1 21 8.5V18a1.5 1.5 0 0 1-1.5 1.5z\"/>'),\n  tag: svgIcon('<path d=\"M4 4.5h6l9.5 9.5a1.8 1.8 0 0 1 0 2.5l-3.5 3.5a1.8 1.8 0 0 1-2.5 0L4 10.5z\"/><path d=\"M7.5 8h.01\"/>'),\n  image: svgIcon('<rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/><circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/><polyline points=\"21 15 16 10 5 21\"/>'),\n  download: svgIcon('<path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/><polyline points=\"7 10 12 15 17 10\"/><line x1=\"12\" y1=\"15\" x2=\"12\" y2=\"3\"/>'),\n};\nfunction withIcon(icon, text) { return icon + `<span>${esc(text)}<\/span>`; }\n\nconst JA = (navigator.language || '').toLowerCase().startsWith('ja');\nconst T = JA ? {\n  saved: '✓ ライブラリに保存済み',\n  queued: '… 取り込み待ち',\n  notSaved: '未登録',\n  noPaper: 'このページから論文情報を見つけられませんでした。DOI 付きの論文ページで試してください。',\n  savedIn: (names) => `所属コレクション: ${names}`,\n  savedNoFolder: '所属コレクション: なし（未分類）',\n  destLib: '保存先ライブラリ',\n  folders: '入れるコレクション（複数選択可）',\n  noFolders: 'コレクションはまだありません（未分類として保存されます）',\n  tags: '付けるタグ（複数選択可）',\n  noTags: 'タグはまだありません',\n  collTab: '入れるコレクション', tagTab: '付けるタグ',\n  searchColl: 'コレクションを検索', searchTag: 'タグを検索', newColl: '新規', newTag: '新規',\n  collName: '新しいコレクション名', tagName: '新しいタグ名', parentTop: 'トップ（親なし）', addBtn: '追加',\n  expandAll: 'すべて開く', collapseAll: 'すべて閉じる', noMatch: '一致するものがありません', newBadge: '新規',\n  tabAdd: '論文を追加する', tabFind: '論文を探す',\n  findHint: '雑誌・年・巻・ページなどから論文を検索します。見つかった論文は「登録」でライブラリに追加、「開く」でそのページを開きます。',\n  findRegister: '登録', findOpen: '開く',\n  findJournalPh: '雑誌名（略称可）', findYearPh: '年', findVolumePh: '巻', findPagePh: 'ページ',\n  findExtraPh: '著者・タイトル・DOI（任意）', findGo: '検索',\n  findSearching: '検索中…', findNone: '該当する文献が見つかりませんでした', findNeedInput: '雑誌・年・巻・ページ・著者などを入力してください',\n  findError: '検索に失敗しました', findExact: '巻・ページ一致', findPicked: '文献を読み込みました。コレクション／タグを選んで保存してください。',\n  imgLabel: '取り込む画像（グラフィカルアブストラクト）',\n  imgInclude: 'この画像を取り込む',\n  imgPick: 'ファイル選択',\n  imgPaste: 'クリップボードから貼り付け',\n  imgClear: '画像なし',\n  imgPrevTitle: '前の候補',\n  imgNextTitle: '次の候補',\n  imgLoading: '読み込み中…',\n  imgNone: 'このページから画像を検出できませんでした。「ファイルから選択」で指定できます。',\n  imgCount: (i, n) => `候補 ${i}/${n}`,\n  imgManualLabel: '選択したファイル',\n  imgFetchFail: 'この画像は自動取得できませんでした。プレビューは表示されますが、確実に取り込むには「ファイルから選択」で保存し直してください。',\n  imgPasteNone: 'クリップボードに画像がありません。画像をコピーしてから再度お試しください。',\n  imgPasteFail: 'クリップボード画像を読み取れませんでした。画像をコピーして、Ctrl/Cmd+V でも貼り付けできます。',\n  imgTooLarge: '画像が大きすぎます（8 MB 以下の画像を指定してください）。',\n  fetchPdf: 'オープンアクセスの PDF も自動取得する',\n  saveRoot: 'コレクションに入れずに保存（未分類）',\n  saveTo: (names) => `「${names}」に保存`,\n  addTo: (names) => `「${names}」に追加`,\n  uncat: '未分類',\n  openApp: 'Paper Library を開いて取り込む',\n  // after a save\n  doneOpen: (dest) => `保存しました → ${dest}。開いている Paper Library に取り込まれます。`,\n  doneClosed: (dest) => `保存しました → ${dest}。下のボタンを押すか、次に Paper Library を開くと取り込まれます。`,\n  doneNoUrl: (dest) => `保存しました → ${dest}。次に Paper Library を開くと取り込まれます。`,\n  // when the paper is already queued (popup reopened)\n  pendingOpen: 'この論文は取り込み待ちです。開いている Paper Library に取り込まれます。',\n  pendingClosed: 'この論文は取り込み待ちです。下のボタンを押すか、次に Paper Library を開くと取り込まれます。',\n  pendingNoUrl: 'この論文は取り込み待ちです。次に Paper Library を開くと取り込まれます。',\n  needSync: 'まだライブラリと同期していません。Paper Library をライブラリフォルダを開いた状態で一度表示すると、保存先ライブラリ・コレクション一覧・保存済み判定が使えるようになります（保存自体は今でも可能です）。',\n  restricted: 'このページでは拡張機能が動作できません。',\n} : {\n  saved: '✓ In your library',\n  queued: '… Pending import',\n  notSaved: 'Not in library',\n  noPaper: 'Could not find paper metadata on this page. Try a paper page with a DOI.',\n  savedIn: (names) => `In collections: ${names}`,\n  savedNoFolder: 'In collections: none (uncategorized)',\n  destLib: 'Destination library',\n  folders: 'Put in collections (multi-select)',\n  noFolders: 'No collections yet (saved as uncategorized)',\n  tags: 'Add tags (multi-select)',\n  noTags: 'No tags yet',\n  collTab: 'Collections', tagTab: 'Tags',\n  searchColl: 'Search collections', searchTag: 'Search tags', newColl: 'New', newTag: 'New',\n  collName: 'New collection name', tagName: 'New tag name', parentTop: 'Top level', addBtn: 'Add',\n  expandAll: 'Expand all', collapseAll: 'Collapse all', noMatch: 'No matches', newBadge: 'new',\n  tabAdd: 'Add paper', tabFind: 'Find paper',\n  findHint: 'Search for a paper by journal, year, volume, page, etc. Register a match to your library, or just open its page.',\n  findRegister: 'Register', findOpen: 'Open',\n  findJournalPh: 'Journal (abbrev. ok)', findYearPh: 'Year', findVolumePh: 'Vol.', findPagePh: 'Page',\n  findExtraPh: 'Author, title, or DOI (optional)', findGo: 'Search',\n  findSearching: 'Searching…', findNone: 'No matching papers found', findNeedInput: 'Enter a journal, year, volume, page, author, etc.',\n  findError: 'Search failed', findExact: 'vol/page match', findPicked: 'Paper loaded. Pick collections/tags and save.',\n  imgLabel: 'Image to import (graphical abstract)',\n  imgInclude: 'Import this image',\n  imgPick: 'Choose file',\n  imgPaste: 'Paste from clipboard',\n  imgClear: 'No image',\n  imgPrevTitle: 'Previous candidate',\n  imgNextTitle: 'Next candidate',\n  imgLoading: 'Loading…',\n  imgNone: 'No image detected on this page. Use “Choose file” to add one.',\n  imgCount: (i, n) => `Candidate ${i}/${n}`,\n  imgManualLabel: 'Chosen file',\n  imgFetchFail: 'This image could not be fetched automatically. It previews here, but to import it reliably, re-add it with “Choose file”.',\n  imgPasteNone: 'No image is available in the clipboard. Copy an image and try again.',\n  imgPasteFail: 'Could not read an image from the clipboard. Copy an image, then try Ctrl/Cmd+V.',\n  imgTooLarge: 'The image is too large. Choose an image up to 8 MB.',\n  fetchPdf: 'Also fetch the open-access PDF automatically',\n  saveRoot: 'Save without a collection (uncategorized)',\n  saveTo: (names) => `Save to “${names}”`,\n  addTo: (names) => `Add to “${names}”`,\n  uncat: 'uncategorized',\n  openApp: 'Open Paper Library to import',\n  doneOpen: (dest) => `Saved → ${dest}. Importing into the open Paper Library.`,\n  doneClosed: (dest) => `Saved → ${dest}. Press the button below, or it imports next time you open Paper Library.`,\n  doneNoUrl: (dest) => `Saved → ${dest}. It imports next time you open Paper Library.`,\n  pendingOpen: 'This paper is pending import. It will be imported into the open Paper Library.',\n  pendingClosed: 'This paper is pending import. Press the button below, or it imports next time you open Paper Library.',\n  pendingNoUrl: 'This paper is pending import. It imports next time you open Paper Library.',\n  needSync: 'Not synced with your library yet. Open Paper Library once (with your library folder open) to enable the destination-library picker, collection list, and saved-state checks. Saving still works now.',\n  restricted: 'The extension cannot run on this page.',\n};\n\nconst DOI_RE = /10\\.\\d{4,9}\\/[^\\s\"'<>&]+/;\n\n// A few common journals for an instant, offline abbreviation; anything else is\n// refined from CrossRef's short-container-title once it responds.\nconst ABBREV = {\n  'journal of the american chemical society': 'J. Am. Chem. Soc.',\n  'angewandte chemie international edition': 'Angew. Chem. Int. Ed.',\n  'angewandte chemie': 'Angew. Chem.',\n  'chemical science': 'Chem. Sci.',\n  'chemical communications': 'Chem. Commun.',\n  'chemical reviews': 'Chem. Rev.',\n  'chemistry - a european journal': 'Chem. Eur. J.',\n  'chemistry a european journal': 'Chem. Eur. J.',\n  'nature': 'Nature',\n  'nature chemistry': 'Nat. Chem.',\n  'nature communications': 'Nat. Commun.',\n  'nature materials': 'Nat. Mater.',\n  'science': 'Science',\n  'journal of organic chemistry': 'J. Org. Chem.',\n  'organic letters': 'Org. Lett.',\n  'organometallics': 'Organometallics',\n  'inorganic chemistry': 'Inorg. Chem.',\n  'dalton transactions': 'Dalton Trans.',\n  'journal of physical chemistry a': 'J. Phys. Chem. A',\n  'journal of physical chemistry b': 'J. Phys. Chem. B',\n  'journal of physical chemistry c': 'J. Phys. Chem. C',\n  'journal of physical chemistry letters': 'J. Phys. Chem. Lett.',\n  'journal of chemical physics': 'J. Chem. Phys.',\n  'physical review letters': 'Phys. Rev. Lett.',\n  'physical review b': 'Phys. Rev. B',\n  'proceedings of the national academy of sciences': 'Proc. Natl. Acad. Sci. U. S. A.',\n  'advanced materials': 'Adv. Mater.',\n  'acs nano': 'ACS Nano',\n  'journal of the chemical society': 'J. Chem. Soc.',\n};\nfunction abbreviate(journal, journalAbbr) {\n  if (journalAbbr) return journalAbbr;\n  const key = String(journal || '').toLowerCase().replace(/^the\\s+/, '').replace(/[.:]/g, '').replace(/\\s+/g, ' ').trim();\n  return ABBREV[key] || '';\n}\nasync function fetchCrossrefAbbrev(doi) {\n  try {\n    const r = await fetch('https://api.crossref.org/works/' + encodeURIComponent(doi) + '?select=short-container-title');\n    if (!r.ok) return '';\n    const m = (await r.json()).message || {};\n    return (m['short-container-title'] && m['short-container-title'][0]) || '';\n  } catch (e) { return ''; }\n}\n\n// --- \"find a paper by citation\" (journal / year / volume / page / author…) ---\n// The popup can't touch the library folder, so a found paper flows through the\n// same save queue as a page save. CrossRef is CORS-enabled, so no host\n// permission is needed.\nconst CR_SELECT = 'DOI,title,container-title,short-container-title,issued,author,volume,issue,page,type,URL,abstract';\nfunction crossrefToMeta(m) {\n  if (!m) return null;\n  const authors = (m.author || []).map(a => {\n    const fam = String(a.family || '').trim(), giv = String(a.given || '').trim();\n    return fam ? (giv ? fam + ', ' + giv : fam) : String(a.name || '').trim();\n  }).filter(Boolean);\n  const dp = m.issued && m.issued['date-parts'] && m.issued['date-parts'][0];\n  const year = (dp && dp[0]) || '';\n  const abbr = (m['short-container-title'] && m['short-container-title'][0]) || '';\n  const full = (m['container-title'] && m['container-title'][0]) || '';\n  return {\n    url: m.URL || '', doi: String(m.DOI || '').toLowerCase(), arxiv: '',\n    title: (m.title && m.title[0]) || '', authors,\n    // CrossRef only sometimes supplies short-container-title, so results for the\n    // same search would otherwise show a mix of abbreviated and full journal names;\n    // fall back to the offline ABBREV dictionary to keep the \"find\" list consistent.\n    journal: full || abbr, journalAbbr: abbr || abbreviate(full, ''),\n    year: String(year || ''), abstract: String(m.abstract || '').replace(/<[^>]+>/g, '').trim(),\n    image: '', volume: String(m.volume || ''), page: String(m.page || ''),\n  };\n}\nasync function crossrefByDoi(doi) {\n  const r = await fetch('https://api.crossref.org/works/' + encodeURIComponent(doi) + '?select=' + encodeURIComponent(CR_SELECT));\n  if (!r.ok) return null;\n  return crossrefToMeta(((await r.json()) || {}).message);\n}\nconst firstPageOf = (p) => String(p || '').split(/[-–—]/)[0].trim();\nasync function crossrefFindByFields(f) {\n  const parts = [f.journal, f.year, f.volume, f.page, f.extra].map(s => String(s || '').trim()).filter(Boolean);\n  if (!parts.length) return [];\n  const url = 'https://api.crossref.org/works?rows=10&select=' + encodeURIComponent(CR_SELECT) +\n    '&query.bibliographic=' + encodeURIComponent(parts.join(' '));\n  const r = await fetch(url);\n  if (!r.ok) throw new Error('CrossRef HTTP ' + r.status);\n  const items = (((await r.json()).message) || {}).items || [];\n  const cands = items.map(crossrefToMeta).filter(Boolean);\n  // Mark (and float up) exact volume + first-page hits, mirroring the app's\n  // ACS-URL resolver, so a fully specified citation lands on the right paper.\n  const vol = String(f.volume || '').trim(), pg = firstPageOf(f.page);\n  cands.forEach(c => { c._exact = !!(vol && pg && String(c.volume) === vol && firstPageOf(c.page) === pg); });\n  cands.sort((a, b) => (b._exact ? 1 : 0) - (a._exact ? 1 : 0));\n  return cands;\n}\n\n// ACS-style author list: \"Family, F. M.\" joined by \"; \" (matches the app).\nfunction acsAuthors(authors) {\n  return (authors || []).map(a => {\n    const s = String(a).trim();\n    if (!s) return '';\n    let family, given;\n    if (s.includes(',')) { const p = s.split(','); family = p[0].trim(); given = p.slice(1).join(',').trim(); }\n    else { const p = s.split(/\\s+/); family = p.pop() || ''; given = p.join(' '); }\n    const ini = given.split(/[\\s.\\-]+/).filter(Boolean).map(w => w[0].toUpperCase() + '.').join(' ');\n    return ini ? `${family}, ${ini}` : family;\n  }).filter(Boolean);\n}\n// ACS-style author list joined with \"; \", capped with \"et al.\", trailing period.\nfunction acsAuthorsStr(authors, cap) {\n  const names = acsAuthors(authors);\n  if (!names.length) return '';\n  const many = cap && names.length > cap;\n  let auth = (many ? names.slice(0, cap) : names).join('; ');\n  if (many) auth += ' et al.';\n  if (!/\\.$/.test(auth)) auth += '.'; // period before the venue\n  return auth;\n}\n// ACS-style meta line: \"Doe, J.; Smith, A. B. Chem. Sci. 2026\" (no DOI).\nfunction acsMetaLine(authors, venue, year, cap) {\n  return [acsAuthorsStr(authors, cap), venue, year].filter(Boolean).join(' ');\n}\n\n// Injected into the page — must be self-contained.\nfunction extractPageMetadata() {\n  const doiRe = /10\\.\\d{4,9}\\/[^\\s\"'<>&]+/;\n  const one = (n) => {\n    const el = document.querySelector(`meta[name=\"${n}\" i], meta[property=\"${n}\" i]`);\n    return el && el.content ? el.content.trim() : '';\n  };\n  const all = (n) => Array.from(document.querySelectorAll(`meta[name=\"${n}\" i]`))\n    .map(e => (e.content || '').trim()).filter(Boolean);\n  let doi = '';\n  for (const n of ['citation_doi', 'dc.identifier', 'dc.identifier.doi', 'prism.doi', 'doi']) {\n    const m = one(n).match(doiRe);\n    if (m) { doi = m[0]; break; }\n  }\n  if (!doi) {\n    try {\n      const m = decodeURIComponent(location.href).match(doiRe);\n      if (m) doi = m[0].replace(/[.,;)\\]]+$/, '');\n    } catch (e) { /* malformed escape */ }\n  }\n  if (!doi) {\n    const a = document.querySelector('a[href*=\"doi.org/10.\"]');\n    if (a) {\n      const m = decodeURIComponent(a.href).match(doiRe);\n      if (m) doi = m[0];\n    }\n  }\n  let arxiv = one('citation_arxiv_id');\n  if (!arxiv) {\n    const m = location.href.match(/arxiv\\.org\\/(?:abs|pdf)\\/([a-z\\-]+(?:\\.[A-Z]{2})?\\/\\d{7}|\\d{4}\\.\\d{4,5})/i);\n    if (m) arxiv = m[1];\n  }\n  if (!arxiv && doi) {\n    const m = doi.match(/^10\\.48550\\/arxiv\\.(.+)$/i);\n    if (m) { arxiv = m[1]; doi = ''; }\n  }\n  // Google Scholar's \"view citation\" page carries no citation_* meta tags, and\n  // its document.title is just \"論文を見る\" / \"View article\" — the generic\n  // extraction above would hand the popup that as the paper's title. Read the\n  // page's own field table instead.\n  const scholarCitation = /(^|\\.)scholar\\.google\\./i.test(location.hostname) &&\n    /[?&]view_op=view_citation(&|$)/.test(location.search);\n  if (scholarCitation) {\n    const fields = {};\n    // Prefer Scholar's class names, but fall back to the label's next sibling so\n    // a markup change degrades to empty fields instead of throwing.\n    document.querySelectorAll('.gsc_oci_field').forEach(f => {\n      const row = f.parentElement;\n      const v = (row && row.querySelector('.gsc_oci_value')) || f.nextElementSibling;\n      if (v) fields[f.textContent.trim()] = v.textContent.trim();\n    });\n    const pick = (...labels) => { for (const l of labels) if (fields[l]) return fields[l]; return ''; };\n    // A selector list returns the first match in DOCUMENT order, so the wrapper\n    // div would win over its own link. Walk down explicitly.\n    const titleBox = document.querySelector('#gsc_oci_title');\n    const titleLink = (titleBox && titleBox.querySelector('a')) || document.querySelector('a.gsc_oci_title_link');\n    const pubHref = (titleLink && titleLink.href) || '';\n    // Many publishers put the DOI straight in the article URL; when they do we\n    // can skip the lookup entirely.\n    if (!doi && pubHref) {\n      try {\n        const m = decodeURIComponent(pubHref).match(doiRe);\n        if (m) doi = m[0].replace(/[.,;)\\]]+$/, '');\n      } catch (e) { /* malformed escape */ }\n    }\n    if (!arxiv && pubHref) {\n      const m = pubHref.match(/arxiv\\.org\\/(?:abs|pdf)\\/([a-z\\-]+(?:\\.[A-Z]{2})?\\/\\d{7}|\\d{4}\\.\\d{4,5})/i);\n      if (m) arxiv = m[1];\n    }\n    if (!arxiv && doi) {\n      const m = doi.match(/^10\\.48550\\/arxiv\\.(.+)$/i);\n      if (m) { arxiv = m[1]; doi = ''; }\n    }\n    const dateM = pick('公開日', 'Publication date').match(/\\d{4}/);\n    return {\n      url: pubHref || location.href.replace(/#.*$/, ''),\n      doi, arxiv,\n      scholarCitation: true,\n      title: ((titleLink || titleBox || {}).textContent || '').trim(),\n      authors: pick('著者', 'Authors', 'Inventors').split(/\\s*,\\s*/).filter(Boolean),\n      journal: pick('論文誌', '雑誌', 'ジャーナル', 'Journal', 'Source', '会議', 'Conference', '書籍', 'Book'),\n      journalAbbr: '',\n      year: dateM ? dateM[0] : '',\n      volume: pick('巻', 'Volume'),\n      issue: pick('号', 'Issue'),\n      page: pick('ページ', 'Pages'),\n      abstract: pick('説明', 'Description'),\n      image: '',\n    };\n  }\n\n  const yr = (one('citation_publication_date') || one('citation_date') ||\n    one('citation_online_date') || one('prism.publicationdate')).match(/\\d{4}/);\n  const first = one('citation_firstpage') || one('prism.startingpage') || '';\n  const last = one('citation_lastpage') || one('prism.endingpage') || '';\n  const page = first ? (last && last !== first ? first + '-' + last : first) : '';\n  return {\n    url: location.href.replace(/#.*$/, ''),\n    doi, arxiv,\n    title: one('citation_title') || one('og:title') || document.title || '',\n    authors: all('citation_author'),\n    journal: one('citation_journal_title') || one('og:site_name') || '',\n    journalAbbr: one('citation_journal_abbrev') || '',\n    year: yr ? yr[0] : '',\n    volume: one('citation_volume') || one('prism.volume') || '',\n    issue: one('citation_issue') || one('prism.number') || '',\n    page,\n    abstract: one('citation_abstract') || one('dcterms.abstract') || one('dc.description') || '',\n    // graphical abstract / TOC image — chemistry publishers expose it as og:image\n    image: one('og:image') || one('citation_image') || one('twitter:image') || '',\n  };\n}\n\n// Injected into the page to fetch the graphical-abstract image from the page's own\n// origin (activeTab grants this on the user's save click). Returns a data URL so the\n// bytes travel through chrome.storage to Paper Library, which writes them to disk.\nasync function fetchImageAsDataUrl(url) {\n  try {\n    const r = await fetch(url);\n    if (!r.ok) return null;\n    const b = await r.blob();\n    if (!/^image\\//.test(b.type || '') || b.size > 8 * 1024 * 1024) return null;\n    return await new Promise((res) => {\n      const fr = new FileReader();\n      fr.onload = () => res({ dataUrl: fr.result, type: b.type });\n      fr.onerror = () => res(null);\n      fr.readAsDataURL(b);\n    });\n  } catch (e) { return null; }\n}\n\n// Injected into the page: collect likely graphical-abstract / TOC image URLs,\n// ranked best-first. Publisher og:image is unreliable (ACS sometimes serves a\n// challenge page; Nature's is often a social card), so we also scan the DOM for\n// real figures and rank by publisher-specific hints and rendered size. The popup\n// then previews each so the user can pick the right one before importing.\nfunction collectImageCandidates() {\n  const abs = (u) => { try { return new URL(u, location.href).href; } catch (e) { return ''; } };\n  const out = [];\n  const seen = new Set();\n  const push = (url, score) => {\n    const u = abs(url);\n    if (!u || !/^https?:/i.test(u) || seen.has(u)) return;\n    seen.add(u); out.push({ url: u, score });\n  };\n  const metaC = (n) => {\n    const el = document.querySelector(`meta[name=\"${n}\" i], meta[property=\"${n}\" i]`);\n    return el && el.content ? el.content.trim() : '';\n  };\n  // DOM figures — most reliable for the actual graphical abstract.\n  Array.from(document.images || []).forEach((img) => {\n    const src = img.currentSrc || img.src || img.getAttribute('data-src') || '';\n    if (!src) return;\n    const w = img.naturalWidth || 0, h = img.naturalHeight || 0;\n    const container = img.closest('figure, .figure, [class*=\"abstract\" i], [class*=\"graphic\" i]');\n    const clsOf = (el) => { const c = el && el.className; return typeof c === 'string' ? c : (c && c.baseVal) || ''; };\n    const hay = (src + ' ' + (img.alt || '') + ' ' + (img.id || '') + ' ' + clsOf(img) + ' ' + clsOf(container) + ' ' + (container ? container.id : '')).toLowerCase();\n    let score = 0;\n    if (/abstract|graphical|\\btoc\\b|scheme|\\bga\\b|synopsis/.test(hay)) score += 1000;\n    if (/\\/asset\\/images\\/|_abstract|mediumimage|largeimage|\\/cms\\/.*asset/.test(hay)) score += 500; // ACS\n    if (/springernature|springer-static|media\\.nature|\\/lw\\d{3}|\\/full\\//.test(hay)) score += 400;    // Nature/Springer\n    if (/wiley|onlinelibrary|\\/asset\\/.*\\.(png|jpe?g|gif)/.test(hay)) score += 250;                    // Wiley\n    if (/logo|icon|sprite|avatar|orcid|badge|button/.test(hay)) score -= 900;\n    if (w && h) {\n      if (w < 80 || h < 80) return;              // decorative / icon-sized\n      score += Math.min((w * h) / 1500, 600);    // bigger rendered image = better\n    }\n    // Keep only images that either loaded at a usable size or match a strong hint.\n    if ((w >= 80 && h >= 80) || score >= 400) push(src, score);\n  });\n  // Meta fallbacks (lower priority than a well-scored DOM figure).\n  push(metaC('citation_image'), 300);\n  push(metaC('og:image'), 260);\n  push(metaC('og:image:secure_url'), 255);\n  push(metaC('twitter:image'), 200);\n  push(metaC('twitter:image:src'), 195);\n  out.sort((a, b) => b.score - a.score);\n  return out.slice(0, 10).map((o) => o.url);\n}\n\n// Fallback when scripting is blocked (PDF viewer, chrome:// pages…).\nfunction metaFromUrl(url, title) {\n  const out = { url: String(url || ''), doi: '', arxiv: '', title: String(title || ''), authors: [], journal: '', journalAbbr: '', year: '', abstract: '' };\n  try {\n    const dec = decodeURIComponent(out.url);\n    const a = dec.match(/arxiv\\.org\\/(?:abs|pdf)\\/([a-z\\-]+(?:\\.[A-Z]{2})?\\/\\d{7}|\\d{4}\\.\\d{4,5})/i);\n    if (a) out.arxiv = a[1];\n    else {\n      const m = dec.match(DOI_RE);\n      if (m) out.doi = m[0].replace(/[.,;)\\]]+$/, '');\n    }\n  } catch (e) { /* ignore */ }\n  return out;\n}\n\nfunction normKeys(meta) {\n  return {\n    doiKey: meta.doi ? 'doi:' + meta.doi.toLowerCase() : '',\n    arxivKey: meta.arxiv ? 'arxiv:' + String(meta.arxiv).toLowerCase().replace(/v\\d+$/, '') : '',\n  };\n}\n\nfunction folderTree(collections) {\n  const byParent = new Map();\n  (collections || []).forEach(c => {\n    const k = c.parent || '';\n    if (!byParent.has(k)) byParent.set(k, []);\n    byParent.get(k).push(c);\n  });\n  for (const arr of byParent.values()) arr.sort((a, b) => a.name.localeCompare(b.name, JA ? 'ja' : 'en'));\n  const out = [];\n  (function walk(parent, depth) {\n    (byParent.get(parent) || []).forEach(c => {\n      out.push({ id: c.id, name: c.name, depth });\n      walk(c.id, depth + 1);\n    });\n  })('', 0);\n  return out;\n}\n\nconst $ = (s) => document.querySelector(s);\nfunction esc(s) {\n  return String(s).replace(/[&<>\"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', \"'\": '&#39;' }[c]));\n}\n\nasync function init() {\n  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });\n  let meta = null;\n  if (tab && /^(https?|file):/.test(tab.url || '')) {\n    try {\n      const res = await chrome.scripting.executeScript({ target: { tabId: tab.id }, func: extractPageMetadata });\n      meta = res && res[0] && res[0].result;\n    } catch (e) { /* injection blocked (PDF viewer etc.) */ }\n  }\n  if (!meta) meta = metaFromUrl(tab && tab.url, tab && tab.title);\n\n  // The \"active paper\" (what Save will queue) is normally the current tab's page,\n  // but the citation search below can replace it with a looked-up paper. These\n  // are recomputed by refreshPaper() whenever the active paper changes.\n  let doiKey = '', arxivKey = '', identifiable = false, activeFromTab = true;\n\n  // ---- graphical-abstract image picker (candidates + preview + manual file) ----\n  // imgCands: URLs found on the page (best first). imgCache: url → dataUrl (or\n  // null once a fetch failed). imgManual: a data URL the user chose from a file.\n  // imgIdx: index into imgCands, or -1 when showing the manual file.\n  let imgCands = [], imgIdx = -1, imgManual = '', imgManualType = '';\n  const imgCache = new Map();\n\n  // Fetch the bytes for a candidate URL as a data URL. Same-origin images (ACS\n  // graphical abstracts, Wiley) resolve through a page-context fetch; CORS-enabled\n  // CDNs (many Nature/Springer images) resolve by drawing into a canvas.\n  async function candidateDataUrl(url) {\n    if (imgCache.has(url)) return imgCache.get(url);\n    let dataUrl = null;\n    if (activeFromTab && tab && tab.id != null && /^https?:/.test(tab.url || '')) {\n      try {\n        const res = await chrome.scripting.executeScript({ target: { tabId: tab.id }, func: fetchImageAsDataUrl, args: [url] });\n        const got = res && res[0] && res[0].result;\n        if (got && got.dataUrl) dataUrl = got.dataUrl;\n      } catch (e) { /* injection blocked / CORS → try canvas */ }\n    }\n    if (!dataUrl) {\n      try {\n        dataUrl = await new Promise((resolve, reject) => {\n          const im = new Image();\n          im.crossOrigin = 'anonymous';\n          im.onload = () => {\n            try {\n              const c = document.createElement('canvas');\n              c.width = im.naturalWidth; c.height = im.naturalHeight;\n              c.getContext('2d').drawImage(im, 0, 0);\n              resolve(c.toDataURL('image/png'));\n            } catch (err) { reject(err); }\n          };\n          im.onerror = reject;\n          im.src = url;\n        });\n      } catch (e) { dataUrl = null; }\n    }\n    imgCache.set(url, dataUrl);\n    return dataUrl;\n  }\n\n  // The data URL that Save will queue (candidate bytes, or the manual file), or ''.\n  function selectedImageData() {\n    if (imgIdx === -1) return imgManual || '';\n    const url = imgCands[imgIdx];\n    return (url && imgCache.get(url)) || '';\n  }\n\n  function setManualImage(blob) {\n    if (!blob || !/^image\\//i.test(blob.type || '')) return false;\n    if (blob.size > 8 * 1024 * 1024) {\n      $('#imgHint').textContent = T.imgTooLarge;\n      $('#imgHint').style.display = 'block';\n      return false;\n    }\n    const fr = new FileReader();\n    fr.onload = () => {\n      imgManual = fr.result;\n      imgManualType = blob.type || 'image/png';\n      imgIdx = -1;\n      showImgAt();\n    };\n    fr.readAsDataURL(blob);\n    return true;\n  }\n\n  async function pasteImageFromClipboard() {\n    try {\n      if (!navigator.clipboard || !navigator.clipboard.read) throw new Error('clipboard-read-unavailable');\n      const items = await navigator.clipboard.read();\n      for (const item of items) {\n        const type = item.types.find(t => /^image\\//i.test(t));\n        if (type) return setManualImage(await item.getType(type));\n      }\n      $('#imgHint').textContent = T.imgPasteNone;\n      $('#imgHint').style.display = 'block';\n      return false;\n    } catch (e) {\n      $('#imgHint').textContent = T.imgPasteFail;\n      $('#imgHint').style.display = 'block';\n      return false;\n    }\n  }\n\n  function renderImgControls() {\n    const total = imgCands.length + (imgManual ? 1 : 0);\n    const onManual = imgIdx === -1 && imgManual;\n    const pos = onManual ? total : (imgIdx >= 0 ? imgIdx + 1 : 0);\n    $('#imgCount').textContent = total ? (onManual ? T.imgManualLabel : T.imgCount(pos, imgCands.length)) : '';\n    const hasNav = imgCands.length > 1 || (imgManual && imgCands.length >= 1);\n    $('#imgPrev').disabled = !hasNav;\n    $('#imgNext').disabled = !hasNav;\n    $('#imgClear').style.display = (imgManual || imgCands.length) ? 'inline-flex' : 'none';\n  }\n\n  async function showImgAt() {\n    const prev = $('#imgPreview'), empty = $('#imgEmpty'), hint = $('#imgHint');\n    hint.style.display = 'none';\n    renderImgControls();\n    if (imgIdx === -1) {\n      // manual file (already a data URL) or nothing\n      if (imgManual) { prev.src = imgManual; prev.style.display = 'block'; empty.style.display = 'none'; }\n      else { prev.style.display = 'none'; empty.style.display = 'block'; empty.textContent = T.imgNone; }\n      $('#imgInclude').checked = !!imgManual;\n      return;\n    }\n    const url = imgCands[imgIdx];\n    empty.style.display = 'none';\n    prev.style.display = 'none';\n    $('#imgEmpty').textContent = T.imgLoading; $('#imgEmpty').style.display = 'block';\n    const dataUrl = await candidateDataUrl(url);\n    // The active candidate may have changed while we awaited; re-check.\n    if (imgIdx < 0 || imgCands[imgIdx] !== url) return;\n    empty.style.display = 'none';\n    // Preview from bytes when we have them, else straight from the URL so the user\n    // can still see (and decide about) images we could not fetch.\n    prev.src = dataUrl || url;\n    prev.style.display = 'block';\n    $('#imgInclude').checked = true;\n    if (!dataUrl) { hint.textContent = T.imgFetchFail; hint.style.display = 'block'; }\n  }\n\n  function imgStep(delta) {\n    // Order: candidates [0..n-1] then the manual file (index -1) if present.\n    const items = imgCands.map((_, i) => i).concat(imgManual ? [-1] : []);\n    if (!items.length) return;\n    const cur = items.indexOf(imgIdx);\n    const next = items[(cur + delta + items.length) % items.length];\n    imgIdx = next;\n    showImgAt();\n  }\n\n  // Detect candidates for the current tab's page and show the first one.\n  async function loadImageCandidates() {\n    imgCands = []; imgIdx = -1; imgManual = ''; imgManualType = ''; imgCache.clear();\n    if (activeFromTab && tab && tab.id != null && /^https?:/.test(tab.url || '')) {\n      try {\n        const res = await chrome.scripting.executeScript({ target: { tabId: tab.id }, func: collectImageCandidates });\n        imgCands = (res && res[0] && res[0].result) || [];\n      } catch (e) { imgCands = []; }\n    }\n    // Fold in the meta og:image the page extraction already found, if new.\n    if (meta.image && !imgCands.includes(meta.image)) imgCands.push(meta.image);\n    if (imgCands.length) imgIdx = 0;\n    else if (imgManual) imgIdx = -1;\n    showImgAt();\n  }\n\n  // ---- title + ACS-style meta line (authors, journal abbrev, year; no DOI) ----\n  function renderHeader() {\n    const venueOf = (journal) => journal || (meta.arxiv ? 'arXiv:' + meta.arxiv : '');\n    const renderMeta = (journal) => {\n      // Split the line so authors / journal / year·volume·page can be styled\n      // differently (journal dark + italic; the rest muted) — otherwise a single\n      // grey run of \"authors journal year\" is hard to scan.\n      const authors = acsAuthorsStr(meta.authors, 10);\n      const venue = venueOf(journal);\n      // ACS-style tail: Year, Volume, Page\n      const tail = [meta.year, meta.volume, meta.page].map(s => String(s || '').trim()).filter(Boolean);\n      const tailStr = tail.join(', ');\n      const endPeriod = (s) => s && !/[.]$/.test(s) ? s + '.' : s; // close the reference\n      let html = '';\n      if (authors) html += `<span class=\"mAuth\">${esc(authors)}<\/span> `;\n      if (tailStr) {\n        if (venue) html += `<span class=\"mJournal\">${esc(venue)}<\/span>`;\n        html += ` <span class=\"mTail\">${esc(endPeriod(tailStr))}<\/span>`;\n      } else if (venue) {\n        html += `<span class=\"mJournal\">${esc(endPeriod(venue))}<\/span>`;\n      }\n      $('#paperMeta').innerHTML = html;\n    };\n    $('#paperTitle').textContent = meta.title || meta.doi || meta.arxiv || '';\n    const abbr = abbreviate(meta.journal, meta.journalAbbr);\n    renderMeta(abbr || meta.journal);\n    if (!abbr && meta.doi && meta.journal) {\n      fetchCrossrefAbbrev(meta.doi).then(a => { if (a) renderMeta(a); });\n    }\n  }\n\n  // ---- load libraries (with fallback from the old single-snapshot shape) ----\n  let { libraries = {}, activeLib, pending = [], appUrl = '' } =\n    await chrome.storage.local.get(['libraries', 'activeLib', 'pending', 'appUrl']);\n  if (!Object.keys(libraries).length) {\n    const { snapshot } = await chrome.storage.local.get('snapshot');\n    if (snapshot && snapshot.persistent) {\n      const id = snapshot.libraryId || snapshot.libraryName || 'default';\n      libraries = { [id]: { id, name: snapshot.libraryName || '', collections: snapshot.collections || [], tags: snapshot.tags || [], journals: snapshot.journals || [], saved: snapshot.saved || {} } };\n      if (!activeLib) activeLib = id;\n    }\n  }\n  const libIds = Object.keys(libraries);\n  if (!activeLib || !libraries[activeLib]) activeLib = libIds[0];\n  const currentLib = () => libraries[activeLib] || null;\n\n  // ---- \"open Paper Library to import\" helpers ----\n  // The library folder can only be written by the Paper Library page (browser\n  // security — an extension can't write to your chosen folder). So a save is\n  // captured here and flushed when the page is open; offer to open it.\n  async function appTabState() {\n    const url = (currentLib() && currentLib().url) || appUrl || '';\n    if (!url) return { url: '', open: false };\n    try {\n      const base = url.split('#')[0];\n      const tabs = await chrome.tabs.query({});\n      return { url, open: tabs.some(t => t.url && t.url.split('#')[0] === base) };\n    } catch (e) { return { url, open: false }; }\n  }\n  function setNote(text, url) {\n    $('#note').className = 'ok';\n    $('#note').textContent = text;\n    if (url) {\n      const b = document.createElement('button');\n      b.textContent = T.openApp;\n      b.addEventListener('click', () => { chrome.tabs.create({ url }); window.close(); });\n      $('#note').appendChild(document.createElement('br'));\n      $('#note').appendChild(b);\n    }\n  }\n  async function showImportHint(msgOpen, msgClosed, msgNoUrl) {\n    const { url, open } = await appTabState();\n    if (open) setNote(msgOpen, '');\n    else if (url) setNote(msgClosed, url);\n    else setNote(msgNoUrl, '');\n  }\n\n  if (!libIds.length) { $('#warn').style.display = 'block'; $('#warn').textContent = T.needSync; }\n\n  // ---- destination-library picker ----\n  // Always a real <select> — even with a single known library — so the\n  // destination is a control the user can change, not static text. It fills\n  // in with more options as the extension learns about more libraries (each\n  // Paper Library page you've opened posts its own snapshot).\n  const renderDestLib = () => {\n    if (!libIds.length) { $('#destLib').style.display = 'none'; return; }\n    $('#destLib').style.display = 'block';\n    const opts = libIds.map(id =>\n      `<option value=\"${esc(id)}\"${id === activeLib ? ' selected' : ''}>${esc(libraries[id].name || id)}<\/option>`).join('');\n    $('#destLib').innerHTML = `<div class=\"libRow\"><span>${esc(T.destLib)}:<\/span><select id=\"libSel\">${opts}<\/select><\/div>`;\n    $('#libSel').addEventListener('change', async (e) => {\n      activeLib = e.target.value;\n      await chrome.storage.local.set({ activeLib });\n      renderForLibrary(); // collections/saved-state differ per library\n    });\n  };\n\n  // ---- per-library section (status, collections, tags, save button) ----\n  const collName = (id) => {\n    const lib = currentLib();\n    const c = lib && (lib.collections || []).find(x => x.id === id);\n    return c ? c.name : '';\n  };\n  const btn = $('#save');\n\n  // Selection + UI state (source of truth across re-renders from expand/search/new).\n  let checkedColls = new Set();  // collection ids (existing) or 'new:*' (created here)\n  let checkedTags = new Set();   // tag names\n  let expanded = new Set();      // expanded parent collection ids\n  let newColls = [];             // [{id:'new:N', name, parent}] created in the popup\n  let newTags = [];              // new tag names created in the popup\n  let collSearch = '', tagSearch = '';\n  let newCollSeq = 0;\n\n  // existing collections (+ any created here) as flat {id,name,parent,isNew}\n  const collData = () => {\n    const lib = currentLib();\n    const base = ((lib && lib.collections) || []).map(c => ({ id: c.id, name: c.name, parent: c.parent || '', isNew: false }));\n    const all = base.concat(newColls.map(c => ({ id: c.id, name: c.name, parent: c.parent || '', isNew: true })));\n    const byId = new Map(all.map(c => [c.id, c]));\n    const byParent = new Map();\n    all.forEach(c => { const k = c.parent || ''; if (!byParent.has(k)) byParent.set(k, []); byParent.get(k).push(c); });\n    for (const arr of byParent.values()) arr.sort((a, b) => a.name.localeCompare(b.name, JA ? 'ja' : 'en'));\n    return { all, byId, byParent };\n  };\n  // \"/\"-joined name path (used to create a nested collection on the app side)\n  const collPath = (id, sep) => {\n    const { byId } = collData();\n    const names = []; const seen = new Set(); let cur = byId.get(id);\n    while (cur && !seen.has(cur.id)) { seen.add(cur.id); names.unshift(cur.name); cur = cur.parent ? byId.get(cur.parent) : null; }\n    return names.join(sep || '/');\n  };\n  const hasKids = (byParent, id) => (byParent.get(id) || []).length > 0;\n  const checkedCollNames = () => {\n    const { byId } = collData();\n    return Array.from(checkedColls).map(id => { const c = byId.get(id); return c ? c.name : ''; }).filter(Boolean);\n  };\n\n  function renderFolders() {\n    const { all, byId, byParent } = collData();\n    const box = $('#folders');\n    if (!all.length) { box.innerHTML = `<div class=\"none\">${esc(T.noFolders)}<\/div>`; return; }\n    const q = collSearch.trim().toLowerCase();\n    let show = null, auto = null;\n    if (q) {\n      show = new Set(); auto = new Set();\n      // Add a branch below a matching parent.  `autoOpen` is deliberately\n      // search-only: clearing the query returns to the user's normal tree state.\n      const revealSubtree = (pid, autoOpen = false) => (byParent.get(pid) || []).forEach(ch => {\n        show.add(ch.id);\n        if (autoOpen && hasKids(byParent, ch.id)) auto.add(ch.id);\n        if (autoOpen || expanded.has(ch.id)) revealSubtree(ch.id, autoOpen);\n      });\n      all.forEach(c => {\n        if (!c.name.toLowerCase().includes(q)) return;\n        show.add(c.id);\n        let p = c.parent;\n        while (p) { show.add(p); auto.add(p); const pc = byId.get(p); p = pc ? pc.parent : ''; }\n        // A matching parent is a useful destination category, so show its\n        // complete branch rather than making non-matching children look absent.\n        if (hasKids(byParent, c.id)) {\n          auto.add(c.id);\n          revealSubtree(c.id, true);\n        }\n      });\n      // A branch the user manually expands during a search should reveal its\n      // children too, even ones that don't match the query.\n      all.forEach(c => { if (expanded.has(c.id) && show.has(c.id)) revealSubtree(c.id); });\n    }\n    const rows = [];\n    (function walk(parent, depth) {\n      (byParent.get(parent) || []).forEach(c => {\n        if (q && !show.has(c.id)) return;\n        const kids = hasKids(byParent, c.id);\n        // Auto-open ancestors of a match, plus anything the user opened by hand.\n        const open = expanded.has(c.id) || (q && auto.has(c.id));\n        const twist = kids\n          ? `<span class=\"twist${open ? ' open' : ''}\" data-toggle=\"${esc(c.id)}\">▶<\/span>`\n          : `<span class=\"twist leaf\">▶<\/span>`;\n        const tag = c.isNew ? `<span class=\"newTag\">${esc(T.newBadge)}<\/span>` : '';\n        rows.push(\n          `<div class=\"collRow${kids ? ' hasKids' : ''}\" style=\"padding-left:${depth * 13}px\" data-id=\"${esc(c.id)}\">${twist}` +\n          `<input type=\"checkbox\" value=\"${esc(c.id)}\"${checkedColls.has(c.id) ? ' checked' : ''}>` +\n          `<span class=\"cn\">${esc(c.name)}<\/span>${tag}<\/div>`);\n        if (open) walk(c.id, depth + 1);\n      });\n    })('', 0);\n    box.innerHTML = rows.length ? rows.join('') : `<div class=\"none\">${esc(T.noMatch)}<\/div>`;\n  }\n\n  function renderTags() {\n    const lib = currentLib();\n    const box = $('#tags');\n    const all = Array.from(new Set(((lib && lib.tags) || []).map(String).concat(newTags)))\n      .sort((a, b) => a.localeCompare(b, JA ? 'ja' : 'en'));\n    if (!all.length) { box.innerHTML = `<div class=\"none\">${esc(T.noTags)}<\/div>`; return; }\n    const q = tagSearch.trim().toLowerCase();\n    const shown = q ? all.filter(n => n.toLowerCase().includes(q)) : all;\n    box.innerHTML = shown.length\n      ? shown.map(name => `<label><input type=\"checkbox\" value=\"${esc(name)}\"${checkedTags.has(name) ? ' checked' : ''}>${esc(name)}<\/label>`).join('')\n      : `<div class=\"none\">${esc(T.noMatch)}<\/div>`;\n  }\n\n  // parent picker options for the \"new collection\" form (existing collections only)\n  function renderCollParentOptions() {\n    const { all } = collData();\n    const opts = [`<option value=\"\">${esc(T.parentTop)}<\/option>`].concat(\n      all.filter(c => !c.isNew)\n        .map(c => ({ id: c.id, label: collPath(c.id, ' / ') }))\n        .sort((a, b) => a.label.localeCompare(b.label, JA ? 'ja' : 'en'))\n        .map(c => `<option value=\"${esc(c.id)}\">${esc(c.label)}<\/option>`));\n    $('#collNewParent').innerHTML = opts.join('');\n  }\n\n  function updateExpandAllLabel() {\n    const { all, byParent } = collData();\n    const anyOpen = all.some(c => hasKids(byParent, c.id) && expanded.has(c.id));\n    $('#collExpandAll').innerHTML = anyOpen ? withIcon(ICON.chevronsUp, T.collapseAll) : withIcon(ICON.chevronsDown, T.expandAll);\n  }\n\n  // Collections/tags share a sub-tab bar so only one list is shown at a time; the\n  // count badges keep selections on the hidden tab visible.\n  function updateSubTabs() {\n    const badge = (n) => n ? ` <span class=\"subTabCount\">${n}<\/span>` : '';\n    $('#subTabColl').innerHTML = withIcon(ICON.folder, T.collTab) + badge(checkedColls.size);\n    $('#subTabTag').innerHTML = withIcon(ICON.tag, T.tagTab) + badge(checkedTags.size);\n  }\n\n  function renderForLibrary() {\n    // fresh per-library selection / UI state\n    checkedColls = new Set(); checkedTags = new Set(); expanded = new Set();\n    newColls = []; newTags = []; collSearch = ''; tagSearch = '';\n    if ($('#collSearch')) $('#collSearch').value = '';\n    if ($('#tagSearch')) $('#tagSearch').value = '';\n    if ($('#collNewForm')) $('#collNewForm').style.display = 'none';\n    if ($('#tagNewForm')) $('#tagNewForm').style.display = 'none';\n\n    const lib = currentLib();\n    const saved = (lib && lib.saved) || {};\n    const savedColls = (doiKey && saved[doiKey]) || (arxivKey && saved[arxivKey]) || null;\n    const isQueued = pending.some(p => {\n      const k = normKeys(p);\n      return (doiKey && k.doiKey === doiKey) || (arxivKey && k.arxivKey === arxivKey);\n    });\n\n    // status chip\n    if (savedColls) {\n      $('#status').innerHTML = `<span class=\"chip saved\">${esc(T.saved)}<\/span>`;\n    } else if (isQueued) {\n      $('#status').innerHTML = `<span class=\"chip queued\">${esc(T.queued)}<\/span>`;\n    } else if (identifiable) {\n      $('#status').innerHTML = `<span class=\"chip new\">${esc(T.notSaved)}<\/span>`;\n    } else {\n      $('#status').innerHTML = '';\n    }\n\n    updateSubTabs();\n    renderCollParentOptions();\n    renderFolders();\n    renderTags();\n    updateExpandAllLabel();\n    // journals already in this library, offered as suggestions in the \"find\" tab\n    const journalList = $('#findJournalList');\n    if (journalList) journalList.innerHTML = ((lib && lib.journals) || []).map(j => `<option value=\"${esc(j)}\"><\/option>`).join('');\n\n    btn.dataset.saved = savedColls ? '1' : '';\n    updateBtn();\n  }\n\n  const updateBtn = () => {\n    const names = checkedCollNames();\n    const label = !names.length ? T.saveRoot : (btn.dataset.saved ? T.addTo : T.saveTo)(names.join('・'));\n    btn.innerHTML = withIcon(ICON.bookmark, label);\n    updateSubTabs();\n  };\n\n  // ---- wire the collection / tag controls (delegated; survive re-renders) ----\n  $('#collSearch').placeholder = T.searchColl;\n  $('#tagSearch').placeholder = T.searchTag;\n  $('#collNewBtn').innerHTML = withIcon(ICON.plus, T.newColl);\n  $('#tagNewBtn').innerHTML = withIcon(ICON.plus, T.newTag);\n  $('#collNewName').placeholder = T.collName;\n  $('#tagNewName').placeholder = T.tagName;\n  $('#collNewAdd').innerHTML = withIcon(ICON.check, T.addBtn);\n  $('#tagNewAdd').innerHTML = withIcon(ICON.check, T.addBtn);\n\n  $('#folders').addEventListener('click', (e) => {\n    // The checkbox toggles selection (handled by the 'change' listener); let it be.\n    if (e.target.closest('input[type=checkbox]')) return;\n    const row = e.target.closest('.collRow');\n    if (!row) return;\n    const id = row.dataset.id;\n    if (row.classList.contains('hasKids')) {\n      // Clicking the twist, the name, or anywhere on a parent row expands it —\n      // works during a search too (matches stay visible via auto-expand).\n      if (expanded.has(id)) expanded.delete(id); else expanded.add(id);\n      renderFolders();\n      updateExpandAllLabel();\n    } else {\n      // Leaf row: clicking the name toggles its selection.\n      const cb = row.querySelector('input[type=checkbox]');\n      if (!cb) return;\n      cb.checked = !cb.checked;\n      if (cb.checked) checkedColls.add(id); else checkedColls.delete(id);\n      updateBtn();\n    }\n  });\n  $('#folders').addEventListener('change', (e) => {\n    const cb = e.target.closest('input[type=checkbox]');\n    if (!cb) return;\n    if (cb.checked) checkedColls.add(cb.value); else checkedColls.delete(cb.value);\n    updateBtn();\n  });\n  $('#tags').addEventListener('change', (e) => {\n    const cb = e.target.closest('input[type=checkbox]');\n    if (!cb) return;\n    if (cb.checked) checkedTags.add(cb.value); else checkedTags.delete(cb.value);\n    updateSubTabs();\n  });\n  $('#collSearch').addEventListener('input', (e) => { collSearch = e.target.value; renderFolders(); });\n  $('#tagSearch').addEventListener('input', (e) => { tagSearch = e.target.value; renderTags(); });\n  $('#collExpandAll').addEventListener('click', () => {\n    const { all, byParent } = collData();\n    const anyOpen = all.some(c => hasKids(byParent, c.id) && expanded.has(c.id));\n    expanded = anyOpen ? new Set() : new Set(all.filter(c => hasKids(byParent, c.id)).map(c => c.id));\n    renderFolders();\n    updateExpandAllLabel();\n  });\n\n  const toggleForm = (formSel, focusSel, onOpen) => {\n    const f = $(formSel);\n    const opening = f.style.display === 'none';\n    f.style.display = opening ? 'flex' : 'none';\n    if (opening) { if (onOpen) onOpen(); $(focusSel).focus(); }\n  };\n  $('#collNewBtn').addEventListener('click', () => toggleForm('#collNewForm', '#collNewName', renderCollParentOptions));\n  $('#tagNewBtn').addEventListener('click', () => toggleForm('#tagNewForm', '#tagNewName'));\n\n  const addNewColl = () => {\n    const name = $('#collNewName').value.trim();\n    if (!name) { $('#collNewName').focus(); return; }\n    const parent = $('#collNewParent').value || '';\n    const id = 'new:' + (++newCollSeq);\n    newColls.push({ id, name, parent });\n    checkedColls.add(id);\n    if (parent) expanded.add(parent);\n    $('#collNewName').value = '';\n    collSearch = ''; $('#collSearch').value = '';\n    renderCollParentOptions();\n    renderFolders();\n    updateExpandAllLabel();\n    updateBtn();\n    $('#collNewName').focus();\n  };\n  $('#collNewAdd').addEventListener('click', addNewColl);\n  $('#collNewName').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addNewColl(); } });\n\n  const addNewTag = () => {\n    const name = $('#tagNewName').value.trim();\n    if (!name) { $('#tagNewName').focus(); return; }\n    if (!newTags.includes(name)) newTags.push(name);\n    checkedTags.add(name);\n    $('#tagNewName').value = '';\n    tagSearch = ''; $('#tagSearch').value = '';\n    renderTags();\n    updateSubTabs();\n    $('#tagNewName').focus();\n  };\n  $('#tagNewAdd').addEventListener('click', addNewTag);\n  $('#tagNewName').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addNewTag(); } });\n\n  // ---- collections / tags sub-tabs (one list visible at a time) ----\n  function showCollTag(name) {\n    const coll = name === 'coll';\n    $('#collPane').style.display = coll ? 'block' : 'none';\n    $('#tagPane').style.display = coll ? 'none' : 'block';\n    $('#subTabColl').classList.toggle('active', coll);\n    $('#subTabTag').classList.toggle('active', !coll);\n  }\n  $('#subTabColl').addEventListener('click', () => showCollTag('coll'));\n  $('#subTabTag').addEventListener('click', () => showCollTag('tag'));\n  showCollTag('coll');\n\n  renderDestLib();\n\n  // ---- image picker labels + controls ----\n  $('#imgLabel').innerHTML = withIcon(ICON.image, T.imgLabel);\n  $('#imgIncludeLabel').textContent = T.imgInclude;\n  $('#imgPick').textContent = T.imgPick;\n  $('#imgPaste').textContent = T.imgPaste;\n  $('#imgClear').textContent = T.imgClear;\n  $('#imgPrev').title = T.imgPrevTitle;\n  $('#imgNext').title = T.imgNextTitle;\n  $('#fetchPdfLabel').innerHTML = withIcon(ICON.download, T.fetchPdf);\n  $('#imgPrev').addEventListener('click', () => imgStep(-1));\n  $('#imgNext').addEventListener('click', () => imgStep(1));\n  $('#imgPick').addEventListener('click', () => $('#imgFile').click());\n  $('#imgPaste').addEventListener('click', pasteImageFromClipboard);\n  $('#imgClear').addEventListener('click', () => {\n    // Drop the current selection; just untick \"import\" so nothing is queued.\n    $('#imgInclude').checked = false;\n    $('#imgPreview').style.display = 'none';\n    $('#imgHint').style.display = 'none';\n    $('#imgEmpty').textContent = T.imgNone; $('#imgEmpty').style.display = 'block';\n  });\n  $('#imgFile').addEventListener('change', (e) => {\n    const file = e.target.files && e.target.files[0];\n    if (!file) return;\n    if (!/^image\\//.test(file.type || '')) return;\n    setManualImage(file);\n    e.target.value = '';\n  });\n  document.addEventListener('paste', (e) => {\n    const item = Array.from((e.clipboardData && e.clipboardData.items) || [])\n      .find(x => x.kind === 'file' && /^image\\//i.test(x.type || ''));\n    if (!item) return;\n    const file = item.getAsFile();\n    if (!file || !setManualImage(file)) return;\n    e.preventDefault();\n  });\n\n  btn.addEventListener('click', async () => {\n    btn.disabled = true;\n    // existing collection ids to file into, plus name-paths for any created here\n    const collIds = Array.from(checkedColls).filter(id => !String(id).startsWith('new:'));\n    const newCollections = Array.from(checkedColls)\n      .filter(id => String(id).startsWith('new:')).map(id => collPath(id)).filter(Boolean);\n    const tagNames = Array.from(checkedTags);\n    // Selected graphical-abstract image (candidate bytes or a chosen file), only\n    // when the user left \"Import this image\" checked.\n    let imageData = '', imageType = '';\n    if ($('#imgInclude') && $('#imgInclude').checked) {\n      imageData = selectedImageData();\n      if (imgIdx === -1) imageType = imgManualType || '';\n    }\n    const fetchPdf = !!($('#fetchPdf') && $('#fetchPdf').checked);\n    const item = {\n      id: (crypto.randomUUID && crypto.randomUUID()) || String(Date.now()) + Math.random().toString(36).slice(2),\n      doi: meta.doi || '', arxiv: meta.arxiv || '', url: meta.url || '',\n      title: meta.title || '', authors: meta.authors || [], journal: meta.journal || '',\n      year: meta.year || '', abstract: meta.abstract || '',\n      collections: collIds, newCollections, tags: tagNames, imageData, imageType, fetchPdf, targetLib: activeLib || '', savedAt: Date.now(),\n    };\n    const { pending: cur = [] } = await chrome.storage.local.get('pending');\n    cur.push(item);\n    await chrome.storage.local.set({ pending: cur });\n    const destColl = checkedCollNames().join('・') || T.uncat;\n    const libLabel = (currentLib() && currentLib().name) || '';\n    const dest = libLabel ? `${libLabel} / ${destColl}` : destColl;\n    $('#status').innerHTML = `<span class=\"chip queued\">${esc(T.queued)}<\/span>`;\n    await showImportHint(T.doneOpen(dest), T.doneClosed(dest), T.doneNoUrl(dest));\n  });\n\n  // Render header/status/note/save-enabled for the active paper — the current\n  // tab's page, or one picked from the citation search. Re-run when it changes.\n  function refreshPaper() {\n    ({ doiKey, arxivKey } = normKeys(meta));\n    identifiable = !!(meta.doi || meta.arxiv || meta.title);\n    renderHeader();\n    // Image picker: candidates come from the current tab's page; a manual file can\n    // be chosen for any paper (including ones picked from the citation search).\n    $('#imgSection').style.display = 'block';\n    loadImageCandidates();\n    renderForLibrary();\n    $('#note').className = ''; $('#note').textContent = '';\n    btn.disabled = !identifiable;\n    if (!identifiable) { $('#note').textContent = T.noPaper; return; }\n    // if already queued (popup reopened before importing), explain how it imports\n    const alreadyQueued = pending.some(p => {\n      const k = normKeys(p);\n      return (doiKey && k.doiKey === doiKey) || (arxivKey && k.arxivKey === arxivKey);\n    });\n    const saved = (currentLib() && currentLib().saved) || {};\n    const savedNow = (doiKey && saved[doiKey]) || (arxivKey && saved[arxivKey]) || null;\n    if (alreadyQueued && !savedNow) showImportHint(T.pendingOpen, T.pendingClosed, T.pendingNoUrl);\n  }\n\n  // ---- tabs: \"add the current page\" vs \"find a paper by citation\" ----\n  $('#tabAdd').innerHTML = withIcon(ICON.plus, T.tabAdd);\n  $('#tabFind').innerHTML = withIcon(ICON.search, T.tabFind);\n  function showTab(name) {\n    const add = name === 'add';\n    $('#paneAdd').style.display = add ? 'block' : 'none';\n    $('#paneFind').style.display = add ? 'none' : 'block';\n    $('#tabAdd').classList.toggle('active', add);\n    $('#tabFind').classList.toggle('active', !add);\n  }\n  $('#tabAdd').addEventListener('click', () => showTab('add'));\n  $('#tabFind').addEventListener('click', () => showTab('find'));\n\n  // ---- find a paper by citation (journal / year / volume / page / author…) ----\n  $('#findHint').textContent = T.findHint;\n  $('#findJournal').placeholder = T.findJournalPh;\n  $('#findYear').placeholder = T.findYearPh;\n  $('#findVolume').placeholder = T.findVolumePh;\n  $('#findPage').placeholder = T.findPagePh;\n  $('#findExtra').placeholder = T.findExtraPh;\n  $('#findGo').innerHTML = withIcon(ICON.search, T.findGo);\n  function renderFindResults(cands) {\n    const box = $('#findResults'); box.innerHTML = '';\n    cands.slice(0, 8).forEach(c => {\n      const card = document.createElement('div');\n      card.className = 'findCand';\n      const venue = [c.journalAbbr || c.journal, c.volume, c.year].filter(Boolean).join(' ');\n      const sub = acsMetaLine(c.authors, venue, '', 6) || venue;\n      const url = c.url || (c.doi ? 'https://doi.org/' + c.doi : '');\n      card.innerHTML = `<div class=\"ct\">${esc(c.title || c.doi || '')}${c._exact ? `<span class=\"exact\">${esc(T.findExact)}<\/span>` : ''}<\/div>` +\n        `<div class=\"cm\">${esc(sub)}<\/div>` +\n        `<div class=\"candBtns\"><button type=\"button\" class=\"candReg\">${withIcon(ICON.bookmark, T.findRegister)}<\/button>` +\n        `<button type=\"button\" class=\"candOpen\"${url ? '' : ' disabled'}>${withIcon(ICON.externalLink, T.findOpen)}<\/button><\/div>`;\n      // Register → load the paper into the \"Add\" tab so collections/tags can be\n      // chosen, then Save queues it exactly like a page save.\n      card.querySelector('.candReg').addEventListener('click', () => {\n        meta = c; activeFromTab = false;\n        refreshPaper();\n        showTab('add');\n        if (!$('#note').textContent) setNote(T.findPicked, '');\n      });\n      const openBtn = card.querySelector('.candOpen');\n      if (url) openBtn.addEventListener('click', () => { chrome.tabs.create({ url }); window.close(); });\n      box.appendChild(card);\n    });\n  }\n  async function runFind() {\n    const f = { journal: $('#findJournal').value, year: $('#findYear').value, volume: $('#findVolume').value, page: $('#findPage').value, extra: $('#findExtra').value };\n    if (!Object.values(f).some(v => String(v).trim())) { $('#findStatus').textContent = T.findNeedInput; return; }\n    $('#findResults').innerHTML = ''; $('#findStatus').textContent = T.findSearching; $('#findGo').disabled = true;\n    try {\n      let cands = [];\n      const doiM = String(f.extra).match(DOI_RE);\n      if (doiM) { const one = await crossrefByDoi(doiM[0].replace(/[.,;)\\]]+$/, '')); if (one) cands = [one]; }\n      if (!cands.length) cands = await crossrefFindByFields(f);\n      $('#findGo').disabled = false;\n      if (!cands.length) { $('#findStatus').textContent = T.findNone; return; }\n      $('#findStatus').textContent = ''; renderFindResults(cands);\n    } catch (e) { console.error(e); $('#findGo').disabled = false; $('#findStatus').textContent = T.findError; }\n  }\n  $('#findGo').addEventListener('click', runFind);\n  ['findJournal', 'findYear', 'findVolume', 'findPage', 'findExtra'].forEach(id => {\n    $('#' + id).addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); runFind(); } });\n  });\n\n  refreshPaper();\n  // A Scholar citation page gives us the bibliographic fields but usually no\n  // DOI, so prime the citation search instead of offering a DOI-less save:\n  // one click turns it into a real CrossRef record.\n  if (meta.scholarCitation && !meta.doi && !meta.arxiv) {\n    $('#findJournal').value = meta.journal || '';\n    $('#findYear').value = meta.year || '';\n    $('#findVolume').value = meta.volume || '';\n    $('#findPage').value = meta.page || '';\n    $('#findExtra').value = meta.title || '';\n    showTab('find');\n  } else {\n    // Open on the tab that fits the page: a paper page → \"Add\"; anything else → \"Find\".\n    showTab(identifiable ? 'add' : 'find');\n  }\n}\n\ninit().catch(e => {\n  console.error(e);\n  $('#note').textContent = T.restricted;\n});\n"},
+  "sniffer.js": {text: "// Runs on every http(s) page. It keeps the toolbar badge for a single paper\n// page, decorates Google Scholar results, and marks each DOI in a publisher's\n// reference list. Matching uses only the local snapshot sent by the app.\n(function () {\n  if (document.querySelector('meta[name=\"refshelf-app\"]')) return; // the app itself\n\n  const DOI_RE = /10\\.\\d{4,9}\\/[^\\s\"'<>&]+/;\n  const isScholar = /(^|\\.)scholar\\.google\\./i.test(location.hostname);\n  const ja = /^ja\\b/i.test(navigator.language || '');\n  let scholarTimer = 0;\n\n  function meta(name) {\n    const el = document.querySelector(`meta[name=\"${name}\" i], meta[property=\"${name}\" i]`);\n    return el && el.content ? el.content.trim() : '';\n  }\n\n  // Keep this in sync with Paper Library's normTitle().\n  function normTitle(value) {\n    return String(value || '').toLowerCase().normalize('NFKD')\n      .replace(/[\\u0300-\\u036f]/g, '')\n      .replace(/[^a-z0-9一-龯ぁ-んァ-ン]+/g, ' ')\n      .replace(/\\s+/g, ' ').trim();\n  }\n\n  function normDoi(raw) {\n    const m = String(raw || '').match(DOI_RE);\n    // Trailing punctuation is part of the surrounding sentence, not the DOI.\n    return m ? m[0].toLowerCase().replace(/[.,;)\\]]+$/, '') : '';\n  }\n\n  function yearOf(value) {\n    const match = String(value || '').match(/\\b(?:18|19|20)\\d{2}\\b/);\n    return match ? match[0] : '';\n  }\n\n  function findIds() {\n    let doi = '';\n    for (const n of ['citation_doi', 'dc.identifier', 'dc.identifier.doi', 'prism.doi', 'doi']) {\n      const m = meta(n).match(DOI_RE);\n      if (m) { doi = m[0]; break; }\n    }\n    if (!doi) {\n      try {\n        const m = decodeURIComponent(location.href).match(DOI_RE);\n        if (m) doi = m[0].replace(/[.,;)\\]]+$/, '');\n      } catch (e) { /* malformed escape in URL */ }\n    }\n    if (!doi) {\n      const a = document.querySelector('a[href*=\"doi.org/10.\"]');\n      if (a) {\n        const m = decodeURIComponent(a.href).match(DOI_RE);\n        if (m) doi = m[0];\n      }\n    }\n    let arxiv = meta('citation_arxiv_id');\n    if (!arxiv) {\n      const m = location.href.match(/arxiv\\.org\\/(?:abs|pdf)\\/([a-z\\-]+(?:\\.[A-Z]{2})?\\/\\d{7}|\\d{4}\\.\\d{4,5})/i);\n      if (m) arxiv = m[1];\n    }\n    if (!arxiv && doi) {\n      const m = doi.match(/^10\\.48550\\/arxiv\\.(.+)$/i);\n      if (m) { arxiv = m[1]; doi = ''; }\n    }\n    return {\n      doi: doi.toLowerCase(),\n      arxiv: String(arxiv || '').toLowerCase().replace(/v\\d+$/, ''),\n    };\n  }\n\n  function activeLibrary(store) {\n    const libraries = store.libraries || {};\n    return libraries[store.activeLib] || Object.values(libraries)[0] || null;\n  }\n\n  function queuedMatch(pending, title, year) {\n    const key = normTitle(title);\n    return pending.some(p => key && normTitle(p.title) === key &&\n      (!year || !p.year || String(p.year) === year));\n  }\n\n  function matchByTitle(lib, pending, title, year) {\n    if (!lib) return { kind: 'unknown' };\n    // Existing connector installations may hold a pre-1.1 snapshot without\n    // this index. Do not label those rows as new until the app syncs once.\n    if (!Object.prototype.hasOwnProperty.call(lib, 'titleIndex')) return { kind: 'unknown' };\n    const key = normTitle(title);\n    const candidates = key && lib.titleIndex && lib.titleIndex[key];\n    // A title alone can legitimately occur in multiple years. With a visible\n    // year, declare a match only when a stored record has the same year.\n    const exact = (candidates || []).filter(item => !year || !item.year || String(item.year) === year);\n    if (exact.length) return { kind: 'saved', collections: exact[0].collections || [] };\n    if (queuedMatch(pending, title, year)) return { kind: 'queued' };\n    return { kind: 'new' };\n  }\n\n  // A reference carries a DOI, which is an exact identifier — no title/year\n  // guessing needed, so this is far more reliable than matchByTitle().\n  function matchByDoi(lib, pending, doi) {\n    if (!lib || !lib.saved) return { kind: 'unknown' };\n    const key = 'doi:' + doi;\n    if (Object.prototype.hasOwnProperty.call(lib.saved, key)) {\n      return { kind: 'saved', collections: lib.saved[key] || [] };\n    }\n    if (pending.some(p => normDoi(p.doi) === doi)) return { kind: 'queued' };\n    return { kind: 'new' };\n  }\n\n  function statusLabel(match, lib, clickable) {\n    if (match.kind === 'saved') {\n      const names = (match.collections || []).map(id => {\n        const c = (lib.collections || []).find(entry => entry.id === id);\n        return c && c.name;\n      }).filter(Boolean);\n      const base = ja ? 'Paper Library に登録済み（タイトル・年が一致）' : 'In Paper Library (exact title and year match)';\n      return names.length ? `${base}: ${names.join(', ')}` : base;\n    }\n    if (match.kind === 'queued') return ja ? 'Paper Library への保存待ち' : 'Queued for Paper Library';\n    if (match.kind === 'unknown') return ja ? '未同期：Paper Library でライブラリを開いてください' : 'Not synced: open a library in Paper Library';\n    const base = ja ? 'Paper Library に未登録' : 'Not in Paper Library';\n    if (!clickable) return base;\n    return base + (ja ? ' — クリックで論文ページを新しいタブで開く' : ' — click to open the paper in a new tab');\n  }\n\n  function addBadgeStyle() {\n    if (document.getElementById('plc-badge-style')) return;\n    const style = document.createElement('style');\n    style.id = 'plc-badge-style';\n    // Scholar styles headings and links heavily, so reset the inherited text\n    // properties the badge depends on rather than assuming defaults.\n    style.textContent = `\n      .plc-status{display:inline-block;position:relative;box-sizing:border-box;width:28px;height:21px;margin:0 0 0 6px;padding:0;vertical-align:-5px;line-height:0;font-style:normal;text-indent:0;text-transform:none;letter-spacing:0;cursor:default;user-select:none}\n      .plc-status *{box-sizing:border-box}\n      .plc-status[href]{cursor:pointer;text-decoration:none;border:0;outline-offset:2px}\n      .plc-status__mark{transition:transform .12s ease}\n      .plc-status[href]:hover .plc-status__mark{transform:scale(1.15)}\n      .plc-status[href]:focus-visible{outline:2px solid #2563eb;border-radius:4px}\n      @media (prefers-reduced-motion:reduce){.plc-status__mark{transition:none}}\n      .plc-status__logo{display:block;width:21px;height:21px;overflow:visible}\n      .plc-status__mark{position:absolute;right:0;bottom:-2px;display:flex;align-items:center;justify-content:center;width:13px;height:13px;margin:0;padding:0;border:2px solid #fff;border-radius:50%;background:#7b8794;color:#fff;font:800 10px/1 Arial,Helvetica,sans-serif;text-indent:0;letter-spacing:0;box-shadow:0 1px 2px rgba(0,0,0,.28)}\n      .plc-status--saved .plc-status__mark{background:#16a34a}.plc-status--new .plc-status__mark{background:#1e40af}.plc-status--queued .plc-status__mark{background:#d97706}.plc-status--unknown .plc-status__mark{background:#7b8794}\n      @media (prefers-color-scheme:dark){.plc-status__mark{border-color:#202124;box-shadow:0 1px 2px rgba(0,0,0,.55)}.plc-status--saved .plc-status__mark{background:#36b661}.plc-status--new .plc-status__mark{background:#2f6fe4}.plc-status--queued .plc-status__mark{background:#e99b28}.plc-status--unknown .plc-status__mark{background:#8995a3}}\n    `;\n    (document.head || document.documentElement).appendChild(style);\n  }\n\n  // For a citation-only result the badge lives inside the heading, so reading\n  // textContent again on a later pass would fold the badge glyph into the\n  // title. Remember the text from the first sighting of each element instead.\n  function titleTextOf(el) {\n    if (el.__plcTitleText === undefined) el.__plcTitleText = el.textContent;\n    return el.__plcTitleText;\n  }\n\n  // The badge links to wherever the row's title already points, so a click is\n  // just the user's own click in a new tab. Refuse anything but http(s): the\n  // href comes from indexed page content, not from us.\n  function linkUrl(a) {\n    if (!a || !a.getAttribute('href')) return '';\n    try {\n      const u = new URL(a.href, location.href);\n      return (u.protocol === 'http:' || u.protocol === 'https:') ? u.href : '';\n    } catch (e) { return ''; }\n  }\n\n  function dropAttr(el, name) { if (el.hasAttribute(name)) el.removeAttribute(name); }\n\n  // Repainting must not write values that are already in place: the Scholar\n  // MutationObserver below watches this subtree, so an unconditional write\n  // would schedule another update and spin forever.\n  function setText(el, value) { if (el.textContent !== value) el.textContent = value; }\n  function setAttr(el, name, value) { if (el.getAttribute(name) !== value) el.setAttribute(name, value); }\n\n  const CITATION_PAGE_RE = /[?&]view_op=view_citation(&|$)/;\n\n  // A profile row's title points at Scholar's own citation page, which has no\n  // DOI, no abstract and no graphical abstract. That page does carry the\n  // publisher's link, so resolve it on click and go straight there. This costs\n  // exactly one Scholar request per click — the same page the click was already\n  // about to load — so it adds no traffic over clicking the title by hand.\n  async function resolvePublisherUrl(detailUrl) {\n    const r = await fetch(detailUrl, { credentials: 'same-origin' });\n    if (!r.ok) return '';\n    const doc = new DOMParser().parseFromString(await r.text(), 'text/html');\n    const box = doc.querySelector('#gsc_oci_title');\n    const link = (box && box.querySelector('a')) || doc.querySelector('a.gsc_oci_title_link');\n    const href = link && link.getAttribute('href');\n    if (!href) return '';\n    // Resolve against the response's own URL: it is always absolute and already\n    // follows any redirect, so this does not rely on the caller's href being one.\n    const u = new URL(href, r.url || detailUrl);\n    return (u.protocol === 'http:' || u.protocol === 'https:') ? u.href : '';\n  }\n\n  function onBadgeClick(e, badge) {\n    const detailUrl = badge.getAttribute('href');\n    // Search results already link to the publisher, and a modified click is the\n    // user asking the browser to handle it — leave both alone.\n    if (!detailUrl || !CITATION_PAGE_RE.test(detailUrl)) return;\n    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;\n    e.preventDefault();\n    if (badge.__plcBusy) return;\n    badge.__plcBusy = true;\n    badge.style.opacity = '.5'; // inline style: not a mutation the observer watches\n    resolvePublisherUrl(detailUrl)\n      .catch(() => '')\n      .then(target => {\n        badge.__plcBusy = false;\n        badge.style.opacity = '';\n        const dest = target || detailUrl; // Scholar blocked or markup moved\n        return chrome.runtime.sendMessage({ type: 'open', url: dest })\n          .catch(() => { window.open(dest, '_blank', 'noopener'); });\n      });\n  }\n\n  function paintBadge(target, inside, match, lib, url) {\n    let badge = target.__plcBadge;\n    if (!badge || !badge.isConnected) {\n      // An anchor, so the clickable state gets middle-click, cmd-click and the\n      // context menu for free. Without an href it is inert, exactly like the\n      // span it replaces.\n      badge = document.createElement('a');\n      badge.addEventListener('click', (e) => onBadgeClick(e, badge));\n      // Google Scholar's CSP blocks chrome-extension:// image URLs injected\n      // into its document. Draw the Paper Library book mark inline instead.\n      const logo = document.createElementNS('http://www.w3.org/2000/svg', 'svg');\n      // An SVG element's .className is a read-only SVGAnimatedString: assigning\n      // to it is a silent no-op, which would leave the logo at its default\n      // replaced-element size (264px here) instead of 21px. Use setAttribute,\n      // and keep width/height attributes as a fallback if the class is lost.\n      logo.setAttribute('class', 'plc-status__logo');\n      logo.setAttribute('viewBox', '0 0 32 32');\n      logo.setAttribute('width', '21');\n      logo.setAttribute('height', '21');\n      logo.setAttribute('aria-hidden', 'true');\n      logo.innerHTML = '<path d=\"M16 8.35C13.2 5.95 8.7 5.7 4.75 6.95v16.2c3.95-1.15 8.45-.8 11.25 1.85z\" fill=\"#2563eb\"/>'\n        + '<path d=\"M16 8.35C18.8 5.95 23.3 5.7 27.25 6.95v16.2c-3.95-1.15-8.45-.8-11.25 1.85z\" fill=\"#60a5fa\"/>'\n        + '<path d=\"M7.8 11.15c1.85-.5 3.7-.48 5.15.06M7.8 14.55c1.85-.5 3.7-.48 5.15.06M19.05 11.15c1.85-.5 3.7-.48 5.15.06M19.05 14.55c1.85-.5 3.7-.48 5.15.06\" stroke=\"#fff\" stroke-width=\"1.05\" stroke-linecap=\"round\" opacity=\".82\"/>'\n        + '<path d=\"M16 8.5v16.25\" stroke=\"#eff6ff\" stroke-width=\"1.25\" stroke-linecap=\"round\"/>'\n        + '<rect x=\"3\" y=\"24.25\" width=\"26\" height=\"3.25\" rx=\"1.6\" fill=\"#3b82f6\"/>';\n      const mark = document.createElement('span');\n      mark.className = 'plc-status__mark';\n      badge.append(logo, mark);\n      badge.__plcMark = mark;\n      // A citation-only result has no link, so the target is the heading\n      // itself; appending keeps the badge on the title line either way.\n      if (inside) target.appendChild(badge);\n      else target.insertAdjacentElement('afterend', badge);\n      target.__plcBadge = badge;\n    }\n    // U+22EF sits on the middle of the em box, unlike '…' which hugs the\n    // baseline and reads as clipped inside a 13px circle.\n    const icon = { saved: '✓', queued: '⋯', unknown: '–', new: '+' }[match.kind];\n    // Only an unsaved paper is worth a trip to its page; the other states have\n    // nowhere useful to send the user.\n    const clickable = match.kind === 'new' && !!url;\n    const label = statusLabel(match, lib, clickable);\n    setAttr(badge, 'class', `plc-status plc-status--${match.kind}`);\n    setText(badge.__plcMark, icon);\n    setAttr(badge, 'title', label);\n    setAttr(badge, 'aria-label', label);\n    if (clickable) {\n      setAttr(badge, 'href', url);\n      setAttr(badge, 'target', '_blank');\n      setAttr(badge, 'rel', 'noopener noreferrer');\n      dropAttr(badge, 'role'); // implicit link role is the accurate one here\n    } else {\n      dropAttr(badge, 'href');\n      dropAttr(badge, 'target');\n      dropAttr(badge, 'rel');\n      setAttr(badge, 'role', 'img');\n    }\n  }\n\n  function updateScholar(store) {\n    if (!isScholar) return;\n    const lib = activeLibrary(store);\n    const pending = store.pending || [];\n    addBadgeStyle();\n    document.querySelectorAll('tr.gsc_a_tr').forEach(row => {\n      const title = row.querySelector('a.gsc_a_at');\n      if (!title) return;\n      const year = yearOf((row.querySelector('.gsc_a_y') || {}).textContent);\n      paintBadge(title, false, matchByTitle(lib, pending, titleTextOf(title), year), lib || {}, linkUrl(title));\n    });\n    document.querySelectorAll('.gs_ri').forEach(row => {\n      const heading = row.querySelector('h3.gs_rt');\n      if (!heading) return;\n      // The badge is itself an anchor appended inside the heading, so a plain\n      // 'a' lookup would find it on the next pass and badge the badge.\n      const link = heading.querySelector('a:not(.plc-status)');\n      const metaText = (row.querySelector('.gs_a') || {}).textContent || '';\n      const match = matchByTitle(lib, pending, titleTextOf(link || heading), yearOf(metaText));\n      paintBadge(link || heading, !link, match, lib || {}, linkUrl(link));\n    });\n  }\n\n  // ---- publisher reference lists -------------------------------------------\n  // Every publisher in scope (Wiley, ACS, Nature, RSC, Science, Elsevier, OUP)\n  // prints a DOI on each reference, either as a link or as bare text. Anchor on\n  // the DOI rather than on each site's markup, so one rule covers all of them —\n  // including the university's EZproxy rewrites (doi-org.kyoto-u.idm.oclc.org).\n  const REF_CONTAINER_RE = /(^|[^a-z])(ref|refs|reference|references|bib|bibliography|citation|citations)([^a-z]|$)/i;\n\n  function isInReferenceList(el) {\n    for (let i = 0; el && i < 5; i++, el = el.parentElement) {\n      const id = el.id || '';\n      const cls = typeof el.className === 'string' ? el.className : '';\n      if (REF_CONTAINER_RE.test(id) || REF_CONTAINER_RE.test(cls)) return true;\n      if (el.getAttribute && el.getAttribute('role') === 'doc-bibliography') return true;\n    }\n    return false;\n  }\n\n  function firstTextDoi(entry) {\n    const walker = document.createTreeWalker(entry, NodeFilter.SHOW_TEXT);\n    let n;\n    while ((n = walker.nextNode())) {\n      const d = normDoi(n.nodeValue);\n      if (d) return d;\n    }\n    return '';\n  }\n\n  // One badge per DOI per page, first occurrence winning. Entry-based dedup was\n  // tried first and does not work: ACS and OUP build references out of divs and\n  // give every link-out its own \"ref\"-named wrapper, so the DOI link, Crossref,\n  // OpenURL and PubMed each looked like a separate reference and each got a\n  // badge. Document order also puts the anchor showing the DOI ahead of the\n  // link-out buttons, so the badge lands next to the DOI itself.\n  const refDoiOwner = new Map();\n\n  function claimDoi(doi, el) {\n    const owner = refDoiOwner.get(doi);\n    // A re-rendered list may have replaced the element that held the badge.\n    if (owner && owner !== el && owner.isConnected) return false;\n    refDoiOwner.set(doi, el);\n    return true;\n  }\n\n  function updateReferences(store, ownDoi) {\n    const lib = activeLibrary(store);\n    // Without a snapshot every reference would show the same grey dash, which on\n    // a 100-entry list is noise rather than information. Stay out of the way.\n    if (!lib || !lib.saved) return;\n    const pending = store.pending || [];\n    addBadgeStyle();\n\n    document.querySelectorAll('a[href]').forEach(a => {\n      if (a.__plcSkip) return;\n      let doi = a.__plcDoi;\n      if (doi === undefined) {\n        const href = a.getAttribute('href') || '';\n        let decoded = href;\n        try { decoded = decodeURIComponent(href); } catch (e) { /* malformed escape */ }\n        doi = normDoi(decoded);\n        // Our own badge links to doi.org; the page's own DOI is already covered\n        // by the toolbar badge; anything outside a reference list is unrelated.\n        if (!doi || doi === ownDoi || a.classList.contains('plc-status') ||\n            !isInReferenceList(a) || !claimDoi(doi, a)) { a.__plcSkip = true; return; }\n        a.__plcDoi = doi;\n      }\n      paintBadge(a, false, matchByDoi(lib, pending, doi), lib, 'https://doi.org/' + doi);\n    });\n\n    // Science prints the DOI as plain text next to the citation, so entries that\n    // no link accounted for get one text scan.\n    document.querySelectorAll('li, [role=\"doc-biblioentry\"]').forEach(entry => {\n      if (entry.__plcSkip) return;\n      let doi = entry.__plcTextDoi;\n      if (doi === undefined) {\n        if (!isInReferenceList(entry)) { entry.__plcSkip = true; return; }\n        doi = firstTextDoi(entry);\n        if (!doi || doi === ownDoi || !claimDoi(doi, entry)) { entry.__plcSkip = true; return; }\n        entry.__plcTextDoi = doi;\n      }\n      paintBadge(entry, true, matchByDoi(lib, pending, doi), lib, 'https://doi.org/' + doi);\n    });\n  }\n\n  function scheduleUpdate() {\n    if (scholarTimer) return;\n    // Scholar's list is interactive, so keep it snappy; a publisher article is\n    // read top to bottom and often keeps mutating (ads, widgets), so wait longer.\n    scholarTimer = setTimeout(() => { scholarTimer = 0; update(); }, isScholar ? 80 : 300);\n  }\n\n  async function update() {\n    const { libraries = {}, activeLib, pending = [] } =\n      await chrome.storage.local.get(['libraries', 'activeLib', 'pending']);\n    const store = { libraries, activeLib, pending };\n    const { doi, arxiv } = findIds();\n    let text = '';\n    if (doi || arxiv) {\n      // badge reflects the active (destination) library, matching the popup\n      const lib = activeLibrary(store);\n      const saved = (lib && lib.saved) || {};\n      const queued = pending.some(p =>\n        (doi && String(p.doi || '').toLowerCase() === doi) ||\n        (arxiv && String(p.arxiv || '').toLowerCase().replace(/v\\d+$/, '') === arxiv));\n      if ((doi && saved['doi:' + doi]) || (arxiv && saved['arxiv:' + arxiv])) text = '✓';\n      else if (queued) text = '…';\n      else text = '+'; // recognizable paper, not yet in the library → prompt to add\n    }\n    if (isScholar) updateScholar(store);\n    else updateReferences(store, doi);\n    try { await chrome.runtime.sendMessage({ type: 'badge', text }); }\n    catch (e) { /* extension reloaded / worker unavailable */ }\n  }\n\n  chrome.storage.onChanged.addListener((ch, area) => {\n    if (area === 'local' && (ch.libraries || ch.activeLib || ch.pending)) update();\n  });\n  new MutationObserver(scheduleUpdate).observe(document.documentElement, { childList: true, subtree: true });\n  update();\n})();\n"},
 };
 /* === END CONNECTOR_FILES === */
 
@@ -15685,7 +19304,7 @@ function downloadWordAddinZip(){
 }
 // End users only need the manifest — taskpane.html etc. are served from GitHub Pages.
 function downloadWordManifest(){
-  const f = WORDADDIN_FILES['paper-library.manifest.xml'];
+  const f = WORDADDIN_FILES['manifest.xml'];
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([f.text], {type:'application/xml'}));
   a.download = 'paper-library.manifest.xml';
@@ -15705,15 +19324,23 @@ const WORDADDIN_FILES = {
   "assets/logo-64.png": {b64: "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAQKADAAQAAAABAAAAQAAAAABlmWCKAAAOeUlEQVR4Ae2a2W/dRxXHz73XS2I7tuO0dZ24S1q1KS0obFWhQEFVxfIAKiCBEBXvICreeET8B/AGqOojpRL0raJIZQ00VKKg0i2iS7olTdLYcR07tq/vxvdzzszvXqe+zq9V+1J7nN9vZs6cc+Zsc2Z+c1PpqNg2LtVtrLurvmOAnQjY5hbYWQLbPABsJwJ2ImCbW2BnCWzzALCBd2OA5ZW2vXBi3Y6fXLeFpZYtqb+81rHhwYqN7q7Y2EjNrr1y0G6YHbKZfQNWqbybWcz4Sjn9VtuOn2rZa2dbtrzasZX1jq3pGR2u2J6Rqk2MVOzgdM2un6nZmOZ+p6WUAeYXW/a3/1ywx55esaN6Ts83zaqaTBJWa1pFqivqV6QpylYEUsvr8dGqff6jo3bnx0fsjsO7bWR461W3KuWOHmvY359r2GN6zsu4bRkCfi01Wi3NpUmoKe12qEw9vbdqtx0atE/dNGh3fHjQpvZsPReUlTJfgz97cM5+/uA5V8iJpKQrrk4VQ6hkL1drYQQAVT0d/WWcibGaffeuPXrGbUKG6S1L8u7vjtbtIT2LF5JyVHpQnIKStLMx+JAFlg3Si/fDr47YvV8bcbqtXqUiwD0rebMieLvwOnpIPhQnZMMQYYRuJISRWCa/enjRfv3nZfvRNybtm58bc9l+/+91u+/RNV9KzFXNtpFynUrHasn7AU9GFaUwraVxjFDT/N1ClHR7W7VKGiAUQyGmhTlGqCIRE9EX0BWmzR9DPgYexmGZQF+1lXrH7v/DebvzE6MA7IEja7bWkKJuxKh9AMuKl/RzZt2rCzF2ayu6NOS8ESLRQ1MYEdotSikDMFeNtY5yPB4B1DE5y8GV1URFlDguhtCjdjZWtCt24LIBG0hem9lXs4UV5RUV9yrrWzTM2+mgjBYSoQ9P/bGsaOF5xqBx4wBWT1Q0SpVSBnAl0D8rLklcGASSFbJSzOi4XnvPx3h5RDi9hIOOdio0a95HmRA/hzXJzo2aBtpeZywYpAiBMhkOGBhlSjkDiBMhjmFRJAsEiFJ4PY15SKJ0UtyjVW3Xn1qNXgMETzhlsamTFxUBgJ0HDKQkOTHWfMKBVAUcH4O/5ilTyhlAvLpKI3ywBobnZi8fsBmF9NR4zYaHIhmuap2/+Zb27znt39rKSJIUdMhRElxYuuKjcTDI5DnZjWtfv2KiYnvHqtr3I0rIFQvLbTt1rm0n57VFahk452AfFpAlsox5jn51KQMwQ3gsGCPqlTrg/ODuCTt01bANDcI+S6BWt+nzvnKmaY88sWL/eGbN+WwaAaLpaD2T8e86PGifOSSD7gEYom/wdepwKHryeNN+c6TuRsmGc2kukiG4vP1dygCEU97mPBLE55aDQ/aR63ap1bGG8teJuYZOam27oK0OQdjnL5uo2eV6Dl45YN/5wpgONvWIJFH1GinzJArI+J+9ScrL6/A+pzPB/JJOgIqoury/mxPgrorN6NAzomi7XYee599o21+eWhc+JaxDpJUppQ2AwL6mU33kqVVbksILyx07oZOhJys/FQpPsjM/UTO9d8BuvnrQTmk5uOcLPmBEQdi8BSoE7JeP1m1qtCK+bTuvA1LvqY/8wjofFN51OgJfNl61x59fl4PEy3WPXaLXwHmezeqSBghlYFCEmZR88qVGKCsFUC57Mk+OAeaW2nbk2XrgiSZwunkEnp4EsYfwKwqBheR1P0UK3nGDgoCGgdOSIfD8sRMth1V1IMLqOIlk+J4mQWfMNEnJIssDQy4hFEdg9VASUXsNkts+5gJCF4X8iAfJLS49YDVbvs/TBl6oLwCnvzDixcoSLQGDyaXLO4oAVxZh8RSd1EY4uq6c5sRQ6qa+coIGQ3ElUciSIbN4jBFZ0PD2gw4dkCns7xp3DIHUKwptsFA6GHjPd5sCaYtGSQOEtUOJUIzJJLddMz1g1+phV5hU4uOTGFlWlZPmz7fslTeb9tKZliewfGIM4yFolArnfZil0lJU82k7q0Q3rW2QhLpbOw0ppt4w5Z6OnVpo2ctvtu30AmmTEl+IzkcCZNvFWP93SQOE0tl7KH+jvvV//K1JG1NG3lCEBKRwiNoNefBP/63bb4+ueCSAjzFzYflEBATlt28ftsNXk9U2FvdyAnXM9147o/uC+/9Yt5PnIhfEMBG6kbZfr5QB4AZDF5q2hB/XZQTKswW+Nte01882/cKC73nKpD599ylDHzowIG9W7WPXD9pDj4uJ02/0ELLiuXzCu1z7P/MtrrDDtG1eB5+Vutl6s2O7FGHMe2Cq6s/0ZNX276tolyEGYvmwhKAvU0oZAGY5fGFKyD55fN3u/cU5W9b+7KcxJgRPiuApT4pq6zPFDuikyG0Ohgt6oaY2fbZA310UzQh//1/XbWig4jT04d97D4Ci9HcPme3Vdvnq2bYbsCXcNINkjJZPuMWrlAGgdyOgnNoRvh1b1DkAYfiXD0reFl7MjyWq9oaOrRRwYBDHVDh1C0ZgkI8rMjlHXoxS7ARijDE4KVKTE8kzHLm7yyfz28g7QzerSxkAZfxwg2Li4srp5Z+4EgZv+pPGsD44iEHtUQFeInaYd0IkwB4BKKfwKbZE0TgPwUEnssKUqeM7g+Ba/vB43+4DmL2rbNUVQhqE9nCXAZC0MJK6WUmM4Z4DWf8Q1MPfJUbqiAxYxHjVmnJ78BXMNRd7hTxNCuFPxHBoyiZyS2EgnQ/8jqCHf1Bt/i4dARH24QkEcY+rEbWYox+RAIxxXipuFA1m42RYGNRRfDv1JUAWlCaEOete1N0zAPwwcrB1wlgKms97enEIUn5yOTLsEnU5A4gJClBcAM1YKA7MFWcsieLj6vMnOrwJTqZ3ARM/h7nxAo8bIPb7IKKGWfSxDwnY13yeCwYqxWd0gl80HEibvMsZQMJHBCRFkiccppkQCil7kxxjDsU4Gu2lv1g48p+HtDBRJApUKm49Gm4FLMA/wfWIkJwRJeFDr3/Z4Gmwb1XKAFA7Q03G5O5xFFRfVfQloAumflae2tvQuVeFCz44nvVDroiSwCH8XVfXMPRHJ+bxjyKIUVoVKJwa4xSpjhcGYg5vXOJVygAusCvc40nN44ZQ3U2QeFt/UhYx3OuMi0EYoofeMUI6xvJROLI8xJE84ZSTHVukJ728LPwbAUHg4y/VYQgMVqaUMwDc9A9BMYYLhUdVXEnVrP9u2wGBm+gupidp5gJ7loCHM/yTMzkDBFxXauLvBx3GdEomSfqyEb7Tva/3AZoTuQol1cmG8K1QYyi/mQGg8YiAQcKDGIVyYRwj8MLbXlJeweM5P6SRwPHlCJEsQkR4hlSXZgtHMXbpUioCYEq4o6DnAk3qEwD3J8ZwjvdZ3+oUSTHh+JhrGnhZPC5FqzXxZCIp5hldzYgSlFEbPVXheYwuDuorBwGk70iqfVl0u4JsWUoZwD0vpWKOtM8mRXq97t6WsA6TYIWRJGAe87whkfB6LkUEsMUBTMpknbJSGvChjZm/a7i8LDBVEi9P0bcuaYCQCcUweE5+OCwLibdJzqG8BGAzx3Mq2UhBT7bnx5Q0yLiahLmf8Oj0ZHlnwJg868tNoR78kISS+VBHZGKgHvaO1e9V0gAp/DWHe9J1kzdUu1J4OwkexgExxhDLx6idfuOpEMEwHsdXJwKQlILWs77C3m3iDBwYVnN+bIUYtfuhxFb6nhogK8PNz80Hajar3/Jm9B0+PaGbGl1N8+k6oCzM1fV5XYu/pe/41/Qd/+IZ/UcKfaqeX0Op7LkwHJCiSHe2wa7Q4d0x/RiyX3cKB/bqdnlc9wC6Eh/RJzB3Ak1FQlNnAG6I5rlE1Z3BmcWOvaz5Tujrs8urmGXTRqkI+OLhYbv71l1vv/25iCX39dMTAbz1YNSocuxU2x57oWWPv9zy/+GBcHlZgEVoe2KTp4cGOvah2ZrdMlOxa6aIgX6lOzYzSVtMUuEHEwxTppQywBXywrstiHbzTNWfez49aI8807SHn21t8BDK71IkfXJWz9W6VywlVX+J+MGESClTtvwfIg2F2Gl+lVnnukqrUe5ku8WrHFJoZzhjTdaqxjIe4+DlPmPAlrQk/qeL0hun+Vnb7KTu9fbrGmxAuwAJDBifv06XPo1zn7rtD3yFU+AlWp8vaPlV6su3jRr/M6Vf6WuAC7pteeL1jq0qlDAEypFs2GZRqq77Oc2tfmRoxgs8CdbSdzlZfV20mQb6jXgyiOjaYuhjDf3YCV8UZC7Bm7oZ6ngbWC9e/DDquGLagFZ4xSMeDU0+tadmD/x01m64avOQ6Bvbz58VAwlP8X0Xd+Rlp5rdQJBwL4uaMYcD8wGQaHjfeajv25/XMRTvwNNo8MGz+vM+bebmUQHTsZ03cACJnlr/AIEO/Zx+kvvJfWcE2bz0XW2Lq0EAazL8jO7nO/IWzPF8U9ZWXvclQJ/veLyb29Q8RELAos+SEam8HOcGx3ME7gK5CapFWDuv8GgOe7eDcN3L6rg89GnjfeTzvtkj/1yyOe1E2ORfz/k2tKkF+hpgSEpzn48fUGJeP4K64K4o0cHEKbxT28M9GQFc6eNR5Hh6sVwQElqMhULgtAXkXq+hkCuUEE5Lnda6Qlt4oWAo2QSPOfXAg2XTFEOWCEsCXP7vItIzPjXZPwf0NcB+efzFuXA33l1rysMIJY7swQ19cLDGUcSV0ER1/UaAsPTBaYuOn7RFFo8GMELkj9jLWfvuNdUNbV95/buCzFMPpdoyUFawUdd3IfMiD0pTMw9tDMo8MoovIV2jfu8rk5t6H2BfA1w7JauLxavn9IMEQkoJdQE6Y1+XtIABTIO0GGPyWPdp2FGEDL2IUBrSyCWZXgAKXUrCjckTMMGkqqNAL27e9heCOo7ZFfpp/p4vjdv3vy5l+pS+u0Af/A8cuO8u8IHTtI9COwboY5htA96JgG3j6j6K7kRAH8NsG/C2j4D/Aze7ixYc7FKGAAAAAElFTkSuQmCC"},
   "assets/logo-80.png": {b64: "iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAAAAXNSR0IArs4c6QAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAUKADAAQAAAABAAAAUAAAAAASKG51AAAU4klEQVR4Ae2cS4xk11nHv6rq7pnOPNvz8ngyw8STGXtsEhsZx4oUA1ZihV2kJBskIsgqu4gFWzZIEUtWyQIhJBawCBEgIh5CCg+FhGCMTRIbh3g8Hs/74Xk/u6urKv/f/zunqnpw99R1W2KROtN17znf+Z7/+53HvXVrWgOVmJb3jUD7fUtOBY3AFMB1JsIUwCmA60RgneLTDJwCuE4E1ik+zcApgOtEYJ3i0wycArhOBNYpPs3AKYDrRGCd4tMMnAK4TgTWKT6zTvmh+JUbvTh+ZikuXevFlZu9uLc0iOXeIDrtVsxvaMVDWzux56GZ2L97NnZt7wzlPsjK5Rv9OH25Hxev9ePqrUHc6+JDxIzG2cbZiO2b27FzazsO7mnHQ1s+mMH3vgC8cbsf//7jO/E9fd44sRjHTi/FtVvyVKXVakVLoOkUoSeN1KlUOvUd22biY49uiOeemI/nPz4fhz88h2jjcvx8L77/k268cmw5/ufUcgAghSecvay6zqEvWn3ySd/2TRGPPjwTR/Z14pNH5+K5x2Zj64fwtVlpNXmgSpb91u+fjh+/dQ9IZGkQ7XY7wVLLYMnLBHDUPzCABVyQ5Y9ulbYAPvTIbHzhV7fE55/fHJvn186M2/cG8bf/tRTffmkpTlzoRV9goB9wqFOyXmhcRNnqC8HaD5gSST6fM5onDszEH//O1lhQpk5aGgF4+mI3PvWVt63bAOjA2XWhkrRsk3EjoFoGym1JG+jsNg8KARLwfvuzW+NLL271sLehcmBK+Ob3FvVZilt3+wkGwGiawHAFCLOuD1RRoU4ZB7jS6KIuz5WxyfedP1iIfTsmn2KaD+ESOCDg1PjQNIByBjAqWJxdINW6CG01yBzO5tXpzuIgvvE31+Ovv38nfu83F+ITj2+06H+/vRx/+O27cf5KP2XQ7yIHSt0XRb2AEUqgQQEmjSr7xK/BIp8ZNUUe0Ir9juQSwqq7mHjAqTGAGMdQAufYh8AwnPMrFgVSgam8tY1/+rjJofSbRmAK8PzV5fjzf74Zjx/c4P6/+o+luHi9r8xFtK2s6RsELmCCwfAEGLNHS2ixeI2K6uo3iFJCtmHa8p2s9HXSX+NSTE4uBzA4nQDIaK3jcEuO6dyWUz6LqfbjXcqNZeiQVvuKPul46tBGXwTsHd3fMSCYaMtGtQ9IrdKGRjYDYtaly/ppj9PYGWRfBz+VDuZHHvrkUJizWQZKO1lAwTnMOStqnX53yCnVh5lqutkRSlnxIQbApAJiFi30mk3ww1L7rR/FpI/oWsKshykPGWeV6gMJwVbnO/epDbdHrhhzWIsCv31QpWFpBiAOOJIMCA8zMJzAeAmqRJ+BE0hmplkIwRmA10WPOsgCF52yXtq2mUMSeeOmg3lgMUH90svQhA5orLjVHnphq8XzozqVvCN5ZaN5RmYr+5rnRgCi2xn4fwKHgMNyikrhc11NZwnR5J85HBx9ZEoBwbQqr75arJfpAb3YUMXzmCgDDzuB5qFsE1Gz0fJFD8sPcvap2hSDr7U6cjWuFic/NwIQ8149caQ4RlRtoeoVdSyLtm7qxM5tHe+p5mbbdnRRdwbX7wx0t7Icd5eKk9aVe0mD6UAhjoLAljOuZAxDj/kP3OtisXFWdztbOtoMR8x6bovA3g3Ze/cGZ0l5+hGQVCXvLdCYz55ORmYnqjUEUDoJxuhxRUugOm0TYC/+8qY4emAuDu2b9W1TeqBOxPKUJB0v6pbvjZNL8fKbi/HqsSVnTVFb9A9ZXfEc5tVTinSeFWCfPDITH324Ewd2tWNhUxoA4xWlEK7eHsRPzyzHq8d78dJPl2IZXQK0rX4uhC+QBO9zc4Wq92o0BrBepRxKOZyof/XzC/HMY7ntGHejgnK/8d26H96zMB+/9tS8933f+rfbFrPeOkcWIXTwIUgPQdE/9+xc/MoTusFlIq1HVSsASVVHIQDwJ47M+vPxg534o3+8ZzkPXfF4/jOl2aEZgAShSOpwrUYJ7tJ17oVb0V0exFtnl+LUpW6c08b3xh09WOiqSxFt1EOFBQ2zR7TTP7JvLvbvyh1/hxO6y3ByZo/FMQRPOnK1jLimockq0JPZ07JzRg8RLughAlPEXW3IlWAxJ71b5luxe3s7Du5Wpu7UVCI7MxriNsUqoopIwzuRCviY+TWrzQCUqrqIOGBFRnBk5Z/8w434u5fueH7TlrcM2dqfPmTWlrpkdmmOBMzXT3Yzu6QsV2zpJKpSbKO0E9xB/Mvr3fjRO8txXUOzKxABLBeCXI2RYSWGhjLmu80C84Au2v+eXi4XCyb1q+TFy3oxO9GpMYAJnJe+YZA4i+kLuoOASLsGyt1JXtWcc2C0s+K5fLPvD/3IpG4apT0WAptfnqKYT3TAYV7jXOdH69Ww8AIjQ/BCwzfOt+4O9NSGBxA5f7MJJyHkcSrk3LA0AhD1dqiCYCdlXs7RV4Pj7Exl2bOT9JenNmYcC6wIWQd9Y3qyJV7xwAaIFYzal5QckvTB6P1g0Zu3lgJfwHrLggb5m6w6KzNh1TFjcM/kh0YAplF8lLHqhIjF13JWMPTZR5z2JbZHyNX5cwi6egjcOoqYdVellhxdOJr1XtYmOCAnfugoq1sbLp4S1KVeeDfEh01Kglq3RZWafZMc3weAdls+pxOZOUSQQXg5U706DA7w1M2yt0Ci1TIEUjyJWWbEOH7UCZThCkIAlAMT5aKUuD101Rj4UVb610bGynK4I+8LLHKZ/gw6bLk9U6VBaQYg/pJdKvhELbPRpOh0BnpcPheP7tWj+10zsUMr7rZN7ZjTng0AFvVM74bmIVbsdy71NJl348qtzBHrs+oy1FOljwkgnSDFXUPaR+cePZrfv6Mde7a29JS5pVW3rY10At7VlHxT9q5orj2llfrYuZ5X6rwQ4kEjcWCgomkfbHaiQzMAcb8YMJC62t6MCtQXtJ/70qc3x8a5+zwYa47lDTgYj5Pv9uJP/+l2nLi4nIGIXue8YQSiVRDJZIA7um8mvvDcbHzofnuovW8kKmdTleg8FvvWDxbjjVP9nCudzerGAPEMjU5W4SI0KqQ/tjKgzBau4Kee3LgSPPHwFPnC1X6cvKiM0+e87j64vRoW8bCtePFpHl2RNWUYsz8bCwUn1eWPh6/qHzvQiU3aVyJXWZe0B2VlPyubZ5RxF/UdyV35AIuLKuwJf/3puXLhc2FCB1NCLnyVebJz4wzEm5Ys2XHZqIvEN797Oz7zS/N6atyLN891tbHtebjaOR2Ykercs7C5Ex/VMH/qI7PxiL6p+9fXF+W8YHIguQhV/TVwZL2nEwEQv6svk+C5pm/f3tEm+qwAu6Yvu+pioi5lWGYjQO/XJvrxvRruuu1jD8kF4ZBbGmJinra1RofGAHq+kAkHSMA4os+xs904dl7DEPM6VLDo90Ih57KvpbuFfrxyfCleeZtAElz0kgE6mrHasTr1gW/NSwJ9V8D95X92CwC5UU6bulCowLAkAJEs/MmZnr+5Qx/ydJPZdkqNCiSkJqURgDg1DgwB4UClldgTMPHipEFhSJY2IuanE0jgUX18dc5+OLPACoBm1pFg4UFDLTwFz4VgRIWHzDelOiuBBCszbtgP6sWfqnOScyMArbD6p/Nwsld9lDkAIk5opnOGUOlJdJ8O9DkIWOhyh9mHh+RNeepmLKtmBb5mkOWdYgCFj7DLjviHemQIm319EVJjGIiXYvVZnejYGEBfVTmYVxff5BzZQTLZW/u7ol5lPJSNUuXNDDQIUgEfxToTqWzr6C5nYa3DS1qVc/UDqvjQkSs2F0lE8SVsKWKgqQ754CgGYJ+wNAYQvQ5UTmkpwWo66ADSaQNlp9VH5ObJ4U9yVHlC4q/qhJegc9gn3UfxWIask50+PKXDc6N1ZsZVXZxZbOAFZ/gQ52L1DDx10cRXdeUFQXLy0hjAOplntuTVNUhyiiucwYvOxZTDmU2O23V/ESGPDbJYFI9LBdpDisjGCjx80qY6eOKsyHMY0gfwVUAV6pzsgwQLiCCGHjzVSeBJg/Q4Gy0PtVlpDOAocIzJqjzCKVftoBr8QSt9BE6w0Mla61C9+pzhZHZUWcuXWKjXTAMLtJmPfoGEPHPggAcXMNdM1VmvXthepl8q5KtRS4mVBxR2Vg8VTBWtSWkGoJT7asuUA9SBtp0uV9exmZZ+OVDkXEn5Ia3w4XAFtcqPB0FMUp9fQyKjSMucn1dBIOXIwBdrGxNPmsGp2VZ7xezbOsuXi1z7Jjw3AhDfcNCgYYBg3KaRV99gkglErDIcdqVOIJWW4Ds0MLXeCq4JolGw4W1KffRkILKPBIIhtzaFJqIzFTkzVJvySyy+/4U1TatT8tZNb7PSCEBUG5g6LErbIOZYEgN/77Gvq7woURmC6Agr+OqQMuvjUEq9YFWGcw7jBK7yGRk1DIaAQ64+OCgriEFjcXHhxHCnVBoBNCjNAUS/HCMIX0C1nXVJVqOAA58YHKz4mWEqJgakODyiWe1K+bFAeA1jHAzeZcFWlTe4HtcyyqZaF5kmZvDT/VT0IVspVoEOGvYn6TQnLc0BrB4Vw3bMdWVFGS4GSDQPFfE7SDV81gGHM3CGOuOtAC3e+twQnlrgzU8GmMMSIhw6VLBQJTuJhegCqi8abnFL55sV0ewzF1Tq8IaL2wZUfLPOavnB52YASnkFx85jrNKKLZxzmKLXXX5mnP0z10hHeShREVJvvSBFXfKbThWDmUHeLtGABGKAJZCo+rsTUKOzAMMDLY8C0dgb6s8lTYvmViFm10THZgBKJV/E4JiBkhcr9m3y16up+bBfs46aPr68OZRzLk2aycjy4Z9QSF50qIgOME4lzNOvc302CEsyuCa2BAJ9eUHVRrcIgOcbAAGcU0LhVVuepYIGx8YA1ncAHayjwjGMp7Ou4y8Vlfv5eBSWdIBy1TwGSWPTQxhtY7FgBj1mp1H2bEwRDFnfvUjE7ohmcQlQzS+Y9E6gcox2S+PY36nApqvgjJcAYNLftDQCEJfGAcEYDgAWdIrrijTbY/y68s468aTTZi8ZAg3hUUZXfeaSbhYRf2mkYJHP2zmdNUSr/VwcxDy8MPn9iRGVTB22tq8Gq7GHO9BZJkdHejbZsRGANRjQIUD9leGWxhI8UQHLCORZfupqj0BG0N1cEHcWftN1IIXGChT4YcWqb9Fy0soO0XMfmNk4XGTEbVDVz60fOgwismp4ztTLMfJi9EowJhqUxgBm9hC4rJQ4DZaDSydxDmfzjPcEn+ckp3xmRGZUZidAIuYbvmEY6B/P2gwcTbgAACpC18NQvOjN+TF5YKCGu5mxdg0pEThkNqKraWkGII7goA21YmamFQ8vtGOvvmfYu6CXhba1Y/PGdszrZx8lseIe34zppwlX9AT5nL6jOKnH75dVr6ACnOcwIpRu/3N9FIrIBtYZaJ6c26wDVTBoKG/X7zx2b9NrbnrFbZte45jXt4F8Q0c3oPLDmzt6re6K3mh4V9+dXLqpbwj16hvzqIEdmZy41ghAfvHzzKHZeHL/TPyiPo/t7cScQGxaruoFoDfO9uLlE714Vd+OEZRBMuqqyw7tWqgzLEuulb1dKzbMDOLwI3pRabfeedFXm1vqy2FVcIIz79XwncpbF/S52M+HCxPIVZZGvxOpQh/kmQB+cHw5/v61Xpy4QjbkkP7iMzPxgt7/o7x2Tr+MOsGbWDnEd22OePZAO44+3PbPuD5If5rqapSBTZVPws8Qe/7wjD9k45+91I3zN5WBY8LOTq3QOze34oXD7Ti0c7x3jPH/oTpxBl67G3Fb3271mS+UJd5/MRtqbuHDhp/idjlDg0xWMfwqL61x+RFf3kW8IiCB6Mju3BKf0ZfhKDq4wG1a2qRtP1gErN+nrMNeaPBRZ4GpfJXGw9SVfMzdgzigH0Q+fTi/q5bUmuWBAN7Vy5E/PDsIAGTPxF6svo9Hm+DxjdcoeAPKAIuo0eZfSg551IbGC5ickat9y9abupFHT7XB5E7wvFnf6+bbBDxtoU1fTwsDIDC8aQMKfCknWuHtya5pMlr5lgsfMvx4B97K98QvzMU3fndvfFhgrlXYjKxa5Ff88Azvs+SV4gqy4uWQyrOFxUfKkDU5uHQUDTIEzgrNgY5Wh5E8doZF/KzELlWBGvDwoccf/Ch8K+gpiYT/8JWy0n4hlpMZi656eu34Ynz5a2f8k93U8N7HNQG8fIdhK0Eb0kHecLXxLSPK7QrdfnQOo/rZ6PgeGbpIrKB1L+eXGq0KJdnvILkL0SqMrH99JGJdjVmc+XjvaVmLiiBe60ZR6sI59PlCq8+yOnDmzoNJwTS1Cb6DHfiRUwfhUZA/dmopvvOy3t1eo6y5iABeAlautbR/5CGbMn0MRw1H6PCnE9QZjp5jmDfdp2EEDXelC2f5aORl3TJjtCJT+Ri243IIDee2qsM0GkWnhRmiI9nsyyFNd+Xtai75+l9c9hTjuNX15qnF+OxzWvZXKWsCqJ93+Eo4unKJL7AJVmEupMY8hhPMYwDhj+jMK5pi3NdTlN6sis6v2C1Xz8hSR1Y2PE8JZH6G4LlPMp7H6GeOskHVsS9aT4brfEjbcyX6qryIyPUlZxuq4wB60J/zYfLXl9NLqL7oC1vWhCjW7N2hX3WT3hzqFbnb1Zv4OCTj+AJgxGSaAgfYSvPiMORJh7vKVACtPJzNRzCKMOUHsaT9IQEbLzGxSAzBwj561cmkPwINQETTwsI5Fwfq+uk/C4bkKojI3L+IwE+4Um2+jXPt+MyzAmGNwjSwatkgeI/u0fBFowvqU/mQZAqHEchGXazmsTcIJQ/H+0u9OPWMLgdSFPiUCiSaPjjCoghQkl8VmM0ymiZMg8fZsNI6NMFqoXH7/PTia1/Z7f/nYaXEytYDtzGw39BvUk5dHcQtzYkMLWeFvPTWQf0EMD6EfZXHaLTJ1hzWVGjX/WT2oZOsSl5slH7RCcwZL6YBWYRN+Mlk2q6TXYUPZ8SUw7z0i284jItOZzQ23c4RwmK4f/dM/Mant8WT+n8dHlQmAvBBSn6e+9ccwj/PwEwa+xTASZFahW8K4CrATEqeAjgpUqvwTQFcBZhJyVMAJ0VqFb4pgKsAMyl5CuCkSK3CNwVwFWAmJU8BnBSpVfh+BnDtRA5kjHfoAAAAAElFTkSuQmCC"},
   "functions.html": {text: "<!DOCTYPE html>\n<html>\n<head><meta charset=\"UTF-8\"><script src=\"https://appsforoffice.microsoft.com/lib/1/hosted/office.js\"><\/script><\/head>\n<body>\n<!-- Required FunctionFile for the add-in commands. No custom ribbon functions are\n     used (the button opens the task pane directly), so this just initializes Office. -->\n<script>Office.onReady(function(){});<\/script>\n<\/body>\n<\/html>\n"},
-  "manifest.xml": {text: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!--\n  Paper Library — Word add-in manifest (GitHub Pages / online version).\n\n  This is the file you sideload into Word. The add-in (taskpane.html, assets/…)\n  is served from GitHub Pages:\n    https://t-shiokawa1.github.io/Paper-Library/word-addin/\n  i.e. taskpane.html, functions.html and assets/ live in a \"word-addin\" folder\n  at the repository root.\n\n  To publish elsewhere, replace every\n    https://t-shiokawa1.github.io/Paper-Library/word-addin\n  below with your own HTTPS host (<AppDomain> is the origin only).\n-->\n<OfficeApp xmlns=\"http://schemas.microsoft.com/office/appforoffice/1.1\"\n           xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n           xmlns:bt=\"http://schemas.microsoft.com/office/officeappbasictypes/1.0\"\n           xmlns:ov=\"http://schemas.microsoft.com/office/taskpaneappversionoverrides\"\n           xsi:type=\"TaskPaneApp\">\n  <Id>e4bd1298-a84d-4249-b366-c20d396bc42e<\/Id>\n  <Version>1.0.1.0<\/Version>\n  <ProviderName>Paper Library<\/ProviderName>\n  <DefaultLocale>ja-JP<\/DefaultLocale>\n  <DisplayName DefaultValue=\"Paper Library\"/>\n  <Description DefaultValue=\"Paper Library の文献を検索して、引用文献を Word に挿入します。\"/>\n  <IconUrl DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/word-addin/assets/logo-32.png\"/>\n  <HighResolutionIconUrl DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/word-addin/assets/logo-80.png\"/>\n  <SupportUrl DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/\"/>\n  <AppDomains>\n    <AppDomain>https://t-shiokawa1.github.io<\/AppDomain>\n  <\/AppDomains>\n  <Hosts>\n    <Host Name=\"Document\"/>\n  <\/Hosts>\n  <DefaultSettings>\n    <SourceLocation DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/word-addin/taskpane.html\"/>\n  <\/DefaultSettings>\n  <Permissions>ReadWriteDocument<\/Permissions>\n\n  <VersionOverrides xmlns=\"http://schemas.microsoft.com/office/taskpaneappversionoverrides\" xsi:type=\"VersionOverridesV1_0\">\n    <Hosts>\n      <Host xsi:type=\"Document\">\n        <DesktopFormFactor>\n          <GetStarted>\n            <Title resid=\"GetStarted.Title\"/>\n            <Description resid=\"GetStarted.Description\"/>\n            <LearnMoreUrl resid=\"Urls.Support\"/>\n          <\/GetStarted>\n          <FunctionFile resid=\"Urls.Functions\"/>\n          <ExtensionPoint xsi:type=\"PrimaryCommandSurface\">\n            <CustomTab id=\"PaperLibrary.Tab\">\n              <Label resid=\"Tab.Label\"/>\n              <Group id=\"PaperLibrary.Group\">\n                <Label resid=\"Group.Label\"/>\n                <Icon>\n                  <bt:Image size=\"16\" resid=\"Icon.16\"/>\n                  <bt:Image size=\"32\" resid=\"Icon.32\"/>\n                  <bt:Image size=\"80\" resid=\"Icon.80\"/>\n                <\/Icon>\n                <Control xsi:type=\"Button\" id=\"PaperLibrary.OpenBtn\">\n                  <Label resid=\"OpenBtn.Label\"/>\n                  <Supertip>\n                    <Title resid=\"OpenBtn.Label\"/>\n                    <Description resid=\"OpenBtn.Tip\"/>\n                  <\/Supertip>\n                  <Icon>\n                    <bt:Image size=\"16\" resid=\"Icon.16\"/>\n                    <bt:Image size=\"32\" resid=\"Icon.32\"/>\n                    <bt:Image size=\"80\" resid=\"Icon.80\"/>\n                  <\/Icon>\n                  <Action xsi:type=\"ShowTaskpane\">\n                    <TaskpaneId>PaperLibrary.Taskpane<\/TaskpaneId>\n                    <SourceLocation resid=\"Urls.Taskpane\"/>\n                  <\/Action>\n                <\/Control>\n              <\/Group>\n            <\/CustomTab>\n          <\/ExtensionPoint>\n        <\/DesktopFormFactor>\n      <\/Host>\n    <\/Hosts>\n\n    <Resources>\n      <bt:Images>\n        <bt:Image id=\"Icon.16\" DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/word-addin/assets/logo-16.png\"/>\n        <bt:Image id=\"Icon.32\" DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/word-addin/assets/logo-32.png\"/>\n        <bt:Image id=\"Icon.80\" DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/word-addin/assets/logo-80.png\"/>\n      <\/bt:Images>\n      <bt:Urls>\n        <bt:Url id=\"Urls.Taskpane\" DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/word-addin/taskpane.html\"/>\n        <bt:Url id=\"Urls.Functions\" DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/word-addin/functions.html\"/>\n        <bt:Url id=\"Urls.Support\" DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/\"/>\n      <\/bt:Urls>\n      <bt:ShortStrings>\n        <bt:String id=\"Tab.Label\" DefaultValue=\"Paper Library\"/>\n        <bt:String id=\"Group.Label\" DefaultValue=\"Paper Library\"/>\n        <bt:String id=\"OpenBtn.Label\" DefaultValue=\"文献を挿入\"/>\n        <bt:String id=\"GetStarted.Title\" DefaultValue=\"Paper Library へようこそ\"/>\n      <\/bt:ShortStrings>\n      <bt:LongStrings>\n        <bt:String id=\"OpenBtn.Tip\" DefaultValue=\"Paper Library の文献を検索し、引用文献をカーソル位置に挿入します。\"/>\n        <bt:String id=\"GetStarted.Description\" DefaultValue=\"リボンの「文献を挿入」を押すとパネルが開きます。library.json を読み込んで検索してください。\"/>\n      <\/bt:LongStrings>\n    <\/Resources>\n  <\/VersionOverrides>\n<\/OfficeApp>\n"},
-  "taskpane.html": {text: "<!DOCTYPE html>\n<html lang=\"ja\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Paper Library<\/title>\n<script src=\"https://appsforoffice.microsoft.com/lib/1/hosted/office.js\"><\/script>\n<style>\n  :root{ --accent:#2563eb; --accent-soft:#eaf1ff; --border:#e2e6ee; --text:#1c2430; --text2:#5a6675; --text3:#8a94a3; --bg:#f6f8fb; }\n  *{box-sizing:border-box}\n  html,body{margin:0; height:100%; font-family:-apple-system,\"Segoe UI\",Roboto,\"Helvetica Neue\",sans-serif; color:var(--text); font-size:13px; background:#fff}\n  body{display:flex; flex-direction:column}\n  header{padding:10px 12px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px}\n  header .logo{width:24px;height:24px;flex:0 0 auto;display:block}\n  header .t{font-weight:700}\n  header .lib{margin-left:auto; font-size:11.5px; color:var(--text3); text-align:right; line-height:1.3}\n  header .langBtn{flex:0 0 auto; border:1px solid var(--border); background:#fff; color:var(--text2); border-radius:6px; padding:3px 9px; font-size:11.5px; cursor:pointer}\n  header .langBtn:hover{border-color:var(--accent); color:var(--accent)}\n  .controls{padding:8px 12px; border-bottom:1px solid var(--border); display:flex; flex-direction:column; gap:7px}\n  .subbar{padding:8px 12px; border-bottom:1px solid var(--border); display:flex; flex-direction:column; gap:7px; background:#fbfcff}\n  .groupHead{font-size:10px; font-weight:700; letter-spacing:.05em; color:var(--text3); text-transform:uppercase; margin-top:1px}\n  .row{display:flex; gap:6px; align-items:center; flex-wrap:wrap}\n  .row > label{font-size:11.5px; color:var(--text2)}\n  select, input[type=search], input[type=text]{ font:inherit; padding:5px 8px; border:1px solid var(--border); border-radius:6px; background:#fff; color:var(--text); outline:none; min-width:0 }\n  select:focus, input:focus{border-color:var(--accent)}\n  #q{flex:1}\n  .fields{display:flex; gap:8px; align-items:flex-end}\n  .field{flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:2px}\n  .field > label{font-size:11.5px; color:var(--text2)}\n  .field select{width:100%}\n  .btn{font:inherit; border:1px solid var(--accent); background:var(--accent); color:#fff; border-radius:6px; padding:5px 10px; cursor:pointer; font-weight:600; white-space:nowrap}\n  .btn:hover{filter:brightness(1.07)}\n  .btn.ghost{background:#fff; color:var(--accent)}\n  .btn.ghost:hover{background:var(--accent-soft)}\n  .btn:disabled{opacity:.5; cursor:default}\n  .libraryPicker{display:flex; align-items:center; width:100%; min-width:0; border:1px solid var(--accent); border-radius:6px; overflow:hidden; background:#fff; color:var(--accent);}\n  .libraryPicker .libNameBtn{font:inherit; border:0; background:#fff; color:var(--accent); padding:5px 9px; flex:1 1 auto; min-width:0; overflow:hidden; white-space:nowrap; font-weight:600; cursor:pointer; max-width:none; display:inline-flex; align-items:center; justify-content:flex-start; gap:5px;}\n  .libraryPicker .libNameBtn:hover{background:var(--accent-soft)}\n  .libraryPicker .libNameBtn .libNameIcon{width:14px; height:14px; flex:0 0 auto;}\n  .libraryPicker .libNameBtn #libButtonLabel{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}\n  .libraryPicker .libIconBtn{width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; border:0; border-left:1px solid var(--border); background:#fff; color:var(--accent); cursor:pointer; padding:0;}\n  .libraryPicker .libIconBtn:hover{background:var(--accent-soft)}\n  .libraryPicker .libIconBtn:disabled{opacity:.45; cursor:default;}\n  .libraryPicker .libIconBtn:disabled:hover{background:#fff;}\n  .libraryPicker .libIconBtn svg{width:14px; height:14px; flex:0 0 auto;}\n  .seg{display:inline-flex; border:1px solid var(--border); border-radius:8px; overflow:hidden; background:#fff}\n  .seg .segBtn{font:inherit; border:0; border-left:1px solid var(--border); background:#fff; color:var(--text2); padding:5px 12px; cursor:pointer; min-width:36px; line-height:1.15; text-align:center}\n  .seg .segBtn:first-child{border-left:0}\n  .seg .segBtn:hover{background:var(--accent-soft); color:var(--accent)}\n  .seg .segBtn.active{background:var(--accent); color:#fff}\n  .seg .segBtn sup{font-size:.72em; line-height:0}\n  .check{display:inline-flex; align-items:center; gap:4px; font-size:11.5px; color:var(--text2)}\n  #results{flex:1; overflow-y:auto; padding:6px 8px}\n  .card{border:1px solid var(--border); border-radius:8px; padding:8px 10px; margin-bottom:7px; background:#fff}\n  .card:hover{border-color:var(--accent)}\n  .card .ct{font-weight:600; line-height:1.3; margin-bottom:3px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}\n  .card .cau{color:var(--text2); font-size:12px; line-height:1.25; margin-bottom:4px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}\n  .card .cmeta{display:flex; flex-wrap:wrap; gap:6px 8px; align-items:center; color:var(--text3); font-size:11.5px; font-weight:600}\n  .card .cmeta .journal{color:var(--accent)}\n  .card .acts{display:flex; gap:6px; margin-left:auto}\n  .card .acts .btn{display:inline-flex; align-items:center; gap:4px; padding:3px 9px}\n  .card .acts .btn svg{width:13px; height:13px; flex:0 0 auto}\n\n  #btnRefresh{display:inline-flex; align-items:center; gap:4px;}\n  #btnRefresh .refreshSvg{width:14px; height:14px; flex:0 0 auto;}\n  .empty{color:var(--text3); text-align:center; padding:26px 16px; line-height:1.6}\n  .toast{position:fixed; left:50%; bottom:12px; transform:translateX(-50%); background:#1c2430; color:#fff; padding:7px 13px; border-radius:8px; font-size:12px; opacity:0; transition:opacity .2s; pointer-events:none; max-width:88%}\n  .toast.show{opacity:.96}\n  .toast.err{background:#b42318}\n  .hidden{display:none !important}\n  a{color:var(--accent)}\n\n\n/* === Final CSS: reference card hover + refined control focus === */\n/* 02: richer reference cards */\n#results{\n  padding:8px;\n  background:linear-gradient(180deg,#f8fafc 0%,#ffffff 100%);\n}\n.card{\n  border-radius:11px;\n  padding:9px 10px;\n  box-shadow:0 1px 3px rgba(15,23,42,.035);\n  transition:border-color .15s ease,box-shadow .15s ease,transform .15s ease;\n}\n.card:hover{\n  border-color:rgba(37,99,235,.48);\n  box-shadow:0 5px 14px rgba(15,23,42,.075);\n  transform:translateY(-1px);\n}\n.card .ct{font-weight:700;}\n.card .cmeta .journal{\n  background:#eef5ff;\n  color:#1d4ed8;\n  border-radius:999px;\n  padding:1px 6px;\n}\n\n/* 03: refined controls and focus states */\n.controls{\n  background:#fbfcff;\n  gap:8px;\n}\nselect,\ninput[type=search],\ninput[type=text]{\n  padding:6px 9px;\n  border-radius:8px;\n  transition:border-color .15s ease,box-shadow .15s ease,background .15s ease;\n}\nselect:hover,\ninput[type=search]:hover,\ninput[type=text]:hover{border-color:#cbd5e1;}\nselect:focus,\ninput:focus{\n  border-color:var(--accent);\n  box-shadow:0 0 0 3px rgba(37,99,235,.12);\n}\n.check{\n  padding:2px 4px;\n  border-radius:6px;\n}\n.check:hover{background:#f1f5f9;}\n.btn{border-radius:8px;}\n\n<\/style>\n<\/head>\n<body>\n  <header>\n    <svg class=\"logo\" viewBox=\"0 0 32 32\" fill=\"none\" aria-hidden=\"true\">\n      <defs>\n        <linearGradient id=\"plg1\" x1=\"5\" y1=\"7\" x2=\"16\" y2=\"25\" gradientUnits=\"userSpaceOnUse\"><stop offset=\"0\" stop-color=\"#1d4ed8\"/><stop offset=\"1\" stop-color=\"#60a5fa\"/><\/linearGradient>\n        <linearGradient id=\"plg2\" x1=\"27\" y1=\"7\" x2=\"16\" y2=\"25\" gradientUnits=\"userSpaceOnUse\"><stop offset=\"0\" stop-color=\"#2563eb\"/><stop offset=\"1\" stop-color=\"#93c5fd\"/><\/linearGradient>\n        <linearGradient id=\"plg3\" x1=\"3\" y1=\"25\" x2=\"29\" y2=\"25\" gradientUnits=\"userSpaceOnUse\"><stop offset=\"0\" stop-color=\"#bfdbfe\"/><stop offset=\".5\" stop-color=\"#60a5fa\"/><stop offset=\"1\" stop-color=\"#1d4ed8\"/><\/linearGradient>\n      <\/defs>\n      <path d=\"M16 8.35C13.2 5.95 8.7 5.7 4.75 6.95v16.2c3.95-1.15 8.45-.8 11.25 1.85z\" fill=\"url(#plg1)\"/>\n      <path d=\"M16 8.35C18.8 5.95 23.3 5.7 27.25 6.95v16.2c-3.95-1.15-8.45-.8-11.25 1.85z\" fill=\"url(#plg2)\"/>\n      <path d=\"M7.8 11.15c1.85-.5 3.7-.48 5.15.06M7.8 14.55c1.85-.5 3.7-.48 5.15.06M19.05 11.15c1.85-.5 3.7-.48 5.15.06M19.05 14.55c1.85-.5 3.7-.48 5.15.06\" stroke=\"#fff\" stroke-width=\"1.05\" stroke-linecap=\"round\" opacity=\".82\"/>\n      <path d=\"M16 8.5v16.25\" stroke=\"#eff6ff\" stroke-width=\"1.25\" stroke-linecap=\"round\"/>\n      <rect x=\"3\" y=\"24.25\" width=\"26\" height=\"3.25\" rx=\"1.6\" fill=\"url(#plg3)\"/>\n      <path d=\"M5.1 25.9h21.8\" stroke=\"#eff6ff\" stroke-width=\".7\" stroke-linecap=\"round\" opacity=\".55\"/>\n    <\/svg>\n    <span class=\"t\">Paper Library<\/span>\n    <span class=\"lib\" id=\"libInfo\"><\/span>\n    <button class=\"langBtn\" id=\"btnLang\">EN<\/button>\n  <\/header>\n\n  <div class=\"controls\">\n    <div class=\"row\">\n      <div class=\"libraryPicker\" id=\"libraryPicker\">\n        <button type=\"button\" class=\"libNameBtn\" id=\"btnLoad\" data-i18n-title=\"loadTitle\">\n          <svg class=\"libNameIcon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M2.4 5.1h4.5l1.2 1.5h5.5v6.2H2.4z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.35\" stroke-linejoin=\"round\"/><path d=\"M2.4 5.1V3.6h4.1l1.1 1.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.35\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><\/svg>\n          <span id=\"libButtonLabel\" data-i18n=\"loadBtn\">ライブラリを選択<\/span>\n        <\/button>\n        <button type=\"button\" class=\"libIconBtn\" id=\"btnReloadLib\" data-i18n-title=\"reloadLibTitle\" aria-label=\"ライブラリを再読み込み\">\n          <svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M13.1 6.2A5.2 5.2 0 1 0 12 11.6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"/><path d=\"M13.1 2.9v3.3H9.8\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><\/svg>\n        <\/button>\n      <\/div>\n      <input type=\"file\" id=\"file\" accept=\".json,application/json\" class=\"hidden\">\n      <input type=\"file\" id=\"folder\" webkitdirectory directory multiple class=\"hidden\">\n    <\/div>\n    <div class=\"groupHead\" data-i18n=\"styleGroup\">引用スタイル<\/div>\n    <div class=\"fields\">\n      <div class=\"field\">\n        <label data-i18n=\"styleLabel\">スタイル<\/label>\n        <select id=\"style\">\n          <option value=\"acs\">ACS<\/option>\n          <option value=\"nature\">Nature<\/option>\n          <option value=\"science\">Science<\/option>\n          <option value=\"rsc\">RSC<\/option>\n          <option value=\"csj\">CSJ<\/option>\n          <option value=\"gdch\">Wiley<\/option>\n        <\/select>\n      <\/div>\n      <div class=\"field\">\n        <label data-i18n=\"numberLabel\">番号<\/label>\n        <div class=\"seg\" id=\"markerStyle\" role=\"group\" aria-label=\"番号スタイル\">\n          <button type=\"button\" class=\"segBtn\" data-val=\"bracket\" data-i18n-title=\"bracketOpt\">[1]<\/button>\n          <button type=\"button\" class=\"segBtn\" data-val=\"super\" data-i18n-title=\"superOpt\"><sup>1<\/sup><\/button>\n          <button type=\"button\" class=\"segBtn\" data-val=\"superBracket\" data-i18n-title=\"superBracketOpt\"><sup>[1]<\/sup><\/button>\n        <\/div>\n      <\/div>\n    <\/div>\n    <div class=\"row\">\n      <label class=\"check\"><input type=\"checkbox\" id=\"incTitle\"> <span data-i18n=\"incTitle\">タイトル<\/span><\/label>\n      <label class=\"check\"><input type=\"checkbox\" id=\"incUrl\"> <span data-i18n=\"incUrl\">DOI/URL<\/span><\/label>\n      <span style=\"flex:1\"><\/span>\n      <button class=\"btn ghost\" id=\"btnRefresh\" data-i18n-title=\"refreshTitle\"><svg class=\"refreshSvg\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M13.1 6.2A5.2 5.2 0 1 0 12 11.6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"/><path d=\"M13.1 2.9v3.3H9.8\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><\/svg><span id=\"refreshLabel\">文献リストを更新<\/span><\/button>\n    <\/div>\n  <\/div>\n\n  <div class=\"subbar\">\n    <div class=\"groupHead\" data-i18n=\"searchGroup\">検索・絞り込み<\/div>\n    <div class=\"fields\">\n      <div class=\"field\">\n        <label data-i18n=\"collLabel\">コレクション<\/label>\n        <select id=\"coll\"><\/select>\n      <\/div>\n      <div class=\"field\">\n        <label data-i18n=\"tagLabel\">タグ<\/label>\n        <select id=\"tag\"><\/select>\n      <\/div>\n    <\/div>\n    <div class=\"row\">\n      <label class=\"check\"><input type=\"checkbox\" id=\"fStar\"> <span data-i18n=\"starredOpt\">★ スター<\/span><\/label>\n      <label class=\"check\"><input type=\"checkbox\" id=\"fMine\"> <span data-i18n=\"myPubOpt\">自分の論文<\/span><\/label>\n      <span style=\"flex:1\"><\/span>\n      <span id=\"count\" style=\"font-size:11.5px;color:var(--text3)\"><\/span>\n    <\/div>\n    <div class=\"row\">\n      <input type=\"search\" id=\"q\" data-i18n-ph=\"searchPh\">\n    <\/div>\n  <\/div>\n\n  <div id=\"results\"><\/div>\n  <div class=\"toast\" id=\"toast\"><\/div>\n\n<script>\n/* ================================================================\n   Citation engine — ported from Paper Library (index.html) so the\n   inserted citations match the app exactly. Keep in sync if the app's\n   citation logic changes.\n================================================================ */\nfunction esc(s){ return String(s==null?'':s).replace(/[&<>\"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c])); }\nfunction normalizeRange(s){ return String(s||'').replace(/\\s*[-–—]+\\s*/g, '–'); }\nfunction normalizeJournalKey(s){\n  return String(s||'').toLowerCase().replace(/[–—-]/g,' ').replace(/&/g,'and').replace(/\\bthe\\b/g,' ')\n    .replace(/[^a-z0-9]+/g,' ').replace(/\\s+/g,' ').trim();\n}\nconst JOURNAL_ABBR = new Map([\n  ['journal of the american chemical society','J. Am. Chem. Soc.'],['nature materials','Nat. Mater.'],\n  ['nature chemistry','Nat. Chem.'],['nature catalysis','Nat. Catal.'],\n  ['angewandte chemie international edition','Angew. Chem. Int. Ed.'],['chemistry - a european journal','Chem. Eur. J.'],\n  ['chemistry a european journal','Chem. Eur. J.'],['chemical science','Chem. Sci.'],['chemical communications','Chem. Commun.'],\n  ['chemistry letters','Chem. Lett.'],['journal of materials chemistry a','J. Mater. Chem. A'],\n  ['journal of materials chemistry b','J. Mater. Chem. B'],['journal of materials chemistry c','J. Mater. Chem. C'],\n  ['energy & environmental science','Energy Environ. Sci.'],['acs catalysis','ACS Catal.'],['acs energy letters','ACS Energy Lett.'],\n  ['acs materials letters','ACS Mater. Lett.'],['acs nano','ACS Nano'],['nano letters','Nano Lett.'],\n  ['chemistry of materials','Chem. Mater.'],['inorganic chemistry','Inorg. Chem.'],['organic letters','Org. Lett.'],\n  ['the journal of organic chemistry','J. Org. Chem.'],['journal of organic chemistry','J. Org. Chem.'],\n  ['organometallics','Organometallics'],['dalton transactions','Dalton Trans.'],\n  ['physical chemistry chemical physics','Phys. Chem. Chem. Phys.'],['journal of physical chemistry letters','J. Phys. Chem. Lett.'],\n  ['the journal of physical chemistry letters','J. Phys. Chem. Lett.'],['journal of physical chemistry c','J. Phys. Chem. C'],\n  ['the journal of physical chemistry c','J. Phys. Chem. C'],['journal of physical chemistry b','J. Phys. Chem. B'],\n  ['the journal of physical chemistry b','J. Phys. Chem. B'],['journal of chemical physics','J. Chem. Phys.'],\n  ['the journal of chemical physics','J. Chem. Phys.'],['advanced materials','Adv. Mater.'],\n  ['advanced energy materials','Adv. Energy Mater.'],['advanced functional materials','Adv. Funct. Mater.'],\n  ['advanced science','Adv. Sci.'],['materials horizons','Mater. Horiz.'],['small','Small'],\n]);\nconst JOURNAL_ABBR_NORMALIZED = new Map(Array.from(JOURNAL_ABBR, ([k,v])=>[normalizeJournalKey(k), v]));\nfunction mappedJournalAbbr(s){ return JOURNAL_ABBR_NORMALIZED.get(normalizeJournalKey(s)) || ''; }\nfunction journalDisplay(item){\n  const j = item.journal || '';\n  return mappedJournalAbbr(j) || mappedJournalAbbr(item.journalAbbr) || item.journalAbbr || j;\n}\nfunction citationStyleKey(style){\n  if(style==='wiley' || style==='angew') return 'gdch';\n  if(style==='jcs') return 'csj';\n  return style || 'acs';\n}\nfunction authorName(a, style){\n  style = citationStyleKey(style);\n  const ini = (a.given||'').split(/[\\s.]+/).filter(Boolean).map(x=>x[0].toUpperCase()+'.').join(' ');\n  if(style==='nature' || style==='rsc' || style==='gdch' || style==='csj' || style==='science'){\n    return [ini, a.family].filter(Boolean).join(' ');\n  }\n  return ini ? `${a.family}, ${ini}` : a.family;\n}\nfunction joinCitationAuthors(names, style){\n  style = citationStyleKey(style); names = names.filter(Boolean);\n  if(!names.length) return '';\n  if(style==='acs') return names.join('; ');\n  if(style==='rsc'){\n    if(names.length===1) return names[0];\n    if(names.length===2) return names[0] + ' and ' + names[1];\n    return names.slice(0,-1).join(', ') + ', and ' + names[names.length-1];\n  }\n  if(style==='nature'){\n    if(names.length===1) return names[0];\n    if(names.length===2) return names[0] + ' & ' + names[1];\n    return names.slice(0,-1).join(', ') + ' & ' + names[names.length-1];\n  }\n  return names.join(', ');\n}\nfunction citationTextToAuthors(text){\n  return String(text||'').split(';').map(s=>s.trim()).filter(Boolean).map(name=>{\n    if(name.includes(',')){ const p = name.split(','); return {family:(p[0]||'').trim(), given:p.slice(1).join(',').trim()}; }\n    const p = name.split(/\\s+/).filter(Boolean); return {family:p.pop()||'', given:p.join(' ')};\n  });\n}\nfunction citationAuthors(item, opts){\n  let list = item.authors || []; const style = citationStyleKey(opts.style);\n  if(opts.authorScope==='corresponding' && item.correspondingAuthors){\n    const corrAuthors = citationTextToAuthors(item.correspondingAuthors); const nCorr = corrAuthors.length;\n    const corr = joinCitationAuthors(corrAuthors.map(a=>authorName(a, style)), style);\n    return corr + (list.length > nCorr ? ' et al.' : '');\n  }\n  if(opts.authorScope==='first'){\n    const first = list[0] ? authorName(list[0], style) : '';\n    return first && list.length > 1 ? first + ' et al.' : first;\n  }\n  return joinCitationAuthors(list.map(a=>authorName(a, style)), style);\n}\nfunction sentenceEnd(s){ return s ? s.replace(/\\.+$/,'') + '. ' : ''; }\nfunction sentenceEndHtml(s){\n  if(!s) return '';\n  return /[.!?](?:<\\/[^>]+>)*$/.test(s) ? s + ' ' : s + '. ';\n}\nfunction citationAuthorsHtml(item, opts){ return esc(citationAuthors(item, opts)).replace(/\\bet al\\./g, '<i>et al.<\/i>'); }\nfunction itemToCitationHtml(item, opts){\n  opts = Object.assign({style:'acs', includeTitle:true, authorScope:'all', includeUrl:true}, opts || {});\n  const style = citationStyleKey(opts.style);\n  const auth = citationAuthorsHtml(item, opts);\n  const title = opts.includeTitle && item.title ? esc(item.title.replace(/\\.?$/, '.')) : '';\n  const journal = journalDisplay(item);\n  const pages = normalizeRange(item.pages);\n  const j = journal ? `<i>${esc(journal)}<\/i>` : '';\n  const y = item.year ? `<b>${esc(item.year)}<\/b>` : '';\n  const vol = item.volume ? ((style==='nature' || style==='science') ? `<b>${esc(item.volume)}<\/b>` : `<i>${esc(item.volume)}<\/i>`) : '';\n  const p = pages ? esc(pages) : '';\n  let html = '';\n  if(style==='nature'){\n    html = [auth ? sentenceEndHtml(auth).trim() : '', title, j, vol ? vol + ',' : '', p, item.year ? `(${esc(item.year)}).` : '']\n      .filter(Boolean).join(' ').replace(/\\s+,/g, ',').trim();\n  }else if(style==='science'){\n    html = [auth ? auth + ',' : '', title, j, vol ? vol + ',' : '', p, item.year ? `(${esc(item.year)}).` : '']\n      .filter(Boolean).join(' ').replace(/\\s+,/g, ',').trim();\n  }else if(style==='rsc'){\n    html = auth ? auth + ', ' : ''; if(title) html += title + ' ';\n    html += [j, y, vol, p].filter(Boolean).join(', '); html = html.trim().replace(/,$/, '') + '.';\n  }else if(style==='csj'){\n    html = auth ? auth + ', ' : ''; if(title) html += title + ' ';\n    html += [j, y].filter(Boolean).join(' ');\n    if(vol) html += (html ? ', ' : '') + vol; if(p) html += (html ? ', ' : '') + p;\n    html = html.trim().replace(/,$/, '') + '.';\n  }else if(style==='gdch'){\n    html = auth ? auth + ', ' : ''; if(title) html += '&ldquo;' + title.replace(/\\.$/,'') + '&rdquo;, ';\n    html += [j, y].filter(Boolean).join(' ');\n    if(vol) html += (html ? ', ' : '') + vol; if(p) html += (html ? ', ' : '') + p;\n    html = html.trim().replace(/,$/, '') + '.';\n  }else{\n    html = [auth ? sentenceEndHtml(auth).trim() : '', title, j, y].filter(Boolean).join(' ');\n    if(vol) html += (html ? ', ' : '') + vol; if(p) html += (html ? ', ' : '') + p;\n    html = html.trim().replace(/,$/, '') + '.';\n  }\n  if(opts.includeUrl !== false && item.doi){\n    const doi = esc(item.doi);\n    html += ` <a href=\"https://doi.org/${doi}\">https://doi.org/${doi}<\/a>`;\n  }\n  return html;\n}\n\n/* ================================================================\n   i18n (JA / EN)\n================================================================ */\nvar I18N = {\n  ja: {\n    notLoaded:'未読み込み', nRefs:function(n){return n+' 件の文献';},\n    searchPh:'タイトル・著者・雑誌・DOI で検索…', loadBtn:'ライブラリを選択', libLoaded:'ライブラリ', loadTitle:'ライブラリフォルダを選択', reloadLibTitle:'library.json を再読み込み', changeLibTitle:'ライブラリフォルダを変更',\n    styleLabel:'スタイル', collLabel:'コレクション', allColl:'すべてのコレクション',\n    styleGroup:'引用スタイル', searchGroup:'検索・絞り込み', tagLabel:'タグ', allTags:'すべてのタグ', starredOpt:'★ スター', myPubOpt:'自分の論文',\n    incTitle:'タイトル', incUrl:'DOI/URL', numberLabel:'番号', bracketOpt:'括弧 [1]', superOpt:'上付き ¹', superBracketOpt:'上付き [1]',\n    refreshBtn:'文献リストを更新', refreshTitle:'本文の番号と末尾の文献リストを再同期します',\n    insertBtn:'挿入', copyBtn:'コピー',\n    insertTitle:'番号を本文に挿入し、末尾リストと連動',\n    count:function(n,m){return n+' / '+m+' 件';},\n    emptyLoad:'まず「ライブラリ」ボタンから library.json を読み込んでください。（Paper Library の保存フォルダ内、または「エクスポート → ライブラリ全体 → JSON」）',\n    moreItems:function(n){return '上位 '+n+' 件を表示（絞り込んでください）';}, noTitle:'(無題)',\n    loaded:'ライブラリを読み込みました', reloaded:'ライブラリを再読み込みしました', loadedNoCache:'ライブラリを読み込みましたが、大きすぎるため次回は再読み込みが必要です', loadFail:function(e){return '読み込み失敗: '+e;}, folderNoJson:'選択したフォルダに library.json が見つかりません', reloadNeedsSelect:'この環境では自動再読み込みできません。もう一度ライブラリフォルダを選択してください',\n    inserted:'引用を挿入しました', insertFail:function(e){return '挿入に失敗: '+e;},\n    updated:'文献リストを更新しました', updateFail:function(e){return '更新に失敗: '+e;},\n    copied:'引用をコピーしました', copyFail:'コピーできませんでした',\n    wordOnly:'Word 上でのみ挿入できます（プレビュー環境では不可）', wordOnlyUpdate:'Word 上でのみ動作します',\n    badFormat:'library.json の形式を認識できません', noCites:'（引用がありません）', notFound:'(ライブラリに見つかりません)',\n  },\n  en: {\n    notLoaded:'Not loaded', nRefs:function(n){return n+' references';},\n    searchPh:'Search title, author, journal, DOI…', loadBtn:'Select library', libLoaded:'Library', loadTitle:'Select library folder', reloadLibTitle:'Reload library.json', changeLibTitle:'Change library folder',\n    styleLabel:'Style', collLabel:'Collection', allColl:'All collections',\n    styleGroup:'Citation style', searchGroup:'Search & filter', tagLabel:'Tag', allTags:'All tags', starredOpt:'★ Starred', myPubOpt:'My publications',\n    incTitle:'Title', incUrl:'DOI/URL', numberLabel:'Number', bracketOpt:'Brackets [1]', superOpt:'Superscript ¹', superBracketOpt:'Superscript [1]',\n    refreshBtn:'Update bibliography', refreshTitle:'Re-sync the in-text numbers and the reference list',\n    insertBtn:'Insert', copyBtn:'Copy',\n    insertTitle:'Insert a number in the text, linked to the reference list',\n    count:function(n,m){return n+' / '+m;},\n    emptyLoad:'Load library.json with the “Library” button. (It is in your Paper Library folder, or export via Export → Whole library → JSON.)',\n    moreItems:function(n){return 'Showing top '+n+' (refine your search)';}, noTitle:'(untitled)',\n    loaded:'Library loaded', reloaded:'Library reloaded', loadedNoCache:'Library loaded, but it is too large to cache. Reload it next time.', loadFail:function(e){return 'Load failed: '+e;}, folderNoJson:'library.json was not found in the selected folder', reloadNeedsSelect:'Automatic reload is not available in this environment. Select the library folder again',\n    inserted:'Citation inserted', insertFail:function(e){return 'Insert failed: '+e;},\n    updated:'Bibliography updated', updateFail:function(e){return 'Update failed: '+e;},\n    copied:'Citation copied', copyFail:'Could not copy',\n    wordOnly:'Only available inside Word', wordOnlyUpdate:'Only works inside Word',\n    badFormat:'Unrecognized library.json format', noCites:'(no citations)', notFound:'(not found in library)',\n  }\n};\nvar LANG = 'ja';\nfunction tr(k){ var a=[].slice.call(arguments,1); var v=I18N[LANG][k]; return typeof v==='function' ? v.apply(null,a) : v; }\n\n/* ================================================================\n   Add-in state + UI\n================================================================ */\nvar $ = (s)=>document.querySelector(s);\nvar STATE = { items: [], collections: [], cached:false, libraryLabel:'', dirHandle:null, libraryFileHandle:null, lastFolderFiles:null };\nvar PREFS = { style:'acs', includeTitle:false, includeUrl:false, marker:'bracket' };\nvar officeReady = false;\nvar LS_LIB = 'plWordAddin.library';\nvar LS_PREFS = 'plWordAddin.prefs';\nvar LS_LANG = 'plWordAddin.lang';\n// inserted content defaults to Times New Roman 10.5pt\nvar INS_FONT = \"Times New Roman\", INS_SIZE = 10.5;\n// inline button icons\nvar IC_INSERT = '<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M8 3.3v9.4M3.3 8h9.4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\"/><\/svg>';\nvar IC_COPY = '<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><rect x=\"5.6\" y=\"5.6\" width=\"7.8\" height=\"7.8\" rx=\"1.4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\"/><path d=\"M10.2 5.6V4.1A1.5 1.5 0 0 0 8.7 2.6H4A1.5 1.5 0 0 0 2.5 4.1v4.7A1.5 1.5 0 0 0 4 10.3h1.6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\"/><\/svg>';\n\nfunction toast(msg, isErr){\n  var el = $('#toast'); el.textContent = msg;\n  el.className = 'toast show' + (isErr ? ' err' : '');\n  clearTimeout(toast._t); toast._t = setTimeout(function(){ el.className = 'toast'; }, 2600);\n}\nfunction collById(id){ return STATE.collections.find(function(c){ return c.id===id; }); }\nfunction activeItems(){ return STATE.items.filter(function(it){ return !it.trashed; }); }\n// a collection and all of its descendant collection ids (so a parent includes its children)\nfunction collectionDescendants(id){\n  var out = [id], byParent = {};\n  STATE.collections.forEach(function(c){ (byParent[c.parent||''] = byParent[c.parent||''] || []).push(c.id); });\n  (function walk(pid){ (byParent[pid]||[]).forEach(function(cid){ out.push(cid); walk(cid); }); })(id);\n  return out;\n}\nfunction allTagsSorted(){\n  var set = {};\n  activeItems().forEach(function(it){ (it.tags||[]).forEach(function(tg){ if(tg) set[tg] = 1; }); });\n  return Object.keys(set).sort(function(a,b){ return a.localeCompare(b,'ja'); });\n}\n// collection filter (hierarchical); an \"all collections\" option means no restriction\nfunction buildCollOptions(){\n  var sel = $('#coll'); if(!sel) return;\n  var prev = sel.value;\n  var byParent = {};\n  STATE.collections.forEach(function(c){ (byParent[c.parent||''] = byParent[c.parent||''] || []).push(c); });\n  var opts = ['<option value=\"\">'+esc(tr('allColl'))+'<\/option>'];\n  (function walk(parent, depth){\n    (byParent[parent]||[]).sort(function(a,b){ return a.name.localeCompare(b.name,'ja'); }).forEach(function(c){\n      opts.push('<option value=\"'+esc(c.id)+'\">'+ '　'.repeat(depth) + esc(c.name) +'<\/option>');\n      walk(c.id, depth+1);\n    });\n  })('', 0);\n  sel.innerHTML = opts.join('');\n  sel.value = prev;                    // keep the current selection across rebuilds (e.g. language switch)\n  if(sel.value !== prev) sel.value = '';\n}\n// tag filter; an \"all tags\" option means no restriction\nfunction buildTagOptions(){\n  var sel = $('#tag'); if(!sel) return;\n  var prev = sel.value;\n  var opts = ['<option value=\"\">'+esc(tr('allTags'))+'<\/option>'];\n  allTagsSorted().forEach(function(tg){ opts.push('<option value=\"'+esc(tg)+'\">'+esc(tg)+'<\/option>'); });\n  sel.innerHTML = opts.join('');\n  sel.value = prev;\n  if(sel.value !== prev) sel.value = '';\n}\n// starred / my-publications / collection / tag are independent AND filters, so e.g.\n// \"starred AND a specific collection\" is expressible — mirrors the app's left pane.\nfunction buildFilterOptions(){ buildCollOptions(); buildTagOptions(); }\nfunction cleanLibraryLabel(s){\n  s = String(s || '').trim();\n  if(!s) return '';\n  s = s.split(/[\\\\/]/).filter(Boolean).pop() || s;\n  return s.replace(/\\.json$/i, '') || s;\n}\nfunction libraryLabelFromFile(file){\n  if(!file) return '';\n  if(file.libraryFolderName) return cleanLibraryLabel(file.libraryFolderName);\n  var rel = file.webkitRelativePath || '';\n  if(rel && rel.indexOf('/') >= 0){\n    var parts = rel.split('/').filter(Boolean);\n    if(parts.length > 1) return cleanLibraryLabel(parts[parts.length - 2]);\n  }\n  return '';\n}\nfunction libraryLabelFromData(data, file){\n  var fromData = data && (data.libraryFolderName || data.libraryFolder || data.libraryDir || data.folderName || data.folder || data.path);\n  return cleanLibraryLabel(fromData) || libraryLabelFromFile(file);\n}\nfunction updateLibraryButton(){\n  var btn = $('#btnLoad'); if(!btn) return;\n  var label = $('#libButtonLabel');\n  // show the folder name; if a library is loaded but its name is unknown, still signal\n  // \"loaded\" rather than the misleading \"select library\" prompt.\n  if(label) label.textContent = STATE.libraryLabel || (STATE.items.length ? tr('libLoaded') : tr('loadBtn'));\n  btn.title = STATE.libraryLabel ? tr('changeLibTitle') : tr('loadTitle');\n  btn.setAttribute('aria-label', btn.title);\n  var reload = $('#btnReloadLib');\n  if(reload){\n    reload.title = tr('reloadLibTitle');\n    reload.setAttribute('aria-label', tr('reloadLibTitle'));\n    reload.disabled = !STATE.items.length;\n  }\n}\nfunction updateLibInfo(){\n  var el = $('#libInfo'); if(!el) return;\n  if(!STATE.items.length){ el.textContent = tr('notLoaded'); updateLibraryButton(); return; }\n  el.textContent = tr('nRefs', activeItems().length);\n  updateLibraryButton();\n}\nfunction loadLibraryData(data, file){\n  var items = Array.isArray(data) ? data : (data && Array.isArray(data.items) ? data.items : null);\n  if(!items) throw new Error(tr('badFormat'));\n  STATE.items = items; STATE.cached = false;\n  STATE.collections = (data && Array.isArray(data.collections)) ? data.collections : [];\n  var lbl = libraryLabelFromData(data, file);\n  if(lbl) STATE.libraryLabel = lbl;    // keep the previously known name if this source can't provide one\n  buildFilterOptions();\n  updateLibInfo();\n  var cacheOk = true;\n  try{\n    localStorage.setItem(LS_LIB, JSON.stringify({items:STATE.items, collections:STATE.collections, libraryLabel:STATE.libraryLabel}));\n  }catch(e){\n    // Do not leave an older library in storage: on the next launch it could be\n    // mistaken for the library the user just selected.\n    try{ localStorage.removeItem(LS_LIB); }catch(_e){}\n    cacheOk = false;\n  }\n  render();\n  return cacheOk;\n}\nfunction currentOpts(){ return { style: $('#style').value, includeTitle: $('#incTitle').checked, includeUrl: $('#incUrl').checked, authorScope:'all' }; }\nfunction segButtons(){ return Array.prototype.slice.call(document.querySelectorAll('#markerStyle .segBtn')); }\nfunction currentMarker(){ var b = document.querySelector('#markerStyle .segBtn.active'); return b ? b.dataset.val : 'bracket'; }\nfunction setMarkerActive(val){ segButtons().forEach(function(b){ b.classList.toggle('active', b.dataset.val === val); }); }\nfunction savePrefs(){\n  PREFS = { style: $('#style').value, includeTitle: $('#incTitle').checked, includeUrl: $('#incUrl').checked, marker: currentMarker() };\n  try{ localStorage.setItem(LS_PREFS, JSON.stringify(PREFS)); }catch(e){}\n}\nfunction authorsShort(authors){ return (authors||[]).map(function(a){ return a.family || a.given; }).filter(Boolean).join('; '); }\nfunction itemText(it){\n  return [it.title, (it.authors||[]).map(function(a){ return (a.family||'')+' '+(a.given||''); }).join(' '),\n    it.journal, it.journalAbbr, it.year, it.doi, it.citekey, (it.tags||[]).join(' ')].join(' ').toLowerCase();\n}\nfunction render(){\n  var box = $('#results');\n  if(!STATE.items.length){\n    box.innerHTML = '<div class=\"empty\">'+esc(tr('emptyLoad'))+'<\/div>';\n    $('#count').textContent = ''; return;\n  }\n  var q = $('#q').value.trim().toLowerCase();\n  var terms = q ? q.split(/\\s+/) : [];\n  var coll = $('#coll').value;\n  var tag = $('#tag').value;\n  var onlyStar = $('#fStar').checked;\n  var onlyMine = $('#fMine').checked;\n  var collIds = coll ? collectionDescendants(coll) : null;\n  var list = STATE.items.filter(function(it){\n    if(it.trashed) return false;\n    if(onlyStar && !it.starred) return false;\n    if(onlyMine && !it.myPublication) return false;\n    if(tag && (it.tags||[]).indexOf(tag) < 0) return false;\n    if(collIds && !(it.collections||[]).some(function(c){ return collIds.indexOf(c) >= 0; })) return false;\n    if(!terms.length) return true;\n    var hay = itemText(it);\n    return terms.every(function(t){ return hay.indexOf(t) >= 0; });\n  });\n  $('#count').textContent = tr('count', list.length, activeItems().length);\n  list.sort(function(a,b){ return String(b.year||'').localeCompare(String(a.year||'')); });\n  var shown = list.slice(0, 200);\n  box.innerHTML = shown.map(function(it, i){\n    var meta = [ journalDisplay(it) ? '<span class=\"journal\">'+esc(journalDisplay(it))+'<\/span>' : '',\n                 it.year ? '<span>'+esc(it.year)+'<\/span>' : '' ].filter(Boolean).join('');\n    return '<div class=\"card\">'\n      + '<div class=\"ct\">'+esc(it.title||tr('noTitle'))+'<\/div>'\n      + '<div class=\"cau\">'+esc(authorsShort(it.authors))+'<\/div>'\n      + '<div class=\"cmeta\">'+meta\n      +   '<span class=\"acts\">'\n      +     '<button class=\"btn\" data-num=\"'+i+'\" title=\"'+esc(tr('insertTitle'))+'\">'+IC_INSERT+esc(tr('insertBtn'))+'<\/button>'\n      +     '<button class=\"btn ghost\" data-copy=\"'+i+'\">'+IC_COPY+esc(tr('copyBtn'))+'<\/button>'\n      +   '<\/span>'\n      + '<\/div>'\n      + '<\/div>';\n  }).join('') + (list.length>shown.length ? '<div class=\"empty\">'+esc(tr('moreItems', shown.length))+'<\/div>' : '');\n  box.__list = shown;\n}\n\nasync function copyCitation(it){\n  var html = itemToCitationHtml(it, currentOpts());\n  var tmp = document.createElement('div'); tmp.innerHTML = html;\n  var text = (tmp.textContent||'').replace(/\\s+/g,' ').trim();\n  try{\n    if(window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){\n      await navigator.clipboard.write([new ClipboardItem({\n        'text/html': new Blob([html], {type:'text/html'}),\n        'text/plain': new Blob([text], {type:'text/plain'}),\n      })]);\n    } else { await navigator.clipboard.writeText(text); }\n    toast(tr('copied'));\n  }catch(e){ toast(tr('copyFail'), true); }\n}\n\n/* ================================================================\n   Numbered citations [1] + auto-linked bibliography.\n   Each in-text citation is a hidden Word content control tagged\n   \"PLCITE:<itemId>\"; the bibliography is one control tagged \"PLBIB\".\n================================================================ */\nvar CITE_TAG = 'PLCITE:';\nvar BIB_TAG = 'PLBIB';\n// in-text marker text; bibliography number label matches the same style\nfunction markerText(n){\n  if(PREFS.marker === 'super') return String(n);\n  if(PREFS.marker === 'superBracket') return '[' + n + ']';\n  return '[' + n + ']';\n}\n// collapse a set of numbers into a compact string: runs of 3+ become ranges (1–4),\n// everything else is comma separated (1, 3, 5).\nfunction collapseNums(nums){\n  var u = Array.from(new Set(nums)).filter(function(x){ return x; }).sort(function(a,b){ return a - b; });\n  var parts = [], i = 0;\n  while(i < u.length){\n    var j = i;\n    while(j + 1 < u.length && u[j + 1] === u[j] + 1) j++;\n    if(j - i >= 2) parts.push(u[i] + '–' + u[j]);\n    else for(var k = i; k <= j; k++) parts.push(String(u[k]));\n    i = j + 1;\n  }\n  return parts.join(', ');\n}\n// in-text text for a group of adjacent citations (e.g. \"[1–4]\" or superscript \"1–4\")\nfunction groupMarkerText(nums, marker){\n  var inner = collapseNums(nums);\n  if(!inner) return '';\n  return marker === 'super' ? inner : ('[' + inner + ']');\n}\nfunction bibLabel(n){ return PREFS.marker === 'super' ? (n + '.') : ('[' + n + ']'); }\nfunction assignNumbers(idsInOrder){\n  var order = [], numById = {};\n  idsInOrder.forEach(function(id){ if(!(id in numById)){ order.push(id); numById[id] = order.length; } });\n  return { order: order, numById: numById };\n}\n// hanging-indent paragraphs, Times New Roman 10.5pt, number floating at the left\nvar BIB_INDENT = 22; // pt — hanging indent / gap between number and citation\nfunction buildBibliographyHtml(items, opts){\n  if(!items.length) return '';\n  var base = \"font-family:'Times New Roman',serif;font-size:10.5pt;text-align:left;margin:0pt 0pt 6pt \" + BIB_INDENT + \"pt;text-indent:-\" + BIB_INDENT + \"pt;\";\n  return items.map(function(it, i){\n    var body = it ? itemToCitationHtml(it, opts) : esc(tr('notFound'));\n    return '<p style=\"' + base + '\">' + esc(bibLabel(i + 1)) + '&#9;' + body + '<\/p>';\n  }).join('');\n}\nfunction applyInsertFont(range, superscript){\n  range.font.name = INS_FONT; range.font.size = INS_SIZE;\n  range.font.superscript = !!superscript;\n}\nfunction wordReady(){ return officeReady && window.Word && typeof Word.run === 'function'; }\n\nasync function insertCitationNumber(it){\n  if(!wordReady()){ toast(tr('wordOnly'), true); return; }\n  try{\n    await Word.run(async function(context){\n      var sel = context.document.getSelection();\n      var r = sel.insertText(markerText(1), 'Replace'); // placeholder number; refresh fixes it\n      var cc = r.insertContentControl();\n      cc.tag = CITE_TAG + it.id;\n      cc.title = 'Paper Library citation';\n      cc.appearance = 'Hidden';\n      applyInsertFont(r, PREFS.marker === 'super' || PREFS.marker === 'superBracket');\n      await context.sync();\n    });\n    await refreshCitations({ silent: true });\n    toast(tr('inserted'));\n  }catch(e){ console.error(e); toast(tr('insertFail', e && e.message), true); }\n}\n\nasync function refreshCitations(o){\n  o = o || {};\n  if(!wordReady()){ if(!o.silent) toast(tr('wordOnlyUpdate'), true); return; }\n  var opts = currentOpts();\n  try{\n    await Word.run(async function(context){\n      var ccs = context.document.body.contentControls;\n      ccs.load('items/tag');\n      await context.sync();\n\n      var cites = ccs.items.filter(function(c){ return (c.tag || '').indexOf(CITE_TAG) === 0; });\n      var ids = cites.map(function(c){ return c.tag.slice(CITE_TAG.length); });\n      var num = assignNumbers(ids);\n      var sup = (PREFS.marker === 'super' || PREFS.marker === 'superBracket');\n\n      // group adjacent in-text citations so consecutive numbers collapse (1234 -> 1–4)\n      var clusters = null;\n      if(cites.length){\n        try{\n          var ranges = cites.map(function(c){ return c.getRange('Whole'); });\n          var cmps = [];\n          for(var ci = 0; ci < cites.length - 1; ci++) cmps.push(ranges[ci].compareLocationWith(ranges[ci + 1]));\n          await context.sync();\n          clusters = [];\n          var cur = [0];\n          for(var cj = 1; cj < cites.length; cj++){\n            if(cmps[cj - 1] && cmps[cj - 1].value === 'AdjacentBefore') cur.push(cj);\n            else { clusters.push(cur); cur = [cj]; }\n          }\n          clusters.push(cur);\n        }catch(e){ clusters = null; }\n      }\n\n      if(clusters){\n        clusters.forEach(function(cluster){\n          var nums = cluster.map(function(idx){ return num.numById[ids[idx]]; });\n          var text = groupMarkerText(nums, PREFS.marker);\n          cluster.forEach(function(idx, k){\n            // first control carries the whole group text; the rest are hidden with a zero-width space\n            var r = cites[idx].insertText(k === 0 ? text : '\\u200B', 'Replace');\n            applyInsertFont(r, sup);\n          });\n        });\n      }else{\n        cites.forEach(function(c){\n          var n = num.numById[c.tag.slice(CITE_TAG.length)];\n          var r = c.insertText(markerText(n), 'Replace');\n          applyInsertFont(r, sup);\n        });\n      }\n\n      var items = num.order.map(function(id){\n        var f = null; STATE.items.forEach(function(x){ if(x.id === id) f = x; }); return f;\n      });\n      var bib = null;\n      ccs.items.forEach(function(c){ if((c.tag || '') === BIB_TAG) bib = c; });\n      // only materialize a bibliography once there is at least one citation; a bare\n      // style change in an empty document must not inject an empty reference list.\n      if(!bib && cites.length){\n        var p = context.document.body.insertParagraph('', 'End');\n        bib = p.insertContentControl();\n        bib.tag = BIB_TAG;\n        bib.title = 'Paper Library bibliography';\n        bib.appearance = 'Hidden';\n      }\n      if(bib){\n        var html = buildBibliographyHtml(items, opts);\n        if(html) bib.insertHtml(html, 'Replace');\n        else bib.insertText(tr('noCites'), 'Replace');\n        bib.font.name = INS_FONT; bib.font.size = INS_SIZE;\n        await context.sync();\n\n        // enforce the hanging indent + left alignment reliably (insertHtml CSS is flaky)\n        if(html){\n          try{\n            var bibParas = bib.paragraphs;\n            bibParas.load('items');\n            await context.sync();\n            bibParas.items.forEach(function(p2){\n              p2.leftIndent = BIB_INDENT;\n              p2.firstLineIndent = -BIB_INDENT;\n              p2.alignment = 'Left';\n            });\n            await context.sync();\n          }catch(e){ /* older Word: rely on the inline CSS hanging indent */ }\n        }\n      }\n    });\n    if(!o.silent) toast(tr('updated'));\n  }catch(e){ console.error(e); toast(tr('updateFail', e && e.message), true); }\n}\n\n/* ---- events ---- */\nasync function readLibraryFileObject(f, label, silent){\n  var text = await f.text();\n  if(label) f.libraryFolderName = label;\n  var cached = loadLibraryData(JSON.parse(text), f);\n  toast(cached ? (silent ? tr('reloaded') : tr('loaded')) : tr('loadedNoCache'), !cached);\n}\nasync function loadLibraryFromHandle(silent){\n  if(!STATE.libraryFileHandle && STATE.dirHandle){\n    STATE.libraryFileHandle = await STATE.dirHandle.getFileHandle('library.json');\n  }\n  if(!STATE.libraryFileHandle) return false;\n  var f = await STATE.libraryFileHandle.getFile();\n  if(STATE.dirHandle && STATE.dirHandle.name) f.libraryFolderName = STATE.dirHandle.name;\n  await readLibraryFileObject(f, f.libraryFolderName, !!silent);\n  return true;\n}\nasync function reloadLibrary(){\n  try{\n    if(await loadLibraryFromHandle(true)) return;\n    toast(tr('reloadNeedsSelect'), true);\n    chooseLibrary();\n  }catch(err){\n    console.error(err);\n    toast(tr('loadFail', err && err.message ? err.message : err), true);\n  }\n}\nasync function loadLibraryFromSelectedFolder(files){\n  files = Array.from(files || []);\n  if(!files.length) return;\n  var f = files.find(function(x){ return /(^|\\/)library\\.json$/i.test(x.webkitRelativePath || x.name); })\n       || files.find(function(x){ return /library\\.json$/i.test(x.name); });\n  if(!f){ toast(tr('folderNoJson'), true); return; }\n  // File objects obtained via <input webkitdirectory> are snapshots.\n  // Keep the latest selection for display, but ask the user to reselect the folder for future updates.\n  STATE.lastFolderFiles = files;\n  var text = await f.text();\n  try{ var cached = loadLibraryData(JSON.parse(text), f); toast(cached ? tr('loaded') : tr('loadedNoCache'), !cached); }\n  catch(err){ toast(tr('loadFail', err.message), true); }\n}\nasync function chooseLibrary(){\n  if(window.showDirectoryPicker){\n    try{\n      var dir = await window.showDirectoryPicker();\n      var h = await dir.getFileHandle('library.json');\n      STATE.dirHandle = dir;\n      STATE.libraryFileHandle = h;\n      await loadLibraryFromHandle(false);\n      return;\n    }catch(err){\n      if(err && (err.name === 'AbortError' || err.name === 'NotAllowedError')) return;\n      toast(tr('loadFail', err && err.message ? err.message : err), true);\n      return;\n    }\n  }\n  if($('#folder') && 'webkitdirectory' in $('#folder')) $('#folder').click();\n  else $('#file').click();\n}\nasync function libraryButtonAction(){\n  if(STATE.items.length) await reloadLibrary();\n  else await chooseLibrary();\n}\n$('#btnLoad').addEventListener('click', function(){ chooseLibrary(); });\n$('#btnReloadLib').addEventListener('click', function(){ reloadLibrary(); });\n$('#folder').addEventListener('change', function(e){\n  loadLibraryFromSelectedFolder(e.target.files);\n  e.target.value = '';\n});\n$('#file').addEventListener('change', async function(e){\n  var f = e.target.files[0]; e.target.value = '';\n  if(!f) return;\n  try{ await readLibraryFileObject(f, '', false); }\n  catch(err){ toast(tr('loadFail', err.message), true); }\n});\n$('#q').addEventListener('input', render);\n$('#coll').addEventListener('change', render);\n$('#tag').addEventListener('change', render);\n$('#fStar').addEventListener('change', render);\n$('#fMine').addEventListener('change', render);\n$('#style').addEventListener('change', function(){ savePrefs(); render(); refreshCitations({ silent: true }); });\n$('#incTitle').addEventListener('change', function(){ savePrefs(); render(); refreshCitations({ silent: true }); });\n$('#incUrl').addEventListener('change', function(){ savePrefs(); render(); refreshCitations({ silent: true }); });\nsegButtons().forEach(function(b){\n  b.addEventListener('click', function(){ setMarkerActive(b.dataset.val); savePrefs(); refreshCitations({ silent: true }); });\n});\n$('#btnRefresh').addEventListener('click', function(){ refreshCitations(); });\n$('#btnLang').addEventListener('click', function(){ setLang(LANG === 'ja' ? 'en' : 'ja'); });\n$('#results').addEventListener('click', function(e){\n  var num = e.target.closest('[data-num]'), cp = e.target.closest('[data-copy]');\n  var list = $('#results').__list || [];\n  if(num){ var it0 = list[+num.dataset.num]; if(it0) insertCitationNumber(it0); }\n  else if(cp){ var it2 = list[+cp.dataset.copy]; if(it2) copyCitation(it2); }\n});\n\n/* ---- i18n apply / language ---- */\nfunction applyI18n(){\n  document.querySelectorAll('[data-i18n]').forEach(function(el){ var v = I18N[LANG][el.dataset.i18n]; if(typeof v === 'string') el.textContent = v; });\n  document.querySelectorAll('[data-i18n-ph]').forEach(function(el){ var v = I18N[LANG][el.dataset.i18nPh]; if(typeof v === 'string') el.placeholder = v; });\n  document.querySelectorAll('[data-i18n-title]').forEach(function(el){ var v = I18N[LANG][el.dataset.i18nTitle]; if(typeof v === 'string') el.title = v; });\n  var refreshLabel = $('#refreshLabel'); if(refreshLabel) refreshLabel.textContent = tr('refreshBtn');\n  $('#btnLang').textContent = (LANG === 'ja') ? 'EN' : '日本語';\n  document.documentElement.lang = LANG;\n  if(STATE.items.length) buildFilterOptions();\n  updateLibInfo();\n  render();\n}\nfunction setLang(l){ LANG = l; try{ localStorage.setItem(LS_LANG, l); }catch(e){} applyI18n(); }\n\n/* ---- startup: restore prefs + cached library ---- */\nfunction restore(){\n  try{ LANG = localStorage.getItem(LS_LANG) || 'ja'; }catch(e){ LANG = 'ja'; }\n  if(LANG !== 'en' && LANG !== 'ja') LANG = 'ja';\n  try{ Object.assign(PREFS, JSON.parse(localStorage.getItem(LS_PREFS)||'{}')); }catch(e){}\n  $('#style').value = PREFS.style || 'acs';\n  $('#incTitle').checked = !!PREFS.includeTitle;\n  $('#incUrl').checked = !!PREFS.includeUrl;\n  setMarkerActive(PREFS.marker || 'bracket');\n  try{\n    var cached = JSON.parse(localStorage.getItem(LS_LIB)||'null');\n    if(cached && cached.items){ STATE.items = cached.items; STATE.collections = cached.collections||[]; STATE.libraryLabel = cached.libraryLabel || ''; STATE.cached = true; }\n  }catch(e){}\n  applyI18n();\n}\nrestore();\n\nif(window.Office && Office.onReady){\n  Office.onReady(function(info){ officeReady = !!(info && info.host); });\n} else {\n  officeReady = false;\n}\n<\/script>\n<\/body>\n<\/html>\n"},
+  "manifest.xml": {text: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!--\n  Paper Library — Word add-in manifest (GitHub Pages / online version).\n\n  This is the file you sideload into Word. The add-in (taskpane.html, assets/…)\n  is served from GitHub Pages:\n    https://t-shiokawa1.github.io/Paper-Library/word-addin/\n  i.e. taskpane.html, functions.html and assets/ live in a \"word-addin\" folder\n  at the repository root.\n\n  To publish elsewhere, replace every\n    https://t-shiokawa1.github.io/Paper-Library/word-addin\n  below with your own HTTPS host (<AppDomain> is the origin only).\n-->\n<OfficeApp xmlns=\"http://schemas.microsoft.com/office/appforoffice/1.1\"\n           xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n           xmlns:bt=\"http://schemas.microsoft.com/office/officeappbasictypes/1.0\"\n           xmlns:ov=\"http://schemas.microsoft.com/office/taskpaneappversionoverrides\"\n           xsi:type=\"TaskPaneApp\">\n  <Id>e4bd1298-a84d-4249-b366-c20d396bc42e<\/Id>\n  <Version>1.0.2.0<\/Version>\n  <ProviderName>Paper Library<\/ProviderName>\n  <DefaultLocale>ja-JP<\/DefaultLocale>\n  <DisplayName DefaultValue=\"Paper Library\"/>\n  <Description DefaultValue=\"Paper Library の文献を検索して、引用文献を Word に挿入します。\"/>\n  <IconUrl DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/word-addin/assets/logo-32.png\"/>\n  <HighResolutionIconUrl DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/word-addin/assets/logo-80.png\"/>\n  <SupportUrl DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/\"/>\n  <AppDomains>\n    <AppDomain>https://t-shiokawa1.github.io<\/AppDomain>\n  <\/AppDomains>\n  <Hosts>\n    <Host Name=\"Document\"/>\n  <\/Hosts>\n  <DefaultSettings>\n    <SourceLocation DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/word-addin/taskpane.html\"/>\n  <\/DefaultSettings>\n  <Permissions>ReadWriteDocument<\/Permissions>\n\n  <VersionOverrides xmlns=\"http://schemas.microsoft.com/office/taskpaneappversionoverrides\" xsi:type=\"VersionOverridesV1_0\">\n    <Hosts>\n      <Host xsi:type=\"Document\">\n        <DesktopFormFactor>\n          <FunctionFile resid=\"Urls.Functions\"/>\n          <ExtensionPoint xsi:type=\"PrimaryCommandSurface\">\n            <CustomTab id=\"PaperLibrary.Tab\">\n              <Label resid=\"Tab.Label\"/>\n              <Group id=\"PaperLibrary.Group\">\n                <Label resid=\"Group.Label\"/>\n                <Icon>\n                  <bt:Image size=\"16\" resid=\"Icon.16\"/>\n                  <bt:Image size=\"32\" resid=\"Icon.32\"/>\n                  <bt:Image size=\"80\" resid=\"Icon.80\"/>\n                <\/Icon>\n                <Control xsi:type=\"Button\" id=\"PaperLibrary.OpenBtn\">\n                  <Label resid=\"OpenBtn.Label\"/>\n                  <Supertip>\n                    <Title resid=\"OpenBtn.Label\"/>\n                    <Description resid=\"OpenBtn.Tip\"/>\n                  <\/Supertip>\n                  <Icon>\n                    <bt:Image size=\"16\" resid=\"Icon.16\"/>\n                    <bt:Image size=\"32\" resid=\"Icon.32\"/>\n                    <bt:Image size=\"80\" resid=\"Icon.80\"/>\n                  <\/Icon>\n                  <Action xsi:type=\"ShowTaskpane\">\n                    <TaskpaneId>PaperLibrary.Taskpane<\/TaskpaneId>\n                    <SourceLocation resid=\"Urls.Taskpane\"/>\n                  <\/Action>\n                <\/Control>\n              <\/Group>\n            <\/CustomTab>\n          <\/ExtensionPoint>\n        <\/DesktopFormFactor>\n      <\/Host>\n    <\/Hosts>\n\n    <Resources>\n      <bt:Images>\n        <bt:Image id=\"Icon.16\" DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/word-addin/assets/logo-16.png\"/>\n        <bt:Image id=\"Icon.32\" DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/word-addin/assets/logo-32.png\"/>\n        <bt:Image id=\"Icon.80\" DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/word-addin/assets/logo-80.png\"/>\n      <\/bt:Images>\n      <bt:Urls>\n        <bt:Url id=\"Urls.Taskpane\" DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/word-addin/taskpane.html\"/>\n        <bt:Url id=\"Urls.Functions\" DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/word-addin/functions.html\"/>\n        <bt:Url id=\"Urls.Support\" DefaultValue=\"https://t-shiokawa1.github.io/Paper-Library/\"/>\n      <\/bt:Urls>\n      <bt:ShortStrings>\n        <bt:String id=\"Tab.Label\" DefaultValue=\"Paper Library\"/>\n        <bt:String id=\"Group.Label\" DefaultValue=\"Paper Library\"/>\n        <bt:String id=\"OpenBtn.Label\" DefaultValue=\"文献パネルを開く\"/>\n      <\/bt:ShortStrings>\n      <bt:LongStrings>\n        <bt:String id=\"OpenBtn.Tip\" DefaultValue=\"Paper Library の文献パネルを開き、文献を検索・選択します。\"/>\n      <\/bt:LongStrings>\n    <\/Resources>\n  <\/VersionOverrides>\n<\/OfficeApp>\n"},
+  "taskpane.html": {text: "<!DOCTYPE html>\n<html lang=\"ja\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Paper Library<\/title>\n<script src=\"https://appsforoffice.microsoft.com/lib/1/hosted/office.js\"><\/script>\n<style>\n  :root{ --accent:#2563eb; --accent-soft:#eaf1ff; --border:#e2e6ee; --text:#1c2430; --text2:#5a6675; --text3:#8a94a3; --bg:#f6f8fb; }\n  *{box-sizing:border-box}\n  html,body{margin:0; min-height:100%; font-family:-apple-system,\"Segoe UI\",Roboto,\"Helvetica Neue\",sans-serif; color:var(--text); font-size:13px; background:#fff}\n  body{overflow-y:auto}\n  header{padding:8px 12px 9px; display:flex; align-items:center; gap:8px}\n  header .logo{width:24px;height:24px;flex:0 0 auto;display:block}\n  header .t{font-weight:700; white-space:nowrap; flex:0 0 auto}\n  header .lib{margin-left:auto; min-width:0; font-size:11.5px; color:var(--text3); text-align:right; line-height:1.3; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}\n  header .langBtn{flex:0 0 auto; display:inline-flex; align-items:center; gap:4px; border:1px solid var(--border); background:#fff; color:var(--text2); border-radius:6px; padding:3px 8px; font-size:11.5px; font-weight:600; cursor:pointer}\n  header .langBtn.iconOnly{padding:3px 6px}\n  header .langBtn .hdrIcon{width:14px; height:14px; flex:0 0 auto}\n  header .langBtn:hover{border-color:var(--accent); color:var(--accent); background:var(--accent-soft)}\n  header .langBtn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}\n\n  /* ---- manual overlay ---- */\n  .manualOverlay{position:fixed; inset:0; z-index:60; background:#fff; display:flex; flex-direction:column}\n  .manualHead{display:flex; align-items:center; gap:7px; flex:0 0 auto; padding:9px 12px; border-bottom:1px solid var(--border); font-weight:800; background:#fff}\n  .manualHead .manualHeadIcon{width:18px; height:18px; flex:0 0 auto; padding:3px; border-radius:5px; background:var(--accent-soft); color:var(--accent)}\n  .manualClose{margin-left:auto; flex:0 0 auto; width:26px; height:26px; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--border); border-radius:6px; background:#fff; color:var(--text2); cursor:pointer; padding:0}\n  .manualClose svg{width:14px; height:14px}\n  .manualClose:hover{border-color:var(--accent); color:var(--accent); background:var(--accent-soft)}\n  .manualBody{flex:1 1 auto; overflow-y:auto; padding:12px 12px 28px; line-height:1.65}\n  .manualBody h3{margin:18px 0 6px; font-size:13px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:6px}\n  .manualBody h3:first-child{margin-top:0}\n  .manualBody h3::before{content:\"\"; width:3px; align-self:stretch; border-radius:2px; background:var(--accent); flex:0 0 auto}\n  .manualBody p{margin:0 0 8px; color:var(--text2); font-size:12px}\n  .manualBody ul{margin:0 0 8px; padding-left:17px; color:var(--text2); font-size:12px}\n  .manualBody li{margin-bottom:5px}\n  .manualBody li::marker{color:var(--text3)}\n  .manualBody code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11px; background:#f1f5f9; border:1px solid var(--border); border-radius:4px; padding:1px 5px; color:var(--text); word-break:break-all}\n  .manualBody .mIntro{background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:9px 11px; margin-bottom:14px}\n  .manualBody .mIntro p{margin:0}\n  .controls{padding:0 12px; display:flex; flex-direction:column; gap:0}\n  .subbar{padding:0 12px; display:flex; flex-direction:column; gap:0; background:#fff}\n  .sectionTitle{display:flex; align-items:center; gap:7px; margin-top:0; color:var(--text); font-size:13px; font-weight:800; letter-spacing:.01em}\n  .sectionTitle .sectionLeadIcon{width:20px; height:20px; flex:0 0 auto; padding:3px; border-radius:5px; background:var(--accent-soft); color:var(--accent)}\n  .sectionToggle{width:100%; border:0; padding:9px 0; background:transparent; font:inherit; text-align:left; cursor:pointer}\n  .sectionToggle .sectionChevron{width:15px; height:15px; flex:0 0 auto; margin-left:auto; padding:0; color:var(--text3); background:transparent; transition:transform .15s ease}\n  .sectionToggle[aria-expanded=\"false\"] .sectionChevron{transform:rotate(-90deg)}\n  .sectionToggle:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:6px}\n  .sectionPanel{display:flex; flex-direction:column; gap:7px; padding-bottom:11px}\n  .sectionPanel[hidden]{display:none}\n  .sectionCount{margin-left:auto; color:var(--text3); font-size:11.5px; font-weight:700; letter-spacing:0}\n  .sectionToggle[aria-expanded=\"false\"] .sectionCount{display:none}\n  .row{display:flex; gap:6px; align-items:center; flex-wrap:wrap}\n  .row > label{font-size:11.5px; color:var(--text2)}\n  select, input[type=search], input[type=text]{ font:inherit; padding:5px 8px; border:1px solid var(--border); border-radius:6px; background:#fff; color:var(--text); outline:none; min-width:0 }\n  select{appearance:none; -webkit-appearance:none; padding-right:32px; background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='m1 1 5 6 5-6' fill='none' stroke='%235a6675' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.8'/%3E%3C/svg%3E\"); background-position:right 10px center; background-repeat:no-repeat; background-size:12px 8px; box-shadow:0 1px 2px rgba(15,23,42,.06)}\n  select:focus, input:focus{border-color:var(--accent)}\n  #q{flex:1}\n  .fields{display:flex; gap:8px; align-items:flex-end}\n  .field{flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:2px}\n  .field > label{font-size:11.5px; color:var(--text2)}\n  .field select{width:100%}\n  .btn{font:inherit; border:1px solid var(--accent); background:var(--accent); color:#fff; border-radius:6px; padding:5px 10px; cursor:pointer; font-weight:600; white-space:nowrap}\n  .btn:hover{filter:brightness(1.07)}\n  .btn.ghost{background:#fff; color:var(--accent)}\n  .btn.ghost:hover{background:var(--accent-soft)}\n  .btn.quiet{border-color:transparent; background:transparent; color:var(--text2); padding:4px 6px; font-size:11.5px}\n  .btn.quiet:hover{background:var(--accent-soft); color:var(--accent); filter:none}\n  .btn:disabled{opacity:.5; cursor:default}\n  .libraryPicker{display:flex; align-items:center; width:100%; min-width:0; border:1px solid var(--border); border-radius:8px; overflow:hidden; background:#fff; color:var(--text2); box-shadow:0 1px 2px rgba(15,23,42,.04); transition:border-color .15s ease,box-shadow .15s ease;}\n  .libraryPicker:hover{border-color:#cbd5e1;}\n  .libraryPicker .libNameBtn{font:inherit; border:0; background:#fff; color:var(--text); padding:6px 9px; flex:1 1 auto; min-width:0; overflow:hidden; white-space:nowrap; font-weight:600; cursor:pointer; max-width:none; display:inline-flex; align-items:center; justify-content:flex-start; gap:5px;}\n  .libraryPicker .libNameBtn:hover{background:#f8fafc}\n  .libraryPicker .libNameBtn .libNameIcon{width:14px; height:14px; flex:0 0 auto; color:var(--accent);}\n  .libraryPicker .libNameBtn #libButtonLabel{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}\n  .libraryPicker .libIconBtn{width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center; border:0; border-left:1px solid var(--border); background:#fff; color:var(--text3); cursor:pointer; padding:0;}\n  .libraryPicker .libIconBtn:hover{background:var(--accent-soft); color:var(--accent)}\n  .libraryPicker .libIconBtn:disabled{opacity:.45; cursor:default;}\n  .libraryPicker .libIconBtn:disabled:hover{background:#fff;}\n  .libraryPicker .libIconBtn svg{width:14px; height:14px; flex:0 0 auto;}\n  .seg{display:inline-flex; width:100%; border:1px solid var(--border); border-radius:8px; overflow:hidden; background:#fff}\n  .seg .segBtn{flex:1 1 0; font:inherit; border:0; border-left:1px solid var(--border); background:#fff; color:var(--text2); padding:5px 12px; cursor:pointer; min-width:0; line-height:1.15; text-align:center}\n  .seg .segBtn:first-child{border-left:0}\n  .seg .segBtn:hover{background:var(--accent-soft); color:var(--accent)}\n  .seg .segBtn.active{background:var(--accent); color:#fff}\n  .seg .segBtn sup{font-size:.72em; line-height:0}\n  .check{display:inline-flex; align-items:center; gap:4px; font-size:11.5px; color:var(--text2)}\n  .resultsArea{background:#fff; padding:0 12px}\n  .resultsArea .sectionTitle{padding:9px 0}\n  #results{overflow:visible; padding:6px 0 0}\n  .card{border:1px solid var(--border); border-radius:8px; padding:8px 10px; margin-bottom:7px; background:#fff}\n  .card:hover{border-color:var(--accent)}\n  .card .ct{font-weight:600; line-height:1.3; margin-bottom:3px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}\n  .card .cau{color:var(--text2); font-size:12px; line-height:1.25; margin-bottom:4px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}\n  .card .cmeta{display:flex; flex-wrap:wrap; gap:6px 8px; align-items:center; color:var(--text3); font-size:11.5px; font-weight:600}\n  .card .cmeta .journal{color:var(--accent)}\n  .card .acts{display:flex; gap:6px; margin-left:auto}\n  .card .acts .btn{display:inline-flex; align-items:center; gap:4px; padding:3px 9px}\n  .card .acts .btn svg{width:13px; height:13px; flex:0 0 auto}\n\n  #btnRefresh{display:inline-flex; align-items:center; gap:4px;}\n  #btnRefresh .refreshSvg{width:14px; height:14px; flex:0 0 auto;}\n  .empty{color:var(--text3); text-align:center; padding:26px 16px; line-height:1.6}\n  .toast{position:fixed; left:50%; bottom:12px; transform:translateX(-50%); background:#1c2430; color:#fff; padding:7px 13px; border-radius:8px; font-size:12px; opacity:0; transition:opacity .2s; pointer-events:none; max-width:88%}\n  .toast.show{opacity:.96}\n  .toast.err{background:#b42318}\n  .hidden{display:none !important}\n  a{color:var(--accent)}\n\n\n/* === Final CSS: reference card hover + refined control focus === */\n/* 02: richer reference cards */\n#results{\n  padding:6px 0 0;\n  background:#fff;\n}\n.card{\n  border-radius:11px;\n  padding:9px 10px;\n  box-shadow:0 1px 3px rgba(15,23,42,.035);\n  transition:border-color .15s ease;\n}\n.card:hover{\n  border-color:rgba(37,99,235,.48);\n}\n.card .ct{font-weight:700;}\n.card .cmeta .journal{\n  background:#eef5ff;\n  color:#1d4ed8;\n  border-radius:999px;\n  padding:1px 6px;\n}\n\n/* 03: refined controls and focus states */\n.controls{\n  background:#fff;\n}\nselect,\ninput[type=search],\ninput[type=text]{\n  padding:6px 9px;\n  border-radius:8px;\n  transition:border-color .15s ease,box-shadow .15s ease,background .15s ease;\n}\nselect{padding-right:32px;}\nselect:hover,\ninput[type=search]:hover,\ninput[type=text]:hover{border-color:#cbd5e1;}\nselect:focus,\ninput:focus{\n  border-color:var(--accent);\n  box-shadow:0 0 0 3px rgba(37,99,235,.12);\n}\n.check{\n  padding:2px 4px;\n  border-radius:6px;\n}\n.check:hover{background:#f1f5f9;}\n.btn{border-radius:8px;}\n\n<\/style>\n<\/head>\n<body>\n  <header>\n    <svg class=\"logo\" viewBox=\"0 0 32 32\" fill=\"none\" aria-hidden=\"true\">\n      <defs>\n        <linearGradient id=\"plg1\" x1=\"5\" y1=\"7\" x2=\"16\" y2=\"25\" gradientUnits=\"userSpaceOnUse\"><stop offset=\"0\" stop-color=\"#1d4ed8\"/><stop offset=\"1\" stop-color=\"#60a5fa\"/><\/linearGradient>\n        <linearGradient id=\"plg2\" x1=\"27\" y1=\"7\" x2=\"16\" y2=\"25\" gradientUnits=\"userSpaceOnUse\"><stop offset=\"0\" stop-color=\"#2563eb\"/><stop offset=\"1\" stop-color=\"#93c5fd\"/><\/linearGradient>\n        <linearGradient id=\"plg3\" x1=\"3\" y1=\"25\" x2=\"29\" y2=\"25\" gradientUnits=\"userSpaceOnUse\"><stop offset=\"0\" stop-color=\"#bfdbfe\"/><stop offset=\".5\" stop-color=\"#60a5fa\"/><stop offset=\"1\" stop-color=\"#1d4ed8\"/><\/linearGradient>\n      <\/defs>\n      <path d=\"M16 8.35C13.2 5.95 8.7 5.7 4.75 6.95v16.2c3.95-1.15 8.45-.8 11.25 1.85z\" fill=\"url(#plg1)\"/>\n      <path d=\"M16 8.35C18.8 5.95 23.3 5.7 27.25 6.95v16.2c-3.95-1.15-8.45-.8-11.25 1.85z\" fill=\"url(#plg2)\"/>\n      <path d=\"M7.8 11.15c1.85-.5 3.7-.48 5.15.06M7.8 14.55c1.85-.5 3.7-.48 5.15.06M19.05 11.15c1.85-.5 3.7-.48 5.15.06M19.05 14.55c1.85-.5 3.7-.48 5.15.06\" stroke=\"#fff\" stroke-width=\"1.05\" stroke-linecap=\"round\" opacity=\".82\"/>\n      <path d=\"M16 8.5v16.25\" stroke=\"#eff6ff\" stroke-width=\"1.25\" stroke-linecap=\"round\"/>\n      <rect x=\"3\" y=\"24.25\" width=\"26\" height=\"3.25\" rx=\"1.6\" fill=\"url(#plg3)\"/>\n      <path d=\"M5.1 25.9h21.8\" stroke=\"#eff6ff\" stroke-width=\".7\" stroke-linecap=\"round\" opacity=\".55\"/>\n    <\/svg>\n    <span class=\"t\">Paper Library<\/span>\n    <span class=\"lib\" id=\"libInfo\"><\/span>\n    <button class=\"langBtn\" id=\"btnLang\" data-i18n-title=\"langTitle\">\n      <svg class=\"hdrIcon\" viewBox=\"0 0 16 16\" fill=\"none\" aria-hidden=\"true\"><circle cx=\"8\" cy=\"8\" r=\"6.15\" stroke=\"currentColor\" stroke-width=\"1.35\"/><ellipse cx=\"8\" cy=\"8\" rx=\"2.65\" ry=\"6.15\" stroke=\"currentColor\" stroke-width=\"1.2\"/><path d=\"M8 1.85v12.3M1.85 8h12.3\" stroke=\"currentColor\" stroke-width=\"1.2\"/><path d=\"M3.15 4.3c1.4.75 3.02 1.15 4.85 1.15S11.45 5.05 12.85 4.3M3.15 11.7c1.4-.75 3.02-1.15 4.85-1.15s3.45.4 4.85 1.15\" stroke=\"currentColor\" stroke-width=\"1.2\" stroke-linecap=\"round\"/><\/svg>\n      <span id=\"langLabel\">EN<\/span>\n    <\/button>\n    <button class=\"langBtn iconOnly\" id=\"btnManual\" data-i18n-title=\"manualTitle\" aria-label=\"マニュアル\">\n      <svg class=\"hdrIcon\" viewBox=\"0 0 16 16\" fill=\"none\" aria-hidden=\"true\"><path d=\"M8 4.35C6.7 3.2 4.6 3.1 2.75 3.65v8.2c1.85-.55 3.95-.45 5.25.75\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><path d=\"M8 4.35c1.3-1.15 3.4-1.25 5.25-.7v8.2c-1.85-.55-3.95-.45-5.25.75\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><path d=\"M8 4.5v8.1\" stroke=\"currentColor\" stroke-width=\"1.1\" stroke-linecap=\"round\"/><\/svg>\n    <\/button>\n  <\/header>\n\n  <div class=\"manualOverlay hidden\" id=\"manualOverlay\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"manualHeadTitle\">\n    <div class=\"manualHead\">\n      <svg class=\"manualHeadIcon\" viewBox=\"0 0 16 16\" fill=\"none\" aria-hidden=\"true\"><path d=\"M8 4.35C6.7 3.2 4.6 3.1 2.75 3.65v8.2c1.85-.55 3.95-.45 5.25.75\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><path d=\"M8 4.35c1.3-1.15 3.4-1.25 5.25-.7v8.2c-1.85-.55-3.95-.45-5.25.75\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><path d=\"M8 4.5v8.1\" stroke=\"currentColor\" stroke-width=\"1.1\" stroke-linecap=\"round\"/><\/svg>\n      <span id=\"manualHeadTitle\">マニュアル<\/span>\n      <button type=\"button\" class=\"manualClose\" id=\"btnManualClose\" data-i18n-title=\"closeTitle\" aria-label=\"閉じる\">\n        <svg viewBox=\"0 0 16 16\" fill=\"none\" aria-hidden=\"true\"><path d=\"m4.4 4.4 7.2 7.2m0-7.2-7.2 7.2\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\"/><\/svg>\n      <\/button>\n    <\/div>\n    <div class=\"manualBody\" id=\"manualBody\"><\/div>\n  <\/div>\n\n  <div class=\"controls\">\n    <button type=\"button\" class=\"sectionTitle sectionToggle\" data-section-toggle=\"library\" aria-expanded=\"true\" aria-controls=\"section-library\">\n      <svg class=\"sectionLeadIcon\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M3.5 7.5h6l1.8 2.2h9.2v8.8H3.5V7.5Z\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linejoin=\"round\"/><path d=\"M3.5 7.5V5.4h5.3l1.7 2.1\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><\/svg>\n      <span data-i18n=\"libraryGroup\">ライブラリフォルダ<\/span>\n      <svg class=\"sectionChevron\" viewBox=\"0 0 16 16\" fill=\"none\" aria-hidden=\"true\"><path d=\"m3.5 5.5 4.5 4.5 4.5-4.5\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><\/svg>\n    <\/button>\n    <div class=\"sectionPanel\" id=\"section-library\">\n      <div class=\"row\">\n        <div class=\"libraryPicker\" id=\"libraryPicker\">\n          <button type=\"button\" class=\"libNameBtn\" id=\"btnLoad\" data-i18n-title=\"loadTitle\">\n            <svg class=\"libNameIcon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M2.4 5.1h4.5l1.2 1.5h5.5v6.2H2.4z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.35\" stroke-linejoin=\"round\"/><path d=\"M2.4 5.1V3.6h4.1l1.1 1.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.35\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><\/svg>\n            <span id=\"libButtonLabel\" data-i18n=\"loadBtn\">ライブラリを選択<\/span>\n          <\/button>\n          <button type=\"button\" class=\"libIconBtn\" id=\"btnReloadLib\" data-i18n-title=\"reloadLibTitle\" aria-label=\"ライブラリを再読み込み\">\n            <svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M13.1 6.2A5.2 5.2 0 1 0 12 11.6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"/><path d=\"M13.1 2.9v3.3H9.8\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><\/svg>\n          <\/button>\n        <\/div>\n        <input type=\"file\" id=\"file\" accept=\".json,application/json\" class=\"hidden\">\n        <input type=\"file\" id=\"folder\" webkitdirectory directory multiple class=\"hidden\">\n      <\/div>\n    <\/div>\n    <button type=\"button\" class=\"sectionTitle sectionToggle\" data-section-toggle=\"style\" aria-expanded=\"true\" aria-controls=\"section-style\">\n      <svg class=\"sectionLeadIcon\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M8.5 8.5H6.8A2.8 2.8 0 0 0 4 11.3v1.1a2.8 2.8 0 0 0 2.8 2.8h1.7v-3.7H6.9v-.2c0-.7.5-1.3 1.2-1.3h.4V8.5Zm8.7 0h-1.7a2.8 2.8 0 0 0-2.8 2.8v1.1a2.8 2.8 0 0 0 2.8 2.8h1.7v-3.7h-1.6v-.2c0-.7.5-1.3 1.2-1.3h.4V8.5Z\" fill=\"currentColor\"/><\/svg>\n      <span data-i18n=\"styleGroup\">引用スタイル<\/span>\n      <svg class=\"sectionChevron\" viewBox=\"0 0 16 16\" fill=\"none\" aria-hidden=\"true\"><path d=\"m3.5 5.5 4.5 4.5 4.5-4.5\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><\/svg>\n    <\/button>\n    <div class=\"sectionPanel\" id=\"section-style\">\n    <div class=\"fields\">\n      <div class=\"field\">\n        <label data-i18n=\"styleLabel\">スタイル<\/label>\n        <select id=\"style\">\n          <option value=\"acs\">ACS<\/option>\n          <option value=\"nature\">Nature<\/option>\n          <option value=\"science\">Science<\/option>\n          <option value=\"rsc\">RSC<\/option>\n          <option value=\"csj\">CSJ<\/option>\n          <option value=\"gdch\">Wiley<\/option>\n        <\/select>\n      <\/div>\n      <div class=\"field\">\n        <label data-i18n=\"pageStyleLabel\">ページ<\/label>\n        <select id=\"pageStyle\">\n          <option value=\"full\" data-i18n=\"pageStyleFull\">全ページ<\/option>\n          <option value=\"first\" data-i18n=\"pageStyleFirst\">最初のページのみ<\/option>\n        <\/select>\n      <\/div>\n      <div class=\"field\">\n        <label data-i18n=\"numberLabel\">番号<\/label>\n        <div class=\"seg\" id=\"markerStyle\" role=\"group\" aria-label=\"番号スタイル\">\n          <button type=\"button\" class=\"segBtn\" data-val=\"bracket\" data-i18n-title=\"bracketOpt\">[1]<\/button>\n          <button type=\"button\" class=\"segBtn\" data-val=\"super\" data-i18n-title=\"superOpt\"><sup>1<\/sup><\/button>\n          <button type=\"button\" class=\"segBtn\" data-val=\"superBracket\" data-i18n-title=\"superBracketOpt\"><sup>[1]<\/sup><\/button>\n        <\/div>\n      <\/div>\n    <\/div>\n    <div class=\"row\">\n      <label class=\"check\"><input type=\"checkbox\" id=\"incTitle\"> <span data-i18n=\"incTitle\">タイトル<\/span><\/label>\n      <label class=\"check\"><input type=\"checkbox\" id=\"incUrl\"> <span data-i18n=\"incUrl\">DOI/URL<\/span><\/label>\n      <span style=\"flex:1\"><\/span>\n      <button class=\"btn quiet\" id=\"btnRefresh\" data-i18n-title=\"refreshTitle\"><svg class=\"refreshSvg\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M13.1 6.2A5.2 5.2 0 1 0 12 11.6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"/><path d=\"M13.1 2.9v3.3H9.8\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><\/svg><span id=\"refreshLabel\">文献リストを更新<\/span><\/button>\n    <\/div>\n    <\/div>\n  <\/div>\n\n  <div class=\"subbar\">\n    <button type=\"button\" class=\"sectionTitle sectionToggle\" data-section-toggle=\"search\" aria-expanded=\"true\" aria-controls=\"section-search\">\n      <svg class=\"sectionLeadIcon\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M5 7h8M5 12h14M5 17h10\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"/><circle cx=\"16.5\" cy=\"7\" r=\"2\" fill=\"var(--accent-soft)\" stroke=\"currentColor\" stroke-width=\"1.8\"/><circle cx=\"10\" cy=\"17\" r=\"2\" fill=\"var(--accent-soft)\" stroke=\"currentColor\" stroke-width=\"1.8\"/><\/svg>\n      <span data-i18n=\"searchGroup\">検索・絞り込み<\/span>\n      <span class=\"sectionCount\" id=\"count\"><\/span>\n      <svg class=\"sectionChevron\" viewBox=\"0 0 16 16\" fill=\"none\" aria-hidden=\"true\"><path d=\"m3.5 5.5 4.5 4.5 4.5-4.5\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><\/svg>\n    <\/button>\n    <div class=\"sectionPanel\" id=\"section-search\">\n    <div class=\"fields\">\n      <div class=\"field\">\n        <label data-i18n=\"collLabel\">コレクション<\/label>\n        <select id=\"coll\"><\/select>\n      <\/div>\n      <div class=\"field\">\n        <label data-i18n=\"tagLabel\">タグ<\/label>\n        <select id=\"tag\"><\/select>\n      <\/div>\n    <\/div>\n    <div class=\"row\">\n      <label class=\"check\"><input type=\"checkbox\" id=\"fStar\"> <span data-i18n=\"starredOpt\">★ スター<\/span><\/label>\n      <label class=\"check\"><input type=\"checkbox\" id=\"fMine\"> <span data-i18n=\"myPubOpt\">自分の論文<\/span><\/label>\n      <span style=\"flex:1\"><\/span>\n    <\/div>\n    <div class=\"row\">\n      <input type=\"search\" id=\"q\" data-i18n-ph=\"searchPh\">\n    <\/div>\n    <\/div>\n  <\/div>\n\n  <section class=\"resultsArea\" aria-label=\"文献リスト\">\n    <button type=\"button\" class=\"sectionTitle sectionToggle\" data-section-toggle=\"results\" aria-expanded=\"true\" aria-controls=\"section-results\">\n      <svg class=\"sectionLeadIcon\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M7 5.5h11.5M7 10.5h11.5M7 15.5h11.5M7 20.5h11.5\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"/><path d=\"M4 5.5h.01M4 10.5h.01M4 15.5h.01M4 20.5h.01\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><\/svg>\n      <span data-i18n=\"referenceGroup\">文献リスト<\/span>\n      <svg class=\"sectionChevron\" viewBox=\"0 0 16 16\" fill=\"none\" aria-hidden=\"true\"><path d=\"m3.5 5.5 4.5 4.5 4.5-4.5\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><\/svg>\n    <\/button>\n    <div class=\"sectionPanel\" id=\"section-results\"><div id=\"results\"><\/div><\/div>\n  <\/section>\n  <div class=\"toast\" id=\"toast\"><\/div>\n\n<script>\n/* ================================================================\n   Citation engine — ported from Paper Library (index.html) so the\n   inserted citations match the app exactly. Keep in sync if the app's\n   citation logic changes.\n================================================================ */\nfunction esc(s){ return String(s==null?'':s).replace(/[&<>\"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c])); }\nfunction normalizeRange(s){ return String(s||'').replace(/\\s*[-–—]+\\s*/g, '–'); }\n// 本体 app/main.js の citationPages() と同じ。最初のページだけを載せる設定用。\nfunction citationPages(s, mode){\n  const v = normalizeRange(s);\n  return mode === 'first' ? (v.split('–')[0] || '').trim() : v;\n}\nfunction normalizeJournalKey(s){\n  return String(s||'').toLowerCase().replace(/[–—-]/g,' ').replace(/&/g,'and').replace(/\\bthe\\b/g,' ')\n    .replace(/[^a-z0-9]+/g,' ').replace(/\\s+/g,' ').trim();\n}\nconst JOURNAL_ABBR = new Map([\n  ['journal of the american chemical society','J. Am. Chem. Soc.'],['nature materials','Nat. Mater.'],\n  ['nature chemistry','Nat. Chem.'],['nature catalysis','Nat. Catal.'],\n  ['angewandte chemie international edition','Angew. Chem. Int. Ed.'],['chemistry - a european journal','Chem. Eur. J.'],\n  ['chemistry a european journal','Chem. Eur. J.'],['chemical science','Chem. Sci.'],['chemical communications','Chem. Commun.'],\n  ['chemistry letters','Chem. Lett.'],['journal of materials chemistry a','J. Mater. Chem. A'],\n  ['journal of materials chemistry b','J. Mater. Chem. B'],['journal of materials chemistry c','J. Mater. Chem. C'],\n  ['energy & environmental science','Energy Environ. Sci.'],['acs catalysis','ACS Catal.'],['acs energy letters','ACS Energy Lett.'],\n  ['acs materials letters','ACS Mater. Lett.'],['acs nano','ACS Nano'],['nano letters','Nano Lett.'],\n  ['chemistry of materials','Chem. Mater.'],['inorganic chemistry','Inorg. Chem.'],['organic letters','Org. Lett.'],\n  ['the journal of organic chemistry','J. Org. Chem.'],['journal of organic chemistry','J. Org. Chem.'],\n  ['organometallics','Organometallics'],['dalton transactions','Dalton Trans.'],\n  ['physical chemistry chemical physics','Phys. Chem. Chem. Phys.'],['journal of physical chemistry letters','J. Phys. Chem. Lett.'],\n  ['the journal of physical chemistry letters','J. Phys. Chem. Lett.'],['journal of physical chemistry c','J. Phys. Chem. C'],\n  ['the journal of physical chemistry c','J. Phys. Chem. C'],['journal of physical chemistry b','J. Phys. Chem. B'],\n  ['the journal of physical chemistry b','J. Phys. Chem. B'],['journal of chemical physics','J. Chem. Phys.'],\n  ['the journal of chemical physics','J. Chem. Phys.'],['advanced materials','Adv. Mater.'],\n  ['advanced energy materials','Adv. Energy Mater.'],['advanced functional materials','Adv. Funct. Mater.'],\n  ['advanced science','Adv. Sci.'],['materials horizons','Mater. Horiz.'],['small','Small'],\n]);\nconst JOURNAL_ABBR_NORMALIZED = new Map(Array.from(JOURNAL_ABBR, ([k,v])=>[normalizeJournalKey(k), v]));\nfunction mappedJournalAbbr(s){ return JOURNAL_ABBR_NORMALIZED.get(normalizeJournalKey(s)) || ''; }\nfunction journalDisplay(item){\n  const j = item.journal || '';\n  return mappedJournalAbbr(j) || mappedJournalAbbr(item.journalAbbr) || item.journalAbbr || j;\n}\nfunction citationStyleKey(style){\n  if(style==='wiley' || style==='angew') return 'gdch';\n  if(style==='jcs') return 'csj';\n  return style || 'acs';\n}\nfunction authorName(a, style){\n  style = citationStyleKey(style);\n  const ini = (a.given||'').split(/[\\s.]+/).filter(Boolean).map(x=>x[0].toUpperCase()+'.').join(' ');\n  if(style==='nature' || style==='rsc' || style==='gdch' || style==='csj' || style==='science'){\n    return [ini, a.family].filter(Boolean).join(' ');\n  }\n  return ini ? `${a.family}, ${ini}` : a.family;\n}\nfunction joinCitationAuthors(names, style){\n  style = citationStyleKey(style); names = names.filter(Boolean);\n  if(!names.length) return '';\n  if(style==='acs') return names.join('; ');\n  if(style==='rsc'){\n    if(names.length===1) return names[0];\n    if(names.length===2) return names[0] + ' and ' + names[1];\n    return names.slice(0,-1).join(', ') + ', and ' + names[names.length-1];\n  }\n  if(style==='nature'){\n    if(names.length===1) return names[0];\n    if(names.length===2) return names[0] + ' & ' + names[1];\n    return names.slice(0,-1).join(', ') + ' & ' + names[names.length-1];\n  }\n  return names.join(', ');\n}\nfunction citationTextToAuthors(text){\n  return String(text||'').split(';').map(s=>s.trim()).filter(Boolean).map(name=>{\n    if(name.includes(',')){ const p = name.split(','); return {family:(p[0]||'').trim(), given:p.slice(1).join(',').trim()}; }\n    const p = name.split(/\\s+/).filter(Boolean); return {family:p.pop()||'', given:p.join(' ')};\n  });\n}\nfunction citationAuthors(item, opts){\n  let list = item.authors || []; const style = citationStyleKey(opts.style);\n  if(opts.authorScope==='corresponding' && item.correspondingAuthors){\n    const corrAuthors = citationTextToAuthors(item.correspondingAuthors); const nCorr = corrAuthors.length;\n    const corr = joinCitationAuthors(corrAuthors.map(a=>authorName(a, style)), style);\n    return corr + (list.length > nCorr ? ' et al.' : '');\n  }\n  if(opts.authorScope==='first'){\n    const first = list[0] ? authorName(list[0], style) : '';\n    return first && list.length > 1 ? first + ' et al.' : first;\n  }\n  return joinCitationAuthors(list.map(a=>authorName(a, style)), style);\n}\nfunction sentenceEnd(s){ return s ? s.replace(/\\.+$/,'') + '. ' : ''; }\nfunction sentenceEndHtml(s){\n  if(!s) return '';\n  return /[.!?](?:<\\/[^>]+>)*$/.test(s) ? s + ' ' : s + '. ';\n}\nfunction citationAuthorsHtml(item, opts){ return esc(citationAuthors(item, opts)).replace(/\\bet al\\./g, '<i>et al.<\/i>'); }\nfunction itemToCitationHtml(item, opts){\n  opts = Object.assign({style:'acs', includeTitle:true, authorScope:'all', includeUrl:true, pageStyle:'full'}, opts || {});\n  const style = citationStyleKey(opts.style);\n  const auth = citationAuthorsHtml(item, opts);\n  const title = opts.includeTitle && item.title ? esc(item.title.replace(/\\.?$/, '.')) : '';\n  const journal = journalDisplay(item);\n  const pages = citationPages(item.pages, opts.pageStyle);\n  const j = journal ? `<i>${esc(journal)}<\/i>` : '';\n  const y = item.year ? `<b>${esc(item.year)}<\/b>` : '';\n  const vol = item.volume ? ((style==='nature' || style==='science') ? `<b>${esc(item.volume)}<\/b>` : `<i>${esc(item.volume)}<\/i>`) : '';\n  const p = pages ? esc(pages) : '';\n  let html = '';\n  if(style==='nature'){\n    html = [auth ? sentenceEndHtml(auth).trim() : '', title, j, vol ? vol + ',' : '', p, item.year ? `(${esc(item.year)}).` : '']\n      .filter(Boolean).join(' ').replace(/\\s+,/g, ',').trim();\n  }else if(style==='science'){\n    html = [auth ? auth + ',' : '', title, j, vol ? vol + ',' : '', p, item.year ? `(${esc(item.year)}).` : '']\n      .filter(Boolean).join(' ').replace(/\\s+,/g, ',').trim();\n  }else if(style==='rsc'){\n    html = auth ? auth + ', ' : ''; if(title) html += title + ' ';\n    html += [j, y, vol, p].filter(Boolean).join(', '); html = html.trim().replace(/,$/, '') + '.';\n  }else if(style==='csj'){\n    html = auth ? auth + ', ' : ''; if(title) html += title + ' ';\n    html += [j, y].filter(Boolean).join(' ');\n    if(vol) html += (html ? ', ' : '') + vol; if(p) html += (html ? ', ' : '') + p;\n    html = html.trim().replace(/,$/, '') + '.';\n  }else if(style==='gdch'){\n    html = auth ? auth + ', ' : ''; if(title) html += '&ldquo;' + title.replace(/\\.$/,'') + '&rdquo;, ';\n    html += [j, y].filter(Boolean).join(' ');\n    if(vol) html += (html ? ', ' : '') + vol; if(p) html += (html ? ', ' : '') + p;\n    html = html.trim().replace(/,$/, '') + '.';\n  }else{\n    html = [auth ? sentenceEndHtml(auth).trim() : '', title, j, y].filter(Boolean).join(' ');\n    if(vol) html += (html ? ', ' : '') + vol; if(p) html += (html ? ', ' : '') + p;\n    html = html.trim().replace(/,$/, '') + '.';\n  }\n  if(opts.includeUrl !== false && item.doi){\n    const doi = esc(item.doi);\n    html += ` <a href=\"https://doi.org/${doi}\">https://doi.org/${doi}<\/a>`;\n  }\n  return html;\n}\n\n/* ================================================================\n   i18n (JA / EN)\n================================================================ */\nvar I18N = {\n  ja: {\n    notLoaded:'未読み込み', nRefs:function(n){return n+' 件の文献';},\n    searchPh:'タイトル・著者・雑誌・DOI で検索…', loadBtn:'ライブラリを選択', libLoaded:'ライブラリ', loadTitle:'ライブラリフォルダを選択', reloadLibTitle:'library.json を再読み込み', changeLibTitle:'ライブラリフォルダを変更',\n    styleLabel:'スタイル', collLabel:'コレクション', allColl:'すべてのコレクション',\n    libraryGroup:'ライブラリフォルダ', styleGroup:'引用スタイル', searchGroup:'検索・絞り込み', referenceGroup:'文献リスト', tagLabel:'タグ', allTags:'すべてのタグ', starredOpt:'★ スター', myPubOpt:'自分の論文',\n    incTitle:'タイトル', incUrl:'DOI/URL', numberLabel:'番号', bracketOpt:'括弧 [1]', superOpt:'上付き ¹', superBracketOpt:'上付き [1]',\n    pageStyleLabel:'ページ', pageStyleFull:'全ページ', pageStyleFirst:'最初のページのみ',\n    refreshBtn:'文献リストを更新', refreshTitle:'本文の番号と末尾の文献リストを再同期します',\n    insertBtn:'挿入', copyBtn:'コピー',\n    insertTitle:'番号を本文に挿入し、末尾リストと連動',\n    count:function(n,m){return n+' / '+m+' 件';},\n    emptyLoad:'まず「ライブラリ」ボタンから library.json を読み込んでください。（Paper Library の保存フォルダ内、または「エクスポート → ライブラリ全体 → JSON」）',\n    moreItems:function(n){return '上位 '+n+' 件を表示（絞り込んでください）';}, noTitle:'(無題)',\n    loaded:'ライブラリを読み込みました', reloaded:'ライブラリを再読み込みしました', loadedNoCache:'ライブラリを読み込みましたが、大きすぎるため次回は再読み込みが必要です', loadFail:function(e){return '読み込み失敗: '+e;}, folderNoJson:'選択したフォルダに library.json が見つかりません', reloadNeedsSelect:'ライブラリフォルダをもう一度選ぶと最新の内容に更新されます',\n    inserted:'引用を挿入しました', insertFail:function(e){return '挿入に失敗: '+e;},\n    updated:'文献リストを更新しました', updateFail:function(e){return '更新に失敗: '+e;},\n    copied:'引用をコピーしました', copyFail:'コピーできませんでした',\n    wordOnly:'Word 上でのみ挿入できます（プレビュー環境では不可）', wordOnlyUpdate:'Word 上でのみ動作します',\n    badFormat:'library.json の形式を認識できません', noCites:'（引用がありません）', notFound:'(ライブラリに見つかりません)',\n    langTitle:'表示言語を切り替える', manualTitle:'マニュアルを開く', manualHead:'マニュアル', closeTitle:'閉じる',\n  },\n  en: {\n    notLoaded:'Not loaded', nRefs:function(n){return n+' references';},\n    searchPh:'Search title, author, journal, DOI…', loadBtn:'Select library', libLoaded:'Library', loadTitle:'Select library folder', reloadLibTitle:'Reload library.json', changeLibTitle:'Change library folder',\n    styleLabel:'Style', collLabel:'Collection', allColl:'All collections',\n    libraryGroup:'Library folder', styleGroup:'Citation style', searchGroup:'Search & filter', referenceGroup:'Reference list', tagLabel:'Tag', allTags:'All tags', starredOpt:'★ Starred', myPubOpt:'My publications',\n    incTitle:'Title', incUrl:'DOI/URL', numberLabel:'Number', bracketOpt:'Brackets [1]', superOpt:'Superscript ¹', superBracketOpt:'Superscript [1]',\n    pageStyleLabel:'Pages', pageStyleFull:'Full range', pageStyleFirst:'First page only',\n    refreshBtn:'Update bibliography', refreshTitle:'Re-sync the in-text numbers and the reference list',\n    insertBtn:'Insert', copyBtn:'Copy',\n    insertTitle:'Insert a number in the text, linked to the reference list',\n    count:function(n,m){return n+' / '+m;},\n    emptyLoad:'Load library.json with the “Library” button. (It is in your Paper Library folder, or export via Export → Whole library → JSON.)',\n    moreItems:function(n){return 'Showing top '+n+' (refine your search)';}, noTitle:'(untitled)',\n    loaded:'Library loaded', reloaded:'Library reloaded', loadedNoCache:'Library loaded, but it is too large to cache. Reload it next time.', loadFail:function(e){return 'Load failed: '+e;}, folderNoJson:'library.json was not found in the selected folder', reloadNeedsSelect:'Select the library folder again to update to the latest contents',\n    inserted:'Citation inserted', insertFail:function(e){return 'Insert failed: '+e;},\n    updated:'Bibliography updated', updateFail:function(e){return 'Update failed: '+e;},\n    copied:'Citation copied', copyFail:'Could not copy',\n    wordOnly:'Only available inside Word', wordOnlyUpdate:'Only works inside Word',\n    badFormat:'Unrecognized library.json format', noCites:'(no citations)', notFound:'(not found in library)',\n    langTitle:'Switch the display language', manualTitle:'Open the manual', manualHead:'Manual', closeTitle:'Close',\n  }\n};\n/* ================================================================\n   In-panel manual (opened from the book button next to EN)\n   Block types: {p} paragraph, {ul} bullet list. [[code:…]] renders\n   as inline monospace. Keep ja / en in sync.\n================================================================ */\nvar MANUAL = {\n  ja: [\n    { intro:'Word のリボンの「Paper Library」タブから開くパネルです。Paper Library で作った library.json を読み込むと、文献を検索して、カーソル位置に番号付きの引用と、文末の文献リストを挿入できます。' },\n    { h:'このパネルでできること', blocks:[\n      {ul:[\n        '番号は本文に出てきた順に自動で振られます。同じ文献をもう一度引用すると、同じ番号を使い回します。',\n        '引用を挿入するたびに、文末の文献リストが自動で作り直されます。',\n        '雑誌名の斜体や年の太字はそのまま入ります。挿入される文字は既定で Times New Roman 10.5pt です。',\n      ]},\n    ]},\n    { h:'1. ライブラリを読み込む', blocks:[\n      {ul:[\n        '「ライブラリフォルダ」→「ライブラリを選択」を押して、Paper Library の保存フォルダ（[[code:library.json]] が入っているフォルダ）を選びます。',\n        'フォルダを選べない環境では、[[code:library.json]] を直接選んでください。本体アプリの「エクスポート → ライブラリ全体 → JSON」で書き出したファイルでも構いません。',\n        '一度読み込むと内容がこのパネルに保存され、次に開いたときは自動で復元します。',\n        '本体で文献を増やしたら、「ライブラリを選択」の右にある円形矢印のボタンで再読み込みしてください。Word ではフォルダの選択画面がもう一度開くので、同じフォルダを選び直すと最新の内容になります。',\n        'ライブラリが大きすぎて保存できないときは、パネルを開くたびに読み込み直す必要があります。',\n      ]},\n    ]},\n    { h:'2. 引用を挿入する', blocks:[\n      {ul:[\n        '「検索・絞り込み」で、タイトル・著者・雑誌・DOI などのキーワードや、コレクション・タグ・★スター・自分の論文で文献を絞り込みます。',\n        '引用を入れたい位置に Word のカーソルを置いてから、「文献リスト」の各カードの「挿入」を押します。',\n        '本文に [1] が入り、文書の末尾に文献リストが追加されます。',\n        '「コピー」を押すと、その文献の書誌情報だけをクリップボードにコピーします。',\n      ]},\n    ]},\n    { h:'3. 表示を変える', blocks:[\n      {ul:[\n        'スタイル：ACS / Nature / Science / RSC / CSJ / Wiley から選べます。切り替えると、挿入済みの文献リストも自動で書き換わります。',\n        '番号：[1]（角括弧）／上付き ¹／上付き [1] を選べます。',\n        'タイトル・DOI/URL：チェックを入れると、文献リストにタイトルや DOI/URL も入ります。',\n        'セクションの見出しをクリックすると開閉できます。開閉の状態は次回も保たれます。',\n        'ヘッダーの地球アイコンのボタンで、日本語と英語を切り替えられます。',\n      ]},\n    ]},\n    { h:'4. 文献リストを更新する', blocks:[\n      {ul:[\n        '本文の引用を消したり並べ替えたりすると、番号と文末リストがずれます。「文献リストを更新」を押すと、本文の番号と末尾のリストを付け直します。',\n        'スタイルや番号の設定を変えたときも、この操作で全体をそろえられます。',\n      ]},\n    ]},\n    { h:'うまくいかないとき', blocks:[\n      {ul:[\n        '「Word 上でのみ挿入できます」と出る：ブラウザでこのページを直接開いています。Word のリボンの「Paper Library」タブ →「文献パネルを開く」から開いてください。',\n        '引用番号を消したら「Click or tap here to enter text.」と出る：番号を消しても、番号を包んでいた Word の入れ物（コンテンツコントロール）が空のまま残っているためです。「文献リストを更新」を押すと、その入れ物ごと取り除かれ、残りの番号と文末のリストも振り直されます。',\n        'パネルが白いまま／内容が古い：Word を完全に終了してから開き直してください。',\n        '文献が出てこない：まず library.json を読み込みます。検索欄やコレクション・タグの絞り込みが残っていないかも確認してください。',\n      ]},\n    ]},\n    { h:'お問い合わせ', blocks:[\n      {p:'不明点や、こうしてほしいという改善点があれば、下記までご連絡ください。'},\n      {contact:true},\n    ]},\n  ],\n  en: [\n    { intro:'This panel opens from the “Paper Library” tab on the Word ribbon. Load the library.json created by Paper Library, then search your references and insert numbered citations at the cursor together with a bibliography at the end of the document.' },\n    { h:'What this panel does', blocks:[\n      {ul:[\n        'Numbers are assigned in order of appearance. Citing the same reference again reuses its number.',\n        'Every insertion rebuilds the bibliography at the end of the document automatically.',\n        'Italic journal names and bold years are preserved. Inserted text defaults to Times New Roman 10.5pt.',\n      ]},\n    ]},\n    { h:'1. Load your library', blocks:[\n      {ul:[\n        'Under “Library folder”, press “Select library” and choose your Paper Library folder (the one containing [[code:library.json]]).',\n        'If folder selection is not available, pick [[code:library.json]] directly. A file exported from the main app via “Export → Whole library → JSON” works too.',\n        'Once loaded, the contents are cached in this panel and restored automatically next time.',\n        'After adding references in the main app, press the circular-arrow button next to “Select library” to reload. In Word the folder picker opens again — choose the same folder to pick up the latest contents.',\n        'If the library is too large to cache, you will need to load it again each time you open the panel.',\n      ]},\n    ]},\n    { h:'2. Insert a citation', blocks:[\n      {ul:[\n        'Use “Search & filter” to narrow the list by title, author, journal or DOI, and by collection, tag, ★ starred or my publications.',\n        'Place the Word cursor where the citation should go, then press “Insert” on a card in the reference list.',\n        '[1] is inserted in the text and the bibliography is added at the end of the document.',\n        '“Copy” copies only that reference’s formatted citation to the clipboard.',\n      ]},\n    ]},\n    { h:'3. Change the formatting', blocks:[\n      {ul:[\n        'Style: ACS / Nature / Science / RSC / CSJ / Wiley. Switching a style also rewrites the bibliography already in the document.',\n        'Number: [1] (brackets), superscript ¹, or superscript [1].',\n        'Title and DOI/URL: tick these to include them in the bibliography.',\n        'Click a section heading to collapse or expand it. The state is remembered next time.',\n        'Use the globe button in the header to switch between English and Japanese.',\n      ]},\n    ]},\n    { h:'4. Update the bibliography', blocks:[\n      {ul:[\n        'Deleting or reordering citations in the text puts the numbers out of sync. Press “Update bibliography” to renumber the text and rebuild the list at the end.',\n        'Use it as well after changing the style or the number format, to bring the whole document in line.',\n      ]},\n    ]},\n    { h:'Troubleshooting', blocks:[\n      {ul:[\n        '“Only available inside Word”: you opened this page directly in a browser. Open it from the Word ribbon: “Paper Library” tab → “Open the reference panel”.',\n        '“Click or tap here to enter text.” appears where you deleted a number: the empty Word content control that wrapped the number is still there. Press “Update bibliography” to remove it and renumber the remaining citations and the reference list.',\n        'The panel stays blank or shows an old version: quit Word completely and open it again.',\n        'No references listed: load library.json first, and check that no search text, collection or tag filter is still applied.',\n      ]},\n    ]},\n    { h:'Contact', blocks:[\n      {p:'For questions or suggestions, please contact us at the address below.'},\n      {contact:true},\n    ]},\n  ]\n};\nvar MANUAL_MAIL = 'aaths.takumi@gmail.com';\nfunction manualRich(str){\n  return esc(str).replace(/\\[\\[code:([^\\]]+)\\]\\]/g, function(_, c){ return '<code>'+c+'<\/code>'; });\n}\nfunction renderManual(){\n  var box = document.getElementById('manualBody');\n  if(!box) return;\n  var html = (MANUAL[LANG] || MANUAL.ja).map(function(sec){\n    if(sec.intro) return '<div class=\"mIntro\"><p>'+manualRich(sec.intro)+'<\/p><\/div>';\n    var body = (sec.blocks||[]).map(function(b){\n      if(b.p) return '<p>'+manualRich(b.p)+'<\/p>';\n      if(b.ul) return '<ul>'+b.ul.map(function(li){ return '<li>'+manualRich(li)+'<\/li>'; }).join('')+'<\/ul>';\n      if(b.contact) return '<p><a href=\"mailto:'+MANUAL_MAIL+'\">'+MANUAL_MAIL+'<\/a><\/p>';\n      return '';\n    }).join('');\n    return '<h3>'+manualRich(sec.h||'')+'<\/h3>'+body;\n  }).join('');\n  box.innerHTML = html;\n}\nfunction manualIsOpen(){\n  var ov = document.getElementById('manualOverlay');\n  return !!ov && !ov.classList.contains('hidden');\n}\nfunction openManual(){\n  var ov = document.getElementById('manualOverlay');\n  if(!ov) return;\n  renderManual();\n  ov.classList.remove('hidden');\n  document.body.style.overflow = 'hidden';\n  var body = document.getElementById('manualBody'); if(body) body.scrollTop = 0;\n  var close = document.getElementById('btnManualClose'); if(close) close.focus();\n}\nfunction closeManual(){\n  var ov = document.getElementById('manualOverlay');\n  if(!ov) return;\n  ov.classList.add('hidden');\n  document.body.style.overflow = '';\n  var btn = document.getElementById('btnManual'); if(btn) btn.focus();\n}\n\nvar LANG = 'ja';\nfunction tr(k){ var a=[].slice.call(arguments,1); var v=I18N[LANG][k]; return typeof v==='function' ? v.apply(null,a) : v; }\n\n/* ================================================================\n   Add-in state + UI\n================================================================ */\nvar $ = (s)=>document.querySelector(s);\nvar STATE = { items: [], collections: [], cached:false, libraryLabel:'', dirHandle:null, libraryFileHandle:null, lastFolderFiles:null };\nvar PREFS = { style:'acs', includeTitle:false, includeUrl:false, marker:'bracket', pageStyle:'full' };\nvar officeReady = false;\nvar LS_LIB = 'plWordAddin.library';\nvar LS_PREFS = 'plWordAddin.prefs';\nvar LS_LANG = 'plWordAddin.lang';\nvar LS_SECTIONS = 'plWordAddin.sections';\n// inserted content defaults to Times New Roman 10.5pt\nvar INS_FONT = \"Times New Roman\", INS_SIZE = 10.5;\n// inline button icons\nvar IC_INSERT = '<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M8 3.3v9.4M3.3 8h9.4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\"/><\/svg>';\nvar IC_COPY = '<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><rect x=\"5.6\" y=\"5.6\" width=\"7.8\" height=\"7.8\" rx=\"1.4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\"/><path d=\"M10.2 5.6V4.1A1.5 1.5 0 0 0 8.7 2.6H4A1.5 1.5 0 0 0 2.5 4.1v4.7A1.5 1.5 0 0 0 4 10.3h1.6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\"/><\/svg>';\n\nfunction toast(msg, isErr){\n  var el = $('#toast'); el.textContent = msg;\n  el.className = 'toast show' + (isErr ? ' err' : '');\n  clearTimeout(toast._t); toast._t = setTimeout(function(){ el.className = 'toast'; }, 2600);\n}\nfunction collById(id){ return STATE.collections.find(function(c){ return c.id===id; }); }\nfunction activeItems(){ return STATE.items.filter(function(it){ return !it.trashed; }); }\n// a collection and all of its descendant collection ids (so a parent includes its children)\nfunction collectionDescendants(id){\n  var out = [id], byParent = {};\n  STATE.collections.forEach(function(c){ (byParent[c.parent||''] = byParent[c.parent||''] || []).push(c.id); });\n  (function walk(pid){ (byParent[pid]||[]).forEach(function(cid){ out.push(cid); walk(cid); }); })(id);\n  return out;\n}\nfunction allTagsSorted(){\n  var set = {};\n  activeItems().forEach(function(it){ (it.tags||[]).forEach(function(tg){ if(tg) set[tg] = 1; }); });\n  return Object.keys(set).sort(function(a,b){ return a.localeCompare(b,'ja'); });\n}\n// collection filter (hierarchical); an \"all collections\" option means no restriction\nfunction buildCollOptions(){\n  var sel = $('#coll'); if(!sel) return;\n  var prev = sel.value;\n  var byParent = {};\n  STATE.collections.forEach(function(c){ (byParent[c.parent||''] = byParent[c.parent||''] || []).push(c); });\n  var opts = ['<option value=\"\">'+esc(tr('allColl'))+'<\/option>'];\n  (function walk(parent, depth){\n    (byParent[parent]||[]).sort(function(a,b){ return a.name.localeCompare(b.name,'ja'); }).forEach(function(c){\n      opts.push('<option value=\"'+esc(c.id)+'\">'+ '　'.repeat(depth) + esc(c.name) +'<\/option>');\n      walk(c.id, depth+1);\n    });\n  })('', 0);\n  sel.innerHTML = opts.join('');\n  sel.value = prev;                    // keep the current selection across rebuilds (e.g. language switch)\n  if(sel.value !== prev) sel.value = '';\n}\n// tag filter; an \"all tags\" option means no restriction\nfunction buildTagOptions(){\n  var sel = $('#tag'); if(!sel) return;\n  var prev = sel.value;\n  var opts = ['<option value=\"\">'+esc(tr('allTags'))+'<\/option>'];\n  allTagsSorted().forEach(function(tg){ opts.push('<option value=\"'+esc(tg)+'\">'+esc(tg)+'<\/option>'); });\n  sel.innerHTML = opts.join('');\n  sel.value = prev;\n  if(sel.value !== prev) sel.value = '';\n}\n// starred / my-publications / collection / tag are independent AND filters, so e.g.\n// \"starred AND a specific collection\" is expressible — mirrors the app's left pane.\nfunction buildFilterOptions(){ buildCollOptions(); buildTagOptions(); }\nfunction cleanLibraryLabel(s){\n  s = String(s || '').trim();\n  if(!s) return '';\n  s = s.split(/[\\\\/]/).filter(Boolean).pop() || s;\n  return s.replace(/\\.json$/i, '') || s;\n}\nfunction libraryLabelFromFile(file){\n  if(!file) return '';\n  if(file.libraryFolderName) return cleanLibraryLabel(file.libraryFolderName);\n  var rel = file.webkitRelativePath || '';\n  if(rel && rel.indexOf('/') >= 0){\n    var parts = rel.split('/').filter(Boolean);\n    if(parts.length > 1) return cleanLibraryLabel(parts[parts.length - 2]);\n  }\n  return '';\n}\nfunction libraryLabelFromData(data, file){\n  var fromData = data && (data.libraryFolderName || data.libraryFolder || data.libraryDir || data.folderName || data.folder || data.path);\n  return cleanLibraryLabel(fromData) || libraryLabelFromFile(file);\n}\nfunction updateLibraryButton(){\n  var btn = $('#btnLoad'); if(!btn) return;\n  var label = $('#libButtonLabel');\n  // show the folder name; if a library is loaded but its name is unknown, still signal\n  // \"loaded\" rather than the misleading \"select library\" prompt.\n  if(label) label.textContent = STATE.libraryLabel || (STATE.items.length ? tr('libLoaded') : tr('loadBtn'));\n  btn.title = STATE.libraryLabel ? tr('changeLibTitle') : tr('loadTitle');\n  btn.setAttribute('aria-label', btn.title);\n  var reload = $('#btnReloadLib');\n  if(reload){\n    reload.title = tr('reloadLibTitle');\n    reload.setAttribute('aria-label', tr('reloadLibTitle'));\n    reload.disabled = !STATE.items.length;\n  }\n}\nfunction updateLibInfo(){\n  var el = $('#libInfo'); if(!el) return;\n  if(!STATE.items.length){ el.textContent = tr('notLoaded'); updateLibraryButton(); return; }\n  el.textContent = tr('nRefs', activeItems().length);\n  updateLibraryButton();\n}\nfunction loadLibraryData(data, file){\n  var items = Array.isArray(data) ? data : (data && Array.isArray(data.items) ? data.items : null);\n  if(!items) throw new Error(tr('badFormat'));\n  STATE.items = items; STATE.cached = false;\n  STATE.collections = (data && Array.isArray(data.collections)) ? data.collections : [];\n  var lbl = libraryLabelFromData(data, file);\n  if(lbl) STATE.libraryLabel = lbl;    // keep the previously known name if this source can't provide one\n  buildFilterOptions();\n  updateLibInfo();\n  var cacheOk = true;\n  try{\n    localStorage.setItem(LS_LIB, JSON.stringify({items:STATE.items, collections:STATE.collections, libraryLabel:STATE.libraryLabel}));\n  }catch(e){\n    // Do not leave an older library in storage: on the next launch it could be\n    // mistaken for the library the user just selected.\n    try{ localStorage.removeItem(LS_LIB); }catch(_e){}\n    cacheOk = false;\n  }\n  render();\n  return cacheOk;\n}\nfunction currentOpts(){ return { style: $('#style').value, includeTitle: $('#incTitle').checked, includeUrl: $('#incUrl').checked, authorScope:'all', pageStyle: $('#pageStyle').value }; }\nfunction segButtons(){ return Array.prototype.slice.call(document.querySelectorAll('#markerStyle .segBtn')); }\nfunction currentMarker(){ var b = document.querySelector('#markerStyle .segBtn.active'); return b ? b.dataset.val : 'bracket'; }\nfunction setMarkerActive(val){ segButtons().forEach(function(b){ b.classList.toggle('active', b.dataset.val === val); }); }\nfunction savePrefs(){\n  PREFS = { style: $('#style').value, includeTitle: $('#incTitle').checked, includeUrl: $('#incUrl').checked, marker: currentMarker(), pageStyle: $('#pageStyle').value };\n  try{ localStorage.setItem(LS_PREFS, JSON.stringify(PREFS)); }catch(e){}\n}\nfunction setSectionOpen(button, open){\n  var panel = document.getElementById(button.getAttribute('aria-controls'));\n  if(!panel) return;\n  button.setAttribute('aria-expanded', open ? 'true' : 'false');\n  panel.hidden = !open;\n}\nfunction restoreSections(){\n  var saved = {};\n  try{ saved = JSON.parse(localStorage.getItem(LS_SECTIONS) || '{}') || {}; }catch(e){}\n  document.querySelectorAll('[data-section-toggle]').forEach(function(button){\n    var key = button.dataset.sectionToggle;\n    setSectionOpen(button, saved[key] !== false);\n    button.addEventListener('click', function(){\n      var open = button.getAttribute('aria-expanded') !== 'true';\n      setSectionOpen(button, open);\n      try{\n        var next = JSON.parse(localStorage.getItem(LS_SECTIONS) || '{}') || {};\n        next[key] = open;\n        localStorage.setItem(LS_SECTIONS, JSON.stringify(next));\n      }catch(e){}\n    });\n  });\n}\nfunction authorsShort(authors){ return (authors||[]).map(function(a){ return a.family || a.given; }).filter(Boolean).join('; '); }\nfunction itemText(it){\n  return [it.title, (it.authors||[]).map(function(a){ return (a.family||'')+' '+(a.given||''); }).join(' '),\n    it.journal, it.journalAbbr, it.year, it.doi, it.citekey, (it.tags||[]).join(' ')].join(' ').toLowerCase();\n}\nfunction render(){\n  var box = $('#results');\n  if(!STATE.items.length){\n    box.innerHTML = '<div class=\"empty\">'+esc(tr('emptyLoad'))+'<\/div>';\n    $('#count').textContent = ''; return;\n  }\n  var q = $('#q').value.trim().toLowerCase();\n  var terms = q ? q.split(/\\s+/) : [];\n  var coll = $('#coll').value;\n  var tag = $('#tag').value;\n  var onlyStar = $('#fStar').checked;\n  var onlyMine = $('#fMine').checked;\n  var collIds = coll ? collectionDescendants(coll) : null;\n  var list = STATE.items.filter(function(it){\n    if(it.trashed) return false;\n    if(onlyStar && !it.starred) return false;\n    if(onlyMine && !it.myPublication) return false;\n    if(tag && (it.tags||[]).indexOf(tag) < 0) return false;\n    if(collIds && !(it.collections||[]).some(function(c){ return collIds.indexOf(c) >= 0; })) return false;\n    if(!terms.length) return true;\n    var hay = itemText(it);\n    return terms.every(function(t){ return hay.indexOf(t) >= 0; });\n  });\n  $('#count').textContent = tr('count', list.length, activeItems().length);\n  list.sort(function(a,b){ return String(b.year||'').localeCompare(String(a.year||'')); });\n  var shown = list.slice(0, 200);\n  box.innerHTML = shown.map(function(it, i){\n    var meta = [ journalDisplay(it) ? '<span class=\"journal\">'+esc(journalDisplay(it))+'<\/span>' : '',\n                 it.year ? '<span>'+esc(it.year)+'<\/span>' : '' ].filter(Boolean).join('');\n    return '<div class=\"card\">'\n      + '<div class=\"ct\">'+esc(it.title||tr('noTitle'))+'<\/div>'\n      + '<div class=\"cau\">'+esc(authorsShort(it.authors))+'<\/div>'\n      + '<div class=\"cmeta\">'+meta\n      +   '<span class=\"acts\">'\n      +     '<button class=\"btn\" data-num=\"'+i+'\" title=\"'+esc(tr('insertTitle'))+'\">'+IC_INSERT+esc(tr('insertBtn'))+'<\/button>'\n      +     '<button class=\"btn ghost\" data-copy=\"'+i+'\">'+IC_COPY+esc(tr('copyBtn'))+'<\/button>'\n      +   '<\/span>'\n      + '<\/div>'\n      + '<\/div>';\n  }).join('') + (list.length>shown.length ? '<div class=\"empty\">'+esc(tr('moreItems', shown.length))+'<\/div>' : '');\n  box.__list = shown;\n}\n\nasync function copyCitation(it){\n  var html = itemToCitationHtml(it, currentOpts());\n  var tmp = document.createElement('div'); tmp.innerHTML = html;\n  var text = (tmp.textContent||'').replace(/\\s+/g,' ').trim();\n  try{\n    if(window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){\n      await navigator.clipboard.write([new ClipboardItem({\n        'text/html': new Blob([html], {type:'text/html'}),\n        'text/plain': new Blob([text], {type:'text/plain'}),\n      })]);\n    } else { await navigator.clipboard.writeText(text); }\n    toast(tr('copied'));\n  }catch(e){ toast(tr('copyFail'), true); }\n}\n\n/* ================================================================\n   Numbered citations [1] + auto-linked bibliography.\n   Each in-text citation is a hidden Word content control tagged\n   \"PLCITE:<itemId>\"; the bibliography is one control tagged \"PLBIB\".\n================================================================ */\nvar CITE_TAG = 'PLCITE:';\nvar BIB_TAG = 'PLBIB';\n// Word shows \"Click or tap here to enter text.\" inside an empty content control.\n// A single space keeps an emptied citation invisible until the next refresh\n// removes the control for good.\nvar PLACEHOLDER = ' ';\n// in-text marker text; bibliography number label matches the same style\nfunction markerText(n){\n  if(PREFS.marker === 'super') return String(n);\n  if(PREFS.marker === 'superBracket') return '[' + n + ']';\n  return '[' + n + ']';\n}\n// collapse a set of numbers into a compact string: runs of 3+ become ranges (1–4),\n// everything else is comma separated without spaces (1,3,5).\nfunction collapseNums(nums){\n  var u = Array.from(new Set(nums)).filter(function(x){ return x; }).sort(function(a,b){ return a - b; });\n  var parts = [], i = 0;\n  while(i < u.length){\n    var j = i;\n    while(j + 1 < u.length && u[j + 1] === u[j] + 1) j++;\n    if(j - i >= 2) parts.push(u[i] + '–' + u[j]);\n    else for(var k = i; k <= j; k++) parts.push(String(u[k]));\n    i = j + 1;\n  }\n  return parts.join(',');\n}\n// in-text text for a group of adjacent citations (e.g. \"[1–4]\" or superscript \"1–4\")\nfunction groupMarkerText(nums, marker){\n  var inner = collapseNums(nums);\n  if(!inner) return '';\n  return marker === 'super' ? inner : ('[' + inner + ']');\n}\nfunction bibLabel(n){ return PREFS.marker === 'super' ? (n + '.') : ('[' + n + ']'); }\nfunction assignNumbers(idsInOrder){\n  var order = [], numById = {};\n  idsInOrder.forEach(function(id){ if(!(id in numById)){ order.push(id); numById[id] = order.length; } });\n  return { order: order, numById: numById };\n}\n// hanging-indent paragraphs, Times New Roman 10.5pt, number floating at the left\nvar BIB_INDENT = 22; // pt — hanging indent / gap between number and citation\nfunction buildBibliographyHtml(items, opts){\n  if(!items.length) return '';\n  var base = \"font-family:'Times New Roman',serif;font-size:10.5pt;text-align:left;margin:0pt 0pt 0pt \" + BIB_INDENT + \"pt;text-indent:-\" + BIB_INDENT + \"pt;\";\n  return items.map(function(it, i){\n    var body = it ? itemToCitationHtml(it, opts) : esc(tr('notFound'));\n    return '<p style=\"' + base + '\">' + esc(bibLabel(i + 1)) + '&#9;' + body + '<\/p>';\n  }).join('');\n}\nfunction applyInsertFont(range, superscript){\n  range.font.name = INS_FONT; range.font.size = INS_SIZE;\n  range.font.superscript = !!superscript;\n}\nfunction wordReady(){ return officeReady && window.Word && typeof Word.run === 'function'; }\n\n// Relations that mean the caret/selection is sitting on (or hard against the end\n// of) one of our content controls. Word grows a content control when text is\n// inserted at its boundary, so inserting there would put the new citation INSIDE\n// the old one — and refreshCitations(), which rewrites the whole content of a\n// citation control, would then wipe one of the two.\nvar NEST_RELATIONS = ['Equal','Inside','InsideStart','InsideEnd','Overlaps','OverlapsBefore','OverlapsAfter','Contains','ContainsStart','ContainsEnd','AdjacentAfter'];\nfunction isPlControl(c){ var t = c.tag || ''; return t.indexOf(CITE_TAG) === 0 || t === BIB_TAG; }\n// Returns { range, where } for the insertion point: normally the selection itself,\n// but anchored just outside an existing citation when the caret touches one.\nasync function citationAnchor(context, sel){\n  var fallback = { range: sel, where: 'Replace' };\n  try{\n    var ccs = context.document.body.contentControls;\n    ccs.load('items/tag');\n    await context.sync();\n    var mine = ccs.items.filter(isPlControl);\n    if(!mine.length) return fallback;\n    var ranges = mine.map(function(c){ return c.getRange('Whole'); });\n    var rels = ranges.map(function(rg){ return sel.compareLocationWith(rg); });\n    await context.sync();\n    var after = -1, before = -1;\n    rels.forEach(function(rel, i){\n      var v = rel.value;\n      if(NEST_RELATIONS.indexOf(v) >= 0) after = i;\n      else if(v === 'AdjacentBefore' && before < 0) before = i;\n    });\n    // \"After\"/\"Before\" land on exactly the same spot as the caret, but outside the\n    // control, so the new citation becomes a sibling instead of a nested child.\n    if(after >= 0) return { range: ranges[after], where: 'After' };\n    if(before >= 0) return { range: ranges[before], where: 'Before' };\n  }catch(e){ /* compareLocationWith unsupported — fall back to the raw selection */ }\n  return fallback;\n}\n\nasync function insertCitationNumber(it){\n  if(!wordReady()){ toast(tr('wordOnly'), true); return; }\n  try{\n    await Word.run(async function(context){\n      var sel = context.document.getSelection();\n      var at = await citationAnchor(context, sel);\n      var r = at.range.insertText(markerText(1), at.where); // placeholder number; refresh fixes it\n      var cc = r.insertContentControl();\n      cc.tag = CITE_TAG + it.id;\n      cc.title = 'Paper Library citation';\n      cc.appearance = 'Hidden';\n      cc.placeholderText = PLACEHOLDER; // hide Word's \"Click or tap here…\" prompt\n      applyInsertFont(r, PREFS.marker === 'super' || PREFS.marker === 'superBracket');\n      await context.sync();\n    });\n    await refreshCitations({ silent: true });\n    toast(tr('inserted'));\n  }catch(e){ console.error(e); toast(tr('insertFail', e && e.message), true); }\n}\n\nasync function refreshCitations(o){\n  o = o || {};\n  if(!wordReady()){ if(!o.silent) toast(tr('wordOnlyUpdate'), true); return; }\n  var opts = currentOpts();\n  try{\n    await Word.run(async function(context){\n      var ccs = context.document.body.contentControls;\n      ccs.load('items/tag,items/text');\n      await context.sync();\n\n      var cites = ccs.items.filter(function(c){ return (c.tag || '').indexOf(CITE_TAG) === 0; });\n\n      // Deleting a number by hand empties its content control but leaves the control\n      // in the document, where Word renders its placeholder prompt. Treat an empty\n      // control as \"this citation was removed\": drop it instead of resurrecting the\n      // number. Controls holding only U+200B are the hidden members of a grouped\n      // citation (see the cluster loop below), so they must survive.\n      var stale = cites.filter(function(c){ return !(c.text || '').length; });\n      if(stale.length){\n        stale.forEach(function(c){ c.delete(true); });\n        cites = cites.filter(function(c){ return (c.text || '').length; });\n        await context.sync();\n      }\n      cites.forEach(function(c){ c.placeholderText = PLACEHOLDER; }); // also fixes older documents\n\n      var ids = cites.map(function(c){ return c.tag.slice(CITE_TAG.length); });\n      var num = assignNumbers(ids);\n      var sup = (PREFS.marker === 'super' || PREFS.marker === 'superBracket');\n\n      // group adjacent in-text citations so consecutive numbers collapse (1234 -> 1–4)\n      var clusters = null;\n      if(cites.length){\n        try{\n          var ranges = cites.map(function(c){ return c.getRange('Whole'); });\n          var cmps = [];\n          for(var ci = 0; ci < cites.length - 1; ci++) cmps.push(ranges[ci].compareLocationWith(ranges[ci + 1]));\n          await context.sync();\n          clusters = [];\n          var cur = [0];\n          for(var cj = 1; cj < cites.length; cj++){\n            if(cmps[cj - 1] && cmps[cj - 1].value === 'AdjacentBefore') cur.push(cj);\n            else { clusters.push(cur); cur = [cj]; }\n          }\n          clusters.push(cur);\n        }catch(e){ clusters = null; }\n      }\n\n      if(clusters){\n        clusters.forEach(function(cluster){\n          var nums = cluster.map(function(idx){ return num.numById[ids[idx]]; });\n          var text = groupMarkerText(nums, PREFS.marker);\n          cluster.forEach(function(idx, k){\n            // first control carries the whole group text; the rest are hidden with a zero-width space\n            var r = cites[idx].insertText(k === 0 ? text : '\\u200B', 'Replace');\n            applyInsertFont(r, sup);\n          });\n        });\n      }else{\n        cites.forEach(function(c){\n          var n = num.numById[c.tag.slice(CITE_TAG.length)];\n          var r = c.insertText(markerText(n), 'Replace');\n          applyInsertFont(r, sup);\n        });\n      }\n\n      var items = num.order.map(function(id){\n        var f = null; STATE.items.forEach(function(x){ if(x.id === id) f = x; }); return f;\n      });\n      var bib = null;\n      ccs.items.forEach(function(c){ if((c.tag || '') === BIB_TAG) bib = c; });\n      // only materialize a bibliography once there is at least one citation; a bare\n      // style change in an empty document must not inject an empty reference list.\n      if(!bib && cites.length){\n        var p = context.document.body.insertParagraph('', 'End');\n        bib = p.insertContentControl();\n        bib.tag = BIB_TAG;\n        bib.title = 'Paper Library bibliography';\n        bib.appearance = 'Hidden';\n        bib.placeholderText = PLACEHOLDER;\n      }\n      if(bib){\n        var html = buildBibliographyHtml(items, opts);\n        if(html) bib.insertHtml(html, 'Replace');\n        else bib.insertText(tr('noCites'), 'Replace');\n        bib.font.name = INS_FONT; bib.font.size = INS_SIZE;\n        await context.sync();\n\n        // enforce the hanging indent + left alignment reliably (insertHtml CSS is flaky)\n        if(html){\n          try{\n            var bibParas = bib.paragraphs;\n            bibParas.load('items');\n            await context.sync();\n            bibParas.items.forEach(function(p2){\n              p2.leftIndent = BIB_INDENT;\n              p2.firstLineIndent = -BIB_INDENT;\n              p2.alignment = 'Left';\n              p2.spaceBefore = 0;\n              p2.spaceAfter = 0;\n            });\n            await context.sync();\n          }catch(e){ /* older Word: rely on the inline CSS hanging indent */ }\n        }\n      }\n    });\n    if(!o.silent) toast(tr('updated'));\n  }catch(e){ console.error(e); toast(tr('updateFail', e && e.message), true); }\n}\n\n/* ---- events ---- */\nasync function readLibraryFileObject(f, label, silent){\n  var text = await f.text();\n  if(label) f.libraryFolderName = label;\n  var cached = loadLibraryData(JSON.parse(text), f);\n  toast(cached ? (silent ? tr('reloaded') : tr('loaded')) : tr('loadedNoCache'), !cached);\n}\nasync function loadLibraryFromHandle(silent){\n  if(!STATE.libraryFileHandle && STATE.dirHandle){\n    STATE.libraryFileHandle = await STATE.dirHandle.getFileHandle('library.json');\n  }\n  if(!STATE.libraryFileHandle) return false;\n  var f = await STATE.libraryFileHandle.getFile();\n  if(STATE.dirHandle && STATE.dirHandle.name) f.libraryFolderName = STATE.dirHandle.name;\n  await readLibraryFileObject(f, f.libraryFolderName, !!silent);\n  return true;\n}\nasync function reloadLibrary(){\n  // Word for Mac's task pane has no File System Access API, so a library picked with\n  // the folder <input> leaves us no handle to re-read. Check that synchronously and\n  // open the picker straight away: awaiting first would spend the click's user\n  // activation, and the picker would then be blocked.\n  if(!STATE.libraryFileHandle && !STATE.dirHandle){\n    toast(tr('reloadNeedsSelect'));\n    chooseLibrary();\n    return;\n  }\n  try{\n    if(await loadLibraryFromHandle(true)) return;\n    toast(tr('reloadNeedsSelect'));\n    chooseLibrary();\n  }catch(err){\n    console.error(err);\n    toast(tr('loadFail', err && err.message ? err.message : err), true);\n  }\n}\nasync function loadLibraryFromSelectedFolder(files){\n  files = Array.from(files || []);\n  if(!files.length) return;\n  var f = files.find(function(x){ return /(^|\\/)library\\.json$/i.test(x.webkitRelativePath || x.name); })\n       || files.find(function(x){ return /library\\.json$/i.test(x.name); });\n  if(!f){ toast(tr('folderNoJson'), true); return; }\n  // File objects obtained via <input webkitdirectory> are snapshots.\n  // Keep the latest selection for display, but ask the user to reselect the folder for future updates.\n  STATE.lastFolderFiles = files;\n  var text = await f.text();\n  try{ var cached = loadLibraryData(JSON.parse(text), f); toast(cached ? tr('loaded') : tr('loadedNoCache'), !cached); }\n  catch(err){ toast(tr('loadFail', err.message), true); }\n}\nasync function chooseLibrary(){\n  if(window.showDirectoryPicker){\n    try{\n      var dir = await window.showDirectoryPicker();\n      var h = await dir.getFileHandle('library.json');\n      STATE.dirHandle = dir;\n      STATE.libraryFileHandle = h;\n      await loadLibraryFromHandle(false);\n      return;\n    }catch(err){\n      if(err && (err.name === 'AbortError' || err.name === 'NotAllowedError')) return;\n      toast(tr('loadFail', err && err.message ? err.message : err), true);\n      return;\n    }\n  }\n  if($('#folder') && 'webkitdirectory' in $('#folder')) $('#folder').click();\n  else $('#file').click();\n}\nasync function libraryButtonAction(){\n  if(STATE.items.length) await reloadLibrary();\n  else await chooseLibrary();\n}\n$('#btnLoad').addEventListener('click', function(){ chooseLibrary(); });\n$('#btnReloadLib').addEventListener('click', function(){ reloadLibrary(); });\n$('#folder').addEventListener('change', function(e){\n  loadLibraryFromSelectedFolder(e.target.files);\n  e.target.value = '';\n});\n$('#file').addEventListener('change', async function(e){\n  var f = e.target.files[0]; e.target.value = '';\n  if(!f) return;\n  try{ await readLibraryFileObject(f, '', false); }\n  catch(err){ toast(tr('loadFail', err.message), true); }\n});\n$('#q').addEventListener('input', render);\n$('#coll').addEventListener('change', render);\n$('#tag').addEventListener('change', render);\n$('#fStar').addEventListener('change', render);\n$('#fMine').addEventListener('change', render);\n$('#style').addEventListener('change', function(){ savePrefs(); render(); refreshCitations({ silent: true }); });\n$('#pageStyle').addEventListener('change', function(){ savePrefs(); render(); refreshCitations({ silent: true }); });\n$('#incTitle').addEventListener('change', function(){ savePrefs(); render(); refreshCitations({ silent: true }); });\n$('#incUrl').addEventListener('change', function(){ savePrefs(); render(); refreshCitations({ silent: true }); });\nsegButtons().forEach(function(b){\n  b.addEventListener('click', function(){ setMarkerActive(b.dataset.val); savePrefs(); refreshCitations({ silent: true }); });\n});\n$('#btnRefresh').addEventListener('click', function(){ refreshCitations(); });\n$('#btnLang').addEventListener('click', function(){ setLang(LANG === 'ja' ? 'en' : 'ja'); });\n$('#btnManual').addEventListener('click', function(){ openManual(); });\n$('#btnManualClose').addEventListener('click', function(){ closeManual(); });\ndocument.addEventListener('keydown', function(e){ if(e.key === 'Escape' && manualIsOpen()) closeManual(); });\n$('#results').addEventListener('click', function(e){\n  var num = e.target.closest('[data-num]'), cp = e.target.closest('[data-copy]');\n  var list = $('#results').__list || [];\n  if(num){ var it0 = list[+num.dataset.num]; if(it0) insertCitationNumber(it0); }\n  else if(cp){ var it2 = list[+cp.dataset.copy]; if(it2) copyCitation(it2); }\n});\n\n/* ---- i18n apply / language ---- */\nfunction applyI18n(){\n  document.querySelectorAll('[data-i18n]').forEach(function(el){ var v = I18N[LANG][el.dataset.i18n]; if(typeof v === 'string') el.textContent = v; });\n  document.querySelectorAll('[data-i18n-ph]').forEach(function(el){ var v = I18N[LANG][el.dataset.i18nPh]; if(typeof v === 'string') el.placeholder = v; });\n  document.querySelectorAll('[data-i18n-title]').forEach(function(el){ var v = I18N[LANG][el.dataset.i18nTitle]; if(typeof v === 'string') el.title = v; });\n  var refreshLabel = $('#refreshLabel'); if(refreshLabel) refreshLabel.textContent = tr('refreshBtn');\n  $('#langLabel').textContent = (LANG === 'ja') ? 'EN' : '日本語';\n  $('#btnManual').setAttribute('aria-label', tr('manualTitle'));\n  $('#manualHeadTitle').textContent = tr('manualHead');\n  $('#btnManualClose').setAttribute('aria-label', tr('closeTitle'));\n  if(manualIsOpen()) renderManual();\n  document.documentElement.lang = LANG;\n  if(STATE.items.length) buildFilterOptions();\n  updateLibInfo();\n  render();\n}\nfunction setLang(l){ LANG = l; try{ localStorage.setItem(LS_LANG, l); }catch(e){} applyI18n(); }\n\n/* ---- startup: restore prefs + cached library ---- */\nfunction restore(){\n  try{ LANG = localStorage.getItem(LS_LANG) || 'ja'; }catch(e){ LANG = 'ja'; }\n  if(LANG !== 'en' && LANG !== 'ja') LANG = 'ja';\n  try{ Object.assign(PREFS, JSON.parse(localStorage.getItem(LS_PREFS)||'{}')); }catch(e){}\n  $('#style').value = PREFS.style || 'acs';\n  $('#pageStyle').value = PREFS.pageStyle === 'first' ? 'first' : 'full';\n  $('#incTitle').checked = !!PREFS.includeTitle;\n  $('#incUrl').checked = !!PREFS.includeUrl;\n  setMarkerActive(PREFS.marker || 'bracket');\n  try{\n    var cached = JSON.parse(localStorage.getItem(LS_LIB)||'null');\n    if(cached && cached.items){ STATE.items = cached.items; STATE.collections = cached.collections||[]; STATE.libraryLabel = cached.libraryLabel || ''; STATE.cached = true; }\n  }catch(e){}\n  applyI18n();\n}\nrestoreSections();\nrestore();\n\nif(window.Office && Office.onReady){\n  Office.onReady(function(info){ officeReady = !!(info && info.host); });\n} else {\n  officeReady = false;\n}\n<\/script>\n<\/body>\n<\/html>\n"},
 };
 /* === END WORDADDIN_FILES === */
 function connectorSnapshot(){
   const saved = {};
+  // Google Scholar list pages normally do not expose a DOI. Keep a compact
+  // title/year index so the connector can mark only exact matches in those lists.
+  const titleIndex = {};
   for(const it of lib.items){
     if(it.doi) saved['doi:' + String(it.doi).toLowerCase()] = it.collections || [];
     if(it.arxiv) saved['arxiv:' + String(it.arxiv).toLowerCase().replace(/v\d+$/,'')] = it.collections || [];
+    const title = normTitle(it.title);
+    if(title.length >= 12){
+      const matches = titleIndex[title] || (titleIndex[title] = []);
+      matches.push({ year:String(it.year || ''), collections:it.collections || [] });
+    }
   }
   const persistent = !!(backend && backend.kind === 'fs');
   // Stable per-library id so the extension can offer a destination-library
@@ -15727,11 +19354,20 @@ function connectorSnapshot(){
     tags: allKnownTags(),
     journals: allKnownJournals(),
     saved,
+    titleIndex,
   };
 }
 let connectorTimer = null;
+// Declared up here because touch() → connectorNotify() reads it, and it is the
+// run itself (further down) that owns them.
+let connectorJob = null;
+let connectorQueue = [];
 function connectorNotify(immediate){
   if(!backend) return;
+  // An import touch()es once per item, and each snapshot walks every record to
+  // rebuild the DOI / arXiv / title index and structured-clones it through
+  // postMessage. One snapshot at the end of the run is enough.
+  if(connectorJob && !immediate) return;
   clearTimeout(connectorTimer);
   connectorTimer = setTimeout(()=>{
     window.postMessage({ source:'refshelf-app', action:'snapshot', snapshot:connectorSnapshot() }, '*');
@@ -15803,35 +19439,116 @@ async function connectorSaveImage(item, dataUrl){
   await backend.putAttachment(name, blob);
   item.image = { name };
 }
+/* ---- import run ----------------------------------------------------------
+   One run at a time, driven off a queue, with a visible progress chip.
+   Everything here used to happen per item — an addItems() call (which rescans
+   the whole library for duplicates), a touch() (which re-serializes the whole
+   library.json), then a renderList() + renderDetail() from the enrich callback
+   of every item at once. Importing a handful of papers therefore stalled the
+   page for hundreds of ms at a time, with nothing on screen to say why.
+   Now: fetch metadata one by one → add the whole batch in one go → one render,
+   then enrich with bounded concurrency, patching rows in place.        */
+const CONNECTOR_ENRICH_CONCURRENCY = 3;
+function updateConnectorImportUI(){
+  const el = $('#importStatus');
+  if(!el) return;
+  const job = connectorJob;
+  if(!job){ el.hidden = true; el.removeAttribute('aria-busy'); return; }
+  const label = job.phase === 'enrich' ? I18N[lang].connectorEnriching : I18N[lang].connectorImporting;
+  el.hidden = false;
+  el.setAttribute('aria-busy', 'true');
+  const text = el.querySelector('.importStatusText');
+  if(text) text.textContent = label(job.done, job.total);
+}
+function connectorPhase(job, phase, total){
+  job.phase = phase; job.done = 0; job.total = total;
+  updateConnectorImportUI();
+}
+async function importConnectorBatch(batch, job){
+  const results = [], fetched = [];
+  connectorPhase(job, 'fetch', batch.length);
+  let switched = false;
+  for(const p of batch){
+    if(lib !== job.lib){ switched = true; break; }   // another library was opened mid-run
+    job.done++; updateConnectorImportUI();
+    try{ fetched.push({ p, it: await connectorImportOne(p) }); }
+    catch(err){
+      console.error(err);
+      results.push({ id:p.id, ok:false, error:String(err && err.message || err) });
+    }
+  }
+  const newOnes = [];
+  if(!switched && fetched.length){
+    // One addItems() for the batch: it rebuilds the DOI map and runs the
+    // duplicate scan once instead of once per paper, and touch()es once.
+    const res = addItems(fetched.map(f=>f.it));
+    const added = new Set(res.addedItems);
+    for(const { p, it } of fetched){
+      const isNew = added.has(it);
+      if(isNew) newOnes.push({ it, fetchPdf: !!p.fetchPdf });
+      results.push({ id:p.id, ok:true, added:isNew ? 1 : 0, skipped:isNew ? 0 : 1 });
+    }
+    // Only rebuild the detail pane when the record it is showing was itself
+    // changed by this import — a same-DOI save merges its collections and tags
+    // into the existing record. Otherwise leave whatever is being edited alone.
+    const hitSelected = res.duplicateCandidates.some(m=>m.skipped && m.match && m.match.id === selectedId);
+    renderAll({keepDetail:!hitSelected});
+  }
+  // Always answer, even when the run was cut short: the extension's bridge holds
+  // its delivery lock until it gets a result, so staying silent would stop this
+  // page receiving any further saves until it is reloaded. Papers that were not
+  // stored are simply absent from `results` and stay queued in the extension.
+  window.postMessage({ source:'refshelf-app', action:'import-result', results }, '*');
+  const n = results.filter(r=>r.ok).length;
+  if(n) showToast(I18N[lang].connectorImported(n));
+  if(!newOnes.length) return;
+  connectorPhase(job, 'enrich', newOnes.length);
+  await runPool(newOnes, CONNECTOR_ENRICH_CONCURRENCY, async ({ it, fetchPdf })=>{
+    if(lib !== job.lib) return;
+    // Fill corresponding authors + cited-by from OpenAlex, same as a manual DOI
+    // add — the extension can't read the corresponding-author flag from the page.
+    try{ await autoEnrichOnAdd(it); }catch(err){ console.warn('auto-enrich failed', err); }
+    // Only fetch the open-access PDF when the popup's opt-in was checked
+    // (default off). Legacy queued items without the flag never fetch.
+    if(fetchPdf && lib === job.lib){
+      // A new attachment is not something refreshRowCells can patch in, so this
+      // is the one thing that still needs a full render once the run is over.
+      try{ if(await tryAutoAttachPdf(it, {quiet:true})){ job.attached++; renderDetailIfShown(it); } }
+      catch(err){ console.warn(err); }
+    }
+    job.done++; updateConnectorImportUI();
+  });
+}
+function connectorEnqueue(items){
+  connectorQueue.push(...items);
+  if(!connectorJob) runConnectorImport();
+}
+async function runConnectorImport(){
+  const job = connectorJob = { lib, phase:'fetch', done:0, total:connectorQueue.length, attached:0 };
+  updateConnectorImportUI();
+  try{
+    while(connectorQueue.length && lib === job.lib){
+      await importConnectorBatch(connectorQueue.splice(0), job);
+    }
+  }catch(err){
+    console.error(err);
+  }finally{
+    connectorQueue = [];   // a library switch drops the rest; they stay queued in the extension
+    connectorJob = null;
+    updateConnectorImportUI();
+  }
+  if(!backend) return;
+  // The enrich pass patched its rows in place, so the only thing left needing a
+  // full render is an auto-attached PDF. The snapshot, suppressed for every
+  // touch() during the run, is sent once here so the extension's badges catch up.
+  if(job.attached) renderAll({keepDetail:true}); else connectorNotify();
+}
 window.addEventListener('message', async (e)=>{
   const d = e.data;
   if(e.source !== window || !d || d.source !== 'refshelf-connector') return;
   if(!backend) return; // home screen: no library to report or import into
   if(d.action === 'hello'){ connectorNotify(true); return; }
-  if(d.action === 'import' && Array.isArray(d.items)){
-    const results = [], newOnes = [];
-    for(const p of d.items){
-      try{
-        const it = await connectorImportOne(p);
-        const res = addItems([it]);
-        // Only fetch the open-access PDF when the popup's opt-in was checked
-        // (default off). Legacy queued items without the flag never fetch.
-        if(res.added) newOnes.push({ it, fetchPdf: !!p.fetchPdf });
-        results.push({ id:p.id, ok:true, added:res.added, skipped:res.skipped });
-      }catch(err){
-        console.error(err);
-        results.push({ id:p.id, ok:false, error:String(err && err.message || err) });
-      }
-    }
-    renderAll();
-    window.postMessage({ source:'refshelf-app', action:'import-result', results }, '*');
-    const n = results.filter(r=>r.ok).length;
-    if(n) showToast(I18N[lang].connectorImported(n));
-    for(const { it, fetchPdf } of newOnes){
-      if(!fetchPdf) continue;
-      try{ await tryAutoAttachPdf(it); }catch(err){ console.warn(err); }
-    }
-  }
+  if(d.action === 'import' && Array.isArray(d.items)) connectorEnqueue(d.items);
 });
 
 // export
@@ -15851,6 +19568,12 @@ function csvCell(v){
   const s = Array.isArray(v) ? v.join('; ') : String(v==null ? '' : v);
   return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
 }
+// Excel ignores the charset in the MIME type: without a BOM it reads UTF-8 CSV
+// as the local ANSI codepage and mangles Japanese titles and accented names.
+// CRLF for the same reason \u2014 it is what RFC 4180 and Excel both expect.
+const CSV_BOM = '\ufeff';
+function csvDocument(rows){ return CSV_BOM + rows.map(r=>r.map(csvCell).join(',')).join('\r\n') + '\r\n'; }
+function stripCsvBom(text){ return String(text==null?'':text).replace(/^\ufeff/, ''); }
 function itemsToCsv(items){
   const headers = ['Item type','Title','Authors','Journal','Year','Volume','Issue','Pages','DOI','URL','Keywords','Folders filed in','Citekey','Abstract','Notes'];
   const rows = items.map(it=>[
@@ -15870,7 +19593,7 @@ function itemsToCsv(items){
     it.abstract || '',
     it.notes || '',
   ]);
-  return [headers, ...rows].map(r=>r.map(csvCell).join(',')).join('\n');
+  return csvDocument([headers, ...rows]);
 }
 const RESEARCHER_EXPORT_SCHEMA='paper-library.researcher-export/v1';
 function researcherExportRecords(entries){
@@ -15888,13 +19611,13 @@ function researcherExportText(value){
   return Array.isArray(value) ? value.filter(Boolean).join('; ') : String(value||'');
 }
 function researcherExportRecordsToCsv(records){
-  const headers=['Name','Registered','Family name','Given name','Middle name','Aliases','Current institutions','Past institutions','Affiliation history','Birth date','PhD year','PhD institution','PhD degree','PhD advisor','Homepage','Image URL','ORCID','OpenAlex','researchmap','Google Scholar','ResearchGate','LinkedIn','X','Bluesky','Wikipedia','Scopus','ResearcherID','DBLP','CiNii','Total citations','h-index','i10-index','Profile publications','Research fields','Related researchers','Positions','Education','Awards','Reference count','Reference IDs','Last modified'];
+  const headers=['Name','Registered','Family name','Given name','Middle name','Aliases','Current institutions','Past institutions','Affiliation history','Birth date','Death date','PhD year','PhD institution','PhD degree','PhD advisor','Homepage','Image URL','ORCID','OpenAlex','researchmap','Google Scholar','ResearchGate','LinkedIn','X','Bluesky','Wikipedia','Scopus','ResearcherID','DBLP','CiNii','Total citations','h-index','i10-index','Profile publications','Research fields','Related researchers','Positions','Education','Awards','Reference count','Reference IDs','Last modified'];
   const rows=records.map(r=>{
     const p=r.profile||{}, ids=p.identifiers||{}, positions=researcherPositions(p), education=researcherEducation(p), affiliations=researcherAffiliations(p), awards=researcherAwards(p);
     return [
       r.name, r.registered?'yes':'no', p.familyName, p.givenName, p.middleName,
       researcherExportText(r.aliases), researcherExportText(researcherCurrentInstitutions(p)), researcherExportText(researcherPastInstitutions(p)),
-      affiliations.map(a=>[a.name,a.start,a.end||'present'].filter(Boolean).join(' / ')).join(' | '), p.birthDate, p.phdYear, p.phdInstitution, p.phdDegree, researcherAdvisors(p).join(' | '),
+      affiliations.map(a=>[a.name,a.start,a.end||'present'].filter(Boolean).join(' / ')).join(' | '), p.birthDate, p.deathDate, p.phdYear, p.phdInstitution, p.phdDegree, researcherAdvisors(p).join(' | '),
       p.website, (String(p.imageUrl||'').startsWith('http://')||String(p.imageUrl||'').startsWith('https://'))?p.imageUrl:'', ids.orcid, ids.openalex, ids.researchmap, ids.googleScholar, ids.researchGate, ids.linkedin, ids.x, ids.bluesky, ids.wikipedia, ids.scopus, ids.researcherId, ids.dblp, ids.cinii,
       p.totalCitations, p.hIndex, p.i10Index, p.worksCount, researcherExportText(p.researchFields), researcherExportText(p.relatedResearchers),
       positions.map(x=>[x.institution,x.organization,x.title,x.start,x.end,researcherLines(x.related).length?`related: ${researcherLines(x.related).join(', ')}`:''].filter(Boolean).join(' / ')).join(' | '),
@@ -15902,7 +19625,7 @@ function researcherExportRecordsToCsv(records){
       awards.map(x=>[x.year,x.name,x.organization].filter(Boolean).join(' / ')).join(' | '), r.paperCount, researcherExportText(r.paperIds), p.dateModified,
     ];
   });
-  return [headers,...rows].map(row=>row.map(csvCell).join(',')).join('\n');
+  return csvDocument([headers, ...rows]);
 }
 function researcherExportEntries(scope){
   const entries=scope==='all' ? researcherDirectoryEntries().slice() : researcherEntriesForDisplay();
@@ -15956,20 +19679,35 @@ $('#miExportResearchersCsv').addEventListener('click', ()=>{ doResearcherExport(
   if(!HAS_FS){
     $('#fsWarn').style.display = 'block';
     $('#btnOpenFolder').style.display = 'none';
-  }else{
-    try{
-      const last = await idbGet('lastDir');
-      if(last){
-        if(await canAutoOpenDir(last) && await dirHasLibrary(last)){
-          if(await startWithBackend(fsBackend(last))) return;
-        }
-        const lastPath = last.path || last.fullPath || last.name || '';
-        $('#btnOpenLast').style.display = '';
-        $('#lastLibName').innerHTML = ic('folder') + ' ' + esc(lastPath);
-        $('#lastLibName').title = lastPath;
-      }
-    }catch(e){ /* ignore */ }
+    return;
   }
+  // If the last boot restored on its own, say so before the IndexedDB lookup
+  // resolves — otherwise the card flashes "checking" for a frame or two.
+  let expectAuto = false;
+  try{ expectAuto = localStorage.getItem(AUTORESTORE_FLAG)==='1'; }catch(e){ /* private mode */ }
+  // When we cannot predict it, hold off on the spinner: the IndexedDB lookup
+  // usually resolves in a few ms and a one-frame flash reads as a glitch.
+  if(expectAuto) setBootState('restoring');
+  else bootCheckTimer = setTimeout(()=>setBootState('checking'), 250);
+  const token = newBootToken();
+  let restored = false;
+  try{
+    const last = await idbGet('lastDir');
+    lastDirHandle = last || null;
+    if(!bootAlive(token)) return;   // the user already picked a folder by hand
+    if(last && await canAutoOpenDir(last) && await dirHasLibrary(last)){
+      if(!bootAlive(token)) return;
+      setBootState('restoring', last.path || last.fullPath || last.name || '');
+      restored = await startWithBackend(fsBackend(last), { token, onStep:setBootStep });
+    }
+  }catch(e){ /* ignore */ }
+  if(!bootAlive(token)) return;   // a hand-picked folder took over; leave its UI alone
+  try{
+    if(restored) localStorage.setItem(AUTORESTORE_FLAG, '1');
+    else localStorage.removeItem(AUTORESTORE_FLAG);
+  }catch(e){ /* private mode */ }
+  if(restored) return;
+  showManualStart();
 })();
 
 // expose internals for testing in console

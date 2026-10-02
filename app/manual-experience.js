@@ -5,16 +5,17 @@
 (() => {
   const topics = [
     {id:'overview', ja:'はじめに', en:'Getting started', icon:'folderOpen'},
-    {id:'import', ja:'インポート等', en:'Import & export', icon:'download'},
-    {id:'add', ja:'文献を追加・削除する', en:'Add & delete references', icon:'plus'},
-    {id:'connector', ja:'Chrome拡張機能', en:'Chrome Connector', icon:'book', action:'connector'},
-    {id:'researchers', ja:'研究者', en:'Researchers', icon:'users'},
-    {id:'organize', ja:'整理・編集する', en:'Organize & edit', icon:'folder'},
-    {id:'search', ja:'探す・並べ替える', en:'Search and sort', icon:'search'},
-    {id:'graph', ja:'論文相関図', en:'Related-paper map', icon:'graph'},
-    {id:'maintenance', ja:'更新・メンテナンス', en:'Maintenance', icon:'retry'},
-    {id:'word', ja:'Wordアドイン', en:'Word add-in', icon:'book', action:'word'},
-    {id:'changelog', ja:'更新履歴', en:'Changelog', icon:'retry', noGuide:true},
+    {id:'import', ja:'文献の取込・出力', en:'Import & export', icon:'download'},
+    {id:'add', ja:'文献の追加・削除', en:'Add & delete references', icon:'plus'},
+    {id:'search', ja:'文献の検索・並べ替え', en:'Search & sort', icon:'search'},
+    {id:'organize', ja:'文献の整理・編集', en:'Organize & edit', icon:'folder'},
+    {id:'maintenance', ja:'情報の更新', en:'Updating info', icon:'retry'},
+    {id:'notes', ja:'メモ', en:'Notes', icon:'note', noGuide:true},
+    {id:'graph', ja:'文献を見つける', en:'Find references', icon:'graph'},
+    {id:'researchers', ja:'研究者機能', en:'Researchers', icon:'users'},
+    {id:'connector', ja:'Chrome拡張機能', en:'Chrome extension', icon:'puzzle', action:'connector'},
+    {id:'word', ja:'Wordアドイン', en:'Word add-in', icon:'quote', action:'word'},
+    {id:'changelog', ja:'更新履歴', en:'Changelog', icon:'clock', noGuide:true},
     {id:'contact', ja:'お問い合わせ', en:'Contact', icon:'message', action:'contact', noGuide:true}
   ];
 
@@ -55,7 +56,7 @@
 
     const rich = value => esc(value)
       .replace(/\bchrome:\/\/extensions\b/g, '<code class="manual-code">chrome://extensions</code>')
-      .replace(/\[\[code:([^\]]+)\]\]/g, (_, value) => '<code class="manual-code">'+value+'</code>')
+      .replace(/\[\[code:(.+?)\]\](?!\])/g, (_, value) => '<code class="manual-code">'+value+'</code>')
       .replace(/\[\[ic:(\w+)\]\]/g, (_, name) => typeof ic === 'function' ? ic(name) : '');
 
     const renderDetails = topic => {
@@ -85,7 +86,9 @@
         ? (isJapanese ? '最初に戻る' : 'Start over')
         : (isJapanese ? '次へ' : 'Next');
       let utility = '';
-      if(activeTopic.action === 'connector') utility = '<button type="button" class="tbtn" data-connector-dl>'+ (typeof ic === 'function' ? ic('download') : '') +esc(isJapanese ? '拡張機能をダウンロード' : 'Download extension')+'</button>';
+      // The connector download button lives in the detail text below the
+      // walkthrough (the {dl} block), so it is intentionally not repeated in
+      // the guide rail. The Word add-in keeps its rail button.
       if(activeTopic.action === 'word') utility = '<button type="button" class="tbtn" data-wordaddin-dl>'+ (typeof ic === 'function' ? ic('download') : '') +esc(isJapanese ? 'manifest.xmlをダウンロード' : 'Download manifest.xml')+'</button>';
       if(activeTopic.action === 'contact') utility = '<button type="button" class="tbtn" id="manualContactAction">'+esc(isJapanese ? 'メールを作成' : 'Compose email')+'</button>';
       actionBar.innerHTML = '<div class="manualScenarioGuideCopy"><span class="manualScenarioGuideKicker">'+esc(isJapanese ? '操作ガイド' : 'Walkthrough')+' · '+esc(guide.label)+' · '+stepLabel+'</span><strong>'+esc(guide.title)+'</strong><p>'+esc(guide.text)+'</p></div>'+
@@ -128,7 +131,7 @@
         guide = {label:isJapanese ? topic.ja : topic.en, title:isJapanese ? '操作ガイドを読み込み中…' : 'Loading walkthrough…', text:isJapanese ? '仮想画面の操作手順を準備しています。' : 'Preparing the walkthrough.', step:0, total:0, canGoBack:false, isLast:false};
         renderGuideRail();
         frame.onload = () => { content.scrollTop = 0; };
-        frame.src = 'manual-virtual-screen.html?v=20260823r7&lang='+language+'#'+topic.id;
+        frame.src = 'manual-virtual-screen.html?v=20260909r1&lang='+language+'#'+topic.id;
       }
       content.scrollTop = 0;
     };

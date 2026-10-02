@@ -3,10 +3,23 @@
   width:min(1344px,88vw);
   max-height:90vh;
 }
+/* The dialog footer is intentionally absent in walkthrough mode.  Its space
+   belongs to the manual and, in particular, to the virtual screen.  The height
+   is handed out by flex rather than computed as `90vh - <header>`: that
+   subtraction was 8px short (the header is 55px, not 49, plus the dialog's own
+   2px of border), so the dialog itself overflowed and painted a second
+   scrollbar next to #manualContent's.  `[open]` keeps the UA's display:none
+   for the closed dialog — the class stays on the element after it closes. */
+#dlgManual.manualScenarioMode[open]{
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+#dlgManual.manualScenarioMode .dlgHead{flex:0 0 auto}
 #dlgManual.manualScenarioMode #manualWrap{
-  /* The dialog footer is intentionally absent in walkthrough mode.  Its space
-     belongs to the manual and, in particular, to the virtual screen. */
-  height:min(780px,calc(90vh - 49px));
+  flex:0 1 780px;
+  height:auto;
+  min-height:0;
 }
 #dlgManual.manualScenarioMode #manualTabs{
   flex:0 0 198px;
@@ -33,10 +46,35 @@
   display:none;
   align-items:center;
   gap:12px;
-  min-height:82px;
+  min-height:87px;
   padding:10px 14px;
   border-bottom:1px solid var(--border2);
   background:var(--panel);
+}
+/* The rail sits directly above the virtual screen, so any change in its height
+   shifts the screen down the page: a 2-line step used to push the screen 20px
+   down, a 3-line one 39px.  Fixing the height stops that, and the line clamp
+   keeps a stray long line from bursting out of the reserved space.
+   Every step in manual-virtual-screen.html is written to fit on one line, but
+   only while the rail is at least ~720px wide (~580px on the Word tab, whose
+   rail also carries the manifest.xml button) — measured, not guessed.  That
+   works out at roughly a 1300px window, so below it the reserve is two lines
+   instead of truncating: no step needs three even at a 300px rail.  Under
+   900px the rail stacks vertically and the fixed height is lifted. */
+@media(min-width:1300px){
+  .manualScenarioActions{height:87px}
+  .manualScenarioGuideCopy p{-webkit-line-clamp:1}
+}
+@media(min-width:901px) and (max-width:1299px){
+  .manualScenarioActions{height:107px}
+  .manualScenarioGuideCopy p{-webkit-line-clamp:2}
+}
+@media(min-width:901px){
+  .manualScenarioGuideCopy p{
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
 }
 .manualScenarioActions.show{display:flex}
 .manualScenarioShell--plain .manualScenarioFrame{display:none}
