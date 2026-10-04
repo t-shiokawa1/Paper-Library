@@ -1,0 +1,63 @@
+/* Latest papers reuse the library gallery cards and the shared detail pane. */
+#latestPapersPane{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--panel);overflow:hidden}
+#latestPapersPane[hidden]{display:none}
+#latestPapersFilter .sideItem{width:100%;font:inherit;text-align:left;border:0;background:transparent;color:var(--text);cursor:pointer}
+#latestPapersFilter .sideItem:hover{background:var(--bg)}
+#latestPapersFilter .sideItem.active{background:var(--sel);color:var(--accent);font-weight:600}
+#latestPapersFilter .sideItem:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.latestTabs{display:inline-flex;gap:0;border:1px solid var(--border);border-radius:5px;background:var(--panel)}
+.latestTabs .lsbtn{border:0;border-radius:0;min-height:22px}
+.latestTabs .lsbtn+.lsbtn{border-left:1px solid var(--border)}
+.latestTabs .lsbtn:first-child{border-radius:4px 0 0 4px}
+.latestTabs .lsbtn:last-child{border-radius:0 4px 4px 0}
+.latestTabs .lsbtn:focus-visible{position:relative;z-index:1;outline:2px solid var(--accent);outline-offset:-2px}
+.latestTabs .lsbtn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.latestTabs .lsbtn[aria-pressed="true"]:hover,.latestDetailActions .lsbtn.primary:hover{filter:brightness(1.08)}
+.latestScroll{flex:1;min-height:0;overflow:auto}
+.latestCards{display:grid;grid-template-columns:repeat(var(--latestCols,4),minmax(0,1fr));gap:12px;padding:12px 12px 22px;align-content:start}
+.latestCard{min-width:0;cursor:pointer}
+.latestCard .cardImg{object-fit:contain}
+.latestCard:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.latestImageFallback[hidden]{display:none}
+.latestCard .latestImageFallback span{font-size:11px;font-weight:400;text-align:center;padding:8px}
+.latest-rows{grid-template-columns:1fr}
+.latest-rows .galCard{display:grid;grid-template-columns:140px minmax(0,1fr)}
+.latest-rows .galThumb{border-right:1px solid var(--border2);border-bottom:0}
+.latest-rows .galBody{justify-content:center}
+.latestEmpty{padding:50px 12px;text-align:center;color:var(--text2)}
+.latestScrollSentinel{height:1px;margin-bottom:20px}
+.latestWarning{padding:6px 12px;font-size:12px;color:var(--text2);border-bottom:1px solid var(--border2)}
+.latestStatus{position:relative;flex-wrap:wrap}
+.latestStatus>span{margin-right:auto}
+.latestStatusInfo{font-size:11.5px;color:var(--text2)}
+.latestStatusInfo summary{cursor:pointer}
+.latestStatusInfo>div{position:absolute;bottom:100%;right:8px;width:min(380px,calc(100% - 16px));padding:12px;background:var(--panel);border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 16px #0002;z-index:5;line-height:1.6}
+.latestDetailActions{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.latestDetailActions a{text-decoration:none}
+.latestDetailActions .lsbtn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.latestDetailZoom{display:block;width:100%;border:0;padding:0;background:transparent;cursor:zoom-in}
+.latestDetailZoom .latestImageFallback{color:var(--text2);font-size:12px}
+@media(max-width:700px){.latestCards.latest-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.latestEmpty p{max-width:420px;margin:0 auto 16px;line-height:1.7}
+.latestJournalTree{margin:0 0 10px}
+.latestJournalTree[hidden],.latestJournalChildren[hidden]{display:none}
+/* Match collection/tag rows: 16px at depth 0, then 10px per level. */
+#latestPapersFilter .sideItem.latestJournalGroupButton{padding-left:16px}
+#latestPapersFilter .sideItem.latestJournalFolder{padding-left:26px}
+#latestPapersFilter .latestJournalFolder{color:var(--text2)}
+#latestPapersFilter .latestJournalGroupButton.selected,#latestPapersFilter .latestJournalFolder.selected{color:var(--accent);font-weight:600}
+#latestPapersFilter .latestJournalFolder.selected>.ic{color:var(--accent)}
+.latestJournalTree .sideName{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.latestJournalChildren{margin:0;padding:0}
+.latestJournalGroup{margin:0}
+.latestJournalTree button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.latestCard .galThumb{position:relative}
+.latestImageKind{position:absolute;bottom:5px;right:5px;padding:2px 5px;border:1px solid var(--border2);border-radius:4px;background:var(--panel);color:var(--text2);font-size:10px;line-height:1.4;pointer-events:none}
+.latestImageCredit{margin-top:5px;color:var(--text3);font-size:11px}
+
+.latestStatus .latestTabs{flex:none}
+.latestStatusCount{white-space:nowrap}
+
+.latestNoImage{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--text3);width:100%;height:100%;padding:12px;text-align:center}
+.latestNoImage .ic{width:26px;height:26px}.cardNoimg .latestNoImage span:not(.ic){font-size:12px;font-weight:500;line-height:1.4;white-space:normal}.cardNoimg .latestNoImage span:last-child{font-size:11px}
