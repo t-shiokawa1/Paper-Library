@@ -142,7 +142,8 @@
     [data-stage="home-resume"] .app-toolbar,[data-stage="home-resume"] .app-main,
     [data-stage="picker"] .app-toolbar,[data-stage="picker"] .app-main,
     [data-stage="picker-select"] .app-toolbar,[data-stage="picker-select"] .app-main,
-    [data-stage="permission"] .app-toolbar,[data-stage="permission"] .app-main{visibility:hidden}
+    [data-stage="permission"] .app-toolbar,[data-stage="permission"] .app-main,
+    [data-stage^="ext"] .app-toolbar,[data-stage^="ext"] .app-main{visibility:hidden}
     .home-card{width:min(420px,86%);padding:34px 30px;border:1px solid var(--border2);border-radius:16px;background:#fff;box-shadow:0 18px 44px rgba(20,35,60,.12);text-align:center}
     .home-card-logo{display:flex;align-items:center;justify-content:center;gap:10px;font-size:21px;font-weight:700;color:var(--text)}
     .home-card-logo svg{width:32px;height:32px}
@@ -153,6 +154,163 @@
     .home-open-icon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
     .home-open-text strong{display:block;font-size:13.5px;color:var(--text);font-weight:650}
     .home-open-text small{display:block;margin-top:3px;font-size:11px;line-height:1.5;color:var(--text3)}
+
+    /* "Chrome拡張機能" install walkthrough — a mocked chrome://extensions page
+       (#extPage) that replaces the app view, plus a folder-picker overlay
+       (#extPickerOverlay) reusing the .picker-* look from the library-folder
+       picker above. [data-stage^="ext"] covers the bare "ext" (dev mode off)
+       stage and every "ext-…" substage; [data-stage^="ext-"] (with the
+       trailing hyphen) covers only the substages, i.e. "dev mode is already
+       on" — that's what turns the switch/load-button on from the "ext-on"
+       stage onward. */
+    #extPage{display:none;position:absolute;inset:0;z-index:4;flex-direction:column;background:#fff}
+    [data-stage^="ext"] #extPage{display:flex}
+    /* header row: Chrome logo + title + search box + Developer mode switch,
+       mirroring the real chrome://extensions top bar. */
+    .ext-header{display:flex;align-items:center;gap:14px;padding:11px 18px;border-bottom:1px solid var(--border2)}
+    .ext-brand{display:flex;align-items:center;gap:9px;flex:0 0 auto}
+    .ext-chrome-logo{width:22px;height:22px;flex:0 0 auto}
+    .ext-brand b{font-size:15px;font-weight:500;color:var(--text)}
+    .ext-search{flex:1;min-width:80px;display:flex;align-items:center;gap:8px;height:32px;padding:0 14px;border-radius:999px;background:var(--bg);color:var(--text3);font-size:12px}
+    .ext-search svg{width:15px;height:15px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .ext-devmode{display:flex;align-items:center;gap:9px;flex:0 0 auto;font-size:11.5px;color:var(--text2)}
+    .ext-switch{position:relative;flex:0 0 auto;width:34px;height:19px;border:1px solid #cfd4db;border-radius:999px;background:#e3e6ea;padding:0}
+    .ext-switch i{position:absolute;top:1px;left:1px;width:15px;height:15px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3);transition:left .15s,background .15s}
+    [data-stage^="ext-"] .ext-switch{background:var(--accent);border-color:var(--accent)}
+    [data-stage^="ext-"] .ext-switch i{left:16px}
+    /* toolbar pills (Load unpacked / Pack extension / Update) — like the real
+       page, they only appear once Developer mode is on. */
+    .ext-toolbar{display:flex;flex-wrap:nowrap;gap:8px;padding:12px 18px 0;overflow-x:auto}
+    .ext-pill{display:none;flex:0 0 auto;align-items:center;gap:6px;height:30px;padding:0 13px;border:1px solid var(--accent-border);border-radius:999px;background:transparent;color:var(--accent);font-size:11px;font-weight:600;white-space:nowrap}
+    [data-stage^="ext-"] .ext-pill{display:inline-flex}
+    .ext-pill svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+    .ext-hint{display:none;margin:0;padding:12px 18px 0;font-size:11.5px;font-weight:650;color:var(--accent)}
+    [data-stage="ext"] .ext-hint{display:block}
+    .ext-content{flex:1;display:flex;min-height:0;margin-top:12px;border-top:1px solid var(--border2)}
+    .ext-nav{flex:0 0 190px;padding:12px 7px;border-right:1px solid var(--border2)}
+    .ext-nav-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:0 20px 20px 0;font-size:11px;color:var(--text2);white-space:nowrap}
+    .ext-nav-item svg{width:15px;height:15px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .ext-nav-item.active{background:var(--accent-soft);color:var(--accent);font-weight:650}
+    .ext-body{flex:1;min-width:0;padding:16px;overflow:auto}
+    .ext-body-title{display:none;font-size:13px;font-weight:600;color:var(--text2);margin:0 0 12px}
+    [data-stage="ext-installed"] .ext-body-title{display:block}
+    .ext-empty{margin:34px 0;text-align:center;font-size:12px;color:var(--text3)}
+    [data-stage="ext-installed"] .ext-empty{display:none}
+    /* the loaded extension card, matching the real card: header (icon, name,
+       version, description, ID) + footer (Details / Remove, reload, toggle). */
+    .ext-card{display:none;flex-direction:column;width:min(322px,100%);border:1px solid var(--border2);border-radius:12px;background:#fff;box-shadow:0 1px 3px rgba(20,35,60,.07)}
+    [data-stage="ext-installed"] .ext-card{display:flex}
+    .ext-card-top{display:flex;gap:13px;padding:16px 16px 13px}
+    .ext-card-icon{width:30px;height:30px;flex:0 0 auto}
+    .ext-card-info{min-width:0}
+    .ext-card-name{display:flex;align-items:baseline;gap:7px}
+    .ext-card-name b{font-size:12.5px;font-weight:600;color:var(--text)}
+    .ext-card-ver{font-size:10.5px;color:var(--text3)}
+    .ext-card-desc{margin-top:5px;font-size:11px;line-height:1.5;color:var(--text2)}
+    .ext-card-id{margin-top:9px;font-size:10px;color:var(--text3);word-break:break-all}
+    .ext-card-foot{display:flex;align-items:center;gap:14px;padding:9px 15px;border-top:1px solid var(--border2)}
+    .ext-card-btn{border:0;background:transparent;color:var(--accent);font-size:11.5px;font-weight:600;padding:2px 0}
+    .ext-card-foot-right{margin-left:auto;display:flex;align-items:center;gap:13px}
+    .ext-card-reload{display:grid;place-items:center;width:16px;height:16px;color:var(--text3)}
+    .ext-card-reload svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+    .ext-card .ext-switch{background:var(--accent);border-color:var(--accent)}
+    .ext-card .ext-switch i{left:16px}
+    @media(max-width:450px){.ext-nav{display:none}}
+
+    .ext-picker-overlay{display:none;position:absolute;inset:0;z-index:6;align-items:center;justify-content:center;background:rgba(15,20,30,.42)}
+    [data-stage="ext-picker"] .ext-picker-overlay,[data-stage="ext-picker-wrong"] .ext-picker-overlay,[data-stage="ext-picker-select"] .ext-picker-overlay{display:flex}
+    #extPickerZipItem,#extPickerFolderItem{transition:background .15s,color .15s}
+    [data-stage="ext-picker-wrong"] #extPickerZipItem{background:#3a5fd9;color:#fff;font-weight:600}
+    [data-stage="ext-picker-select"] #extPickerFolderItem{background:#3a5fd9;color:#fff;font-weight:600}
+    .ext-picker-warn{display:none;align-items:flex-start;gap:6px;margin:0 14px 10px;padding:7px 9px;border-radius:6px;background:#4a2020;color:#ff9a9a;font-size:10.5px;line-height:1.5}
+    [data-stage="ext-picker-wrong"] .ext-picker-warn{display:flex}
+    .ext-picker-warn svg{width:13px;height:13px;flex:0 0 auto;margin-top:1px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+    /* "Pin it to the toolbar" step: a dropdown from the puzzle-piece
+       (extensions) icon listing the extension with a pin toggle, plus a
+       spotlight-style ring on the real toolbar book icon once pinned. */
+    #pinMenu{display:none;position:absolute;z-index:7;top:6px;right:46px;width:min(266px,72%);padding:8px;border:1px solid var(--border);border-radius:11px;background:var(--panel);box-shadow:0 14px 34px rgba(15,38,75,.24)}
+    [data-stage="pin"] #pinMenu{display:block}
+    .pin-menu-title{padding:4px 8px 8px;font-size:11px;font-weight:700;color:var(--text3)}
+    .pin-row{display:flex;align-items:center;gap:9px;padding:8px;border-radius:8px;background:var(--bg)}
+    .pin-row .paper-logo{width:20px;height:20px;flex:0 0 auto}
+    .pin-row-name{flex:1;min-width:0;font-size:11.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .pin-btn{display:grid;place-items:center;width:26px;height:26px;flex:0 0 auto;border-radius:7px;background:var(--accent-soft)}
+    .pin-btn svg{width:15px;height:15px;fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+    .pin-menu-note{margin:8px 4px 2px;font-size:10.5px;line-height:1.5;color:var(--text2)}
+
+    /* Mock journal-article page for the "use the extension" steps — replaces
+       the app view (like #extPage) so the connector popup sits over a real
+       paper, not over Paper Library itself. */
+    #paperPage{display:none;position:absolute;inset:0;z-index:4;flex-direction:column;background:#fff;overflow:auto}
+    [data-stage="paper"] #paperPage,[data-stage="paper-popup"] #paperPage{display:flex}
+    .pp-inner{max-width:640px;margin:0 auto;padding:26px 30px 40px}
+    .pp-journal{font-family:Georgia,"Times New Roman",serif;font-size:24px;font-weight:700;color:#0a0a0a;border-bottom:2px solid #0a0a0a;padding-bottom:10px;margin-bottom:16px}
+    .pp-tagline{font-size:11px;color:var(--text3)}
+    .pp-tagline b{color:#c05621;font-weight:700}
+    .pp-title{font-family:Georgia,"Times New Roman",serif;font-size:23px;line-height:1.32;color:#0a0a0a;margin:10px 0 12px}
+    .pp-authors{font-size:12.5px;line-height:1.6;color:#1a4fb4}
+    .pp-cite{margin-top:10px;font-size:12px;color:var(--text2)}
+    .pp-cite i{color:#0a0a0a}
+    .pp-metrics{display:flex;gap:16px;margin-top:12px;font-size:11px;color:var(--text3)}
+    .pp-metrics b{color:var(--text)}
+    .pp-abs-head{font-family:Georgia,"Times New Roman",serif;font-size:16px;font-weight:700;color:#0a0a0a;margin:22px 0 8px;border-top:1px solid var(--border2);padding-top:16px}
+    .pp-abs{font-size:12.5px;line-height:1.75;color:#26292e}
+
+    /* The Connector popup (the extension's own popup UI), shown over the paper
+       page. Mirrors the real popup: tabs, saved badge + library picker, title,
+       collection/tag subtabs, a scrolling collection checklist, the graphical
+       abstract, and the save button. */
+    #connectorPopup{display:none;position:absolute;z-index:8;top:6px;right:8px;width:min(320px,84%);max-height:calc(100% - 14px);flex-direction:column;border:1px solid var(--border);border-radius:12px;background:var(--panel);box-shadow:0 16px 40px rgba(15,23,42,.3);overflow:hidden}
+    [data-stage="paper-popup"] #connectorPopup{display:flex}
+    .cn-tabs{display:flex;flex:0 0 auto;border-bottom:1px solid var(--border2)}
+    .cn-tab{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;height:38px;border:0;background:transparent;color:var(--text3);font-size:11.5px;font-weight:600}
+    .cn-tab.active{color:var(--accent);box-shadow:inset 0 -2px 0 var(--accent)}
+    .cn-tab svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .cn-scroll{flex:1;min-height:0;overflow:auto;padding:12px 13px}
+    .cn-status-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
+    .cn-badge{padding:3px 9px;border-radius:999px;font-size:10.5px;font-weight:700}
+    .cn-badge.saved{background:var(--green-soft);color:var(--green)}
+    .cn-badge.unsaved{background:var(--accent-soft);color:var(--accent)}
+    .cn-lib{font-size:10.5px;color:var(--text3);display:flex;align-items:center;gap:5px}
+    .cn-lib b{display:inline-flex;align-items:center;gap:3px;padding:3px 7px;border:1px solid var(--border);border-radius:6px;color:var(--text2);font-weight:600}
+    .cn-title{font-size:12.5px;font-weight:700;line-height:1.4;color:var(--text)}
+    .cn-authors{margin-top:5px;font-size:10.5px;line-height:1.5;color:var(--text2)}
+    .cn-authors i{font-style:italic}
+    .cn-subtabs{display:flex;gap:0;margin:12px 0 10px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+    .cn-subtab{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;height:30px;border:0;background:var(--bg);color:var(--text2);font-size:11px;font-weight:600}
+    .cn-subtab+.cn-subtab{border-left:1px solid var(--border)}
+    .cn-subtab.active{background:var(--accent-soft);color:var(--accent)}
+    .cn-subtab svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .cn-search-row{display:flex;gap:6px;margin-bottom:8px}
+    .cn-search{flex:1;min-width:0;display:flex;align-items:center;height:28px;padding:0 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text3);font-size:10.5px}
+    .cn-search-row .cn-mini{flex:0 0 auto;height:28px;padding:0 8px;border:1px solid var(--border);border-radius:6px;background:var(--panel);color:var(--text2);font-size:10.5px}
+    .cn-search-row .cn-mini.accent{color:var(--accent);border-color:var(--accent-border);background:var(--accent-soft)}
+    .cn-colls{border:1px solid var(--border2);border-radius:8px;max-height:132px;overflow:auto}
+    .cn-coll{display:flex;align-items:center;gap:9px;padding:7px 10px;font-size:11px;color:var(--text2)}
+    .cn-coll+.cn-coll{border-top:1px solid var(--border2)}
+    .cn-coll .cn-caret{color:var(--text3);font-size:9px;width:8px}
+    .cn-coll .cn-box{width:14px;height:14px;flex:0 0 auto;border:1.5px solid var(--border);border-radius:3px}
+    .cn-img-label{display:flex;align-items:center;gap:6px;margin:13px 0 7px;font-size:11px;font-weight:600;color:var(--text2)}
+    .cn-img-label svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.8}
+    .cn-img{height:78px;border:1px solid var(--border2);border-radius:8px;background:linear-gradient(120deg,#eef4ff,#f6fbf8);display:flex;align-items:center;justify-content:center}
+    .cn-img .cn-photo{height:66px;aspect-ratio:1/1;background-image:url('assets/manual-demo-cover-sheet.png');background-repeat:no-repeat;background-size:300% 200%;background-position:0 0;border-radius:5px}
+    .cn-save{flex:0 0 auto;display:flex;align-items:center;justify-content:center;gap:7px;height:42px;margin:0;border:0;border-top:1px solid var(--border2);background:var(--accent);color:#fff;font-size:12px;font-weight:700}
+    .cn-save svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+    /* Step ② "place the folder": a real macOS Finder window (not a Select
+       dialog) showing the unzipped folder now sitting in 書類 / PaperLibrary —
+       giving the "I moved/saved it here" feel. Reuses the .picker-* dark
+       chrome with a traffic-light title bar and a Finder status bar. */
+    #placeFinder{display:none;position:absolute;inset:0;z-index:6;align-items:center;justify-content:center;background:rgba(15,20,30,.42)}
+    [data-stage="place"] #placeFinder{display:flex}
+    .finder-titlebar{display:flex;align-items:center;gap:8px;padding:9px 12px;background:#323238;border-bottom:1px solid #3d3d44}
+    .finder-lights{display:flex;gap:7px;flex:0 0 auto}
+    .finder-lights i{display:block;width:12px;height:12px;border-radius:50%}
+    .finder-lights .r{background:#ff5f57}.finder-lights .y{background:#febc2e}.finder-lights .g{background:#28c840}
+    .finder-title{flex:1;text-align:center;margin-right:47px;font-size:12.5px;font-weight:600;color:#e7e9ee}
+    #placeFinder .picker-item.placed{background:#3a5fd9;color:#fff;font-weight:600}
+    .finder-status{padding:8px 12px;border-top:1px solid #3d3d44;font-size:10.5px;color:#9a9ca3;text-align:center}
 
     /* macOS-style Open panel. Icon set mirrors Finder: blue folder glyphs,
        a monitor for Desktop, a house for the home directory, a cloud for
@@ -223,6 +381,72 @@
     .gallery-card.trash-only{display:none}
     [data-stage="trash"] .gallery-card:not(.trash-only){display:none}
     [data-stage="trash"] .gallery-card.trash-only{display:block}
+
+    /* Researcher view — a separate list + profile shown only in the
+       "researchers" stage (the references list/detail are hidden then). */
+    /* All four researcher stages (grid / map / tree / ranking) reuse this view;
+       the references list + detail pane are hidden for every one of them. */
+    .researchers-view{display:none;flex:1;min-width:0}
+    [data-stage^="researcher"] .researchers-view{display:flex}
+    [data-stage^="researcher"] .list-pane,[data-stage^="researcher"] .detail{display:none}
+    .rv-body{flex:1;min-width:0;display:flex;flex-direction:column;min-height:0;background:#fff}
+    .rv-stage{flex:1;min-height:0;display:none;overflow:auto;padding:12px 14px 18px}
+    [data-stage="researchers"] .rv-stage-grid{display:block}
+    [data-stage="researcher-map"] .rv-stage-world{display:block}
+    [data-stage="researcher-network"] .rv-stage-network{display:block}
+    [data-stage="researcher-tree"] .rv-stage-tree{display:block}
+    [data-stage="researcher-rank"] .rv-stage-rank{display:block}
+    /* The co-authorship map is a full dialog in the real app, not one of the
+       researcher view's seven views — give it dialog chrome so the walkthrough
+       doesn't imply it lives in the view switch. */
+    .rv-dlg-head{display:flex;align-items:center;gap:8px;margin-bottom:9px;padding-bottom:8px;border-bottom:1px solid var(--border2)}
+    .rv-dlg-title{font-size:12px;font-weight:750;color:var(--text)}
+    .rv-dlg-ctl{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:9.5px;color:var(--text3)}
+    .rv-dlg-ctl i{display:inline-block;width:54px;height:4px;border-radius:99px;background:linear-gradient(90deg,var(--accent) 60%,var(--border2) 60%)}
+    /* Grid of researcher cards — the researcher view's default look. */
+    /* Four across, like the real view. The mock browser is far narrower than a
+       real window, so the cards are compact and long names ellipsize — which is
+       what the real cards do at this width too. */
+    .rv-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+    .rv-card{border:1px solid var(--border2);border-radius:10px;background:var(--panel);padding:13px 7px 10px;text-align:center;cursor:pointer;transition:border-color .12s,background .12s}
+    .rv-card:hover{border-color:var(--border);background:var(--bg)}
+    .rv-card.selected{border-color:var(--accent-border);background:#f8fbff}
+    .rv-card-av{width:52px;height:52px;margin:0 auto 8px;border-radius:50%;display:grid;place-items:center;font-size:15px;font-weight:700;color:#fff;letter-spacing:.02em;overflow:hidden}
+    .rv-card-av svg{width:100%;height:100%;display:block}
+    .rv-card-name{font-size:11px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .rv-card-affil{margin-top:2px;font-size:9.5px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    /* Row-with-wrap, like the real cards: the metric pair sits on one line when
+       the numbers are short and wraps to two when they are long. */
+    .rv-card-metrics{margin-top:6px;font-size:9px;color:var(--text3);display:flex;flex-wrap:wrap;gap:1px 7px;justify-content:center}
+    .rv-card-metrics b{color:var(--accent);font-weight:700}
+    /* Bottom bar of the researcher view (count + filter / sort / view switch). */
+    .rv-status{height:44px;flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:0 15px;border-top:1px solid var(--border);background:var(--panel);color:var(--text3);font-size:10px}
+    /* Right-hand profile pane: header buttons + career timeline. */
+    .rv-detail{width:272px;flex:0 0 272px;border-left:1px solid var(--border);background:var(--panel);padding:14px;overflow:auto}
+    .rv-prof-head{display:flex;align-items:center;gap:10px}
+    .rv-prof-avatar{width:38px;height:38px;flex:0 0 auto;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#dbeafe,#eef4ff);color:#2563eb;font-size:13px;font-weight:700}
+    .rv-prof-name{font-size:15px;font-weight:750;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .rv-prof-btns{display:flex;gap:6px;margin:11px 0 4px}
+    .rv-prof-btn{display:inline-flex;align-items:center;gap:5px;height:27px;padding:0 10px;border:1px solid var(--border);border-radius:7px;background:var(--panel);color:var(--text2);font-size:11px}
+    .rv-prof-btn svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+    .rv-sect-label{display:flex;align-items:center;gap:6px;margin:14px 0 9px;font-size:11px;font-weight:700;color:var(--text2)}
+    .rv-sect-count{display:inline-grid;place-items:center;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--chip);color:var(--text2);font-size:9px}
+    .rv-timeline{display:flex;flex-direction:column;gap:11px}
+    .rv-tl{display:grid;grid-template-columns:60px 11px 1fr;gap:7px;font-size:10.5px}
+    .rv-tl time{color:var(--text3);padding-top:1px}
+    .rv-tl-dot{width:9px;height:9px;margin-top:3px;border-radius:50%;border:1.6px solid var(--accent);background:var(--panel)}
+    .rv-tl b{display:block;font-size:11px;font-weight:700;color:var(--text)}
+    .rv-tl small{display:block;margin-top:2px;color:var(--text2);line-height:1.45}
+    .rv-person{display:inline-flex;align-items:center;gap:4px;margin-top:5px;padding:2px 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:9.5px}
+    /* Map / tree / ranking mock stages. */
+    .rv-vis{width:100%;height:auto;display:block}
+    .rv-vis-cap{margin:0 0 10px;font-size:11px;color:var(--text2);line-height:1.6}
+    .rv-rank-table{width:100%;border-collapse:collapse;font-size:11px}
+    .rv-rank-table th{text-align:left;padding:7px 9px;border-bottom:1px solid var(--border);color:var(--text2);font-size:10px;font-weight:700;white-space:nowrap}
+    .rv-rank-table td{padding:8px 9px;border-bottom:1px solid var(--border2);color:var(--text2)}
+    .rv-rank-table td.num{text-align:right;font-variant-numeric:tabular-nums}
+    .rv-rank-table td b{color:var(--text);font-weight:700}
+    .rv-rank-pos{display:inline-grid;place-items:center;width:19px;height:19px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:9.5px;font-weight:700}
 
     /* The guide shown inside the prototype. */
     .guide-layer{position:absolute;inset:var(--browser-chrome-h) 0 0;z-index:8;pointer-events:none}
@@ -343,6 +567,186 @@
         </div>
       </div>
 
+      <div id="extPage">
+        <div class="ext-header">
+          <div class="ext-brand">
+            <svg class="ext-chrome-logo" viewBox="0 0 48 48" aria-hidden="true">
+              <path fill="#ea4335" d="M24 24 L7.42 12.81 A20 20 0 0 1 40.58 12.81 Z"/>
+              <path fill="#fbbc05" d="M24 24 L41.32 14 A20 20 0 0 1 24 44 Z"/>
+              <path fill="#34a853" d="M24 24 L22.6 43.95 A20 20 0 0 1 6.03 15.23 Z"/>
+              <circle cx="24" cy="24" r="9.5" fill="#fff"/>
+              <circle cx="24" cy="24" r="7.5" fill="#4285f4"/>
+            </svg>
+            <b data-i18n="extTitle">拡張機能</b>
+          </div>
+          <label class="ext-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l4.5 4.5"/></svg><span data-i18n="extSearchPh">拡張機能を検索</span></label>
+          <label class="ext-devmode"><span data-i18n="extDevMode">デベロッパー モード</span><button type="button" class="ext-switch" id="extDevSwitch" aria-label="デベロッパー モード"><i></i></button></label>
+        </div>
+        <p class="ext-hint" data-i18n="extHint">← まずここを ON にすると、読み込みボタンなどが使えるようになります</p>
+        <div class="ext-toolbar">
+          <button type="button" class="ext-pill" id="extLoadBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5 6.4 12a1.5 1.5 0 0 1 1.45-1.1H21a1 1 0 0 1 .96 1.26l-1.6 6a1.5 1.5 0 0 1-1.45 1.1z"/><path d="M4.5 19.5A1.5 1.5 0 0 1 3 18V6a1.5 1.5 0 0 1 1.5-1.5h3.8a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h5.6A1.5 1.5 0 0 1 19.8 9v1.9"/></svg><span data-i18n="extLoadBtnText">パッケージ化されていない拡張機能を読み込む</span></button>
+          <button type="button" class="ext-pill" data-i18n="extPackBtn">拡張機能をパッケージ化</button>
+          <button type="button" class="ext-pill" data-i18n="extUpdateBtn">更新</button>
+        </div>
+        <div class="ext-content">
+          <nav class="ext-nav">
+            <div class="ext-nav-item active"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.3 5.2h3.3V4.6a2.4 2.4 0 0 1 4.8 0v.6h3.3c1 0 1.8.8 1.8 1.8v3.3h.6a2.4 2.4 0 0 1 0 4.8h-.6v3.3c0 1-.8 1.8-1.8 1.8H6.3c-1 0-1.8-.8-1.8-1.8v-3.3h.6a2.4 2.4 0 0 0 0-4.8h-.6V7c0-1 .8-1.8 1.8-1.8z"/></svg><span data-i18n="extNavMine">拡張機能</span></div>
+            <div class="ext-nav-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6.5" width="18" height="11" rx="2"/><path d="M7 10h.01M11 10h.01M15 10h.01M8.5 13.5h7"/></svg><span data-i18n="extNavShortcuts">キーボード ショートカット</span></div>
+          </nav>
+          <div class="ext-body">
+            <div class="ext-body-title" data-i18n="extAllTitle">すべての拡張機能</div>
+            <p class="ext-empty" data-i18n="extEmpty">拡張機能がありません</p>
+            <div class="ext-card" id="extCard">
+              <div class="ext-card-top">
+                <svg class="paper-logo ext-card-icon" viewBox="0 0 32 32" aria-hidden="true"></svg>
+                <div class="ext-card-info">
+                  <div class="ext-card-name"><b>Paper Library Connector</b><span class="ext-card-ver">1.0</span></div>
+                  <div class="ext-card-desc" data-i18n="extCardDesc">論文ページを開いたまま Paper Library に保存し、登録済みかどうかをひと目で確認できます。</div>
+                  <div class="ext-card-id">ID: pibopijlohmdldpaojblaledengodoii</div>
+                </div>
+              </div>
+              <div class="ext-card-foot">
+                <button type="button" class="ext-card-btn" data-i18n="extDetails">詳細</button>
+                <button type="button" class="ext-card-btn" data-i18n="extRemove">削除</button>
+                <span class="ext-card-foot-right">
+                  <span class="ext-card-reload" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-1.5 5.5"/><path d="M20 5v5h-5"/></svg></span>
+                  <span class="ext-switch"><i></i></span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ext-picker-overlay" id="extPickerOverlay">
+        <div class="picker-dialog">
+          <div class="picker-titlebar">Select the extension directory.</div>
+          <div class="picker-toolbar">
+            <div class="picker-nav">
+              <button type="button" aria-label="戻る"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+              <button type="button" aria-label="進む"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+            </div>
+            <div class="picker-view-toggle" aria-hidden="true">
+              <span><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="3"/><rect x="4" y="10.5" width="16" height="3"/><rect x="4" y="16" width="16" height="3"/></svg></span>
+              <span class="active"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/></svg></span>
+            </div>
+            <div class="picker-breadcrumb"><svg viewBox="0 0 24 24" aria-hidden="true" fill="#7fa6ff"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.7l1.6 1.8H19.5A1.5 1.5 0 0 1 21 8.3v9.2A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z"/></svg>PaperLibrary<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9.5 12 15l6-5.5"/></svg></div>
+            <span class="spacer"></span>
+            <label class="picker-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l4.5 4.5"/></svg>Search</label>
+          </div>
+          <div class="picker-body">
+            <div class="picker-sidebar">
+              <div class="picker-sidebar-label">Favorites</div>
+              <div class="picker-sidebar-item"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#9a9ca3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="11" rx="1.5"/><path d="M9 20h6M12 16v4"/></svg>Desktop</div>
+              <div class="picker-sidebar-item"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#9a9ca3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.7l1.6 1.8H19.5A1.5 1.5 0 0 1 21 8.3v9.2A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z"/></svg>Documents</div>
+              <div class="picker-sidebar-item active"><svg viewBox="0 0 24 24" aria-hidden="true" fill="#fff"><path d="M12 4v10m0 0 4-4m-4 4-4-4"/></svg>Downloads</div>
+            </div>
+            <div class="picker-main">
+              <div class="picker-item" id="extPickerZipItem"><svg viewBox="0 0 24 24" aria-hidden="true" fill="#c7c9d1"><path d="M6 3.5h7.5l4.5 4.5V19a1.5 1.5 0 0 1-1.5 1.5H6A1.5 1.5 0 0 1 4.5 19V5A1.5 1.5 0 0 1 6 3.5z"/><path d="M11 4v9m-1.5-1.5h3" stroke="#2c2c31" stroke-width="1.4"/></svg>paper-library-connector.zip</div>
+              <div class="picker-item" id="extPickerFolderItem"><svg viewBox="0 0 24 24" aria-hidden="true" fill="#5b9bf5"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.7l1.6 1.8H19.5A1.5 1.5 0 0 1 21 8.3v9.2A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z"/></svg>paper-library-connector<svg class="chev" viewBox="0 0 24 24" aria-hidden="true" style="margin-left:auto;width:11px;height:11px;stroke:#77797f;fill:none;stroke-width:2"><path d="M9 6l6 6-6 6"/></svg></div>
+            </div>
+          </div>
+          <p class="ext-picker-warn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 2.5 20.5h19z"/><path d="M12 10v4.5M12 17.6h.01"/></svg><span data-i18n="extPickerWarn">ZIP ファイルのままでは選べません。解凍してできたフォルダの方を選びます。</span></p>
+          <div class="picker-footer">
+            <button type="button" id="extPickerNewFolderBtn">New Folder</button>
+            <span class="spacer"></span>
+            <button type="button">Cancel</button>
+            <button type="button" id="extPickerSelectBtn">Select</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="placeFinder">
+        <div class="picker-dialog">
+          <div class="finder-titlebar"><span class="finder-lights"><i class="r"></i><i class="y"></i><i class="g"></i></span><span class="finder-title">PaperLibrary</span></div>
+          <div class="picker-toolbar">
+            <div class="picker-nav">
+              <button type="button" aria-label="戻る"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+              <button type="button" aria-label="進む"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+            </div>
+            <div class="picker-view-toggle" aria-hidden="true">
+              <span><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="3"/><rect x="4" y="10.5" width="16" height="3"/><rect x="4" y="16" width="16" height="3"/></svg></span>
+              <span class="active"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/></svg></span>
+            </div>
+            <div class="picker-breadcrumb"><svg viewBox="0 0 24 24" aria-hidden="true" fill="#7fa6ff"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.7l1.6 1.8H19.5A1.5 1.5 0 0 1 21 8.3v9.2A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z"/></svg><span data-i18n="placeDocuments">書類</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9.5 12 15l6-5.5"/></svg>PaperLibrary</div>
+            <span class="spacer"></span>
+            <label class="picker-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l4.5 4.5"/></svg>Search</label>
+          </div>
+          <div class="picker-body">
+            <div class="picker-sidebar">
+              <div class="picker-sidebar-label">Favorites</div>
+              <div class="picker-sidebar-item"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#9a9ca3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="11" rx="1.5"/><path d="M9 20h6M12 16v4"/></svg>Desktop</div>
+              <div class="picker-sidebar-item active"><svg viewBox="0 0 24 24" aria-hidden="true" fill="#fff"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.7l1.6 1.8H19.5A1.5 1.5 0 0 1 21 8.3v9.2A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z"/></svg>Documents</div>
+              <div class="picker-sidebar-item"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#9a9ca3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10m0 0 4-4m-4 4-4-4"/><path d="M5 18.5h14"/></svg>Downloads</div>
+            </div>
+            <div class="picker-main">
+              <div class="picker-item placed"><svg viewBox="0 0 24 24" aria-hidden="true" fill="#5b9bf5"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.7l1.6 1.8H19.5A1.5 1.5 0 0 1 21 8.3v9.2A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z"/></svg>paper-library-connector</div>
+            </div>
+          </div>
+          <div class="finder-status" data-i18n="placeStatus">1 項目 ・ 書類 › PaperLibrary</div>
+        </div>
+      </div>
+
+      <div id="pinMenu">
+        <div class="pin-menu-title" data-i18n="pinMenuTitle">拡張機能</div>
+        <div class="pin-row">
+          <svg class="paper-logo" viewBox="0 0 32 32" aria-hidden="true"></svg>
+          <span class="pin-row-name">Paper Library Connector</span>
+          <span class="pin-btn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 4.5h6M10 4.5l-.5 6.5-2.5 2.5h10l-2.5-2.5-.5-6.5M12 16.5v4"/></svg></span>
+        </div>
+        <p class="pin-menu-note" data-i18n="pinMenuNote">右のピン（画びょう）を押すと、ツールバーに固定されます。</p>
+      </div>
+
+      <div id="paperPage">
+        <div class="pp-inner">
+          <div class="pp-journal">Nature Communications</div>
+          <div class="pp-tagline"><b data-i18n="ppOA">オープンアクセス</b> · <span data-i18n="ppPublished">2024年3月18日 公開</span></div>
+          <div class="pp-title">Visible-light photoredox catalysis for organic synthesis</div>
+          <div class="pp-authors">Jane Smith, Kenji Tanaka, Robert Garcia, María López</div>
+          <div class="pp-cite"><i>Nat. Commun.</i> <b>15</b>, 1234 (2024)</div>
+          <div class="pp-metrics"><span><b>18k</b> Accesses</span><span><b>42</b> Citations</span><span><b>7</b> Altmetric</span></div>
+          <div class="pp-abs-head" data-i18n="paperAbsHead">要旨</div>
+          <p class="pp-abs" data-i18n="paperAbs">可視光レドックス触媒は、温和な条件で多彩な有機変換を可能にする強力な合成手法である。本論文では、可視光照射下で高い効率と選択性を示す新規光触媒系を報告する。反応機構を分光学的手法と量子化学計算により解明し、幅広い基質適用範囲を実証した。本手法は医薬品や機能性材料の合成に応用できると期待される。</p>
+        </div>
+      </div>
+
+      <div id="connectorPopup">
+        <div class="cn-tabs">
+          <button type="button" class="cn-tab active"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span data-i18n="cnTabAdd">論文を追加する</span></button>
+          <button type="button" class="cn-tab"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l4.5 4.5"/></svg><span data-i18n="cnTabFind">論文を探す</span></button>
+        </div>
+        <div class="cn-scroll">
+          <div class="cn-status-row">
+            <span class="cn-badge unsaved" data-i18n="cnUnsaved">未登録</span>
+            <span class="cn-lib"><span data-i18n="cnLibLabel">保存先</span><b>Paper-Library ▾</b></span>
+          </div>
+          <div class="cn-title">Visible-light photoredox catalysis for organic synthesis</div>
+          <div class="cn-authors">Smith, J.; Tanaka, K.; Garcia, R.; López, M. <i>Nat. Commun.</i> 2024, 15, 1234.</div>
+          <div class="cn-subtabs">
+            <button type="button" class="cn-subtab active"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A1.5 1.5 0 0 1 2.5 18V6A1.5 1.5 0 0 1 4 4.5h4.3a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h6.6A1.5 1.5 0 0 1 21 8.5V18a1.5 1.5 0 0 1-1.5 1.5z"/></svg><span data-i18n="cnColTab">入れるコレクション</span></button>
+            <button type="button" class="cn-subtab"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5h6l9.5 9.5a1.8 1.8 0 0 1 0 2.5l-3.5 3.5a1.8 1.8 0 0 1-2.5 0L4 10.5z"/><path d="M7.5 8h.01"/></svg><span data-i18n="cnTagTab">付けるタグ</span></button>
+          </div>
+          <div class="cn-search-row">
+            <span class="cn-search" data-i18n="cnSearchColl">コレクションを検索</span>
+            <button type="button" class="cn-mini" data-i18n="cnOpenAll">すべて開く</button>
+            <button type="button" class="cn-mini accent">＋<span data-i18n="cnNew">新規</span></button>
+          </div>
+          <div class="cn-colls">
+            <div class="cn-coll"><span class="cn-caret">▶</span><span class="cn-box"></span><span>00_Other</span></div>
+            <div class="cn-coll"><span class="cn-caret">▶</span><span class="cn-box"></span><span>01_FukazawaLab</span></div>
+            <div class="cn-coll"><span class="cn-caret">▶</span><span class="cn-box"></span><span>02_StructChem</span></div>
+            <div class="cn-coll"><span class="cn-caret">▶</span><span class="cn-box"></span><span>03_MainGroupChem</span></div>
+            <div class="cn-coll"><span class="cn-caret"></span><span class="cn-box"></span><span>04_Electronics</span></div>
+            <div class="cn-coll"><span class="cn-caret"></span><span class="cn-box"></span><span>05_MaterSci</span></div>
+            <div class="cn-coll"><span class="cn-caret"></span><span class="cn-box"></span><span>06_SupramolChem</span></div>
+            <div class="cn-coll"><span class="cn-caret">▶</span><span class="cn-box"></span><span>07_Reaction</span></div>
+          </div>
+          <div class="cn-img-label"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="1.5"/><circle cx="8.5" cy="9" r="1.5"/><path d="m5.5 17 4.3-4 3.1 2.6 2.3-2 3.3 3.4"/></svg><span data-i18n="cnImgLabel">取り込む画像（グラフィカルアブストラクト）</span></div>
+          <div class="cn-img"><div class="cn-photo"></div></div>
+        </div>
+        <button type="button" class="cn-save"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4.5h12v16l-6-4-6 4z"/></svg><span data-i18n="cnSaveBtn">コレクションに入れずに保存（未分類）</span></button>
+      </div>
+
       <div class="folder-picker-overlay" id="folderPickerOverlay">
         <div class="picker-dialog">
           <div class="picker-titlebar">Select where this site can save changes</div>
@@ -396,9 +800,9 @@
       <div class="app-main">
         <aside class="sidebar" id="sidebar">
           <div class="side-item active" id="allSideItem" data-demo="collection"><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h6l2 2h8v12H4z"/><path d="M12 7.5v12"/></svg><span data-i18n="navAll">すべての文献</span><span class="count">24</span></div>
-          <div class="side-item" data-demo="collection"><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3.8 19c.6-3 2.5-4.7 5.2-4.7s4.6 1.7 5.2 4.7M14 18.5c.4-2.1 1.6-3.4 3.6-3.4 1.5 0 2.5.7 3.1 2"/></svg><span data-i18n="navResearchers">研究者</span><span class="count">8</span></div>
-          <div class="side-item" data-demo="collection"><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><span data-i18n="navStarred">スター</span><span class="count">6</span></div>
+          <div class="side-item" data-demo="collection"><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><span data-i18n="navStarred">スター付き</span><span class="count">6</span></div>
           <div class="side-item" data-demo="collection"><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12 5 5L20 6"/></svg><span data-i18n="navMyPub">自分の論文</span><span class="count">1</span></div>
+          <div class="side-item" data-demo="collection"><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 11H4z"/><path d="M8 8V5h8v3"/></svg><span data-i18n="navUncat">未分類</span><span class="count">4</span></div>
           <div class="side-item" data-demo="collection" id="trashSideItem"><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v5M14 11v5"/></svg><span data-i18n="navTrash">ゴミ箱</span><span class="count" id="trashCount">1</span></div>
           <div class="side-head" id="collectionsHeading"><span class="side-title"><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A1.5 1.5 0 0 1 2.5 18V6A1.5 1.5 0 0 1 4 4.5h4.3a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h6.6A1.5 1.5 0 0 1 21 8.5V18a1.5 1.5 0 0 1-1.5 1.5z"/></svg><span data-i18n="navCollections">コレクション</span></span><span class="side-tools"><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5 6.4 12a1.5 1.5 0 0 1 1.45-1.1H21a1 1 0 0 1 .96 1.26l-1.6 6a1.5 1.5 0 0 1-1.45 1.1z"/><path d="M4.5 19.5A1.5 1.5 0 0 1 3 18V6a1.5 1.5 0 0 1 1.5-1.5h3.8a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h5.6A1.5 1.5 0 0 1 19.8 9v1.9"/></svg><span>⌕</span><span>＋</span></span></div>
           <div class="side-item" data-demo="collection" data-lib-item><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A1.5 1.5 0 0 1 2.5 18V6A1.5 1.5 0 0 1 4 4.5h4.3a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h6.6A1.5 1.5 0 0 1 21 8.5V18a1.5 1.5 0 0 1-1.5 1.5z"/></svg><span data-i18n="collPhotochem">光化学</span><span class="count">12</span></div>
@@ -407,24 +811,25 @@
           <div class="side-head" id="tagsHeading"><span class="side-title"><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5h6l9.5 9.5a1.8 1.8 0 0 1 0 2.5l-3.5 3.5a1.8 1.8 0 0 1-2.5 0L4 10.5z"/><path d="M7.5 8h.01"/></svg><span data-i18n="navTags">タグ</span></span><span class="side-tools"><span>⌕</span><span>＋</span></span></div>
           <div class="side-item" data-demo="collection" data-lib-item><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5h6l9.5 9.5a1.8 1.8 0 0 1 0 2.5l-3.5 3.5a1.8 1.8 0 0 1-2.5 0L4 10.5z"/><path d="M7.5 8h.01"/></svg><span>catalysis</span><span class="count">7</span></div>
           <div class="side-item" data-demo="collection" data-lib-item><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5h6l9.5 9.5a1.8 1.8 0 0 1 0 2.5l-3.5 3.5a1.8 1.8 0 0 1-2.5 0L4 10.5z"/><path d="M7.5 8h.01"/></svg><span>photoredox</span><span class="count">4</span></div>
-          <div class="side-item" data-demo="collection" data-lib-item><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 11H4z"/><path d="M8 8V5h8v3"/></svg><span data-i18n="navUncat">未分類</span><span class="count">4</span></div>
+          <div class="side-item" data-demo="collection" id="researchersSideItem"><svg class="side-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3.8 19c.6-3 2.5-4.7 5.2-4.7s4.6 1.7 5.2 4.7M14 18.5c.4-2.1 1.6-3.4 3.6-3.4 1.5 0 2.5.7 3.1 2"/></svg><span data-i18n="navResearchers">研究者</span><span class="count">8</span></div>
         </aside>
         <section class="list-pane">
           <div class="trash-banner" id="trashBanner"><svg class="trash-banner-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v5M14 11v5"/></svg><strong data-i18n="trashBannerCount">ゴミ箱内の文献：2件</strong><span class="trash-banner-note" data-i18n="trashBannerNote">完全削除すると元に戻せません。</span><span class="spacer"></span><button class="trash-banner-btn" data-i18n="trashRestoreAll">すべて復元</button><button class="trash-banner-btn danger" data-i18n="trashEmptyBtn">完全に削除する</button></div>
           <div class="table-wrap"><div class="gallery" aria-label="文献ギャラリー">
             <article class="gallery-card" data-demo="reference"><div class="gallery-figure"><div class="fig-photo"></div></div><div class="gallery-info"><div class="gallery-title">Visible-light photoredox catalysis for organic synthesis</div><div class="gallery-authors">Smith, J.; Tanaka, K.</div><div class="gallery-meta"><span>Nat. Commun.</span><time>2024</time></div></div></article>
             <article class="gallery-card" data-demo="reference"><div class="gallery-figure"><div class="fig-photo"></div></div><div class="gallery-info"><div class="gallery-title">Designed synthesis of a three-dimensional covalent framework</div><div class="gallery-authors">Lee, M.; Garcia, R.</div><div class="gallery-meta"><span>Science</span><time>2023</time></div></div></article>
-            <article class="gallery-card" data-demo="reference"><div class="gallery-figure"><div class="fig-photo"></div></div><div class="gallery-info"><div class="gallery-title">Moving beyond boron: new linkage chemistry</div><div class="gallery-authors">DeBase, A.; Dichtel, W.</div><div class="gallery-meta"><span>Macromolecules</span><time>2022</time></div></div></article>
+            <article class="gallery-card" data-demo="reference"><div class="gallery-figure"><div class="fig-photo"></div></div><div class="gallery-info"><div class="gallery-title">Linkage chemistry for covalent organic frameworks</div><div class="gallery-authors">Brown, A.; Wilson, P.</div><div class="gallery-meta"><span>Macromolecules</span><time>2022</time></div></div></article>
             <article class="gallery-card" data-demo="reference"><div class="gallery-figure"><div class="fig-photo"></div></div><div class="gallery-info"><div class="gallery-title">Molecular switching in a zwitterionic framework</div><div class="gallery-authors">He, L.; Xu, Y.; Gohar, M.</div><div class="gallery-meta"><span>J. Am. Chem. Soc.</span><time>2021</time></div></div></article>
             <article class="gallery-card" data-demo="reference"><div class="gallery-figure"><div class="fig-photo"></div></div><div class="gallery-info"><div class="gallery-title">Porous framework with an antiaromatic nanocorridor</div><div class="gallery-authors">Nakajo, U.; Tanabe, H.</div><div class="gallery-meta"><span>J. Am. Chem. Soc.</span><time>2020</time></div></div></article>
             <article class="gallery-card" data-demo="reference"><div class="gallery-figure"><div class="fig-photo"></div></div><div class="gallery-info"><div class="gallery-title">Organophosphinidene in a T-shaped environment</div><div class="gallery-authors">Bourque, K.; Zhou, C.</div><div class="gallery-meta"><span>J. Am. Chem. Soc.</span><time>2019</time></div></div></article>
             <article class="gallery-card trash-only" data-demo="reference"><div class="gallery-figure"><div class="fig-photo"></div></div><div class="gallery-info"><div class="gallery-title">Thermally activated delayed fluorescence polymers</div><div class="gallery-authors">Li, H.; Kang, Y.</div><div class="gallery-meta"><span>J. Mater. Chem. C</span><time>2026</time></div></div></article>
-            <article class="gallery-card trash-only" data-demo="reference"><div class="gallery-figure"><div class="fig-photo"></div></div><div class="gallery-info"><div class="gallery-title">1,3,5-Tri-tert-butyl-pentalene</div><div class="gallery-authors">Hafner, K.; Süss, H.</div><div class="gallery-meta"><span>Angew. Chem. Int. Ed.</span><time>1973</time></div></div></article>
+            <article class="gallery-card trash-only" data-demo="reference"><div class="gallery-figure"><div class="fig-photo"></div></div><div class="gallery-info"><div class="gallery-title">Synthesis of a stable substituted pentalene</div><div class="gallery-authors">Weber, K.; Schmidt, H.</div><div class="gallery-meta"><span>Angew. Chem. Int. Ed.</span><time>1973</time></div></div></article>
           </div></div>
           <div class="empty-gallery-msg" id="emptyGalleryMsg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5 6.4 12a1.5 1.5 0 0 1 1.45-1.1H21a1 1 0 0 1 .96 1.26l-1.6 6a1.5 1.5 0 0 1-1.45 1.1z"/><path d="M4.5 19.5A1.5 1.5 0 0 1 3 18V6a1.5 1.5 0 0 1 1.5-1.5h3.8a1.5 1.5 0 0 1 1.2.6l1 1.3a1.5 1.5 0 0 0 1.2.6h5.6A1.5 1.5 0 0 1 19.8 9v1.9"/></svg><p data-i18n="emptyGallery">文献はまだ登録されていません</p></div>
           <div class="list-status"><span id="listStatusCount">24 / 24 件を表示</span><span class="spacer"></span><button class="bottom-control"><svg class="bottom-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 17H3zM12 9v4M12 17h.01"/></svg><span data-i18n="alertsBtn">通知</span> <span class="bottom-badge">3</span>⌄</button><button class="bottom-control"><svg class="bottom-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="1.5"/><circle cx="8" cy="9" r="1.2"/><path d="m5.5 17 4.3-4 3.2 2.8 2.1-2 3.4 3.2"/></svg><span data-i18n="viewStyleBtn">表示スタイル</span>⌄</button><button class="bottom-control"><svg class="bottom-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg><span data-i18n="displaySettingsBtn">表示設定</span>⌄</button><button class="bottom-control update-control"><svg class="bottom-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0 2 5.3M20 4v7h-7"/></svg><span data-i18n="updateBtn">更新</span></button></div>
         </section>
         <aside class="detail" id="detailPane"><div class="detail-empty" data-i18n="detailEmpty">文献を選択してください</div></aside>
+        <div class="researchers-view" id="researchersView" aria-hidden="true"></div>
       </div>
     </main>
 
@@ -474,6 +879,7 @@
         upload: '<path d="M12 15V5m0 0 4 4m-4-4-4 4"/><path d="M5 18.5h14"/>',
         search: '<circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l4.5 4.5"/>',
         plus: '<path d="M12 5v14M5 12h14"/>',
+        users: '<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3.8 19c.6-3 2.5-4.7 5.2-4.7s4.6 1.7 5.2 4.7M14 18.5c.4-2.1 1.6-3.4 3.6-3.4 1.5 0 2.5.7 3.1 2"/>',
       };
 
       // Language: the outer manual passes ?lang=ja|en so this virtual screen
@@ -494,7 +900,7 @@
         langBtn: L('EN', '日本語'),
         navAll: L('すべての文献', 'All items'),
         navResearchers: L('研究者', 'Researchers'),
-        navStarred: L('スター', 'Starred'),
+        navStarred: L('スター付き', 'Starred'),
         navMyPub: L('自分の論文', 'My publications'),
         navTrash: L('ゴミ箱', 'Trash'),
         navCollections: L('コレクション', 'Collections'),
@@ -524,9 +930,226 @@
         nextBtn: L('次へ', 'Next'),
         doneBtn: L('完了', 'Done'),
         kicker: L('PAPER LIBRARY の使い方', 'How to use Paper Library'),
+        extTitle: L('拡張機能', 'Extensions'),
+        extSearchPh: L('拡張機能を検索', 'Search extensions'),
+        extDevMode: L('デベロッパー モード', 'Developer mode'),
+        extHint: L('← まずここを ON にすると、読み込みボタンなどが使えるようになります', '← Turn this on first — the buttons below only appear once it’s on'),
+        extLoadBtnText: L('パッケージ化されていない拡張機能を読み込む', 'Load unpacked'),
+        extPackBtn: L('拡張機能をパッケージ化', 'Pack extension'),
+        extUpdateBtn: L('更新', 'Update'),
+        extNavMine: L('拡張機能', 'My extensions'),
+        extNavShortcuts: L('キーボード ショートカット', 'Keyboard shortcuts'),
+        extAllTitle: L('すべての拡張機能', 'All Extensions'),
+        extEmpty: L('拡張機能がありません', 'No extensions'),
+        extCardDesc: L('論文ページを開いたまま Paper Library に保存し、登録済みかどうかをひと目で確認できます。', 'Save the paper you are viewing to Paper Library and see at a glance whether it is already in your library.'),
+        extDetails: L('詳細', 'Details'),
+        extRemove: L('削除', 'Remove'),
+        extPickerWarn: L('ZIP ファイルのままでは選べません。解凍してできたフォルダの方を選びます。', 'You can’t pick the zip itself — choose the unzipped folder instead.'),
+        placeDocuments: L('書類', 'Documents'),
+        placeStatus: L('1 項目 ・ 書類 › PaperLibrary', '1 item · Documents › PaperLibrary'),
+        pinMenuTitle: L('拡張機能', 'Extensions'),
+        pinMenuNote: L('右のピン（画びょう）を押すと、ツールバーに固定されます。', 'Press the pin on the right to fix it to the toolbar.'),
+        // The paper page depicts a real journal article, which is in English
+        // regardless of the manual's UI language — so these stay English even
+        // in Japanese mode (only the extension's own popup UI is localized).
+        ppOA: 'Open access',
+        ppPublished: 'Published: 18 March 2024',
+        paperAbsHead: 'Abstract',
+        paperAbs: 'Visible-light photoredox catalysis is a powerful strategy that enables a wide range of organic transformations under mild conditions. Here we report a new photocatalyst system with high efficiency and selectivity under visible light. The mechanism was elucidated by spectroscopic methods and quantum-chemical calculations, and a broad substrate scope was demonstrated. The method is expected to find use in the synthesis of pharmaceuticals and functional materials.',
+        cnTabAdd: L('論文を追加する', 'Add a paper'),
+        cnTabFind: L('論文を探す', 'Find a paper'),
+        cnUnsaved: L('未登録', 'Not in library'),
+        cnLibLabel: L('保存先', 'Save to'),
+        cnColTab: L('入れるコレクション', 'Collections'),
+        cnTagTab: L('付けるタグ', 'Tags'),
+        cnSearchColl: L('コレクションを検索', 'Search collections'),
+        cnOpenAll: L('すべて開く', 'Expand all'),
+        cnNew: L('新規', 'New'),
+        cnImgLabel: L('取り込む画像（グラフィカルアブストラクト）', 'Image to import (graphical abstract)'),
+        cnSaveBtn: L('コレクションに入れずに保存（未分類）', 'Save without a collection (uncategorized)'),
       };
       document.querySelectorAll('[data-i18n]').forEach(el => { const v = UI[el.dataset.i18n]; if (v != null) el.textContent = v; });
       document.querySelectorAll('[data-i18n-ph]').forEach(el => { const v = UI[el.dataset.i18nPh]; if (v != null) el.placeholder = v; });
+
+      // Researcher-view mock (list + profile), localized. Shown only in the
+      // "researchers" stage; the researcher scenario spotlights parts of it.
+      // Placeholder portraits for the researcher cards. These are simple flat
+      // illustrations of fictional people (never photos of real researchers),
+      // drawn inline so the mock stays self-contained. Cards without one fall
+      // back to coloured initials, mirroring the real mixed look.
+      let portraitSeq = 0;
+      function portraitSvg(v){
+        const id = 'rvpc' + (++portraitSeq);
+        const hair = [
+          '<path d="M17 28a15 15 0 0 1 30 0c0-6-3-11-15-11S17 22 17 28z" fill="HAIR"/><path d="M17 28c0-9 5-13 15-13s15 4 15 13v-4c0-7-6-11-15-11s-15 4-15 11z" fill="HAIR"/>',
+          '<path d="M16 30c0-11 6-16 16-16s16 5 16 16v10c-2-3-3-8-3-13 0 0-6 4-13 4s-13-4-13-4c0 5-1 10-3 13z" fill="HAIR"/>',
+          '<path d="M18 26c1-8 6-12 14-12s13 4 14 12c-3-5-8-7-14-7s-11 2-14 7z" fill="HAIR"/>',
+          '<circle cx="32" cy="21" r="16" fill="HAIR"/><ellipse cx="32" cy="30" rx="13" ry="14" fill="SKIN"/>',
+          '<path d="M17 29c0-10 6-15 15-15s15 5 15 15c-2-4-3-6-3-6s-5 3-12 3-12-3-12-3-1 2-3 6z" fill="HAIR"/><circle cx="32" cy="10" r="5" fill="HAIR"/>'
+        ][v % 5];
+        const pal = [
+          {bg:'#dbeafe', skin:'#f2c9a6', hair:'#3f3730', cloth:'#4b6bb5'},
+          {bg:'#fde8ef', skin:'#e8b894', hair:'#5a3a2a', cloth:'#c2557a'},
+          {bg:'#e6f4ea', skin:'#d9a97e', hair:'#241f1c', cloth:'#3f8f6a'},
+          {bg:'#fff2dc', skin:'#c98d63', hair:'#1f1a17', cloth:'#c98032'},
+          {bg:'#ece7fb', skin:'#f0c8a8', hair:'#6b6560', cloth:'#7156b8'},
+          {bg:'#e0f2f7', skin:'#b9805a', hair:'#2b2320', cloth:'#2f7f97'}
+        ][v % 6];
+        return `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">`+
+          `<defs><clipPath id="${id}"><circle cx="32" cy="32" r="32"/></clipPath></defs>`+
+          `<g clip-path="url(#${id})">`+
+            `<rect width="64" height="64" fill="${pal.bg}"/>`+
+            `<ellipse cx="32" cy="63" rx="23" ry="17" fill="${pal.cloth}"/>`+
+            `<rect x="27" y="37" width="10" height="10" rx="4" fill="${pal.skin}"/>`+
+            `<ellipse cx="32" cy="29" rx="13" ry="14.5" fill="${pal.skin}"/>`+
+            hair.replace(/HAIR/g, pal.hair).replace(/SKIN/g, pal.skin)+
+            `<circle cx="27" cy="30" r="1.5" fill="#3b3330"/><circle cx="37" cy="30" r="1.5" fill="#3b3330"/>`+
+            `<path d="M29 36q3 2 6 0" stroke="#a9705a" stroke-width="1.2" fill="none" stroke-linecap="round"/>`+
+          `</g></svg>`;
+      }
+
+      // Researcher map / world map / academic tree / ranking mocks. All colours
+      // come from CSS variables so the visuals follow the light/dark toggle.
+      function researcherMapSvg(){
+        const nodes = [
+          {x:250, y:118, r:31, n:'Hiroshi Tanaka', s:'13', me:true},
+          {x:104, y:66,  r:19, n:'Taro Yamada', s:'6'},
+          {x:398, y:70,  r:22, n:'H. Suzuki', s:'8'},
+          {x:86,  y:196, r:15, n:'Yuki Kato', s:'3'},
+          {x:262, y:236, r:17, n:'Minjun Lee', s:'4'},
+          {x:420, y:200, r:13, n:'J. A. Doe', s:'2'},
+        ];
+        const links = [[0,1],[0,2],[0,3],[0,4],[0,5],[1,3],[2,5]];
+        const edges = links.map(([a,b])=>`<line x1="${nodes[a].x}" y1="${nodes[a].y}" x2="${nodes[b].x}" y2="${nodes[b].y}" stroke="var(--border)" stroke-width="1.4"/>`).join('');
+        const dots = nodes.map(d=>`<g>`+
+          `<circle cx="${d.x}" cy="${d.y}" r="${d.r}" fill="${d.me?'var(--accent)':'var(--accent-soft)'}" stroke="var(--accent-border)" stroke-width="${d.me?2:1.3}"/>`+
+          `<text x="${d.x}" y="${d.y+4}" text-anchor="middle" font-size="11" font-weight="700" fill="${d.me?'#fff':'var(--accent)'}">${d.s}</text>`+
+          `<text x="${d.x}" y="${d.y+d.r+13}" text-anchor="middle" font-size="10" fill="var(--text2)">${d.n}</text>`+
+        `</g>`).join('');
+        return `<svg class="rv-vis" viewBox="0 0 500 280" role="img" aria-label="${L('研究者マップ','Researcher map')}">`+
+          `<rect x="0" y="0" width="500" height="280" rx="10" fill="var(--bg)" stroke="var(--border2)"/>${edges}${dots}</svg>`;
+      }
+      // Equirectangular world map: x=(lon+180)/360*500, y=(90-lat)/180*260.
+      // The continents are deliberately coarse — enough to read as a world map
+      // behind the institution pins, which is what this step is illustrating.
+      function researcherWorldMapSvg(){
+        const land = [
+          'M17 32 118 29 167 46 153 69 136 94 104 101 76 72 56 43Z',
+          'M139 116 167 123 201 142 194 163 174 188 153 205 146 159 137 137Z',
+          'M236 66 250 46 292 29 306 51 289 72 264 75Z',
+          'M226 108 264 79 294 85 310 113 306 147 294 179 275 181 267 137 243 123Z',
+          'M306 51 333 26 396 19 444 29 472 40 444 65 419 87 396 116 382 101 358 118 347 94 326 94 313 72Z',
+          'M407 159 432 147 453 156 463 170 451 185 431 176 410 179Z'
+        ].map(d=>`<path d="${d}" fill="var(--accent-soft)" stroke="var(--accent-border)" stroke-width=".8"/>`).join('');
+        const grat = [65,130,195,325,390,455].map(x=>`<line x1="${x}" y1="8" x2="${x}" y2="252" stroke="var(--border2)" stroke-width=".6"/>`).join('')
+          + [65,130,195].map(y=>`<line x1="8" y1="${y}" x2="492" y2="${y}" stroke="var(--border2)" stroke-width=".6"/>`).join('');
+        const pins = [
+          {x:439, y:79, n:'12'}, {x:151, y:69, n:'8'}, {x:262, y:62, n:'5'},
+          {x:250, y:55, n:'4'}, {x:92, y:56, n:'2'}, {x:420, y:97, n:'3'}
+        ].map(p=>{
+          const r = 7 + Math.min(+p.n, 12) * .8;
+          return `<g><circle cx="${p.x}" cy="${p.y}" r="${r}" fill="var(--accent)" fill-opacity=".85" stroke="#fff" stroke-width="1.4"/>`+
+            `<text x="${p.x}" y="${p.y+3.4}" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">${p.n}</text></g>`;
+        }).join('');
+        return `<svg class="rv-vis" viewBox="0 0 500 260" role="img" aria-label="${L('研究者の世界地図','Researcher world map')}">`+
+          `<rect x="0" y="0" width="500" height="260" rx="10" fill="var(--bg)" stroke="var(--border2)"/>`+
+          grat + land + pins + `</svg>`;
+      }
+      function researcherTreeSvg(){
+        const box = (x,y,w,label,sub,hi)=>`<g>`+
+          `<rect x="${x}" y="${y}" width="${w}" height="38" rx="8" fill="${hi?'var(--accent-soft)':'var(--panel)'}" stroke="${hi?'var(--accent-border)':'var(--border)'}" stroke-width="${hi?1.8:1.2}"/>`+
+          `<text x="${x+w/2}" y="${y+16}" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--text)">${label}</text>`+
+          `<text x="${x+w/2}" y="${y+29}" text-anchor="middle" font-size="9" fill="var(--text3)">${sub}</text></g>`;
+        const line = d=>`<path d="${d}" fill="none" stroke="var(--border)" stroke-width="1.4"/>`;
+        // Three generations. Level-1 centre 250; level-2 centres 140 / 360;
+        // level-3 centres 78 / 218 (children of the level-2 box at 140).
+        return `<svg class="rv-vis" viewBox="0 0 500 246" role="img" aria-label="${L('アカデミックツリー','Academic tree')}">`+
+          `<rect x="0" y="0" width="500" height="246" rx="10" fill="var(--bg)" stroke="var(--border2)"/>`+
+          box(178,18,144,'Taro Yamada',L('指導教員','Advisor'))+
+          line('M250 56 V76 M140 76 H360 M140 76 V98 M360 76 V98')+
+          box(68,98,144,'Hanako Suzuki',L('指導教員','Advisor'))+
+          box(288,98,144,'Yuki Kato',L('同門','Same lab'))+
+          line('M140 136 V156 M78 156 H218 M78 156 V178 M218 156 V178')+
+          box(16,178,124,'Hiroshi Tanaka',L('この研究者','This researcher'),true)+
+          box(156,178,124,'Minjun Lee',L('同門','Same lab'))+
+        `</svg>`;
+      }
+      function researcherRankTable(){
+        const rows = [
+          [1,'Hiroshi Tanaka',L('京都大学','Kyoto University'),'13','4,356'],
+          [2,'John Smith','MIT','8','7,200'],
+          [3,'Minjun Lee','ETH Zürich','6','2,800'],
+          [4,'Yuki Kato',L('名古屋大学','Nagoya University'),'4','1,120'],
+          [5,'Robert Dupont','Univ. of Cambridge','3','980'],
+        ];
+        return `<table class="rv-rank-table"><thead><tr>`+
+          `<th>#</th><th>${L('研究者','Researcher')}</th><th>${L('所属','Affiliation')}</th>`+
+          `<th style="text-align:right">${L('文献数','Refs')}</th><th style="text-align:right">${L('総引用数','Citations')}</th></tr></thead><tbody>`+
+          rows.map(r=>`<tr><td><span class="rv-rank-pos">${r[0]}</span></td><td><b>${r[1]}</b></td><td>${r[2]}</td>`+
+            `<td class="num"><b>${r[3]}</b></td><td class="num">${r[4]}</td></tr>`).join('')+
+          `</tbody></table>`;
+      }
+      (function buildResearchersView(){
+        const view = document.getElementById('researchersView');
+        if(!view) return;
+        // Grid of researcher cards, matching the real view: avatar, name,
+        // affiliation, then the 文献数 / 総引用数 metric pair.
+        // photo:n → illustrated placeholder portrait; otherwise coloured initials.
+        const cards = [
+          {photo:0, ini:'HT', c:'#0e9488', name:'Hiroshi Tanaka', affil:L('京都大学','Kyoto University'), papers:'13', cites:'4,356', sel:true},
+          {photo:2, ini:'JS', c:'#a21caf', name:'John Smith', affil:'MIT', papers:'8', cites:'7,200'},
+          {photo:1, ini:'ML', c:'#2563eb', name:'Minjun Lee', affil:'ETH Zürich', papers:'6', cites:'2,800'},
+          {photo:4, ini:'YK', c:'#c2410c', name:'Yuki Kato', affil:L('名古屋大学','Nagoya University'), papers:'4', cites:'1,120'},
+          {photo:3, ini:'RD', c:'#7c3aed', name:'Robert Dupont', affil:'Univ. of Cambridge', papers:'3', cites:'980'},
+          {ini:'SA', c:'#0891b2', name:'Samira Ansari', affil:'—', papers:'1', cites:'—'},
+          {photo:5, ini:'JD', c:'#0f766e', name:'John A. Doe', affil:L('カルガリー大学','Univ. of Calgary'), papers:'2', cites:'640'},
+          {ini:'VA', c:'#0891b2', name:'Venkataramanarao G.', affil:'—', papers:'2', cites:'—'},
+        ];
+        const cardHtml = cards.map((r,i)=>`<div class="rv-card${r.sel?' selected':''}"${i===0?' id="rvFirstCard"':''}>`+
+          `<div class="rv-card-av" style="background:${r.c}">${r.photo!=null?portraitSvg(r.photo):r.ini}</div>`+
+          `<div class="rv-card-name">${r.name}</div>`+
+          `<div class="rv-card-affil">${r.affil}</div>`+
+          `<div class="rv-card-metrics"><span>${L('文献数','Refs')} <b>${r.papers}</b></span><span>${L('総引用数','Citations')} <b>${r.cites}</b></span></div>`+
+        `</div>`).join('');
+
+        // Career timeline in the profile pane: period, organisation (+country),
+        // department / title, and the related researcher for that period.
+        const career = [
+          {t:'1998–2002', org:L('京都大学','Kyoto University'), flag:'🇯🇵', d:L('工学部 工業化学科 · 学士（工学）','Dept. of Industrial Chemistry, School of Engineering · B.Eng.'), p:'Taro Yamada'},
+          {t:'2002–2004', org:L('京都大学','Kyoto University'), flag:'🇯🇵', d:L('工学研究科 · 修士（工学）','Graduate School of Engineering · M.Eng.'), p:'Taro Yamada'},
+          {t:'2005–2006', org:L('日本学術振興会','Japan Society for the Promotion of Science'), flag:'🇯🇵', d:L('特別研究員（DC2）','Research Fellow for Young Scientists (DC2)'), p:'Taro Yamada'},
+          {t:'2006–2013', org:L('名古屋大学','Nagoya University'), flag:'🇯🇵', d:L('理学研究科 化学専攻 · 助教','Graduate School of Science, Chemistry · Assistant Professor'), p:'Hanako Suzuki'},
+          {t:'2011', org:L('カルガリー大学','University of Calgary'), flag:'🇨🇦', d:L('化学科 · 客員研究員','Dept. of Chemistry · Visiting Researcher'), p:'John A. Doe'},
+        ];
+        const gearSvg = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>';
+        const noteSvg = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4.5h12A1.5 1.5 0 0 1 19.5 6v12A1.5 1.5 0 0 1 18 19.5H6A1.5 1.5 0 0 1 4.5 18V6A1.5 1.5 0 0 1 6 4.5z"/><path d="M8 8.5h8M8 12h8M8 15.5h5"/></svg>';
+        const timeline = career.map(r=>`<div class="rv-tl"><time>${r.t}</time><span class="rv-tl-dot"></span><div>`+
+          `<b>${r.org} ${r.flag}</b><small>${r.d}</small>`+
+          `<span class="rv-person">${r.p}</span></div></div>`).join('');
+
+        view.innerHTML =
+          `<div class="rv-body">`+
+            `<div class="rv-stage rv-stage-grid"><div class="rv-grid" id="rvGrid">${cardHtml}</div></div>`+
+            `<div class="rv-stage rv-stage-world" id="rvWorldStage"><p class="rv-vis-cap">${L('ピンの大きさ・中の数字 ＝ その拠点の研究者数。拡大すると顔写真になります。','Pin size and the number inside are the researcher count at that location; zooming in turns them into portraits.')}</p>${researcherWorldMapSvg()}</div>`+
+            `<div class="rv-stage rv-stage-network" id="rvMapStage">`+
+              `<div class="rv-dlg-head"><span class="rv-dlg-title">${L('研究者マップ','Researcher Map')}</span>`+
+              `<span class="rv-dlg-ctl">${L('深度','Depth')}<i></i>2</span></div>`+
+              `<p class="rv-vis-cap">${L('丸の大きさは責任著者としての文献数、線は共著関係を表します。','Circle size is the corresponding-author reference count; lines are co-authorship.')}</p>${researcherMapSvg()}</div>`+
+            `<div class="rv-stage rv-stage-tree" id="rvTreeStage"><p class="rv-vis-cap">${L('PhD指導教員・研究室主宰者（PI）の関係をたどった系譜です。','The lineage traced through PhD advisors and host-lab PIs.')}</p>${researcherTreeSvg()}</div>`+
+            `<div class="rv-stage rv-stage-rank" id="rvRankStage"><p class="rv-vis-cap">${L('ランキング基準：ライブラリ内の文献数（責任著者）','Ranking metric: library references (corresponding)')}</p>${researcherRankTable()}</div>`+
+            `<div class="rv-status"><span>603 ${L('件','items')}</span><span class="spacer"></span>`+
+              `<button class="bottom-control">▽ ${L('絞り込み','Filter')}⌄</button>`+
+              `<button class="bottom-control">⇅ ${L('並び替え','Sort')}⌄</button>`+
+              `<button class="bottom-control" id="rvViewBtn">⊞ ${L('グリッド','Grid')}⌄</button></div>`+
+          `</div>`+
+          `<div class="rv-detail" id="rvProfile">`+
+            `<div class="rv-prof-head"><span class="rv-prof-avatar">HT</span><span class="rv-prof-name">Hiroshi Tanaka</span></div>`+
+            `<div class="rv-prof-btns"><span class="rv-prof-btn" id="rvEditBtn">${noteSvg}${L('編集','Edit')}</span>`+
+              `<span class="rv-prof-btn">${gearSvg}${L('表示設定','Display')}</span></div>`+
+            `<div class="rv-sect-label">${L('経歴','Career')}<span class="rv-sect-count">9</span></div>`+
+            `<div class="rv-timeline">${timeline}</div>`+
+          `</div>`;
+      })();
 
       const S = (title, text, target, panel, effect, modal) => ({title, text, target, panel, effect, modal});
       const SCENARIOS = {
@@ -540,12 +1163,12 @@
             S('ポップアップで「Allow」を押す','ブラウザが「ファイルの変更を許可しますか？」と確認します。自動保存に必要なので「Allow（許可）」を選びます。','#permAllowBtn',null,'showPermission'),
             S('「保存済み／PaperLibrary」が表示される','右上に保存先フォルダ名が表示されれば準備完了です。この時点ではまだ文献は1件も登録されていません。','.library-status',null,'showEmpty'),
             S('すでに文献が登録されている場合','一度ライブラリを作ったあと、同じフォルダをもう一度開くとどうなるかを説明します。','#homeView',null,'showHomeResume'),
-            S('前回のフォルダを自動で開く','2回目以降はホーム画面に「前回のライブラリを開く」ボタンが表示され、フォルダ選択と許可ポップアップを省略してすぐに開けます。','#homeResumeBtn',null,'showHomeResume'),
+            S('前回のフォルダを自動で開く','2回目以降はホーム画面の「前回のライブラリを開く」から、フォルダ選択も許可ポップアップも省略できます。','#homeResumeBtn',null,'showHomeResume'),
             S('画面の4つの領域','上部は追加・検索、左は分類、中央は文献一覧、右は選択した文献の詳細です。ここからはテスト用のデータを使って説明します。','.browser-content',null,'showLoaded'),
             S('テスト用データで試す','この仮想画面にはテスト文献が入っています。以降のマニュアルでも、このテストデータを使って説明します。','.gallery',null,'showLoaded')
           ]},
           add: {label:'文献の追加・削除', steps:[
-            S('DOIやURLを入力する','左上の「URL を入力して Enter」欄に、DOI・arXiv ID・論文ページのURLを直接貼り付けます。タイトルや著者名を入力してもかまいません。','#addBoxDemo',null,'addExample'),
+            S('DOIやURLを入力する','左上の「URL を入力して Enter」欄に、DOI・arXiv ID・URL を貼り付けます。タイトルや著者名でも構いません。','#addBoxDemo',null,'addExample'),
             S('メニューから選ぶこともできる','欄の右にある▾を押すと、「文献情報を入力して検索」「手動追加」やインポート形式を選べるメニューが開きます。','#addMenuCaret',{title:'文献を追加',plain:true,items:[
               {header:'文献を追加'},
               {icon:'search',text:'文献情報を入力して検索'},
@@ -563,7 +1186,7 @@
             S('重複していないか確認する','同じ DOI の文献がすでにある場合は追加されず、既存のものを開く・置き換える・削除するかを選べます。',undefined,null,null,{title:'重複候補の確認',duplicate:{banner:'同じ DOI のため追加されませんでした・一致度 100%',existingLabel:'既存',existing:{title:'Visible-light photoredox catalysis',meta:'Smith, J.; Tanaka, K. · Nat. Commun. · 2024'},addedLabel:'追加しようとした文献',added:{title:'Visible-light photoredox catalysis',meta:'Smith, J.; Tanaka, K. · Nat. Commun. · 2024'}},buttons:['既存を開く','既存を置き換え','既存を削除','閉じる']}),
             S('一覧に追加されたことを確認する','追加後は中央のギャラリーにカードが現れます。必要に応じてコレクションやタグを設定します。','.gallery'),
             S('文献をゴミ箱へ移動する','削除したい文献を選び、左パネルの「ゴミ箱」へドラッグします。確認が表示されるので、内容を確認してから移動します。','#trashSideItem',{title:'確認',items:['1 件の文献をゴミ箱に移動しますか？','ゴミ箱に移動'],anchor:'#trashSideItem'}),
-            S('ゴミ箱から復元・完全削除する','ゴミ箱を開くと移動した文献を確認でき、「すべて復元」で元に戻すか「完全に削除する」で消せます。完全に削除すると元に戻せません。','.trash-banner',null,'showTrash')
+            S('ゴミ箱から復元・完全削除する','ゴミ箱では「すべて復元」で元に戻せます。「完全に削除する」を選ぶと元には戻せません。','.trash-banner',null,'showTrash')
           ]},
           import: {label:'文献の取込・出力', steps:[
             S('追加メニューを開く','追加欄のメニューを開きます。','#addBoxDemo'),
@@ -592,9 +1215,18 @@
             S('バックアップを保管する','文献データが入っている作業フォルダを変更できます。このフォルダを複製すればバックアップになります。','.library-status')
           ]},
           connector: {label:'Chrome拡張機能', steps:[
-            S('論文ページで本アイコンを押す','Chromeで論文ページを開き、右上のPaper Library Connectorの本アイコンを押します。','.connector-button'),
-            S('取得内容を確認する','タイトル・DOI・PDF候補を確認し、必要ならコレクションとタグを選んで保存します。','#scenarioPanel',{title:'Paper Library Connector',items:['書誌情報を取得しました','コレクション：光化学','Paper Library に保存'],anchor:'.connector-button'}),
-            S('保存結果を確認する','Paper Libraryへ戻り、中央の一覧に追加されたカードを確認します。','.gallery')
+            S('① .zip をダウンロードする','右上の「Chrome拡張機能をダウンロード」ボタンを押し、paper-library-connector.zip をダウンロードして解凍します。'),
+            S('② フォルダを消えない場所に置く','解凍した「paper-library-connector」フォルダを、あとで消したり動かしたりしない場所に置きます。','#placeFinder',null,'showPlace'),
+            S('③ chrome://extensions を開く','アドレスバーに chrome://extensions と入力して開きます（リンクからは開けないため、貼り付けて移動してください）。','.address',null,'showExt'),
+            S('④ デベロッパー モードを ON にする','右上のスイッチを ON にします。ON にしないと、下の読み込みボタンが表示されません。','#extDevSwitch',null,'showExtOn'),
+            S('⑤ 「パッケージ化されていない拡張機能を読み込む」を押す','ON にすると現れるこのボタンを押すと、フォルダを選ぶダイアログが開きます。','#extLoadBtn',null,'showExtOn'),
+            S('⑥ ZIP ファイルは選べません','ここで ZIP ファイルをクリックしても、フォルダとして選ぶことはできません。よくある勘違いポイントです。','#extPickerZipItem',null,'showExtPickerWrong'),
+            S('⑦ 解凍してできたフォルダを選ぶ','「paper-library-connector」フォルダ（ZIP ではない方）をクリックして選び、「Select」を押します。','#extPickerFolderItem',null,'showExtPickerSelect'),
+            S('⑧ 読み込み完了','一覧に「Paper Library Connector」が表示されれば完了です。','.ext-card',null,'showExtInstalled'),
+            S('⑨ ツールバーに固定（ピン留め）する','パズルのピースアイコンを開き、ピンを押して固定します。','#pinMenu',null,'showPin'),
+            S('論文ページで拡張機能アイコンを押す','出版社ページや arXiv などの論文ページを開き、ツールバー右上の本のアイコン（固定した拡張機能）を押します。','.connector-button',null,'showPaper'),
+            S('取得内容を確認して保存する','タイトル・著者・画像を確認し、コレクションやタグを選んで保存します。未選択なら「未分類」です。','#connectorPopup',null,'showPaperPopup'),
+            S('保存結果を確認する','Paper Library に戻ると、中央の一覧に追加されたカードを確認できます。','.gallery',null,'showLoaded')
           ]},
           organize: {label:'文献の整理・編集', steps:[
             S('コレクションを作る','左側の「コレクション」見出し右端の＋から新しい分類を作ります。','#collectionsHeading'),
@@ -612,12 +1244,40 @@
           graph: {label:'文献を見つける', steps:[
             S('基準にする文献を選ぶ','相関図の中心に置きたい文献カードを選びます。','.gallery-card:first-child',null,'selectFirst'),
             S('相関図を開く','詳細パネルの相関図アイコンから関連論文マップを開きます。','#detailPane',{title:'詳細パネルの操作',items:['引用','リンク','論文相関図を開く'],anchor:'#detailPane'},'selectFirst'),
-            S('ノードを選んで確認する','中心文献の周囲に関連文献が表示されます。ノードを選ぶと文献情報と関係を確認できます。','#scenarioPanel',{title:'関連論文マップ',items:['● 中心文献　○ 引用関係','○ 共通キーワード','ノードを選択して詳細表示'],anchor:'.gallery'})
+            S('ノードを選んで確認する','中心文献の周囲に関連文献が表示されます。ノードを選ぶと文献情報と関係を確認できます。','#scenarioPanel',{title:'関連論文マップ',items:['● 中心文献　○ 引用関係','○ 共通キーワード','ノードを選択して詳細表示'],anchor:'.gallery'}),
+            S('引用関係を開く','詳細パネルの「引用関係」アイコンを押すと、この文献の引用・被引用の一覧が開きます。','#detailPane',{title:'詳細パネルの操作',items:['引用関係を開く','論文相関図を開く','リンクを開く'],anchor:'#detailPane'},'selectFirst'),
+            S('引用・被引用を確認して追加する','「引用している文献」と「引用されている文献」が一覧され、未登録の文献はその場で「追加」できます。','#scenarioPanel',{title:'引用関係',items:['引用している文献（参考文献）','引用されている文献（被引用）','未登録の文献は「追加」で取り込み'],anchor:'.gallery'})
+          ]},
+          researchers: {label:'研究者機能', steps:[
+            S('研究者ビューを開く','左パネルの「研究者」をクリックすると、著者を研究者プロフィールとして管理する画面に切り替わります。','#researchersSideItem',null,'showResearchers'),
+            S('「追加」メニューを開く','「研究者名 / URL を入力」欄の右の ▾ から、登録方法とインポート形式を選べます。','#addMenuCaret',{title:'研究者を追加',plain:true,items:[
+              {header:'研究者を追加'},
+              {icon:'plus',text:'手動追加'},
+              {icon:'users',text:'論文著者から'},
+              {divider:true},
+              {header:'研究者をインポート'},
+              {icon:'download',text:'JSON (.json)'},
+              {icon:'download',text:'CSV (.csv)'},
+              {icon:'search',text:'AI調査JSON (.json)'}
+            ],anchor:'#addMenuCaret'},'showResearchers'),
+            S('「手動追加」で氏名を入力する','姓・名（英字）を入力します。表示名は自動で決まるため入力欄はありません。',undefined,null,'showResearchers',{title:'手動追加',hint:'表示名は姓・名・ミドルネームから自動的に決まります。',fields:[['姓（英字）','名（英字）'],['ミドルネーム（英字・任意）','所属'],'別表記（1行に1件）',['ORCID','OpenAlex'],['researchmap','Chem-Station'],'Website'],buttons:['キャンセル','保存']}),
+            S('登録内容を確認して保存する','「保存」で確認画面が開き、「一致する論文著者にも紐付ける」で同名の著者と自動リンクされます。',undefined,null,'showResearchers',{title:'登録内容を確認',fields:['☑　Z A','　　登録元: manual','　　☑　一致する論文著者にも紐付ける'],buttons:['キャンセル','保存']}),
+            S('「論文著者から」まとめて登録する','ライブラリの著者一覧から未登録の人をまとめて選べます。同名の既存プロフィールへの紐付けも選べます。',undefined,null,'showResearchers',{title:'登録する著者を選択',fields:['論文名・著者名・コレクション・タグで検索',['論文数が多い順','すべてのコレクション'],['表示中をすべて選択','選択 0 / 表示 3153'],'☐　Kenji Tanaka　／　論文 27 件','　　一致する既存プロフィール: Kenji Tanaka','　　新しいプロフィールとして登録　▾','　　☑　一致する論文著者にも紐付ける'],buttons:['キャンセル','保存']}),
+            S('研究者を選ぶ','カードには所属・文献数・総引用数が出ます。クリックすると右側にプロフィールが表示されます。','#rvFirstCard',null,'showResearchers'),
+            S('プロフィールを確認する','右側に経歴が時系列で並び、その期間の指導教員や研究室主宰者（PI）が青いチップで示されます。','#rvProfile',null,'showResearchers'),
+            S('文献の責任著者と連携する','文献の「責任著者」欄に登録すると、プロフィールの「責任著者の文献」に自動で一覧表示されます。','#scenarioPanel',{title:'責任著者の文献',items:['文献の「責任著者」欄に登録する','プロフィールに自動で一覧表示される','一括取得は「情報の更新」から'],anchor:'#rvFirstCard'},'showResearchers'),
+            S('「編集」から9つのタブで編集する','「編集」で9つのタブを切り替えて入力します。自動保存ではないので最後に「保存」を押します。',undefined,null,'showResearchers',{title:'研究者プロフィール',hint:'左のタブで切り替え。最後に「保存」を押します。',fields:['基本情報 ／ AIから取り込む ／ 職歴 ／ 学歴 ／ 受賞歴','研究情報 ／ 外部プロフィール ／ 画像 ／ 関連研究者',['姓　Fukazawa','名　Aiko'],'別言語・別文字表記（1行に1つ）　深澤 愛子','出典: ORCID ／ researchmap ／ Google Scholar'],buttons:['研究者を削除','キャンセル','保存']}),
+            S('AIで情報を取り込む','調査用プロンプトをコピーして生成AIに渡し、返ってきたJSONを貼り付けます。APIキーは不要です。',undefined,null,'showResearchers',{title:'AIから取り込む',hint:'反映したあと「保存」を押すと確定します。',fields:['1. 調査用プロンプトを作る → プロンプトをコピー','2. AIの回答（JSON）を貼り付け → 内容を確認','3. 反映する項目をチェックして編集内容へ反映'],buttons:['閉じる','内容を確認']}),
+            S('研究者マップで共著関係を見る','文献の詳細パネルの「研究者マップ」から開き、責任著者を中心に共同研究ネットワークを描きます。','#rvMapStage .rv-vis',null,'showResearcherNetwork'),
+            S('世界地図で所属の分布を見る','表示切替の「地図」は世界地図です。所属機関をピンで示し、数字はその拠点の研究者数です。','#rvWorldStage .rv-vis',null,'showResearcherMap'),
+            S('アカデミックツリーで系譜を見る','表示切替の「ツリー」で、PhD指導教員や研究室主宰者（PI）をたどった系譜を表示します。','#rvTreeStage .rv-vis',null,'showResearcherTree'),
+            S('ランキングで指標順に並べる','表示切替の「ランキング」で、文献数・被引用数・h-index などの指標順に並べ替えます。','#rvRankStage .rv-rank-table',null,'showResearcherRank'),
+            S('表示を切り替えて絞り込む','表示切替では7種類のビューを選べます。「絞り込み」で条件を、表形式では「列」も指定できます。','#rvViewBtn',null,'showResearchers')
           ]},
           maintenance: {label:'情報の更新', steps:[
             S('通知を確認する','下部の「通知」には重複候補や情報不足など、確認が必要な項目が表示されます。','.bottom-control:first-of-type'),
             S('書誌情報を更新する','対象文献を選び「更新」を押すと、公開データベースから書誌情報を再取得します。','.update-control'),
-            S('候補を確認して確定する','現在値と取得値を比較し、必要な項目だけ反映します。','#scenarioPanel',{title:'更新候補',items:['現在：2023　取得：2024','タイトル・著者は変更なし','選択した変更を反映'],anchor:'.update-control'})
+            S('候補を確認して確定する','現在値と取得値を比較し、必要な項目だけ反映します。','#scenarioPanel',{title:'更新候補',items:['現在：2023　取得：2024','タイトル・著者は変更なし','選択した変更を反映'],anchor:'.gallery'})
           ]},
           word: {label:'Wordアドイン', steps:[
             S('マニュアルから導入する','「Wordアドイン」項目にあるmanifest.xmlのダウンロードボタンを押し、Wordへサイドロードします。','#manualButton'),
@@ -635,12 +1295,12 @@
             S('Press “Allow” on the popup','The browser asks to confirm editing files. Choose “Allow” — it’s needed for automatic saving.','#permAllowBtn',null,'showPermission'),
             S('“Saved / PaperLibrary” appears','Once the folder name appears at the top right, you’re ready. No references are registered yet at this point.','.library-status',null,'showEmpty'),
             S('When a library already exists','Here’s what happens when you open the same folder again after already creating a library.','#homeView',null,'showHomeResume'),
-            S('The last folder opens automatically','From the second time on, the home screen shows an “Open the last library” button, skipping the folder picker and permission prompt.','#homeResumeBtn',null,'showHomeResume'),
-            S('The four areas of the screen','The top is for adding/searching, the left for organizing, the centre is the reference list, and the right shows the selected reference’s details. From here on, test data is used.','.browser-content',null,'showLoaded'),
+            S('The last folder opens automatically','From the second time on, “Open the last library” appears, skipping the picker and the permission prompt.','#homeResumeBtn',null,'showHomeResume'),
+            S('The four areas of the screen','The top adds and searches, the left organizes, the centre lists references, and the right shows details.','.browser-content',null,'showLoaded'),
             S('Try it with test data','This virtual screen contains test references. The rest of the manual uses this same test data too.','.gallery',null,'showLoaded')
           ]},
           add: {label:'Add & delete references', steps:[
-            S('Enter a DOI or URL','Paste a DOI, an arXiv ID, or a paper page URL directly into the “Enter URL and press Enter” box at the top left. A title or author name works too.','#addBoxDemo',null,'addExample'),
+            S('Enter a DOI or URL','Paste a DOI, arXiv ID, or paper URL into the “Enter URL and press Enter” box. A title or author works too.','#addBoxDemo',null,'addExample'),
             S('You can also open a menu','Press the ▾ to its right to open a menu with “Search by reference info”, “Add manually”, and import formats.','#addMenuCaret',{title:'Add a reference',plain:true,items:[
               {header:'Add a reference'},
               {icon:'search',text:'Search by reference info'},
@@ -654,11 +1314,11 @@
               {icon:'download',text:'Zotero RDF (.rdf)'},
             ],anchor:'#addMenuCaret'}),
             S('Pressing Enter opens the search dialog','Click “Search by reference info” to search using whatever you know of journal, year, volume, and page.',undefined,null,null,{title:'Search by reference info',hint:'Paste a DOI, an arXiv ID, or a paper page URL to fetch it automatically. If you don’t have one, search instead by journal, year, volume, page, or title.',fields:['10.1038/example.2024.12345',['Journal (abbrev. ok)','Year'],['Vol.','Page']],buttons:['Cancel','Search']}),
-            S('Review and add the result','Searching shows a candidate — with title, authors, year, and more already filled in — inside that same dialog. Click it to add it.',undefined,null,null,{title:'Search by reference info',fields:['10.1038/example.2024.12345',['Journal (abbrev. ok)','Year'],['Vol.','Page']],candidate:{title:'Visible-light photoredox catalysis',meta:'Smith, J.; Tanaka, K. · Nat. Commun. · 2024'},buttons:['Cancel','Search']}),
-            S('Check for duplicates','If a reference with the same DOI already exists, it isn’t added — you can open, replace, or delete the existing one instead.',undefined,null,null,{title:'Check possible duplicates',duplicate:{banner:'Not added — same DOI · 100% match',existingLabel:'Existing',existing:{title:'Visible-light photoredox catalysis',meta:'Smith, J.; Tanaka, K. · Nat. Commun. · 2024'},addedLabel:'What you tried to add',added:{title:'Visible-light photoredox catalysis',meta:'Smith, J.; Tanaka, K. · Nat. Commun. · 2024'}},buttons:['Open existing','Replace existing','Delete existing','Close']}),
+            S('Review and add the result','The candidate appears in the same dialog with title, authors, and year filled in. Click it to add it.',undefined,null,null,{title:'Search by reference info',fields:['10.1038/example.2024.12345',['Journal (abbrev. ok)','Year'],['Vol.','Page']],candidate:{title:'Visible-light photoredox catalysis',meta:'Smith, J.; Tanaka, K. · Nat. Commun. · 2024'},buttons:['Cancel','Search']}),
+            S('Check for duplicates','A reference with the same DOI is not added — open, replace, or delete the existing one instead.',undefined,null,null,{title:'Check possible duplicates',duplicate:{banner:'Not added — same DOI · 100% match',existingLabel:'Existing',existing:{title:'Visible-light photoredox catalysis',meta:'Smith, J.; Tanaka, K. · Nat. Commun. · 2024'},addedLabel:'What you tried to add',added:{title:'Visible-light photoredox catalysis',meta:'Smith, J.; Tanaka, K. · Nat. Commun. · 2024'}},buttons:['Open existing','Replace existing','Delete existing','Close']}),
             S('Confirm it appears in the list','Once added, a card appears in the gallery. Set its collections and tags as needed.','.gallery'),
-            S('Move a reference to Trash','Select the reference you want to remove and drag it onto “Trash” in the left panel. A confirmation appears — review it before moving.','#trashSideItem',{title:'Confirm',items:['Move 1 reference to Trash?','Move to trash'],anchor:'#trashSideItem'}),
-            S('Restore or delete forever from Trash','Open Trash to see what’s in it. “Restore all” brings everything back; “Delete forever” removes it for good and cannot be undone.','.trash-banner',null,'showTrash')
+            S('Move a reference to Trash','Drag the reference onto “Trash” in the left panel. A confirmation appears before it is moved.','#trashSideItem',{title:'Confirm',items:['Move 1 reference to Trash?','Move to trash'],anchor:'#trashSideItem'}),
+            S('Restore or delete forever from Trash','“Restore all” brings everything back; “Delete forever” removes it for good and cannot be undone.','.trash-banner',null,'showTrash')
           ]},
           import: {label:'Import & export', steps:[
             S('Open the Add menu','Open the menu on the add box.','#addBoxDemo'),
@@ -687,16 +1347,25 @@
             S('Keep a backup','You can change the working folder your reference data lives in. Duplicating that folder makes a backup.','.library-status')
           ]},
           connector: {label:'Chrome extension', steps:[
-            S('Click the book icon on a paper page','Open a paper page in Chrome and click the Paper Library Connector book icon at the top right.','.connector-button'),
-            S('Review what it found','Check the title, DOI, and PDF candidates, choose a collection and tags if needed, then save.','#scenarioPanel',{title:'Paper Library Connector',items:['Fetched the bibliographic info','Collection: Photochemistry','Saved to Paper Library'],anchor:'.connector-button'}),
-            S('Confirm it was saved','Back in Paper Library, check that a new card appeared in the list.','.gallery')
+            S('① Download the .zip','Press the “Download Chrome extension” button at the top right to download paper-library-connector.zip, then unzip it.'),
+            S('② Put the folder somewhere permanent','Put the unzipped “paper-library-connector” folder somewhere you won’t delete or move later.','#placeFinder',null,'showPlace'),
+            S('③ Open chrome://extensions','Type chrome://extensions into the address bar (it can’t be opened from a link, so paste it in).','.address',null,'showExt'),
+            S('④ Turn on Developer mode','Turn on the switch at the top right. The load button below only appears once it’s on.','#extDevSwitch',null,'showExtOn'),
+            S('⑤ Click “Load unpacked”','This button appears once Developer mode is on. Clicking it opens a folder picker.','#extLoadBtn',null,'showExtOn'),
+            S('⑥ You can’t pick the zip','Clicking the zip file here doesn’t select it as a folder — this is the step most people get stuck on.','#extPickerZipItem',null,'showExtPickerWrong'),
+            S('⑦ Pick the unzipped folder','Click the “paper-library-connector” folder (not the zip) and press “Select”.','#extPickerFolderItem',null,'showExtPickerSelect'),
+            S('⑧ Loaded','Once “Paper Library Connector” appears in the list, you’re done.','.ext-card',null,'showExtInstalled'),
+            S('⑨ Pin it to the toolbar','Open the puzzle-piece menu and click the pin to fix it to the toolbar.','#pinMenu',null,'showPin'),
+            S('Click the extension icon on a paper page','Open a publisher or arXiv paper page and click the book icon at the top right (your pinned extension).','.connector-button',null,'showPaper'),
+            S('Review what it found and save','Check the title, authors, and image, choose collections and tags, then save. With none chosen it is “uncategorized”.','#connectorPopup',null,'showPaperPopup'),
+            S('Confirm it was saved','Back in Paper Library, check that a new card appeared in the list.','.gallery',null,'showLoaded')
           ]},
           organize: {label:'Organize & edit', steps:[
             S('Create a collection','Use the “+” at the right of the “Collections” heading on the left.','#collectionsHeading'),
             S('File a reference into it','Select a reference card and assign it to a collection. It can belong to more than one.','.gallery'),
             S('Organize across collections with tags','Create tags with the “+” next to the “Tags” heading. Selecting a tag filters across collections.','#tagsHeading'),
             S('Select a reference card','Click a reference card in the centre to open the detail pane on the right.','.gallery-card:first-child',null,'selectFirst'),
-            S('Review and edit its details','The right pane shows the title, authors, journal, tags, abstract, and more, and you can edit them in place. Edits are saved automatically.','#detailPane',null,'selectFirst'),
+            S('Review and edit its details','The right pane shows title, authors, journal, tags, and abstract, editable in place and saved automatically.','#detailPane',null,'selectFirst'),
             S('Work with the PDF and citation','From the top of the detail pane you can open the PDF, copy a citation, or open the original page.','#detailPane',{title:'Reference actions',items:['Copy citation','Open PDF','Open paper page'],anchor:'#detailPane'},'selectFirst')
           ]},
           search: {label:'Search & sort', steps:[
@@ -707,17 +1376,45 @@
           graph: {label:'Find references', steps:[
             S('Pick the reference to centre on','Select the reference card you want at the centre of the graph.','.gallery-card:first-child',null,'selectFirst'),
             S('Open the graph','Open the related-papers map from the graph icon in the detail pane.','#detailPane',{title:'Detail pane actions',items:['Citations','Links','Open paper graph'],anchor:'#detailPane'},'selectFirst'),
-            S('Select a node to inspect it','Related references appear around the centre reference. Select a node to see its info and relation.','#scenarioPanel',{title:'Related-papers map',items:['● Centre reference   ○ Citation link','○ Shared keyword','Select a node for details'],anchor:'.gallery'})
+            S('Select a node to inspect it','Related references appear around the centre reference. Select a node to see its info and relation.','#scenarioPanel',{title:'Related-papers map',items:['● Centre reference   ○ Citation link','○ Shared keyword','Select a node for details'],anchor:'.gallery'}),
+            S('Open citation relations','Press the “Citation relations” icon in the detail pane to list what this reference cites and what cites it.','#detailPane',{title:'Detail pane actions',items:['Open citation relations','Open paper graph','Open link'],anchor:'#detailPane'},'selectFirst'),
+            S('Review references and cited-by','“References” and “Cited by” are listed, and any paper not yet in your library can be added on the spot.','#scenarioPanel',{title:'Citation relations',items:['References (works this paper cites)','Cited by (works citing this paper)','Add unregistered papers to the library'],anchor:'.gallery'})
+          ]},
+          researchers: {label:'Researchers', steps:[
+            S('Open the researcher view','Click “Researchers” in the left panel to switch to the view that manages authors as researcher profiles.','#researchersSideItem',null,'showResearchers'),
+            S('Open the “Add” menu','Press the ▾ beside the “Researcher name / URL” box to choose a registration method or import format.','#addMenuCaret',{title:'Add researchers',plain:true,items:[
+              {header:'Add researchers'},
+              {icon:'plus',text:'Manual entry'},
+              {icon:'users',text:'From paper authors'},
+              {divider:true},
+              {header:'Import researchers'},
+              {icon:'download',text:'JSON (.json)'},
+              {icon:'download',text:'CSV (.csv)'},
+              {icon:'search',text:'AI research JSON (.json)'}
+            ],anchor:'#addMenuCaret'},'showResearchers'),
+            S('Enter the name under “Manual entry”','Enter the family and given name (Latin script). The display name is derived automatically from them.',undefined,null,'showResearchers',{title:'Manual entry',hint:'The display name is derived automatically from the family, given, and middle names.',fields:[['Family name','Given name'],['Middle name (optional)','Affiliation'],'Name variants (one per line)',['ORCID','OpenAlex'],['researchmap','Chem-Station'],'Website'],buttons:['Cancel','Save']}),
+            S('Review the registration and save','“Save” opens a review screen; “Also link matching paper authors” links same-named authors in your library.',undefined,null,'showResearchers',{title:'Review registrations',fields:['☑　Z A','　　Source: manual','　　☑　Also link matching paper authors'],buttons:['Cancel','Save']}),
+            S('Register many at once “From paper authors”','Pick unregistered people from your library’s authors. Where a profile of the same name exists, you can link to it.',undefined,null,'showResearchers',{title:'Select authors to register',fields:['Search by paper, author, collection, or tag',['Most papers','All collections'],['Select all shown','0 selected / 3153 shown'],'☐　Kenji Tanaka　/　27 papers','　　Matching existing profile: Kenji Tanaka','　　Create a new profile　▾','　　☑　Also link matching paper authors'],buttons:['Cancel','Save']}),
+            S('Select a researcher','Each card shows the affiliation, reference count, and total citations. Click one to show the profile.','#rvFirstCard',null,'showResearchers'),
+            S('Review the profile','The career is laid out in date order, with each period’s advisor or host-lab PI as a blue chip.','#rvProfile',null,'showResearchers'),
+            S('Link with corresponding authors','Setting this researcher as a reference’s corresponding author lists it under “Corresponding-author references”.','#scenarioPanel',{title:'Corresponding-author references',items:['Set it in the reference’s “Corresponding author” field','It is listed on the profile automatically','Bulk fetch lives under “Updating info”'],anchor:'#rvFirstCard'},'showResearchers'),
+            S('Edit across nine tabs from “Edit”','“Edit” opens nine tabs of fields. This is not auto-saved, so press “Save” when you are done.',undefined,null,'showResearchers',{title:'Researcher profile',hint:'Switch sections on the left, then press “Save”.',fields:['Basic information / Import from AI / Career / Education / Awards','Research information / External profiles / Image / Related researchers',['Family　Fukazawa','Given　Aiko'],'Other-script names (one per line)　深澤 愛子','Sources: ORCID / researchmap / Google Scholar'],buttons:['Delete researcher','Cancel','Save']}),
+            S('Import info with AI','Copy the research prompt, hand it to a generative AI, and paste the returned JSON. No API key is needed.',undefined,null,'showResearchers',{title:'Import from AI',hint:'Press “Save” after applying to commit the changes.',fields:['1. Create a research prompt → Copy prompt','2. Paste the AI response (JSON) → Review contents','3. Tick the fields to apply to the draft'],buttons:['Close','Review']}),
+            S('See co-authorship on the Researcher Map','Opened from a reference’s “Researcher Map” button, it maps co-authorship around its corresponding authors.','#rvMapStage .rv-vis',null,'showResearcherNetwork'),
+            S('See where people are on the world map','The “Map” view is a world map. Pins mark institutions, and the number inside is the count there.','#rvWorldStage .rv-vis',null,'showResearcherMap'),
+            S('Trace lineage on the academic tree','Switch the view to “Tree” for the lineage traced through PhD advisors and host-lab PIs.','#rvTreeStage .rv-vis',null,'showResearcherTree'),
+            S('Sort by metric with the ranking','Switch the view to “Ranking” to sort by metric — reference or citation counts, h-index, and more.','#rvRankStage .rv-rank-table',null,'showResearcherRank'),
+            S('Switch views and filter','Seven views are available. Use “Filter” to narrow the list and “Columns” to pick fields in table views.','#rvViewBtn',null,'showResearchers')
           ]},
           maintenance: {label:'Updating info', steps:[
             S('Check Alerts','“Alerts” at the bottom lists things worth reviewing, like duplicate candidates or missing info.','.bottom-control:first-of-type'),
             S('Update bibliographic info','Select the target references and press “Update” to refetch bibliographic info from public databases.','.update-control'),
-            S('Review candidates and confirm','Compare current values against fetched ones and apply only the fields you want.','#scenarioPanel',{title:'Update candidates',items:['Current: 2023   Fetched: 2024','Title & authors unchanged','Apply selected changes'],anchor:'.update-control'})
+            S('Review candidates and confirm','Compare current values against fetched ones and apply only the fields you want.','#scenarioPanel',{title:'Update candidates',items:['Current: 2023   Fetched: 2024','Title & authors unchanged','Apply selected changes'],anchor:'.gallery'})
           ]},
           word: {label:'Word add-in', steps:[
             S('Install it from the manual','Press the manifest.xml download button on the “Word add-in” page, then sideload it into Word.','#manualButton'),
             S('Load your library in Word','Open the Paper Library panel in Word and load the library.json you exported from the app.','#scenarioPanel',{title:'Word — Paper Library',items:['Load library.json','Choose a citation style','Search for a reference'],anchor:'#manualButton'}),
-            S('Insert a citation','Select a reference to insert its citation. The number in the text and the reference list at the end stay in sync.','#scenarioPanel',{title:'Insert citation',items:['Insert [1] into the text','Update the reference list','ACS / Nature / Science, etc.'],anchor:'#manualButton'})
+            S('Insert a citation','Insert a citation: the number in the text and the reference list stay in sync.','#scenarioPanel',{title:'Insert citation',items:['Insert [1] into the text','Update the reference list','ACS / Nature / Science, etc.'],anchor:'#manualButton'})
           ]},
         }
       };
@@ -773,23 +1470,47 @@
         guideProgress.innerHTML = steps.map((_, i) => `<i class="${i <= step ? 'on' : ''}"></i>`).join('');
         prev.disabled = step === 0;
         next.textContent = step === steps.length - 1 ? UI.doneBtn : UI.nextBtn;
-        address.textContent = 't-shiokawa1.github.io/Paper-Library/';
         scenarioPanel.classList.remove('show');
         scenarioPanel.replaceChildren();
         document.getElementById('scenarioModal').classList.remove('show');
         document.getElementById('scenarioModalBox').replaceChildren();
         if(item.effect === 'selectFirst') document.querySelector('.gallery-card')?.click();
         if(item.effect === 'addExample') document.getElementById('addBoxDemo').textContent = '＋　10.1038/example.2024.12345';
+        // The add box swaps its placeholder in the researcher view, exactly as
+        // the real toolbar does (updateResearcherAddBar in app/main.js).
+        else if(String(item.effect || '').indexOf('showResearcher') === 0) document.getElementById('addBoxDemo').textContent = `＋　${L('研究者名 / URL を入力','Researcher name / URL')}`;
         else document.getElementById('addBoxDemo').textContent = `＋　${L('URL を入力して Enter','Enter URL and press Enter')}`;
         // "はじめに" walkthrough stages: home screen → OS folder picker →
         // permission popup → saved-but-empty library → returning-user resume
         // → back to the normal (loaded, test-data) view every other scenario uses.
-        const stageMap = {showHome:'home', showPicker:'picker', showPickerSelect:'picker-select', showPermission:'permission', showEmpty:'empty', showHomeResume:'home-resume', showTrash:'trash', showLoaded:''};
+        // The "connector" install walkthrough reuses the same [data-stage]
+        // mechanism to swap the mock page for a chrome://extensions mock
+        // (ext / ext-on) and its unpacked-folder picker (ext-picker…).
+        const stageMap = {showHome:'home', showPicker:'picker', showPickerSelect:'picker-select', showPermission:'permission', showEmpty:'empty', showHomeResume:'home-resume', showTrash:'trash', showLoaded:'',
+          showResearchers:'researchers', showResearcherMap:'researcher-map', showResearcherNetwork:'researcher-network', showResearcherTree:'researcher-tree', showResearcherRank:'researcher-rank',
+          showExt:'ext', showExtOn:'ext-on', showExtPicker:'ext-picker', showExtPickerWrong:'ext-picker-wrong', showExtPickerSelect:'ext-picker-select', showExtInstalled:'ext-installed',
+          showPlace:'place', showPin:'pin', showPaper:'paper', showPaperPopup:'paper-popup'};
         const stage = stageMap[item.effect] || '';
         if(stage) app.dataset.stage = stage; else delete app.dataset.stage;
+        // The mock address bar tracks the page each stage depicts: chrome://extensions
+        // for the install stages (ext*), a journal article URL for the "use the
+        // extension" stages (paper*), and the normal Paper Library URL otherwise.
+        address.textContent = stage.indexOf('ext') === 0 ? 'chrome://extensions'
+          : stage.indexOf('paper') === 0 ? 'www.nature.com/articles/s41467-024-01234-5'
+          : 't-shiokawa1.github.io/Paper-Library/';
         document.getElementById('homeResumeBtn').hidden = stage !== 'home-resume';
+        // The researcher view's bottom-bar view switch names whichever of the
+        // seven views the current stage is showing.
+        const rvViewBtn = document.getElementById('rvViewBtn');
+        if(rvViewBtn){
+          // The co-authorship map is a dialog opened over the current view, so
+          // the view switch keeps naming whichever view is underneath it.
+          const viewName = stage === 'researcher-map' ? L('地図','Map') : stage === 'researcher-tree' ? L('ツリー','Tree')
+            : stage === 'researcher-rank' ? L('ランキング','Ranking') : L('グリッド','Grid');
+          rvViewBtn.textContent = `⊞ ${viewName}⌄`;
+        }
         if(listStatusCount) listStatusCount.textContent = stage === 'empty' ? L('0 / 0 件を表示','0 / 0 shown') : stage === 'trash' ? L('2 / 2 件を表示','2 / 2 shown') : L('24 / 24 件を表示','24 / 24 shown');
-        document.querySelectorAll('.side-item').forEach(x => x.classList.toggle('active', x.id === (stage === 'trash' ? 'trashSideItem' : 'allSideItem')));
+        document.querySelectorAll('.side-item').forEach(x => x.classList.toggle('active', x.id === (stage === 'trash' ? 'trashSideItem' : stage.indexOf('researcher') === 0 ? 'researchersSideItem' : 'allSideItem')));
         // Every walkthrough step (home → picker → permission → empty →
         // resume) tells a "no papers registered yet" story — never leave a
         // previously-selected test card showing in the detail pane here,
@@ -861,13 +1582,6 @@
             }
             scenarioPanel.appendChild(row);
           });
-          const anchor = document.querySelector(item.panel.anchor || '.app-toolbar');
-          const anchorRect = anchor?.getBoundingClientRect();
-          const contentRect = document.querySelector('.browser-content').getBoundingClientRect();
-          if(anchorRect){
-            scenarioPanel.style.left = `${Math.max(12, Math.min(anchorRect.left - contentRect.left, contentRect.width - 306))}px`;
-            scenarioPanel.style.top = `${Math.max(45, anchorRect.bottom - contentRect.top + 7)}px`;
-          }
           scenarioPanel.classList.add('show');
         }
         // "modal" steps depict a real centred, backdrop-dimmed dialog (the
@@ -900,12 +1614,37 @@
           box.innerHTML = html;
           document.getElementById('scenarioModal').classList.add('show');
         }
+        positionOverlays();
+        publishGuide();
+      }
+
+      // Position the anchored scenario panel and the spotlight from the current
+      // step's live layout. Kept separate from renderStep so it can also run on
+      // scroll: the spotlight/panel live in the non-scrolling .guide-layer, but
+      // their targets (gallery cards, the anchored panel) sit inside the
+      // scrollable .table-wrap / .detail — so without this they drift out of
+      // alignment the moment the virtual screen is scrolled.
+      function positionOverlays() {
+        const item = steps[step];
+        if (!item) return;
+        // Re-anchor the scenario panel first, so that steps whose spotlight
+        // target *is* #scenarioPanel measure it at its updated position.
+        if (item.panel) {
+          const anchor = document.querySelector(item.panel.anchor || '.app-toolbar');
+          const anchorRect = anchor?.getBoundingClientRect();
+          const contentRect = document.querySelector('.browser-content').getBoundingClientRect();
+          if (anchorRect) {
+            // Clamp the bottom edge too: anchoring to something near the foot of
+            // the mock (a bottom-bar button, a full-height pane) would otherwise
+            // push the panel — and the spotlight that tracks it — off-screen.
+            const panelH = scenarioPanel.offsetHeight || 0;
+            scenarioPanel.style.left = `${Math.max(12, Math.min(anchorRect.left - contentRect.left, contentRect.width - 306))}px`;
+            scenarioPanel.style.top = `${Math.max(45, Math.min(anchorRect.bottom - contentRect.top + 7, contentRect.height - panelH - 12))}px`;
+          }
+        }
         // querySelector('') throws (an empty string isn't a valid selector),
         // so steps with no target (the modal steps) must skip the call
-        // entirely rather than falling back to an empty-string selector —
-        // otherwise the exception aborts renderStep() before publishGuide()
-        // runs, and the outer guide rail's message stops updating even
-        // though the mock screen behind it has already changed.
+        // entirely rather than falling back to an empty-string selector.
         const target = item.target ? document.querySelector(item.target) : null;
         if (target) {
           const targetRect = target.getBoundingClientRect();
@@ -924,8 +1663,18 @@
           spotlight.hidden = true;
           positionGuideCard(null);
         }
-        publishGuide();
       }
+
+      // Keep the overlays glued to their targets while the user scrolls any
+      // inner region of the virtual screen. Scroll events don't bubble, so the
+      // listener is capturing; rAF-coalesced to avoid layout thrash.
+      let overlayRepositionScheduled = false;
+      function scheduleOverlayReposition() {
+        if (overlayRepositionScheduled) return;
+        overlayRepositionScheduled = true;
+        requestAnimationFrame(() => { overlayRepositionScheduled = false; positionOverlays(); });
+      }
+      window.addEventListener('scroll', scheduleOverlayReposition, true);
 
       function setStep(nextStep) {
         step = Math.max(0, Math.min(steps.length - 1, nextStep));
