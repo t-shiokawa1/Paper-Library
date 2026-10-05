@@ -6543,7 +6543,7 @@ function renderResearcherList(){
   }else if(view==='list'){
     list.innerHTML=`<div class="rList">${shown.map(researcherLargeRowHtml).join('')}</div>`+more; renderIcons(list);
   }else if(view==='leaderboard'){
-    list.innerHTML=researcherLeaderboardHtml(shown)+more; renderIcons(list);
+    list.innerHTML=researcherLeaderboardHtml(entries,researcherRenderLimit)+more; renderIcons(list);
   }else if(view==='map'){
     list.innerHTML=researcherMapHtml(entries); renderIcons(list); wireResearcherMap();
   }
@@ -6634,7 +6634,7 @@ function researcherLargeRowHtml(e){
   </div>`;
 }
 // ⑤ leaderboard (the selected metric stays local to the ranking view)
-function researcherLeaderboardHtml(shown){
+function researcherLeaderboardHtml(entries,limit=entries.length){
   const metric=researcherLeaderboardMetric;
   const libraryCitations=e=>Array.from(e.paperIds||[]).reduce((sum,id)=>sum+(Number((lib.items||[]).find(item=>item.id===id)?.citedByCount)||0),0);
   const profileKey={citations:'totalCitations',worksCount:'worksCount',hIndex:'hIndex',i10Index:'i10Index'}[metric];
@@ -6645,11 +6645,13 @@ function researcherLeaderboardHtml(shown){
     cache.set(e,v); return v;
   };
   const label={papers:'researcherLeaderboardLibraryPapers',allPapers:'researcherLeaderboardLibraryAllPapers',libraryCitations:'researcherLeaderboardLibraryCitations',citations:'researcherLeaderboardExternalCitations',hIndex:'researcherLeaderboardHIndex',i10Index:'researcherLeaderboardI10Index',worksCount:'researcherLeaderboardWorksCount'}[metric];
-  const ranked=[...shown].sort((a,b)=>{
+  // Rank the complete filtered directory before limiting DOM rows. Scrolling
+  // must only reveal lower ranks, never change the ranking or bar scale.
+  const ranked=[...entries].sort((a,b)=>{
     return value(b)-value(a) || b.paperIds.size-a.paperIds.size || formatResearcherName(a).localeCompare(formatResearcherName(b),lang);
   });
   const max=Math.max(1,...ranked.map(value));
-  const rows=ranked.map((e,i)=>{
+  const rows=ranked.slice(0,limit).map((e,i)=>{
     const v=value(e), pct=v/max*100, val=v? v.toLocaleString():'—';
     return `<div class="rLbRow ${researcherSel(e)}" ${researcherRowData(e)}>
       <div class="rLbRank">${i+1}</div>${researcherAvatarHTML(e,'rAvS')}
