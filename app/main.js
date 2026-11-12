@@ -16354,8 +16354,9 @@ $('#detail').addEventListener('input', (e)=>{
   touch(it, {typing:true});
   if(f==='notes'){ clearTimeout(notePreviewTimer); notePreviewTimer = setTimeout(updateNotePreview, 200); }
   clearTimeout(citePreviewTimer); citePreviewTimer = setTimeout(updateCitePreview, 150);
+  detailEditFields.add(f);
+  if(dupAlertTimer) scheduleDupAlertRefresh(); // still typing: push the duplicate scan back
   if(f==='notes' && !noteEditAffectsList()) return;
-  detailEditNeedsRefresh = true;
   clearTimeout(renderListDebounce._t);
   renderListDebounce._t = setTimeout(()=>{
     if(f!=='notes' && !fieldEditAffectsList(f)) refreshRowAllCells(it);
@@ -16368,12 +16369,54 @@ $('#detail').addEventListener('input', (e)=>{
 // we now only redraw the edited row (or the list, when the edit can move or
 // filter rows), and run the sidebar + alert refresh once the field loses focus.
 let citePreviewTimer = null;
-let detailEditNeedsRefresh = false;
+let detailEditFields = new Set();
 $('#detail').addEventListener('focusout', (e)=>{
-  if(!detailEditNeedsRefresh || !e.target.dataset || !e.target.dataset.f) return;
-  detailEditNeedsRefresh = false;
-  setTimeout(()=>{ if(!lib) return; renderSidebar(); updateAlerts(); }, 0);
+  if(!detailEditFields.size || !e.target.dataset || !e.target.dataset.f) return;
+  const fields = detailEditFields;
+  detailEditFields = new Set();
+  setTimeout(()=>{ if(!lib) return; refreshAfterDetailEdit(fields); }, 0);
 });
+// Leaving a field used to redraw the whole sidebar and rerun every alert scan
+// (~2 s at 1800 records). Only redo what the edited fields can change:
+// the sidebar shows tag counts and the researcher count (authors of records
+// with corresponding authors); fix suggestions read the journal fields, year,
+// DOI and publisher; the duplicate scan reads title / DOI / year and is pushed
+// to idle time after the user stops editing. Empty-record count is cheap.
+const SIDEBAR_EDIT_FIELDS = new Set(['tags']);
+// The researcher count can need a ~1 s directory rebuild (only when the edited
+// record has corresponding authors), so it is refreshed in idle time instead.
+const RESEARCHER_EDIT_FIELDS = new Set(['authors','correspondingAuthors']);
+const FIX_EDIT_FIELDS = new Set(['journal','journalAbbr','year','doi','arxiv','publisher']);
+const DUP_EDIT_FIELDS = new Set(['title','doi','arxiv','year']);
+const DUP_ALERT_IDLE_MS = 1500;
+let dupAlertTimer = null;
+function refreshAfterDetailEdit(fields){
+  const touches = set=>[...fields].some(f=>set.has(f));
+  if(touches(SIDEBAR_EDIT_FIELDS)) renderSidebar();
+  if(touches(RESEARCHER_EDIT_FIELDS)) researcherCountRefreshPending = true;
+  _alertCounts.empty = findEmptyRecords().length;
+  if(touches(FIX_EDIT_FIELDS)) _alertCounts.fix = findFixSuggestions().length;
+  renderAlerts();
+  if(touches(DUP_EDIT_FIELDS) || researcherCountRefreshPending) scheduleDupAlertRefresh();
+}
+let researcherCountRefreshPending = false;
+function scheduleDupAlertRefresh(){
+  clearTimeout(dupAlertTimer);
+  dupAlertTimer = setTimeout(()=>{
+    const run = ()=>{
+      dupAlertTimer = null;
+      if(!lib) return;
+      if(researcherCountRefreshPending){
+        researcherCountRefreshPending = false;
+        const cnt = document.querySelector('#researcherFilter .cnt');
+        if(cnt) cnt.textContent = researcherDirectoryEntries().length;
+      }
+      _alertCounts.dup = findLibraryDuplicateCandidates(50).length;
+      renderAlerts();
+    };
+    if(window.requestIdleCallback) requestIdleCallback(run, {timeout:3000}); else run();
+  }, DUP_ALERT_IDLE_MS);
+}
 // Can editing field f change which rows are listed or their order?
 function fieldEditAffectsList(f){
   if(listView!=='table' && listView!=='cards' && !GALLERY_VIEWS.includes(listView)) return true; // shelves / kanban group by fields
