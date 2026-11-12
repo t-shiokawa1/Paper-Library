@@ -39,6 +39,7 @@ function latestState(){
 }
 function latestUrl(value){try{const u=new URL(value);return u.protocol==='https:'?u.href:'';}catch(_){return '';}}
 function latestImage(p){
+ if(typeof latestLocalUrls!=='undefined'&&p.imageCache&&latestLocalUrls.has(p.imageCache))return latestLocalUrls.get(p.imageCache);
  const local=/^data\/latest-images\/[a-f0-9]{24}\.(?:png|jpg|gif|webp)$/.test(p.imageLocal||'')?p.imageLocal:'';
  if(local&&location.protocol==='file:'){
   const embedded=latestData?.offlineImages?.[local];
@@ -68,7 +69,11 @@ async function loadLatestPapers(){
  latestLoading=true;latestError='';const request=++latestRequest;renderLatestPapers();
  try{
   let data;
-  if(location.protocol==='file:'){
+  if(backend?.kind==='fs'&&backend.loadLatest){
+   data=await backend.loadLatest();
+   latestCacheFailed=false;
+   if(!data)data={version:1,sources:LP_SOURCES,papers:[],status:[]};
+  }else if(location.protocol==='file:'){
    data=await new Promise((resolve,reject)=>{
     const script=document.createElement('script');
     const finish=(error)=>{clearTimeout(timer);script.remove();error?reject(error):resolve(window.PaperLibraryLatestSnapshot);};
@@ -85,8 +90,8 @@ async function loadLatestPapers(){
   if(!Array.isArray(data.papers)||!Array.isArray(data.sources))throw new Error('Invalid feed');
   if(request!==latestRequest)return;
   latestData={...data,papers:data.papers.filter(p=>p&&typeof p.doi==='string'&&typeof p.title==='string').map(p=>({...p,doi:normDoi(p.doi),authors:Array.isArray(p.authors)?p.authors:[]}))};
- }catch(e){latestError=t('latestFailed');console.warn('Latest papers:',e);}
- finally{latestLoading=false;latestSidebar();if(currentView==='latest')renderLatestPapers();}
+ }catch(e){if(request===latestRequest){if(typeof latestCacheFailed!=='undefined'&&backend?.kind==='fs')latestCacheFailed=true;latestError=t('latestFailed');console.warn('Latest papers:',e);}}
+ finally{if(request===latestRequest){latestLoading=false;latestSidebar();if(currentView==='latest')renderLatestPapers();}}
 }
 function latestItem(p){
  return latestStored(p)||newItem({doi:p.doi,title:p.title,authors:parseAuthorListText(p.authors.join('; ')),journal:p.journal,year:(p.date||'').slice(0,4),url:latestUrl(p.url),abstract:p.abstract||''});
@@ -94,7 +99,7 @@ function latestItem(p){
 function latestCardHtml(p){
  const image=latestImage(p),it=latestItem(p),selected=p.doi===latestSelectedDoi;
  return `<article class="cardRow galCard latestCard ${selected?'sel':''}" role="button" tabindex="0" aria-pressed="${selected}" aria-label="${esc(p.title)}" data-latest-doi="${esc(p.doi)}">
- <div class="galThumb">${image?`<img class="cardImg" src="${esc(image)}" alt="${esc(p.title)} — ${esc(latestImageLabel(p))}" loading="lazy" referrerpolicy="no-referrer"><div class="cardNoimg latestImageFallback" hidden><span>${esc(t('latestImageFailed'))}</span></div>`:`<div class="cardNoimg"><div class="latestNoImage">${ic('journal')}<span>${esc(journalDisplay(it))}</span><span>${esc(t('latestNoImage'))}</span></div></div>`}${image&&p.imageKind?`<span class="latestImageKind">${esc(latestImageLabel(p))}</span>`:''}</div>
+ <div class="galThumb">${image?`<img class="cardImg" data-latest-cache-doi="${esc(p.doi)}" src="${esc(image)}" alt="${esc(p.title)} — ${esc(latestImageLabel(p))}" loading="lazy" referrerpolicy="no-referrer"><div class="cardNoimg latestImageFallback" hidden><span>${esc(t('latestImageFailed'))}</span></div>`:`<div class="cardNoimg"><div class="latestNoImage">${ic('journal')}<span>${esc(journalDisplay(it))}</span><span>${esc(t('latestNoImage'))}</span></div></div>`}${image&&p.imageKind?`<span class="latestImageKind">${esc(latestImageLabel(p))}</span>`:''}</div>
  <div class="galBody"><div class="galTitle" title="${esc(p.title)}">${esc(p.title)}</div><div class="galAuth">${esc(tableAuthorsText(it.authors,it.correspondingAuthors))}</div><div class="galMeta"><span class="galJournal" title="${esc(p.journal)}">${esc(journalDisplay(it))}</span><span class="galYear">${esc(it.year)}</span></div></div></article>`;
 }
 function renderLatestPapers(){
@@ -106,10 +111,11 @@ function renderLatestPapers(){
  const scopes=['unread','read','saved','all'];
  pane.innerHTML=`
  ${latestError?`<div class="latestWarning" role="alert">${esc(latestError)}</div>`:''}
+ ${typeof latestProgress!=='undefined'&&latestProgress?`<div class="latestWarning" data-latest-progress role="status">${esc(latestProgress)}</div>`:''}
  <div class="latestScroll scroll-y" tabindex="0"><div class="latestCards latest-${latestLayout}" style="--latestCols:${galleryCols}">${shown.map(p=>{
  return latestCardHtml(p);
- }).join('')}</div>${latestLoading&&!latestData?`<div class="latestEmpty" role="status">${esc(t('latestLoading'))}</div>`:!shown.length?`<div class="latestEmpty">${esc(t('latestEmpty'))}</div>`:''}${papers.length>shown.length?'<div class="latestScrollSentinel" aria-hidden="true"></div>':''}</div>
- <div class="listStatusBar latestStatus"><span class="latestStatusCount" title="${esc(t('latestJournalSelection')((latestData?.sources||[]).filter(s=>!state.hiddenSources.includes(s.id)).length,(latestData?.sources||[]).length))}">${esc(t('latestCount')(papers.length))}</span><div class="latestTabs" role="group" aria-label="${esc(t('latestStatusFilter'))}">${scopes.map(s=>`<button class="lsbtn" data-latest-scope="${s}" aria-pressed="${latestScope===s}">${esc(t({unread:'latestUnread',read:'latestRead',saved:'latestSaved',all:'latestAll'}[s]))}</button>`).join('')}</div><details class="latestStatusInfo"><summary class="lsbtn">${esc(t('latestChecked'))}${latestData?.status?.some(s=>!s.ok)?' ⚠':''}${ic('chevron')}</summary><div>${latestData?.checkedAt?esc(new Date(latestData.checkedAt).toLocaleString(lang==='ja'?'ja-JP':'en-US')):''}<p>${esc(t('latestFeedHelp'))}</p>${latestData?.status?.some(s=>!s.ok)?`<p>${esc(t('latestSourceError'))}: ${latestData.status.filter(s=>!s.ok).map(s=>esc(latestSourceDisplay(latestData.sources.find(x=>x.id===s.id))||s.id)).join(', ')}</p>`:''}</div></details>
+ }).join('')}</div>${latestLoading&&!latestData?`<div class="latestEmpty" role="status">${esc(t('latestLoading'))}</div>`:!shown.length?`<div class="latestEmpty">${esc(t(backend?.kind==='fs'&&!latestData?.papers.length?'latestNoCache':'latestEmpty'))}</div>`:''}${papers.length>shown.length?'<div class="latestScrollSentinel" aria-hidden="true"></div>':''}</div>
+ <div class="listStatusBar latestStatus"><span class="latestStatusCount" title="${esc(t('latestJournalSelection')((latestData?.sources||[]).filter(s=>!state.hiddenSources.includes(s.id)).length,(latestData?.sources||[]).length))}">${esc(t('latestCount')(papers.length))}</span><div class="latestTabs" role="group" aria-label="${esc(t('latestStatusFilter'))}">${scopes.map(s=>`<button class="lsbtn" data-latest-scope="${s}" aria-pressed="${latestScope===s}">${esc(t({unread:'latestUnread',read:'latestRead',saved:'latestSaved',all:'latestAll'}[s]))}</button>`).join('')}</div><details class="latestStatusInfo"><summary class="lsbtn">${esc(t('latestChecked'))}${latestData?.status?.some(s=>!s.ok||s.metadataError)?' ⚠':''}${ic('chevron')}</summary><div>${latestData?.checkedAt?esc(new Date(latestData.checkedAt).toLocaleString(lang==='ja'?'ja-JP':'en-US')):''}<p>${esc(t('latestFeedHelp'))}</p>${latestData?.status?.some(s=>!s.ok||s.metadataError)?`<p>${esc(t('latestSourceError'))}: ${latestData.status.filter(s=>!s.ok||s.metadataError).map(s=>esc(latestSourceDisplay(latestData.sources.find(x=>x.id===s.id))||s.id)).join(', ')}</p>`:''}</div></details>
  <button class="lsbtn" data-latest-read-all ${!shown.length?'disabled':''}>${esc(t('latestMarkAll'))}</button><select class="lsbtn" id="latestColumns" aria-label="${esc(t('latestColumns'))}">${['2','3','4'].map(n=>`<option value="${n}" ${galleryCols===n?'selected':''}>${n}</option>`).join('')}</select><button class="lsbtn" data-latest-layout="${latestLayout==='grid'?'rows':'grid'}" aria-label="${esc(t(latestLayout==='grid'?'latestRows':'latestGrid'))}">${ic(latestLayout==='grid'?'rows':'grid')}</button><button class="lsbtn" data-latest-refresh ${latestLoading?'disabled':''} title="${esc(t('latestRefresh'))}">${ic('retry')}</button></div>`;
  latestWireImages(pane);renderLatestDetail();latestSidebar();latestObserveScroll(pane);
 }
@@ -133,6 +139,7 @@ function latestObserveScroll(pane){
  }
 }
 function latestWireImages(pane){
+ if(typeof latestHydrateImages==='function')latestHydrateImages(pane);
  pane.querySelectorAll('img').forEach(img=>img.addEventListener('error',()=>{img.hidden=true;const fallback=img.nextElementSibling;if(fallback)fallback.hidden=false;}));
 }
 function latestAbstractParts(value){
@@ -150,7 +157,7 @@ function renderLatestDetail(){
  const it=latestItem(p),image=latestImage(p),stored=latestStored(p),read=latestState().read.includes(p.doi),url=latestUrl(p.url)||'https://doi.org/'+encodeURIComponent(p.doi),parts=latestAbstractParts(it.abstract||p.abstract);
  pane.innerHTML=`<div class="latestDetailActions"><button class="lsbtn ${stored?'':'primary'}" data-latest-add="${esc(p.doi)}" ${stored||latestAdding.has(p.doi)?'disabled':''}>${ic(stored?'check':'plus')}${esc(t(stored?'latestSaved':'latestAdd'))}</button><a class="lsbtn" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-latest-open="${esc(p.doi)}">${ic('link')}${esc(t('latestOpen'))}</a><button class="lsbtn" data-latest-read="${esc(p.doi)}">${ic('check')}${esc(t(read?'latestBackUnread':'latestRead'))}</button></div>
  <div class="refDetailTitle">${esc(p.title)}</div>${detailBibliographyHtml(it)}<div id="refBody">
- ${image?`<div class="refBlock refHero"><button class="latestDetailZoom" data-latest-zoom="${esc(p.doi)}" aria-label="${esc(t('latestImageZoom'))}"><img class="refFig" src="${esc(image)}" alt="${esc(p.title)} — ${esc(latestImageLabel(p))}" referrerpolicy="no-referrer"><span class="latestImageFallback" hidden>${esc(t('latestImageFailed'))}</span></button><div class="latestImageCredit">${esc(latestImageLabel(p))}</div></div>`:''}
+ ${image?`<div class="refBlock refHero"><button class="latestDetailZoom" data-latest-zoom="${esc(p.doi)}" aria-label="${esc(t('latestImageZoom'))}"><img class="refFig" data-latest-cache-doi="${esc(p.doi)}" src="${esc(image)}" alt="${esc(p.title)} — ${esc(latestImageLabel(p))}" referrerpolicy="no-referrer"><span class="latestImageFallback" hidden>${esc(t('latestImageFailed'))}</span></button><div class="latestImageCredit">${esc(latestImageLabel(p))}</div></div>`:''}
  ${detailReadBlockHtml(it,'authors')}
  <section class="refBlock citePreview"><div class="refLabel">${esc(t('citePreview'))}</div><div class="cpText">${itemToCitationHtml(it,citationPrefs)}</div></section>
  <section class="refBlock refSection"><div class="refLabel">${esc(journalDisplay(it))}</div><div class="refProse">${esc(p.date||'')}<br><a href="https://doi.org/${esc(encodeURIComponent(p.doi))}" target="_blank" rel="noopener noreferrer">${esc(p.doi)}</a></div></section>
@@ -175,7 +182,8 @@ async function latestAddPaper(doi,btn){
   let imageFailed=false;
   if(latestImage(p)&&destination){
    try{
-    const response=await fetch(latestImage(p),{signal:AbortSignal.timeout(15000)});
+    const cached=typeof latestCachedImage==='function'?await latestCachedImage(p,destination):'';
+    const response=await fetch(cached||latestImage(p),{signal:AbortSignal.timeout(15000)});
     if(!response.ok)throw new Error('Image HTTP '+response.status);
     const blob=await response.blob();
     if(!/^image\/(png|jpeg|gif|webp)$/.test(blob.type)||blob.size>4*1024*1024)throw new Error('Invalid image');
@@ -200,7 +208,7 @@ function latestHandleClick(e){
  const card=e.target.closest('[data-latest-doi]');
  if(card){latestSelectedDoi=card.dataset.latestDoi;$('#latestPapersPane').querySelectorAll('[data-latest-doi]').forEach(el=>{const selected=el.dataset.latestDoi===latestSelectedDoi;el.classList.toggle('sel',selected);el.setAttribute('aria-pressed',String(selected));});renderLatestDetail();return;}
  const b=e.target.closest('button,a');if(!b)return;const d=b.dataset;
- if('latestRefresh' in d){loadLatestPapers();return;}
+ if('latestRefresh' in d){latestUpdatePapers();return;}
  if(d.latestScope){latestScope=d.latestScope;latestLimit=60;renderLatestPapers();return;}
  if(d.latestLayout){latestLayout=d.latestLayout;renderLatestPapers();return;}
  if('latestReadAll' in d){const s=latestState();s.read=Array.from(new Set([...s.read,...latestVisible().slice(0,latestLimit).map(p=>p.doi)]));touch();latestSidebar();renderLatestPapers();return;}
@@ -246,4 +254,4 @@ $('#latestPapersFilter')?.addEventListener('click',e=>{
  Array.from($('#latestPapersFilter').querySelectorAll(`[${attr}]`)).find(el=>el.getAttribute(attr)===value)?.focus({preventScroll:true});
 });
 
-latestSidebar();
+ latestSidebar();
